@@ -27,16 +27,16 @@ button {
 }
 </style>
 
-<h2>🔐 Ultra-Secure Password Generator</h2>
+<h2>🔐Password Generator</h2>
 <p>Define the password length and click generate to get an extremely strong, secure password.</p>
 
 <label for="length">Password Length (Max 128):</label>
 <input type="number" id="length" min="8" max="128" value="32">
 <br>
-<button onclick="generatePassword()">Generate Password</button>
+<button onclick="generatePassword()">Generate a New Password</button>
 <button onclick="copyPassword()">Copy to Clipboard</button>
 
-<p id="password-box">Your password will appear here.</p>
+<p id="password-box" style="font-size: 14px; color: #495057;">Your password will appear here.</p>
 
 <script>
 function generatePassword() {
