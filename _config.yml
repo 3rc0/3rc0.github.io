@@ -52,19 +52,19 @@ social-network-links:
  # facebook: 
   github: 3rc0
   # twitter: 
-  # patreon: 
+  patreon: DiyarHussein
   youtube: "DiyarHussein"
 #  whatsapp: 15551212
 #  medium: yourname
 #  reddit: yourname or r/yoursubreddit
   linkedin: diyar
 #  xing: yourname
-#  stackoverflow: "3943160/daattali"
-#  snapchat: deanat78
-#  instagram: deanat78
+#  stackoverflow: ""
+#  snapchat: 
+#  instagram: 
 #  spotify: yourname
-#  telephone: +14159998888
-#  steam: deanat78
+#  telephone: 
+#  steam: 
 #  twitch: yourname
 #  yelp: yourname
 #  telegram: yourname
@@ -83,7 +83,7 @@ social-network-links:
 
 # If you want your website to generate an RSS feed, provide a description
 # The URL for the feed will be https://<your_website>/feed.xml
-rss-description: This website is a virtual proof that I'm awesome
+# rss-description: 
 
 ###########################
 # --- General options --- #
@@ -99,7 +99,7 @@ share-links-active:
 
 # How to display the link to your website in the footer
 # Remove this if you don't want a link in the footer
-url-pretty: "MyWebsite.com"
+url-pretty: "3rc0.github.io"
 
 # Add the website title to the title of every page
 title-on-all-pages: true
@@ -257,7 +257,7 @@ date_format: "%B %-d, %Y"
 #################################################################################
 
 # Output options (more information on Jekyll's site)
-timezone: "America/Toronto"
+timezone: "Iraq/Baghdad"
 markdown: kramdown
 highlighter: rouge
 permalink: /:year-:month-:day-:title/
