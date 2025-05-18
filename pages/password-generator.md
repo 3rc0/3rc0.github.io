@@ -6,7 +6,7 @@ author: "Diyar Hussein"
 permalink: /password-generator/
 ---
 
-<button id="toggle-theme">🌓 Toggle Dark Mode</button>
+
 <link rel="stylesheet" href="/assets/css/password-generator.css">
 <script src="/assets/js/password-generator.js" defer></script>
 
