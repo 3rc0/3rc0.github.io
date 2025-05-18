@@ -5,114 +5,173 @@ permalink: /password-generator/
 ---
 
 <style>
-#password-generator-container {
-  max-width: 600px;
-  margin: 0 auto;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+:root {
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --bg-light: #f1f3f5;
+  --text-light: #212529;
+  --bg-dark: #1e1e1e;
+  --text-dark: #f1f3f5;
+  --box-bg-light: #e9ecef;
+  --box-bg-dark: #2c2c2c;
+}
+
+body[data-theme='dark'] {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+[data-theme='dark'] #password-box {
+  background-color: var(--box-bg-dark);
+  color: var(--text-dark);
+  border-color: #444;
+}
+
+[data-theme='dark'] button {
+  background: linear-gradient(to right, #4f46e5, #3b82f6);
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  padding: 10px 18px;
+  font-size: 1rem;
+  font-weight: 500;
+  background: linear-gradient(to right, var(--primary-dark), var(--primary));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  margin-top: 12px;
+  margin-right: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+button:hover {
+  transform: translateY(-1px);
+}
+button:active {
+  transform: scale(0.98);
 }
 
 #password-box {
   font-family: monospace;
-  font-size: 1.1rem;
+  font-size: 18px;
   padding: 12px;
-  margin-top: 1rem;
-  background-color: #f8f9fa;
-  border: 1px solid #ced4da;
-  border-radius: 8px;
-  word-break: break-word;
-  min-height: 40px;
-  transition: all 0.2s ease;
-  text-align: center;
-}
-
-#password-box.placeholder {
-  color: #6c757d;
-  font-style: italic;
-  text-align: center;
-}
-
-#password-box.generated {
-  color: #212529;
-  font-weight: bold;
-  font-style: normal;
-}
-
-button {
   margin-top: 10px;
-  margin-right: 8px;
-  padding: 8px 14px;
-  font-size: 0.95rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-button:hover {
-  background-color: #0056b3;
+  background-color: var(--box-bg-light);
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  color: var(--text-light);
+  text-align: center;
+  word-break: break-word;
 }
 
-input[type="number"] {
-  padding: 6px;
-  width: 80px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  margin-top: 5px;
-  margin-bottom: 10px;
+#prompt-text {
+  color: #6c757d;
+}
+
+/* Toggle Switch */
+.switch {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+}
+.switch input {
+  display: none;
+}
+.slider {
+  width: 40px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 30px;
+  position: relative;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+input:checked + .slider {
+  background-color: var(--primary);
+}
+input:checked + .slider::before {
+  transform: translateX(20px);
 }
 </style>
 
-<div id="password-generator-container">
-  <h2>🔐 Password Generator</h2>
-  <p>Define the password length and click generate to get an extremely strong, secure password.</p>
-
-  <label for="length">Password Length (Max 128):</label>
-  <br>
-  <input type="number" id="length" min="8" max="128" value="32">
-  <br>
-  <button onclick="generatePassword()">Generate New Password</button>
-  <button onclick="copyPassword()">Copy to Clipboard</button>
-
-  <p id="password-box" class="placeholder">Your password will appear here.</p>
+<!-- Dark Mode Switch -->
+<div class="switch">
+  <label>
+    <input type="checkbox" id="theme-toggle" aria-label="Toggle dark mode">
+    <span class="slider"></span>
+  </label>
 </div>
 
+<h2>🔐 Password Generator</h2>
+<p>Define the password length and click generate to get a secure, high-entropy password.</p>
+
+<label for="length">Password Length (8–128):</label>
+<input type="number" id="length" min="8" max="128" value="32">
+<br>
+
+<button onclick="generatePassword()">🔄 Generate New Password</button>
+<button onclick="copyPassword()">📋 Copy to Clipboard</button>
+
+<p id="password-box"><span id="prompt-text">Your password will appear here.</span></p>
+
 <script>
+// Toggle dark mode
+document.getElementById('theme-toggle').addEventListener('change', function() {
+  document.body.setAttribute('data-theme', this.checked ? 'dark' : 'light');
+});
+
+// Secure password generation with max entropy
 function generatePassword() {
   const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?/`~";
-  let length = parseInt(document.getElementById("length").value);
+  const length = parseInt(document.getElementById("length").value);
   if (isNaN(length) || length < 8 || length > 128) {
     alert("Please choose a valid length between 8 and 128.");
     return;
   }
 
   let password = '';
-  const array = new Uint32Array(length);
-  window.crypto.getRandomValues(array);  // secure RNG
+  const cryptoArray = new Uint8Array(length);
+  window.crypto.getRandomValues(cryptoArray);
 
   for (let i = 0; i < length; i++) {
-    password += charset[array[i] % charset.length];
+    password += charset[cryptoArray[i] % charset.length];
   }
 
-  const box = document.getElementById("password-box");
-  box.innerText = password;
-  box.classList.remove("placeholder");
-  box.classList.add("generated");
+  document.getElementById("password-box").innerHTML = `<strong>${password}</strong>`;
 }
 
+// Clipboard copy
 function copyPassword() {
   const box = document.getElementById("password-box");
-  const password = box.innerText;
-  if (!password || box.classList.contains("placeholder")) {
+  const text = box.innerText;
+  if (!text || text.includes("Your password")) {
     alert("No password to copy!");
     return;
   }
 
-  navigator.clipboard.writeText(password).then(() => {
+  navigator.clipboard.writeText(text).then(() => {
     alert("Password copied to clipboard.");
   }).catch(err => {
     console.error("Copy failed", err);
-    alert("Failed to copy. Please try manually.");
+    alert("Failed to copy. Try manually.");
   });
 }
 </script>
