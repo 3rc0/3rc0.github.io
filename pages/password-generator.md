@@ -33,7 +33,7 @@ permalink: /password-generator/
   border-radius: 8px;
   word-break: break-word;
   min-height: 40px;
-  color:rgb(173, 182, 190);
+  color:rgb(71, 76, 80);
 }
 
 label, input, button {
@@ -76,7 +76,7 @@ button:hover {
   <button onclick="generatePassword()">Generate Password</button>
   <button onclick="copyPassword()">Copy to Clipboard</button>
 
-  <p id="password-box">Your password will appear here.</p>
+  <p id="password-box" style="font-size: 14px; margin-center: 10px; color:rgb(169, 181, 194);">Your password will appear here.</p>
 </div>
 
 <script>
