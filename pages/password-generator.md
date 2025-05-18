@@ -33,7 +33,7 @@ permalink: /password-generator/
   border-radius: 8px;
   word-break: break-word;
   min-height: 40px;
-  color: #6c757d;
+  color:rgb(173, 182, 190);
 }
 
 label, input, button {
