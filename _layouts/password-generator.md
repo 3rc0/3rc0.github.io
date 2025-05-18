@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: page
 title: Password Geneator
 subtitle: 
 gh-repo: 
