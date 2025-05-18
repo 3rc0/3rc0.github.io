@@ -7,7 +7,8 @@ gh-badge: [star, fork, follow]
 tags: [test]
 comments: true
 mathjax: true
-author: "Diyar Hussein" 
+author: "Diyar Hussein"
+permalink: /password-generator/
 ---
 
 
