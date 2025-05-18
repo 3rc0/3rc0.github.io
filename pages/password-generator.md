@@ -22,11 +22,13 @@ permalink: /password-generator/
   word-break: break-word;
   min-height: 40px;
   transition: all 0.2s ease;
+  text-align: center;
 }
 
 #password-box.placeholder {
   color: #6c757d;
   font-style: italic;
+  text-align: center;
 }
 
 #password-box.generated {
