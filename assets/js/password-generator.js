@@ -1,9 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById("generate-btn").addEventListener("click", generatePassword);
   document.getElementById("copy-btn").addEventListener("click", copyPassword);
-  document.getElementById("toggle-theme").addEventListener("click", toggleTheme);
+  const toggleButton = document.getElementById("toggle-theme");
+  if (toggleButton) {
+    toggleButton.addEventListener("click", () => {
+      document.body.classList.toggle("dark-mode");
+      localStorage.setItem('theme', document.body.classList.contains("dark-mode") ? 'dark' : 'light');
+    });
+
+    // Load theme on page load
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark-mode");
+    }
+  }
 });
 
+// Password generation
 function generatePassword() {
   const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?/`~";
   const length = parseInt(document.getElementById("length").value);
@@ -28,6 +40,7 @@ function generatePassword() {
   updateEntropy(password, charset.length);
 }
 
+// Clipboard copy
 function copyPassword() {
   const password = document.getElementById("password-box").innerText;
   if (!password || password.includes("Your password")) {
@@ -43,6 +56,7 @@ function copyPassword() {
   });
 }
 
+// Entropy visual
 function updateEntropy(password, charsetSize) {
   const entropy = password.length * Math.log2(charsetSize);
   const fill = document.getElementById("entropy-fill");
@@ -55,8 +69,4 @@ function getEntropyColor(entropy) {
   if (entropy >= 128) return "#28a745"; // strong
   if (entropy >= 80) return "#ffc107"; // moderate
   return "#dc3545"; // weak
-}
-
-function toggleTheme() {
-  document.body.classList.toggle("dark-mode");
 }
