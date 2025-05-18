@@ -11,7 +11,6 @@ permalink: /password-generator/
 <script src="/assets/js/password-generator.js" defer></script>
 
 <h2>🔐 Password Generator</h2>
-<p>Generate a secure password with entropy strength.</p>
 
 <label for="length">Password Length (8–128):</label>
 <input type="number" id="length" min="8" max="128" value="32">
