@@ -5,12 +5,8 @@ subtitle: Ultra-secure, customizable, and accessible password tool
 author: "Diyar Hussein"
 permalink: /password-generator/
 ---
----
-layout: page
-title: Password Generator
-permalink: /password-generator/
----
 
+<button id="toggle-theme">🌓 Toggle Dark Mode</button>
 <link rel="stylesheet" href="/assets/css/password-generator.css">
 <script src="/assets/js/password-generator.js" defer></script>
 
@@ -22,7 +18,7 @@ permalink: /password-generator/
 <br>
 <button id="generate-btn">🔁 Generate Password</button>
 <button id="copy-btn">📋 Copy</button>
-<button id="toggle-theme">🌓 Toggle Dark Mode</button>
+
 
 <p id="password-box" class="placeholder">Your password will appear here.</p>
 
