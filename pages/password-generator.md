@@ -16,7 +16,7 @@ permalink: /password-generator/
 <label for="length">Password Length (8–128):</label>
 <input type="number" id="length" min="8" max="128" value="32">
 <br>
-<button id="generate-btn">🔁 Generate Password</button>
+<button id="generate-btn">🔁 Generate New Password</button>
 <button id="copy-btn">📋 Copy</button>
 
 
