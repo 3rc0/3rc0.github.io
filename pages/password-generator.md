@@ -1,177 +1,153 @@
 ---
 layout: page
 title: Password Generator
+subtitle: Ultra-secure, customizable, and accessible password tool
+author: "Diyar Hussein"
 permalink: /password-generator/
 ---
 
 <style>
-:root {
-  --primary: #3b82f6;
-  --primary-dark: #2563eb;
-  --bg-light: #f1f3f5;
-  --text-light: #212529;
-  --bg-dark: #1e1e1e;
-  --text-dark: #f1f3f5;
-  --box-bg-light: #e9ecef;
-  --box-bg-dark: #2c2c2c;
-}
-
-body[data-theme='dark'] {
-  background-color: var(--bg-dark);
-  color: var(--text-dark);
-}
-
-[data-theme='dark'] #password-box {
-  background-color: var(--box-bg-dark);
-  color: var(--text-dark);
-  border-color: #444;
-}
-
-[data-theme='dark'] button {
-  background: linear-gradient(to right, #4f46e5, #3b82f6);
-}
-
-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4em;
-  padding: 10px 18px;
-  font-size: 1rem;
-  font-weight: 500;
-  background: linear-gradient(to right, var(--primary-dark), var(--primary));
-  color: white;
-  border: none;
-  border-radius: 8px;
-  margin-top: 12px;
-  margin-right: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-button:hover {
-  transform: translateY(-1px);
-}
-button:active {
-  transform: scale(0.98);
+body[data-theme="dark"] {
+  background-color: #121212;
+  color: #e0e0e0;
 }
 
 #password-box {
   font-family: monospace;
-  font-size: 18px;
-  padding: 12px;
-  margin-top: 10px;
-  background-color: var(--box-bg-light);
+  font-size: 1.2em;
+  padding: 10px;
+  background-color: #f8f9fa;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  color: var(--text-light);
-  text-align: center;
   word-break: break-word;
+  text-align: center;
+  margin-top: 10px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-#prompt-text {
-  color: #6c757d;
+[data-theme="dark"] #password-box {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  border-color: #555;
 }
 
-/* Toggle Switch */
-.switch {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  display: flex;
-  align-items: center;
-}
-.switch input {
-  display: none;
-}
-.slider {
-  width: 40px;
-  height: 20px;
-  background-color: #ccc;
-  border-radius: 30px;
-  position: relative;
+button {
+  margin: 10px 5px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
-  transition: 0.3s;
+  font-weight: bold;
+  transition: background 0.3s, color 0.3s;
 }
-.slider::before {
-  content: "";
-  position: absolute;
-  height: 16px;
-  width: 16px;
-  left: 2px;
-  bottom: 2px;
-  background-color: white;
-  border-radius: 50%;
-  transition: 0.3s;
+
+button i {
+  margin-right: 5px;
 }
-input:checked + .slider {
-  background-color: var(--primary);
+
+.btn-generate {
+  background-color: #1976d2;
+  color: white;
 }
-input:checked + .slider::before {
-  transform: translateX(20px);
+
+.btn-copy {
+  background-color: #388e3c;
+  color: white;
+}
+
+#strength-bar {
+  height: 10px;
+  width: 100%;
+  background-color: #ddd;
+  border-radius: 5px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+#strength-level {
+  height: 100%;
+  transition: width 0.5s ease, background-color 0.5s ease;
+}
+
+.toggle-dark {
+  background-color: #444;
+  color: white;
+  float: right;
 }
 </style>
 
-<!-- Dark Mode Switch -->
-<div class="switch">
-  <label>
-    <input type="checkbox" id="theme-toggle" aria-label="Toggle dark mode">
-    <span class="slider"></span>
-  </label>
-</div>
-
+<button class="toggle-dark" onclick="toggleTheme()">🌓 Toggle Dark Mode</button>
 <h2>🔐 Password Generator</h2>
-<p>Define the password length and click generate to get a secure, high-entropy password.</p>
+<p>Define the password length and click generate to get an ultra-secure password.</p>
 
-<label for="length">Password Length (8–128):</label>
+<label for="length">Password Length (Max 128):</label>
 <input type="number" id="length" min="8" max="128" value="32">
 <br>
+<button class="btn-generate" onclick="generatePassword()"><i>🔄</i>Generate Password</button>
+<button class="btn-copy" onclick="copyPassword()"><i>📋</i>Copy Password</button>
 
-<button onclick="generatePassword()">🔄 Generate New Password</button>
-<button onclick="copyPassword()">📋 Copy to Clipboard</button>
-
-<p id="password-box"><span id="prompt-text">Your password will appear here.</span></p>
+<p id="password-box" aria-live="polite">Your password will appear here.</p>
+<div id="strength-bar"><div id="strength-level"></div></div>
 
 <script>
-// Toggle dark mode
-document.getElementById('theme-toggle').addEventListener('change', function() {
-  document.body.setAttribute('data-theme', this.checked ? 'dark' : 'light');
-});
+function toggleTheme() {
+  const currentTheme = document.body.getAttribute('data-theme');
+  document.body.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark');
+}
 
-// Secure password generation with max entropy
+function calculateEntropy(password) {
+  let charsetSize = 0;
+  if (/[a-z]/.test(password)) charsetSize += 26;
+  if (/[A-Z]/.test(password)) charsetSize += 26;
+  if (/[0-9]/.test(password)) charsetSize += 10;
+  if (/[^a-zA-Z0-9]/.test(password)) charsetSize += 32;
+  const entropy = password.length * Math.log2(charsetSize);
+  return entropy;
+}
+
+function showStrength(entropy) {
+  const level = document.getElementById('strength-level');
+  let width = Math.min(entropy, 128) + "%";
+  let color = "red";
+  if (entropy > 80) color = "green";
+  else if (entropy > 60) color = "orange";
+  else if (entropy > 40) color = "yellow";
+  level.style.width = width;
+  level.style.backgroundColor = color;
+}
+
 function generatePassword() {
   const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?/`~";
-  const length = parseInt(document.getElementById("length").value);
+  let length = parseInt(document.getElementById("length").value);
   if (isNaN(length) || length < 8 || length > 128) {
     alert("Please choose a valid length between 8 and 128.");
     return;
   }
 
   let password = '';
-  const cryptoArray = new Uint8Array(length);
-  window.crypto.getRandomValues(cryptoArray);
+  const array = new Uint32Array(length);
+  window.crypto.getRandomValues(array);
 
   for (let i = 0; i < length; i++) {
-    password += charset[cryptoArray[i] % charset.length];
+    password += charset[array[i] % charset.length];
   }
 
-  document.getElementById("password-box").innerHTML = `<strong>${password}</strong>`;
+  const passwordBox = document.getElementById("password-box");
+  passwordBox.innerText = password;
+  const entropy = calculateEntropy(password);
+  showStrength(entropy);
 }
 
-// Clipboard copy
 function copyPassword() {
-  const box = document.getElementById("password-box");
-  const text = box.innerText;
-  if (!text || text.includes("Your password")) {
+  const password = document.getElementById("password-box").innerText;
+  if (!password || password.includes("Your password")) {
     alert("No password to copy!");
     return;
   }
-
-  navigator.clipboard.writeText(text).then(() => {
+  navigator.clipboard.writeText(password).then(() => {
     alert("Password copied to clipboard.");
   }).catch(err => {
     console.error("Copy failed", err);
-    alert("Failed to copy. Try manually.");
+    alert("Failed to copy. Please try manually.");
   });
 }
 </script>
