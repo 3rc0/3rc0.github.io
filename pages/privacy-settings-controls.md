@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: split
 title: Privacy Settings & Controls
 subtitle: Complete guide to telemetry opt-out, personalized ads control, and tracking prevention
 author: Diyar Hussein
