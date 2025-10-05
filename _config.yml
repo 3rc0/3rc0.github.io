@@ -23,7 +23,7 @@ navbar-links:
   Projects: 
     - JobsIn: "https://jobsiniraq.github.io/"
     - Password Generator: "password-generator"
-    - Privacy Settings & Controls: "privacy-settings-controls.md"
+    - Privacy Settings & Controls: "privacy-settings-controls"
     - SWSaver: "https://github.com/3rc0/SWSaver/"
     - Voronezh Graffiti: "https://voronezhgraffiti.github.io/"
     - ICT Tutorials - YouTube: "https://youtube.com/DiyarHussein"
