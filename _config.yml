@@ -21,7 +21,11 @@ author: Diyar Hussein
 
 navbar-links:
   Projects: 
+    - JobsIn: "https://jobsiniraq.github.io/"
     - Password Generator: "password-generator"
+    - SWSaver: "https://github.com/3rc0/SWSaver/"
+    - Voronezh Graffiti: "https://voronezhgraffiti.github.io/"
+    - ICT Tutorials - YouTube: "https://youtube.com/DiyarHussein"
   About: "https://linkedin.com/in/diyar"
 
 ################
