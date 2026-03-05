@@ -2,116 +2,288 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>UniFi Infrastructure Checklist</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>UniFi Home Security — Project Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { background: #0a1628; }
-input:focus { outline: 2px solid #2dd4f7; }
-button:active { opacity: 0.8; }
+  :root {
+    --bg:        #080f1a;
+    --bg1:       #0d1829;
+    --bg2:       #111f36;
+    --bg3:       #162540;
+    --glass:     rgba(255,255,255,0.04);
+    --glass2:    rgba(255,255,255,0.07);
+    --border:    rgba(255,255,255,0.08);
+    --border2:   rgba(255,255,255,0.13);
+    --accent:    #38bdf8;
+    --accent2:   #34d399;
+    --orange:    #fb923c;
+    --red:       #f87171;
+    --purple:    #a78bfa;
+    --text:      #e2eaf4;
+    --text2:     #8ba3bf;
+    --text3:     #4d6a85;
+    --done-bg:   rgba(52,211,153,0.07);
+    --done-text: #34d399;
+    --warn-bg:   rgba(251,146,60,0.1);
+  }
+  * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  html { scroll-behavior:smooth; }
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% -10%, rgba(56,189,248,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(52,211,153,0.05) 0%, transparent 60%);
+    min-height: 100vh;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    font-size: 14px;
+    padding-bottom: 60px;
+  }
+  /* Scrollbar */
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--bg3); border-radius:4px; }
+
+  /* Animations */
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+  @keyframes checkPop { 0%{transform:scale(0)} 60%{transform:scale(1.3)} 100%{transform:scale(1)} }
+  @keyframes slideDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes spin { to{stroke-dashoffset:0} }
+
+  .fade-in { animation: fadeIn 0.35s ease forwards; }
+  .slide-down { animation: slideDown 0.2s ease forwards; }
+
+  /* Glass card */
+  .card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+  }
+  .card:hover { border-color: var(--border2); }
+
+  button { cursor:pointer; border:none; outline:none; font-family:inherit; }
+  input  { font-family:inherit; outline:none; }
+  input:focus { border-color: var(--accent) !important; box-shadow: 0 0 0 2px rgba(56,189,248,0.15); }
+
+  /* Category icons */
+  .sec-icon {
+    width:32px; height:32px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; flex-shrink:0;
+  }
+
+  /* Item row */
+  .item-row {
+    display:flex; align-items:flex-start; gap:10px;
+    padding:11px 14px; cursor:pointer;
+    border-bottom:1px solid var(--border);
+    transition: background 0.15s;
+    position:relative;
+  }
+  .item-row:last-child { border-bottom:none; }
+  .item-row:hover { background:var(--glass2); }
+  .item-row.done { background:var(--done-bg); }
+  .item-row.done .item-name { color:var(--done-text); text-decoration:line-through; opacity:0.7; }
+  .item-row.done .item-model { color:var(--done-text); opacity:0.5; text-decoration:line-through; }
+  .item-row.done .item-price { opacity:0.4; text-decoration:line-through; }
+
+  /* Checkbox */
+  .cb {
+    width:20px; height:20px; border-radius:6px; flex-shrink:0;
+    border:2px solid var(--text3); display:flex; align-items:center;
+    justify-content:center; margin-top:1px; transition:all 0.2s;
+    background:transparent;
+  }
+  .cb.checked {
+    background:var(--accent2); border-color:var(--accent2);
+  }
+  .cb.checked svg { animation:checkPop 0.25s ease; }
+
+  /* Tags */
+  .tag {
+    display:inline-flex; align-items:center; gap:3px;
+    padding:2px 7px; border-radius:20px; font-size:10px;
+    font-weight:600; letter-spacing:0.02em; font-family:'JetBrains Mono',monospace;
+  }
+  .tag-warn { background:var(--warn-bg); color:var(--orange); border:1px solid rgba(251,146,60,0.3); }
+  .tag-free { background:rgba(52,211,153,0.1); color:var(--accent2); border:1px solid rgba(52,211,153,0.2); }
+  .tag-info { background:rgba(56,189,248,0.1); color:var(--accent); border:1px solid rgba(56,189,248,0.2); }
+
+  /* Progress ring */
+  .ring-wrap { position:relative; width:56px; height:56px; flex-shrink:0; }
+  .ring-bg { fill:none; stroke:var(--bg3); stroke-width:4; }
+  .ring-fg { fill:none; stroke-width:4; stroke-linecap:round; transform:rotate(-90deg); transform-origin:center; transition:stroke-dashoffset 0.6s ease; }
+
+  /* Dropdown */
+  .dropdown-menu {
+    position:absolute; top:calc(100% + 8px); right:0;
+    background:var(--bg2); border:1px solid var(--border2);
+    border-radius:12px; min-width:220px; z-index:100;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+    overflow:hidden;
+  }
+  .dropdown-item {
+    display:flex; align-items:center; gap:10px;
+    padding:10px 14px; font-size:13px; color:var(--text2);
+    cursor:pointer; transition:background 0.15s;
+    text-decoration:none;
+  }
+  .dropdown-item:hover { background:var(--glass2); color:var(--text); }
+  .dropdown-item .di-icon { font-size:16px; width:24px; text-align:center; }
+
+  /* Section complete banner */
+  .sec-complete {
+    background:linear-gradient(135deg,rgba(52,211,153,0.1),rgba(52,211,153,0.05));
+    border:1px solid rgba(52,211,153,0.2);
+    border-radius:8px; padding:6px 12px; margin:8px 14px;
+    font-size:11px; color:var(--accent2); font-weight:600;
+    display:flex; align-items:center; gap:6px;
+  }
+
+  /* Notification toast */
+  .toast {
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+    background:var(--bg2); border:1px solid var(--border2);
+    border-radius:20px; padding:8px 18px;
+    font-size:12px; font-weight:600; color:var(--accent2);
+    box-shadow:0 8px 32px rgba(0,0,0,0.4);
+    z-index:999; white-space:nowrap;
+    animation:fadeIn 0.2s ease;
+  }
+
+  /* Edit inputs */
+  .edit-input {
+    background:var(--bg1); border:1px solid var(--border2);
+    color:var(--text); border-radius:8px; padding:6px 10px;
+    font-size:12px; width:100%; transition:all 0.2s;
+  }
+  .edit-btn {
+    padding:5px 12px; border-radius:8px; font-size:11px;
+    font-weight:700; transition:all 0.15s;
+  }
+  .btn-save { background:var(--accent2); color:#0a1628; }
+  .btn-cancel { background:var(--bg3); color:var(--text2); border:1px solid var(--border); }
+  .btn-add { background:transparent; border:1px dashed var(--border2); color:var(--text3); border-radius:10px; padding:8px; width:100%; font-size:12px; transition:all 0.2s; }
+  .btn-add:hover { border-color:var(--accent); color:var(--accent); }
+
+  /* Section header */
+  .sec-header {
+    display:flex; align-items:center; gap:10px;
+    padding:12px 14px; cursor:pointer; user-select:none;
+    transition:background 0.15s; border-radius:16px 16px 0 0;
+  }
+  .sec-header:hover { background:var(--glass2); }
+
+  /* Sticky header */
+  .sticky-header {
+    position:sticky; top:0; z-index:50;
+    background:rgba(8,15,26,0.85);
+    backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+  }
 </style>
 </head>
 <body>
 <div id="root"></div>
 
 <script type="text/babel">
-// ─────────────────────────────────────────────────────
-// ⚙️  CONFIG — paste your Cloudflare Worker URL here
-// ─────────────────────────────────────────────────────
 const WORKER_URL = "https://checklist-api.3rc0.workers.dev";
-// ─────────────────────────────────────────────────────
+const { useState, useEffect, useRef, useCallback } = React;
 
-const { useState, useEffect, useRef } = React;
+// ─── Data ──────────────────────────────────────────────────────────────────
+const SECTION_META = {
+  A:{ icon:"🖥️",  color:"#38bdf8", hint:"The main devices that make the system work" },
+  B:{ icon:"📡",  color:"#a78bfa", hint:"Door and window sensors for intrusion alerts" },
+  C:{ icon:"💾",  color:"#34d399", hint:"Storage drives for saving camera footage" },
+  D:{ icon:"⚡",  color:"#fb923c", hint:"Backup power so nothing goes offline" },
+  E:{ icon:"🗄️",  color:"#60a5fa", hint:"The cabinet that holds all equipment" },
+  F:{ icon:"🔇",  color:"#4ade80", hint:"Makes the system run silently" },
+  G:{ icon:"🌐",  color:"#f472b6", hint:"Access your system remotely for free" },
+  H:{ icon:"🛡️",  color:"#f87171", hint:"Built-in security features to protect your network" },
+  I:{ icon:"🚪",  color:"#fbbf24", hint:"Set up door access and motion alerts" },
+  J:{ icon:"📶",  color:"#38bdf8", hint:"Connect your internet provider to the system" },
+};
 
 const DEFAULT_SECTIONS = [
-  { id:"A", title:"Core Hardware", items:[
-    { n:1,  name:"UDM-SE", model:"Dream Machine Special Edition", price:"$599", warn:false },
-    { n:2,  name:"G6 180 Camera ×3", model:"UVC-G6-180 · $299 each", price:"$897", warn:false },
-    { n:3,  name:"G6 Entry — Front door", model:"UVC-G6-Entry · NFC · Face ID · PIN", price:"~$200", warn:true },
-    { n:4,  name:"Access Hub — Front door", model:"UA-Hub-Door", price:"$199", warn:false },
-    { n:5,  name:"Access Hub Mini — Backyard", model:"UA-Hub-Door-Mini", price:"$99", warn:false },
-    { n:6,  name:"Gate Hub — Garage roll-up", model:"UA-Hub-Gate · G6 integration soon", price:"$279", warn:true },
-    { n:7,  name:"Fail Secure Bolt — Front door", model:"UA-Lock-Electric", price:"$79", warn:false },
-    { n:8,  name:"Fail Secure Bolt — Backyard", model:"UA-Lock-Electric", price:"$79", warn:false },
-    { n:9,  name:"WiFi AP — Ceiling mount", model:"U7-Pro · WiFi 7 · BLE 5.0", price:"$199", warn:false },
+  { id:"A", title:"Main Hardware", items:[
+    { n:1,  name:"Central Controller", model:"Ubiquiti UDM-SE", detail:"The brain of the whole system — manages cameras, doors, network and security in one box", price:"$599", warn:false },
+    { n:2,  name:"Panoramic Cameras ×3", model:"UniFi G6 180", detail:"180° wide-angle cameras, 4K quality, AI detects people and vehicles automatically", price:"$897", warn:false },
+    { n:3,  name:"Front Door Camera", model:"UniFi G6 Entry", detail:"Camera with NFC tap, Face ID and PIN code entry for your front door", price:"~$200", warn:true },
+    { n:4,  name:"Front Door Access Hub", model:"UA-Hub-Door", detail:"Controls the electric lock on your front door — connects to the G6 Entry camera", price:"$199", warn:false },
+    { n:5,  name:"Backyard Door Hub", model:"UA-Hub-Door-Mini", detail:"Smaller hub for the backyard door — phone unlock only, no reader needed", price:"$99", warn:false },
+    { n:6,  name:"Garage Door Controller", model:"UA-Hub-Gate", detail:"Wires to your existing garage opener — open/close from your phone", price:"$279", warn:true },
+    { n:7,  name:"Front Door Electric Lock", model:"UA-Lock-Electric", detail:"Fail-secure bolt — keeps door locked without power, your physical key still works", price:"$79", warn:false },
+    { n:8,  name:"Backyard Electric Lock", model:"UA-Lock-Electric", detail:"Same bolt for the backyard door", price:"$79", warn:false },
+    { n:9,  name:"WiFi Access Point", model:"UniFi U7 Pro", detail:"WiFi 7 — fastest available. Also acts as the bridge for door/window sensors via Bluetooth", price:"$199", warn:false },
   ]},
-  { id:"B", title:"Sensors", items:[
-    { n:10, name:"UP-SENSE ×2 — Doors", model:"UP-Sense · Backyard + Kitchen · Motion · Sound", price:"$70", warn:false },
-    { n:11, name:"USL-Entry ×10 — Windows", model:"USL-Entry · All 10 windows · 6-yr battery", price:"$250", warn:false },
+  { id:"B", title:"Security Sensors", items:[
+    { n:10, name:"Door Sensors ×2", model:"UniFi UP-SENSE", detail:"Backyard + Kitchen doors — detects motion, opening, sound (glass break, smoke alarm, CO)", price:"$70", warn:false },
+    { n:11, name:"Window Sensors ×10", model:"UniFi USL-Entry", detail:"All 10 windows — simple open/close detection, 6-year battery life, set and forget", price:"$250", warn:false },
   ]},
-  { id:"C", title:"Storage", items:[
-    { n:12, name:"SSD ×2 — Inside UDM-SE", model:"WD Red SA500 2TB · Silent", price:"$160", warn:false },
+  { id:"C", title:"Storage Drives", items:[
+    { n:12, name:"Silent SSD Drives ×2", model:"WD Red SA500 2TB", detail:"Solid state — completely silent, no moving parts. Stores months of camera recordings", price:"$160", warn:false },
   ]},
-  { id:"D", title:"Power", items:[
-    { n:13, name:"UPS 2200VA — Rack mount", model:"Tripp Lite SU2200RTXLCD2U · Online · Pure sine · 0ms", price:"$450", warn:false },
+  { id:"D", title:"Backup Power (UPS)", items:[
+    { n:13, name:"Uninterruptible Power Supply", model:"Tripp Lite SU2200RTXLCD2U", detail:"If power goes out — system stays on for ~45 min. Pure sine wave, zero switchover time, auto restarts when power comes back", price:"$450", warn:false },
   ]},
-  { id:"E", title:"Rack & Enclosure", items:[
-    { n:14, name:"Soundproof Rack 9U", model:"XRackPro2 · 80% noise reduction", price:"$300", warn:false },
-    { n:15, name:"Vented shelf 1U — XB8 mount", model:"Generic 1U vented shelf", price:"$35", warn:false },
-    { n:16, name:"Cable manager 1U", model:"D-Ring 1U", price:"$20", warn:false },
+  { id:"E", title:"Rack Cabinet", items:[
+    { n:14, name:"Soundproof Rack 9U", model:"XRackPro2", detail:"Holds all equipment in one quiet cabinet — reduces noise by up to 80%", price:"$300", warn:false },
+    { n:15, name:"Shelf for Internet Modem", model:"1U Vented Shelf", detail:"Holds the Xfinity XB8 modem inside the rack with proper airflow", price:"$35", warn:false },
+    { n:16, name:"Cable Organizer", model:"1U D-Ring", detail:"Keeps all cables tidy inside the cabinet", price:"$20", warn:false },
   ]},
-  { id:"F", title:"Silence Upgrades", items:[
-    { n:17, name:"Fan replacement — UDM-SE", model:"Noctua NF-A6x25 PWM", price:"$15", warn:false },
-    { n:18, name:"Fan speed script — SSH", model:"SSH config only", price:"FREE", warn:false },
+  { id:"F", title:"Noise Reduction", items:[
+    { n:17, name:"Silent Fan Replacement", model:"Noctua NF-A6x25 PWM", detail:"Replaces the noisy default fan in the UDM-SE — near-silent operation", price:"$15", warn:false },
+    { n:18, name:"Fan Speed Script", model:"SSH configuration", detail:"Slows down fan speed at idle via software — further reduces noise", price:"FREE", warn:false },
   ]},
-  { id:"G", title:"Remote Access", items:[
-    { n:19, name:"Zero Trust account", model:"Cloudflare Zero Trust · free tier", price:"FREE", warn:false },
-    { n:20, name:"DDNS account", model:"DuckDNS", price:"FREE", warn:false },
-    { n:21, name:"Tunnel install on UDM-SE", model:"cloudflared via SSH", price:"FREE", warn:false },
-    { n:22, name:"VPN app — Smartphone", model:"Cloudflare WARP", price:"FREE", warn:false },
-    { n:23, name:"XB8 WiFi disable", model:"Xfinity admin config", price:"FREE", warn:false },
+  { id:"G", title:"Remote Access Setup", items:[
+    { n:19, name:"Zero Trust Account", model:"Cloudflare Zero Trust", detail:"Free account — lets you access your cameras remotely without exposing your home IP", price:"FREE", warn:false },
+    { n:20, name:"Free Domain Name (DDNS)", model:"DuckDNS", detail:"Gives your home a permanent address even when your internet IP changes", price:"FREE", warn:false },
+    { n:21, name:"Tunnel Software", model:"cloudflared on UDM-SE", detail:"Install on the controller via SSH — creates a secure outbound tunnel, no ports opened", price:"FREE", warn:false },
+    { n:22, name:"Remote Access App", model:"Cloudflare WARP", detail:"Install on your phone — connects you securely to your home system from anywhere", price:"FREE", warn:false },
+    { n:23, name:"Disable Modem WiFi", model:"Xfinity XB8 admin panel", detail:"Turn off the XB8's own WiFi — the U7 Pro AP handles all WiFi instead", price:"FREE", warn:false },
   ]},
-  { id:"H", title:"Security Configuration", items:[
-    { n:24, name:"IDS/IPS enable", model:"Suricata · 25k+ signatures", price:"FREE", warn:false },
-    { n:25, name:"GeoIP blocking", model:"UDM-SE built-in", price:"FREE", warn:false },
-    { n:26, name:"Honeypot enable", model:"UDM-SE built-in", price:"FREE", warn:false },
-    { n:27, name:"DNS filtering", model:"UDM-SE built-in", price:"FREE", warn:false },
-    { n:28, name:"Tor + malicious IP block", model:"UDM-SE built-in", price:"FREE", warn:false },
-    { n:29, name:"VLAN 10 — Cameras", model:"192.168.10.0/24", price:"FREE", warn:false },
-    { n:30, name:"VLAN 20 — Access Control", model:"192.168.20.0/24", price:"FREE", warn:false },
-    { n:31, name:"VLAN 30 — IoT", model:"192.168.30.0/24", price:"FREE", warn:false },
-    { n:32, name:"Disable Ubiquiti cloud", model:"Local admin only", price:"FREE", warn:false },
+  { id:"H", title:"Security Settings", items:[
+    { n:24, name:"Threat Detection (IDS/IPS)", model:"Suricata engine", detail:"Automatically scans all internet traffic and blocks known threats — 25,000+ threat signatures", price:"FREE", warn:false },
+    { n:25, name:"Country Blocking", model:"GeoIP filter", detail:"Block entire countries from accessing your network with one click", price:"FREE", warn:false },
+    { n:26, name:"Honeypot Trap", model:"UDM-SE built-in", detail:"Creates a fake target on your network — any hacker who finds it gets instantly flagged", price:"FREE", warn:false },
+    { n:27, name:"DNS Protection", model:"UDM-SE built-in", detail:"Blocks malicious websites before they even load on any device in your home", price:"FREE", warn:false },
+    { n:28, name:"Tor & Malicious IP Block", model:"UDM-SE built-in", detail:"Blocks known hacker tools and anonymous networks from reaching your system", price:"FREE", warn:false },
+    { n:29, name:"Camera Network (VLAN 10)", model:"192.168.10.0/24", detail:"Cameras get their own isolated network — they can't talk to your phone or laptop", price:"FREE", warn:false },
+    { n:30, name:"Door Access Network (VLAN 20)", model:"192.168.20.0/24", detail:"All door/lock devices on their own network segment for extra security", price:"FREE", warn:false },
+    { n:31, name:"Smart Home Network (VLAN 30)", model:"192.168.30.0/24", detail:"Separate network for any smart home devices — isolated from main devices", price:"FREE", warn:false },
+    { n:32, name:"Disable Ubiquiti Cloud", model:"Local admin only", detail:"Turn off Ubiquiti's cloud connection — everything runs locally, nothing goes to their servers", price:"FREE", warn:false },
   ]},
-  { id:"I", title:"Access & Alarm", items:[
-    { n:33, name:"UniFi Access — Front door", model:"G6 Entry + Access Hub", price:"FREE", warn:false },
-    { n:34, name:"UniFi Access — Backyard", model:"Access Hub Mini", price:"FREE", warn:false },
-    { n:35, name:"Gate Hub — Garage config", model:"UniFi Access app", price:"FREE", warn:false },
-    { n:36, name:"Alarm Manager config", model:"Motion · Door open · Sound detection", price:"FREE", warn:false },
-    { n:37, name:"UP-SENSE ×2 pair", model:"BLE via U7 Pro", price:"FREE", warn:false },
-    { n:38, name:"USL-Entry ×10 install", model:"All windows", price:"FREE", warn:false },
-    { n:39, name:"Geofencing automation", model:"UniFi Protect", price:"FREE", warn:false },
+  { id:"I", title:"Door & Alarm Config", items:[
+    { n:33, name:"Front Door Access Setup", model:"UniFi Access app", detail:"Configure NFC cards, Face ID profiles, PIN codes for the front door entry", price:"FREE", warn:false },
+    { n:34, name:"Backyard Door Setup", model:"UniFi Access app", detail:"Configure phone unlock for the backyard door in the Access app", price:"FREE", warn:false },
+    { n:35, name:"Garage Door Setup", model:"UniFi Access app", detail:"Test open/close trigger, set schedules and access logs for the garage", price:"FREE", warn:false },
+    { n:36, name:"Alarm Rules Setup", model:"Alarm Manager", detail:"Configure what happens when motion, door open, or sounds are detected — notifications, recording, sirens", price:"FREE", warn:false },
+    { n:37, name:"Pair Door Sensors", model:"Bluetooth via U7 Pro", detail:"Pair the 2 UP-SENSE door sensors through the U7 Pro WiFi AP's Bluetooth radio", price:"FREE", warn:false },
+    { n:38, name:"Install Window Sensors", model:"USL-Entry ×10", detail:"Stick sensors on all 10 window frames — magnetic, no wiring needed", price:"FREE", warn:false },
+    { n:39, name:"Set Up Geofencing", model:"UniFi Protect", detail:"Optional — system arms/disarms automatically based on your phone's location", price:"FREE", warn:false },
   ]},
-  { id:"J", title:"ISP / XB8", items:[
-    { n:40, name:"XB8 on vented rack shelf", model:"Horizontal · WiFi disabled", price:"—", warn:false },
-    { n:41, name:"XB8 WiFi disable", model:"Xfinity admin panel", price:"—", warn:false },
-    { n:42, name:"WAN cable run", model:"Cat6 RJ45 · XB8 → UDM-SE WAN", price:"—", warn:false },
+  { id:"J", title:"Internet Connection", items:[
+    { n:40, name:"Mount Modem in Rack", model:"Xfinity XB8", detail:"Place XB8 on the vented shelf inside the rack — horizontal with airflow", price:"—", warn:false },
+    { n:41, name:"Disable Modem WiFi", model:"Xfinity admin panel", detail:"Log into 10.0.0.1 and turn off the XB8's built-in WiFi radio", price:"—", warn:false },
+    { n:42, name:"Connect WAN Cable", model:"Cat6 Ethernet", detail:"Run a Cat6 cable from XB8 LAN port → UDM-SE WAN port. This is your internet feed", price:"—", warn:false },
   ]},
 ];
 
-const C = {
-  bg:"#0a1628",bg2:"#0f2040",bg3:"#162a4a",border:"#1e3a5f",
-  accent:"#2dd4f7",green:"#3bdf8a",orange:"#f7a935",red:"#f74d4d",
-  text:"#d0e8ff",muted:"#6a8faf",done:"#0f2a1a",doneText:"#4aaa70",
-};
-const inp = {
-  background:"transparent",border:`1px solid ${C.border}`,color:C.text,
-  borderRadius:4,padding:"3px 7px",fontFamily:"monospace",fontSize:11,
-  outline:"none",width:"100%",
-};
-
-// API helpers
+// ─── API ───────────────────────────────────────────────────────────────────
 async function apiGet() {
   try {
     const r = await fetch(`${WORKER_URL}/api/data`);
     return await r.json();
   } catch(e) {
-    // fallback to localStorage if worker not configured
     return {
-      sections: JSON.parse(localStorage.getItem("sections") || "null"),
-      checks:   JSON.parse(localStorage.getItem("checks")   || "{}"),
+      sections: JSON.parse(localStorage.getItem("sections")||"null"),
+      checks:   JSON.parse(localStorage.getItem("checks")||"{}"),
     };
   }
 }
@@ -120,13 +292,36 @@ async function apiSet(key, value) {
     await fetch(`${WORKER_URL}/api/data`, {
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({ key, value }),
+      body: JSON.stringify({key,value}),
     });
   } catch(e) {
     localStorage.setItem(key, JSON.stringify(value));
   }
 }
 
+// ─── Progress Ring ─────────────────────────────────────────────────────────
+function Ring({pct, size=56, stroke=4, color="#38bdf8"}) {
+  const r = (size-stroke*2)/2;
+  const circ = 2*Math.PI*r;
+  const offset = circ*(1-pct/100);
+  return (
+    <div className="ring-wrap" style={{width:size,height:size}}>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <circle className="ring-bg" cx={size/2} cy={size/2} r={r} strokeWidth={stroke}/>
+        <circle className="ring-fg" cx={size/2} cy={size/2} r={r}
+          stroke={color} strokeWidth={stroke}
+          strokeDasharray={circ} strokeDashoffset={offset}
+          style={{transformOrigin:`${size/2}px ${size/2}px`,transform:"rotate(-90deg)",transition:"stroke-dashoffset 0.6s ease"}}/>
+      </svg>
+      <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",
+        fontFamily:"'JetBrains Mono',monospace",fontSize:11,fontWeight:700,color}}>
+        {pct}%
+      </div>
+    </div>
+  );
+}
+
+// ─── Main App ──────────────────────────────────────────────────────────────
 function App() {
   const [sections,setSections]       = useState(DEFAULT_SECTIONS);
   const [checks,setChecks]           = useState({});
@@ -135,26 +330,31 @@ function App() {
   const [editingItem,setEditingItem] = useState(null);
   const [editDraft,setEditDraft]     = useState({});
   const [addingSec,setAddingSec]     = useState(null);
-  const [newItem,setNewItem]         = useState({name:"",model:"",price:"",warn:false});
+  const [newItem,setNewItem]         = useState({name:"",model:"",detail:"",price:"",warn:false});
   const [newSecTitle,setNewSecTitle] = useState("");
   const [loading,setLoading]         = useState(true);
   const [saving,setSaving]           = useState(false);
-  const [notif,setNotif]             = useState("");
-  const timer = useRef(null);
+  const [toast,setToast]             = useState("");
+  const [showDropdown,setShowDropdown] = useState(false);
+  const [expandedItem,setExpandedItem] = useState(null);
+  const toastTimer = useRef(null);
+  const dropRef = useRef(null);
 
-  const notify = m => { setNotif(m); clearTimeout(timer.current); timer.current=setTimeout(()=>setNotif(""),2200); };
+  const notify = m => { setToast(m); clearTimeout(toastTimer.current); toastTimer.current=setTimeout(()=>setToast(""),2500); };
 
   useEffect(()=>{
-    apiGet().then(data=>{
-      if(data.sections) setSections(data.sections);
-      if(data.checks)   setChecks(data.checks);
-      setLoading(false);
-    });
+    apiGet().then(d=>{ if(d.sections)setSections(d.sections); if(d.checks)setChecks(d.checks); setLoading(false); });
+  },[]);
+
+  // Close dropdown on outside click
+  useEffect(()=>{
+    const h = e => { if(dropRef.current&&!dropRef.current.contains(e.target)) setShowDropdown(false); };
+    document.addEventListener("mousedown",h);
+    return ()=>document.removeEventListener("mousedown",h);
   },[]);
 
   const saveSecs = async s => { setSaving(true); await apiSet("sections",s); setSaving(false); };
   const saveCks  = async c => { await apiSet("checks",c); };
-
   const toggleCheck = n => { const nx={...checks,[n]:!checks[n]}; setChecks(nx); saveCks(nx); };
   const toggleSec   = id => setCollapsed(p=>({...p,[id]:!p[id]}));
   const renumber    = secs => { let n=1; return secs.map(s=>({...s,items:s.items.map(i=>({...i,n:n++}))})); };
@@ -162,7 +362,12 @@ function App() {
   const allItems = sections.flatMap(s=>s.items);
   const total=allItems.length, done=allItems.filter(i=>checks[i.n]).length, pct=total?Math.round(done/total*100):0;
 
-  const startEdit = (si,ii,item) => { setEditingItem({si,ii}); setEditDraft({name:item.name,model:item.model,price:item.price,warn:item.warn}); };
+  const secProgress = sec => {
+    const t=sec.items.length, d=sec.items.filter(i=>checks[i.n]).length;
+    return {t,d,pct:t?Math.round(d/t*100):0};
+  };
+
+  const startEdit = (si,ii,item) => { setEditingItem({si,ii}); setEditDraft({name:item.name,model:item.model,detail:item.detail||"",price:item.price,warn:item.warn}); };
   const commitEdit = async () => {
     const {si,ii}=editingItem;
     const nx=sections.map((s,i)=>i!==si?s:{...s,items:s.items.map((it,j)=>j!==ii?it:{...it,...editDraft})});
@@ -176,7 +381,7 @@ function App() {
     if(!newItem.name.trim()) return;
     const maxN=Math.max(0,...sections.flatMap(s=>s.items.map(i=>i.n)));
     const nx=renumber(sections.map((s,i)=>i!==si?s:{...s,items:[...s.items,{n:maxN+1,...newItem}]}));
-    setSections(nx); setNewItem({name:"",model:"",price:"",warn:false}); setAddingSec(null); await saveSecs(nx); notify("✓ Item added");
+    setSections(nx); setNewItem({name:"",model:"",detail:"",price:"",warn:false}); setAddingSec(null); await saveSecs(nx); notify("✓ Item added");
   };
   const addSection = async () => {
     if(!newSecTitle.trim()) return;
@@ -184,158 +389,276 @@ function App() {
     const nx=[...sections,{id:ids[sections.length]||String(sections.length+1),title:newSecTitle,items:[]}];
     setSections(nx); setNewSecTitle(""); await saveSecs(nx); notify("✓ Section added");
   };
-  const deleteSection = async si => {
-    const nx=renumber(sections.filter((_,i)=>i!==si));
-    setSections(nx); await saveSecs(nx); notify("✓ Section removed");
-  };
-  const resetChecks = async () => { setChecks({}); await saveCks({}); notify("✓ Progress reset"); };
-  const resetAll    = async () => { setSections(DEFAULT_SECTIONS); setChecks({}); await saveSecs(DEFAULT_SECTIONS); await saveCks({}); notify("✓ Reset to default"); };
+  const deleteSection = async si => { const nx=renumber(sections.filter((_,i)=>i!==si)); setSections(nx); await saveSecs(nx); notify("✓ Section removed"); };
+  const resetChecks = async () => { setChecks({}); await saveCks({}); notify("✓ Progress cleared"); };
+  const resetAll    = async () => { if(!confirm("Reset everything to default?"))return; setSections(DEFAULT_SECTIONS); setChecks({}); await saveSecs(DEFAULT_SECTIONS); await saveCks({}); notify("✓ Fully reset"); };
 
-  if(loading) return React.createElement("div",{style:{background:C.bg,height:"100vh",display:"flex",alignItems:"center",justifyContent:"center",color:C.accent,fontFamily:"monospace",fontSize:13}},"Loading…");
+  if(loading) return (
+    <div style={{height:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:16}}>
+      <div style={{width:40,height:40,border:"3px solid rgba(56,189,248,0.2)",borderTopColor:"#38bdf8",borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/>
+      <span style={{color:"#38bdf8",fontFamily:"'JetBrains Mono',monospace",fontSize:12}}>Loading your checklist…</span>
+    </div>
+  );
 
   return (
-    <div style={{background:C.bg,minHeight:"100vh",padding:8,fontFamily:"'Segoe UI',system-ui,sans-serif",fontSize:12,color:C.text}}>
+    <div style={{maxWidth:600,margin:"0 auto",padding:"0 12px"}}>
 
-      {notif && <div style={{position:"fixed",top:8,left:"50%",transform:"translateX(-50%)",background:C.green,color:"#0a1628",padding:"5px 16px",borderRadius:20,fontWeight:700,fontSize:11,zIndex:999,fontFamily:"monospace",boxShadow:"0 2px 12px rgba(0,0,0,0.4)"}}>{notif}</div>}
+      {/* Toast */}
+      {toast && <div className="toast">{toast}</div>}
 
-      {/* Header */}
-      <div style={{background:`linear-gradient(135deg,#0f2a4a,${C.bg})`,border:`1px solid ${C.accent}`,borderRadius:8,padding:"10px 12px",marginBottom:8,position:"relative",overflow:"hidden"}}>
-        <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${C.accent},${C.green},${C.orange})`}}/>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
-          <div>
-            <div style={{fontFamily:"monospace",fontSize:11,fontWeight:700,color:C.accent,letterSpacing:"0.08em",textTransform:"uppercase"}}>Infrastructure Checklist</div>
-            <div style={{fontSize:10,color:C.muted,marginTop:2}}>UniFi UDM-SE · Reston, VA · 2025</div>
-          </div>
-          <div style={{display:"flex",gap:5,alignItems:"center"}}>
-            {saving && <span style={{color:C.muted,fontSize:9}}>saving…</span>}
-            <button onClick={()=>setEditMode(e=>!e)} style={{background:editMode?C.orange:C.bg3,border:`1px solid ${editMode?C.orange:C.border}`,color:editMode?"#0a1628":C.text,borderRadius:5,padding:"3px 9px",fontSize:10,cursor:"pointer",fontWeight:700,fontFamily:"monospace"}}>
-              {editMode?"✓ DONE":"✏ EDIT"}
-            </button>
-          </div>
-        </div>
-        <div style={{background:C.border,borderRadius:99,height:4,marginTop:8,overflow:"hidden"}}>
-          <div style={{height:"100%",width:pct+"%",background:`linear-gradient(90deg,${C.accent},${C.green})`,borderRadius:99,transition:"width 0.4s"}}/>
-        </div>
-        <div style={{fontFamily:"monospace",fontSize:9,color:C.muted,marginTop:3,textAlign:"right"}}>{done} / {total} completed ({pct}%)</div>
-      </div>
+      {/* ── Sticky Header ── */}
+      <div className="sticky-header" style={{padding:"12px 0"}}>
+        <div style={{display:"flex",alignItems:"center",gap:12}}>
 
-      {/* Cost */}
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:5,marginBottom:8}}>
-        {[["~$4,298","Total w/tax"],["$0/yr","Software"],["~$138/yr","Electricity"]].map(([v,l])=>(
-          <div key={l} style={{background:C.bg2,border:`1px solid ${C.border}`,borderRadius:6,padding:"6px 8px",textAlign:"center"}}>
-            <div style={{fontFamily:"monospace",fontSize:11,fontWeight:700,color:C.orange}}>{v}</div>
-            <div style={{fontSize:9,color:C.muted,marginTop:1}}>{l}</div>
-          </div>
-        ))}
-      </div>
+          {/* Progress Ring */}
+          <Ring pct={pct}/>
 
-      {/* Sections */}
-      {sections.map((sec,si)=>(
-        <div key={sec.id} style={{marginBottom:6,borderRadius:7,overflow:"hidden",border:`1px solid ${C.border}`}}>
-          <div style={{background:C.bg3,padding:"7px 10px",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer",borderBottom:collapsed[sec.id]?"none":`1px solid ${C.border}`}} onClick={()=>toggleSec(sec.id)}>
-            <span style={{fontFamily:"monospace",fontSize:10,fontWeight:700,color:C.accent,letterSpacing:"0.06em",textTransform:"uppercase"}}>{sec.id}. {sec.title}</span>
-            <div style={{display:"flex",alignItems:"center",gap:8}}>
-              {editMode && <span onClick={e=>{e.stopPropagation();deleteSection(si);}} style={{color:C.red,fontSize:11,cursor:"pointer",fontWeight:700,padding:"0 4px"}}>✕</span>}
-              <span style={{fontFamily:"monospace",fontSize:9,color:C.muted}}>{sec.items.length} {collapsed[sec.id]?"▸":"▾"}</span>
+          {/* Title */}
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontWeight:700,fontSize:16,color:"#fff",letterSpacing:"-0.01em",lineHeight:1.2}}>
+              Home Security Setup
+            </div>
+            <div style={{fontSize:12,color:"#8ba3bf",marginTop:2}}>
+              {done} of {total} tasks done · Reston, VA
+            </div>
+            {/* Progress bar */}
+            <div style={{height:3,background:"rgba(255,255,255,0.07)",borderRadius:99,marginTop:6,overflow:"hidden"}}>
+              <div style={{height:"100%",width:pct+"%",background:"linear-gradient(90deg,#38bdf8,#34d399)",borderRadius:99,transition:"width 0.5s ease"}}/>
             </div>
           </div>
 
-          {!collapsed[sec.id] && (
-            <div>
-              <table style={{width:"100%",borderCollapse:"collapse"}}>
-                <tbody>
-                  {sec.items.map((item,ii)=>{
-                    const isDone=checks[item.n];
-                    const isEditing=editingItem?.si===si&&editingItem?.ii===ii;
+          {/* Right buttons */}
+          <div style={{display:"flex",gap:8,flexShrink:0}}>
+
+            {/* Projects dropdown */}
+            <div style={{position:"relative"}} ref={dropRef}>
+              <button onClick={()=>setShowDropdown(v=>!v)}
+                style={{background:"rgba(56,189,248,0.1)",border:"1px solid rgba(56,189,248,0.25)",color:"#38bdf8",borderRadius:10,padding:"7px 10px",fontSize:12,fontWeight:600,display:"flex",alignItems:"center",gap:5}}>
+                📋 <span style={{fontSize:10}}>▾</span>
+              </button>
+              {showDropdown && (
+                <div className="dropdown-menu slide-down">
+                  <div style={{padding:"10px 14px 6px",fontSize:10,fontWeight:700,color:"#4d6a85",letterSpacing:"0.08em",textTransform:"uppercase",fontFamily:"'JetBrains Mono',monospace"}}>Jump to Section</div>
+                  {sections.map((sec,si)=>{
+                    const {d,t,pct:sp}=secProgress(sec);
+                    const meta=SECTION_META[sec.id]||{icon:"📌",color:"#8ba3bf"};
                     return (
-                      <tr key={item.n} style={{borderBottom:`1px solid ${C.border}`,background:isDone?C.done:"transparent",cursor:editMode?"default":"pointer"}} onClick={()=>{if(!editMode)toggleCheck(item.n);}}>
-                        <td style={{padding:"6px 5px",width:26,textAlign:"center",fontFamily:"monospace",fontSize:10,fontWeight:700,color:isDone?C.doneText:C.accent}}>#{item.n}</td>
-                        <td style={{width:20,padding:"6px 2px",textAlign:"center"}}>
-                          <div style={{width:14,height:14,border:`1.5px solid ${isDone?C.green:C.accent}`,borderRadius:3,display:"inline-flex",alignItems:"center",justifyContent:"center",background:isDone?C.green:"transparent",cursor:"pointer"}} onClick={e=>{e.stopPropagation();toggleCheck(item.n);}}>
-                            {isDone&&<span style={{fontSize:9,color:"#0a1628",fontWeight:900}}>✓</span>}
-                          </div>
-                        </td>
-                        <td style={{padding:"5px 4px",verticalAlign:"top"}}>
-                          {isEditing?(
-                            <div style={{display:"flex",flexDirection:"column",gap:3}}>
-                              <input style={inp} value={editDraft.name} onChange={e=>setEditDraft(p=>({...p,name:e.target.value}))} placeholder="Item name" onClick={e=>e.stopPropagation()}/>
-                              <input style={inp} value={editDraft.model} onChange={e=>setEditDraft(p=>({...p,model:e.target.value}))} placeholder="Model / notes" onClick={e=>e.stopPropagation()}/>
-                              <div style={{display:"flex",gap:4,alignItems:"center"}}>
-                                <input style={{...inp,width:70}} value={editDraft.price} onChange={e=>setEditDraft(p=>({...p,price:e.target.value}))} placeholder="Price" onClick={e=>e.stopPropagation()}/>
-                                <label style={{fontSize:10,color:C.muted,display:"flex",alignItems:"center",gap:3,cursor:"pointer"}}>
-                                  <input type="checkbox" checked={editDraft.warn} onChange={e=>setEditDraft(p=>({...p,warn:e.target.checked}))}/>⚠️
-                                </label>
-                                <button onClick={e=>{e.stopPropagation();commitEdit();}} style={{background:C.green,border:"none",color:"#0a1628",borderRadius:4,padding:"2px 8px",fontSize:10,cursor:"pointer",fontWeight:700}}>Save</button>
-                                <button onClick={e=>{e.stopPropagation();setEditingItem(null);}} style={{background:C.bg3,border:`1px solid ${C.border}`,color:C.muted,borderRadius:4,padding:"2px 8px",fontSize:10,cursor:"pointer"}}>✕</button>
-                              </div>
-                            </div>
-                          ):(
-                            <>
-                              <div style={{fontFamily:"monospace",fontSize:10,fontWeight:600,color:isDone?C.doneText:C.green,textDecoration:isDone?"line-through":"none"}}>
-                                {item.model}
-                                {item.warn&&<span style={{marginLeft:4,fontSize:8,background:"rgba(247,77,77,0.15)",border:`1px solid ${C.red}`,color:C.red,padding:"0 3px",borderRadius:3}}>⚠</span>}
-                              </div>
-                              <div style={{fontSize:11,color:isDone?C.doneText:C.text,marginTop:1,textDecoration:isDone?"line-through":"none"}}>{item.name}</div>
-                            </>
-                          )}
-                        </td>
-                        <td style={{padding:"6px 6px 6px 2px",textAlign:"right",verticalAlign:"top",width:50,whiteSpace:"nowrap",fontFamily:"monospace",fontSize:10,fontWeight:600,color:item.price==="FREE"?C.green:item.price==="—"?C.muted:C.orange,textDecoration:isDone?"line-through":"none"}}>{item.price}</td>
-                        {editMode&&!isEditing&&(
-                          <td style={{width:44,padding:"6px 4px",textAlign:"right",verticalAlign:"top"}}>
-                            <div style={{display:"flex",gap:3,justifyContent:"flex-end"}}>
-                              <span onClick={e=>{e.stopPropagation();startEdit(si,ii,item);}} style={{cursor:"pointer",fontSize:13,color:C.accent}}>✏</span>
-                              <span onClick={e=>{e.stopPropagation();deleteItem(si,ii);}} style={{cursor:"pointer",fontSize:13,color:C.red}}>✕</span>
-                            </div>
-                          </td>
-                        )}
-                      </tr>
+                      <div key={sec.id} className="dropdown-item"
+                        onClick={()=>{ setCollapsed(p=>({...p,[sec.id]:false})); setShowDropdown(false); setTimeout(()=>document.getElementById("sec-"+sec.id)?.scrollIntoView({behavior:"smooth",block:"start"}),100); }}>
+                        <span className="di-icon">{meta.icon}</span>
+                        <span style={{flex:1,fontSize:12}}>{sec.title}</span>
+                        <span style={{fontFamily:"'JetBrains Mono',monospace",fontSize:10,color:sp===100?"#34d399":"#4d6a85"}}>{d}/{t}</span>
+                      </div>
                     );
                   })}
-                </tbody>
-              </table>
+                  <div style={{borderTop:"1px solid rgba(255,255,255,0.06)",margin:"4px 0"}}/>
+                  <div className="dropdown-item" onClick={()=>{resetChecks();setShowDropdown(false);}}>
+                    <span className="di-icon">↺</span>
+                    <span style={{fontSize:12,color:"#fb923c"}}>Reset Progress</span>
+                  </div>
+                </div>
+              )}
+            </div>
 
-              {editMode&&(
-                <div style={{padding:"6px 8px",borderTop:`1px solid ${C.border}`,background:C.bg2}}>
-                  {addingSec===si?(
-                    <div style={{display:"flex",flexDirection:"column",gap:4}}>
-                      <input style={inp} value={newItem.name} placeholder="Item name *" onChange={e=>setNewItem(p=>({...p,name:e.target.value}))}/>
-                      <input style={inp} value={newItem.model} placeholder="Model / notes" onChange={e=>setNewItem(p=>({...p,model:e.target.value}))}/>
-                      <div style={{display:"flex",gap:4,alignItems:"center"}}>
-                        <input style={{...inp,width:70}} value={newItem.price} placeholder="Price" onChange={e=>setNewItem(p=>({...p,price:e.target.value}))}/>
-                        <label style={{fontSize:10,color:C.muted,display:"flex",alignItems:"center",gap:3}}>
-                          <input type="checkbox" checked={newItem.warn} onChange={e=>setNewItem(p=>({...p,warn:e.target.checked}))}/>⚠️
-                        </label>
-                        <button onClick={()=>commitAdd(si)} style={{background:C.green,border:"none",color:"#0a1628",borderRadius:4,padding:"3px 10px",fontSize:10,cursor:"pointer",fontWeight:700}}>Add</button>
-                        <button onClick={()=>{setAddingSec(null);setNewItem({name:"",model:"",price:"",warn:false});}} style={{background:C.bg3,border:`1px solid ${C.border}`,color:C.muted,borderRadius:4,padding:"3px 8px",fontSize:10,cursor:"pointer"}}>Cancel</button>
-                      </div>
+            {/* Edit toggle */}
+            <button onClick={()=>setEditMode(e=>!e)}
+              style={{background:editMode?"rgba(251,146,60,0.15)":"rgba(255,255,255,0.05)",border:`1px solid ${editMode?"rgba(251,146,60,0.4)":"rgba(255,255,255,0.1)"}`,color:editMode?"#fb923c":"#8ba3bf",borderRadius:10,padding:"7px 10px",fontSize:12,fontWeight:600}}>
+              {editMode?"✓ Done":"✏️"}
+            </button>
+          </div>
+        </div>
+
+        {/* Cost strip */}
+        <div style={{display:"flex",gap:8,marginTop:10,overflowX:"auto",paddingBottom:2}}>
+          {[["💰","~$4,298","Total cost"],["📅","$0 / year","Subscriptions"],["⚡","~$138 / year","Electricity"]].map(([icon,val,lbl])=>(
+            <div key={lbl} style={{flex:1,minWidth:90,background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,padding:"6px 10px",textAlign:"center",flexShrink:0}}>
+              <div style={{fontSize:10}}>{icon}</div>
+              <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:11,fontWeight:700,color:"#fb923c",marginTop:1}}>{val}</div>
+              <div style={{fontSize:9,color:"#4d6a85",marginTop:1}}>{lbl}</div>
+            </div>
+          ))}
+        </div>
+        {saving && <div style={{textAlign:"center",fontSize:10,color:"#38bdf8",marginTop:6,fontFamily:"'JetBrains Mono',monospace",animation:"pulse 1s infinite"}}>● saving…</div>}
+      </div>
+
+      {/* ── Sections ── */}
+      <div style={{marginTop:12,display:"flex",flexDirection:"column",gap:10}}>
+        {sections.map((sec,si)=>{
+          const meta = SECTION_META[sec.id]||{icon:"📌",color:"#8ba3bf",hint:""};
+          const {d,t,pct:sp} = secProgress(sec);
+          const isComplete = d===t && t>0;
+          const isCollapsed = collapsed[sec.id];
+
+          return (
+            <div key={sec.id} id={"sec-"+sec.id} className="card fade-in"
+              style={{borderRadius:16,overflow:"hidden",animationDelay:`${si*0.04}s`}}>
+
+              {/* Section Header */}
+              <div className="sec-header" onClick={()=>toggleSec(sec.id)}>
+                <div className="sec-icon" style={{background:`${meta.color}18`,border:`1px solid ${meta.color}30`}}>
+                  {meta.icon}
+                </div>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <span style={{fontWeight:600,fontSize:14,color:isComplete?"#34d399":"#fff"}}>{sec.title}</span>
+                    {isComplete && <span style={{fontSize:11}}>✅</span>}
+                  </div>
+                  <div style={{fontSize:11,color:"#4d6a85",marginTop:1}}>{meta.hint}</div>
+                </div>
+                <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
+                  {editMode && (
+                    <button onClick={e=>{e.stopPropagation();deleteSection(si);}}
+                      style={{background:"rgba(248,113,113,0.1)",border:"1px solid rgba(248,113,113,0.2)",color:"#f87171",borderRadius:6,padding:"2px 7px",fontSize:11,fontWeight:700}}>✕</button>
+                  )}
+                  <div style={{textAlign:"right"}}>
+                    <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:11,color:isComplete?"#34d399":"#4d6a85",fontWeight:600}}>{d}/{t}</div>
+                    <div style={{height:3,width:40,background:"rgba(255,255,255,0.07)",borderRadius:99,marginTop:3,overflow:"hidden"}}>
+                      <div style={{height:"100%",width:sp+"%",background:meta.color,borderRadius:99,transition:"width 0.4s"}}/>
                     </div>
-                  ):(
-                    <button onClick={()=>setAddingSec(si)} style={{background:"transparent",border:`1px dashed ${C.border}`,color:C.muted,borderRadius:5,padding:"4px 10px",fontSize:10,cursor:"pointer",width:"100%",fontFamily:"monospace"}}>+ Add item</button>
+                  </div>
+                  <span style={{color:"#4d6a85",fontSize:12,transform:isCollapsed?"rotate(-90deg)":"rotate(0)",transition:"transform 0.2s",display:"inline-block"}}>▾</span>
+                </div>
+              </div>
+
+              {/* Items */}
+              {!isCollapsed && (
+                <div style={{borderTop:"1px solid rgba(255,255,255,0.06)"}}>
+                  {sec.items.map((item,ii)=>{
+                    const isDone = checks[item.n];
+                    const isEditing = editingItem?.si===si && editingItem?.ii===ii;
+                    const isExpanded = expandedItem===`${si}-${ii}`;
+
+                    return (
+                      <div key={item.n} className={`item-row${isDone?" done":""}`}
+                        style={{flexDirection:"column",gap:0,cursor:"default"}}>
+                        <div style={{display:"flex",alignItems:"flex-start",gap:10,width:"100%"}}
+                          onClick={()=>{ if(!editMode&&!isEditing) toggleCheck(item.n); }}>
+
+                          {/* Number */}
+                          <span style={{fontFamily:"'JetBrains Mono',monospace",fontSize:10,fontWeight:700,color:isDone?"#34d399":"rgba(56,189,248,0.5)",width:20,flexShrink:0,marginTop:1,textAlign:"right"}}>
+                            {item.n}
+                          </span>
+
+                          {/* Checkbox */}
+                          <div className={`cb${isDone?" checked":""}`}
+                            onClick={e=>{e.stopPropagation();toggleCheck(item.n);}}>
+                            {isDone && (
+                              <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+                                <path d="M1 4L4 7.5L10 1" stroke="#0a1628" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            )}
+                          </div>
+
+                          {/* Content */}
+                          {isEditing ? (
+                            <div style={{flex:1,display:"flex",flexDirection:"column",gap:6}} onClick={e=>e.stopPropagation()}>
+                              <input className="edit-input" value={editDraft.name} onChange={e=>setEditDraft(p=>({...p,name:e.target.value}))} placeholder="Name"/>
+                              <input className="edit-input" value={editDraft.model} onChange={e=>setEditDraft(p=>({...p,model:e.target.value}))} placeholder="Model"/>
+                              <input className="edit-input" value={editDraft.detail||""} onChange={e=>setEditDraft(p=>({...p,detail:e.target.value}))} placeholder="Description for users"/>
+                              <div style={{display:"flex",gap:6,alignItems:"center"}}>
+                                <input className="edit-input" style={{width:80}} value={editDraft.price} onChange={e=>setEditDraft(p=>({...p,price:e.target.value}))} placeholder="Price"/>
+                                <label style={{fontSize:11,color:"#8ba3bf",display:"flex",alignItems:"center",gap:4,cursor:"pointer"}}>
+                                  <input type="checkbox" checked={editDraft.warn} onChange={e=>setEditDraft(p=>({...p,warn:e.target.checked}))}/>⚠️ Pending
+                                </label>
+                              </div>
+                              <div style={{display:"flex",gap:6}}>
+                                <button className="edit-btn btn-save" onClick={commitEdit}>Save</button>
+                                <button className="edit-btn btn-cancel" onClick={()=>setEditingItem(null)}>Cancel</button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div style={{flex:1,minWidth:0}}>
+                              <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
+                                <span className="item-name" style={{fontWeight:600,fontSize:13,color:isDone?"#34d399":"#fff",lineHeight:1.3}}>{item.name}</span>
+                                {item.warn && <span className="tag tag-warn">⚠ Pending</span>}
+                                {item.price==="FREE" && <span className="tag tag-free">FREE</span>}
+                              </div>
+                              <div className="item-model" style={{fontFamily:"'JetBrains Mono',monospace",fontSize:10,color:"#38bdf8",marginTop:2,opacity:isDone?0.5:0.8}}>{item.model}</div>
+                              {item.detail && (
+                                <div onClick={e=>{e.stopPropagation();setExpandedItem(isExpanded?null:`${si}-${ii}`);}}
+                                  style={{fontSize:11,color:isExpanded?"#8ba3bf":"#4d6a85",marginTop:3,lineHeight:1.5,cursor:"pointer",display:"flex",alignItems:"flex-start",gap:4}}>
+                                  <span style={{flexShrink:0,marginTop:1,fontSize:9,color:"#38bdf8"}}>{isExpanded?"▾":"▸"}</span>
+                                  <span>{isExpanded?item.detail:"What is this?"}</span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Right side */}
+                          {!isEditing && (
+                            <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4,flexShrink:0}}>
+                              <span className="item-price" style={{fontFamily:"'JetBrains Mono',monospace",fontSize:11,fontWeight:700,color:item.price==="FREE"?"#34d399":item.price==="—"?"#4d6a85":"#fb923c",whiteSpace:"nowrap"}}>
+                                {item.price}
+                              </span>
+                              {editMode && (
+                                <div style={{display:"flex",gap:4}}>
+                                  <button onClick={e=>{e.stopPropagation();startEdit(si,ii,item);}}
+                                    style={{background:"rgba(56,189,248,0.1)",border:"1px solid rgba(56,189,248,0.2)",color:"#38bdf8",borderRadius:5,padding:"2px 6px",fontSize:11}}>✏</button>
+                                  <button onClick={e=>{e.stopPropagation();deleteItem(si,ii);}}
+                                    style={{background:"rgba(248,113,113,0.1)",border:"1px solid rgba(248,113,113,0.2)",color:"#f87171",borderRadius:5,padding:"2px 6px",fontSize:11}}>✕</button>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {/* Add item */}
+                  {editMode && (
+                    <div style={{padding:"8px 14px",borderTop:"1px solid rgba(255,255,255,0.05)"}}>
+                      {addingSec===si ? (
+                        <div style={{display:"flex",flexDirection:"column",gap:6}} onClick={e=>e.stopPropagation()}>
+                          <input className="edit-input" value={newItem.name} placeholder="Item name *" onChange={e=>setNewItem(p=>({...p,name:e.target.value}))}/>
+                          <input className="edit-input" value={newItem.model} placeholder="Model / spec" onChange={e=>setNewItem(p=>({...p,model:e.target.value}))}/>
+                          <input className="edit-input" value={newItem.detail} placeholder="Plain English description for users" onChange={e=>setNewItem(p=>({...p,detail:e.target.value}))}/>
+                          <div style={{display:"flex",gap:6,alignItems:"center"}}>
+                            <input className="edit-input" style={{width:80}} value={newItem.price} placeholder="Price" onChange={e=>setNewItem(p=>({...p,price:e.target.value}))}/>
+                            <label style={{fontSize:11,color:"#8ba3bf",display:"flex",alignItems:"center",gap:4,cursor:"pointer"}}>
+                              <input type="checkbox" checked={newItem.warn} onChange={e=>setNewItem(p=>({...p,warn:e.target.checked}))}/>⚠️
+                            </label>
+                            <button className="edit-btn btn-save" onClick={()=>commitAdd(si)}>Add</button>
+                            <button className="edit-btn btn-cancel" onClick={()=>{setAddingSec(null);setNewItem({name:"",model:"",detail:"",price:"",warn:false});}}>✕</button>
+                          </div>
+                        </div>
+                      ) : (
+                        <button className="btn-add" onClick={()=>setAddingSec(si)}>+ Add item to {sec.title}</button>
+                      )}
+                    </div>
                   )}
                 </div>
               )}
             </div>
-          )}
-        </div>
-      ))}
+          );
+        })}
 
-      {editMode&&(
-        <div style={{marginBottom:8,border:`1px dashed ${C.border}`,borderRadius:7,padding:"8px 10px",background:C.bg2}}>
-          <div style={{fontSize:10,color:C.muted,marginBottom:5,fontFamily:"monospace",textTransform:"uppercase",letterSpacing:"0.05em"}}>+ New Section</div>
-          <div style={{display:"flex",gap:6}}>
-            <input style={{...inp,flex:1}} value={newSecTitle} placeholder="Section title" onChange={e=>setNewSecTitle(e.target.value)} onKeyDown={e=>e.key==="Enter"&&addSection()}/>
-            <button onClick={addSection} style={{background:C.accent,border:"none",color:"#0a1628",borderRadius:4,padding:"3px 12px",fontSize:10,cursor:"pointer",fontWeight:700,fontFamily:"monospace"}}>Add</button>
+        {/* Add section */}
+        {editMode && (
+          <div className="card" style={{padding:"12px 14px",borderStyle:"dashed"}}>
+            <div style={{fontSize:11,color:"#4d6a85",marginBottom:8,fontFamily:"'JetBrains Mono',monospace",textTransform:"uppercase",letterSpacing:"0.06em"}}>+ New Section</div>
+            <div style={{display:"flex",gap:8}}>
+              <input className="edit-input" style={{flex:1}} value={newSecTitle} placeholder="Section title (e.g. Cabling)" onChange={e=>setNewSecTitle(e.target.value)} onKeyDown={e=>e.key==="Enter"&&addSection()}/>
+              <button className="edit-btn btn-save" onClick={addSection} style={{padding:"6px 14px"}}>Add</button>
+            </div>
           </div>
+        )}
+
+        {/* Bottom actions */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginTop:4}}>
+          <button onClick={resetChecks}
+            style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)",color:"#4d6a85",padding:10,borderRadius:12,fontSize:12,fontWeight:600,fontFamily:"'DM Sans',sans-serif"}}>
+            ↺ Reset Progress
+          </button>
+          <button onClick={resetAll}
+            style={{background:"rgba(248,113,113,0.06)",border:"1px solid rgba(248,113,113,0.2)",color:"#f87171",padding:10,borderRadius:12,fontSize:12,fontWeight:600,fontFamily:"'DM Sans',sans-serif"}}>
+            ⚠ Reset All
+          </button>
         </div>
-      )}
 
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:5,marginTop:4}}>
-        <button onClick={resetChecks} style={{background:"transparent",border:`1px solid ${C.border}`,color:C.muted,fontFamily:"monospace",fontSize:10,padding:8,borderRadius:6,cursor:"pointer"}}>↺ Reset Progress</button>
-        <button onClick={resetAll} style={{background:"transparent",border:`1px solid ${C.red}`,color:C.red,fontFamily:"monospace",fontSize:10,padding:8,borderRadius:6,cursor:"pointer"}}>⚠ Reset All</button>
-      </div>
-
-      <div style={{textAlign:"center",marginTop:8,fontSize:9,color:C.muted,fontFamily:"monospace"}}>
-        3rc0.github.io · Cloudflare Workers KV · Shared sync
+        <div style={{textAlign:"center",padding:"8px 0 16px",fontSize:10,color:"#4d6a85",fontFamily:"'JetBrains Mono',monospace"}}>
+          3rc0.github.io · Cloudflare Workers KV · Shared sync
+        </div>
       </div>
     </div>
   );
