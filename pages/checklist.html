@@ -655,9 +655,12 @@ function App() {
         const isOpen = !collapsed[sec.id];
 
         return (
-          <div key={sec.id} id={"sec-"+sec.id}
-            className={`cl-section fade-up${isComplete?" complete":""}`}
-            style={{animationDelay:`${si*0.03}s`}}>
+          <div
+            key={sec.id}
+            id={"sec-" + sec.id}
+            className={`cl-section fade-up${isComplete ? " complete" : ""}`}
+            style={{ animationDelay: `${si * 0.03}s` }}
+          >
 
             {/* Header */}
             <div className="cl-sec-header" onClick={()=>toggleSec(sec.id)}>
