@@ -1,670 +1,803 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>UniFi Home Security — Project Checklist</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+---
+layout: page
+title: Home Security Checklist
+subtitle: UniFi UDM-SE Infrastructure · Reston, VA
+---
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ── Reset & Base ─────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --bg:       #080f1a;
+  --bg1:      #0d1829;
+  --bg2:      #111f36;
+  --bg3:      #162540;
+  --glass:    rgba(255,255,255,0.04);
+  --glass2:   rgba(255,255,255,0.07);
+  --border:   rgba(255,255,255,0.08);
+  --border2:  rgba(255,255,255,0.14);
+  --accent:   #38bdf8;
+  --green:    #34d399;
+  --orange:   #fb923c;
+  --red:      #f87171;
+  --purple:   #a78bfa;
+  --text:     #e2eaf4;
+  --text2:    #8ba3bf;
+  --text3:    #4d6a85;
+  --done-bg:  rgba(52,211,153,0.07);
+  --warn-bg:  rgba(251,146,60,0.1);
+  --radius:   14px;
+  --font:     'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono:     'JetBrains Mono', 'Fira Code', monospace;
+}
+
+#checklist-app {
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 0 48px;
+}
+
+/* ── Animations ──────────────────────────────────── */
+@keyframes fadeUp   { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes popIn    { 0%{transform:scale(0.6)} 70%{transform:scale(1.15)} 100%{transform:scale(1)} }
+@keyframes shimmer  { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+@keyframes spin     { to{transform:rotate(360deg)} }
+
+.fade-up { animation: fadeUp 0.3s ease both; }
+
+/* ── Progress Header ─────────────────────────────── */
+.cl-header {
+  background: linear-gradient(135deg, #0f2240 0%, #0a1628 100%);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.cl-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--green), var(--purple), var(--orange));
+}
+.cl-header-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.cl-ring { position: relative; width: 64px; height: 64px; flex-shrink: 0; }
+.cl-ring svg { transform: rotate(-90deg); }
+.cl-ring-label {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 13px; font-weight: 700;
+  color: var(--accent);
+}
+.cl-title-block { flex: 1; min-width: 0; }
+.cl-title-block h2 {
+  font-size: 20px; font-weight: 700; color: #fff;
+  margin: 0 0 2px; letter-spacing: -0.01em;
+}
+.cl-title-block p { font-size: 14px; color: var(--text2); margin: 0 0 8px; }
+.cl-progress-bar {
+  height: 4px; background: rgba(255,255,255,0.08);
+  border-radius: 99px; overflow: hidden;
+}
+.cl-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--green));
+  border-radius: 99px;
+  transition: width 0.5s ease;
+}
+.cl-actions {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-top: 16px; padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.cl-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 10px;
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s; border: none;
+  text-decoration: none;
+}
+.cl-btn-primary  { background: rgba(56,189,248,0.12); color: var(--accent); border: 1px solid rgba(56,189,248,0.3); }
+.cl-btn-success  { background: rgba(52,211,153,0.12); color: var(--green);  border: 1px solid rgba(52,211,153,0.3); }
+.cl-btn-warning  { background: rgba(251,146,60,0.12);  color: var(--orange); border: 1px solid rgba(251,146,60,0.3); }
+.cl-btn-danger   { background: rgba(248,113,113,0.08); color: var(--red);   border: 1px solid rgba(248,113,113,0.2); }
+.cl-btn-ghost    { background: rgba(255,255,255,0.04); color: var(--text2); border: 1px solid var(--border); }
+.cl-btn:hover    { opacity: 0.85; transform: translateY(-1px); }
+.cl-btn-edit-on  { background: rgba(251,146,60,0.15); color: var(--orange); border: 1px solid rgba(251,146,60,0.4); }
+
+/* ── Cost Strip ───────────────────────────────────── */
+.cl-costs {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 8px; margin-bottom: 16px;
+}
+.cl-cost-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 10px 12px;
+  text-align: center;
+}
+.cl-cost-val { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--orange); }
+.cl-cost-lbl { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+/* ── Section ──────────────────────────────────────── */
+.cl-section {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.cl-section:hover { border-color: var(--border2); }
+.cl-section.complete { border-color: rgba(52,211,153,0.25); }
+
+.cl-sec-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; cursor: pointer;
+  user-select: none; transition: background 0.15s;
+}
+.cl-sec-header:hover { background: var(--glass2); }
+
+.cl-sec-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.cl-sec-info { flex: 1; min-width: 0; }
+.cl-sec-title {
+  font-size: 15px; font-weight: 600; color: #fff;
+  margin: 0 0 1px; line-height: 1.3;
+}
+.cl-sec-hint { font-size: 12px; color: var(--text3); }
+.cl-sec-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.cl-sec-count { font-family: var(--mono); font-size: 12px; color: var(--text3); font-weight: 600; }
+.cl-sec-count.done { color: var(--green); }
+.cl-chevron {
+  color: var(--text3); font-size: 12px;
+  transition: transform 0.2s; display: inline-block;
+}
+.cl-chevron.open { transform: rotate(180deg); }
+
+/* ── Mini progress bar in section header ─────────── */
+.cl-sec-bar {
+  width: 48px; height: 3px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 99px; overflow: hidden;
+}
+.cl-sec-bar-fill { height: 100%; border-radius: 99px; transition: width 0.4s; }
+
+/* ── Items ────────────────────────────────────────── */
+.cl-items { border-top: 1px solid rgba(255,255,255,0.06); }
+
+.cl-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  cursor: pointer; transition: background 0.15s;
+  position: relative;
+}
+.cl-item:last-child { border-bottom: none; }
+.cl-item:hover { background: var(--glass2); }
+.cl-item.done { background: var(--done-bg); }
+.cl-item.done .cl-item-name  { text-decoration: line-through; color: var(--green); opacity: 0.7; }
+.cl-item.done .cl-item-model { text-decoration: line-through; opacity: 0.4; }
+.cl-item.done .cl-item-price { opacity: 0.35; text-decoration: line-through; }
+
+/* Number */
+.cl-item-num {
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  color: rgba(56,189,248,0.4); width: 22px;
+  text-align: right; flex-shrink: 0; padding-top: 2px;
+}
+.done .cl-item-num { color: var(--green); opacity: 0.6; }
+
+/* Checkbox */
+.cl-cb {
+  width: 22px; height: 22px; border-radius: 7px;
+  border: 2px solid var(--text3); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; background: transparent; margin-top: 0;
+}
+.cl-cb.on { background: var(--green); border-color: var(--green); }
+.cl-cb.on svg { animation: popIn 0.25s ease; }
+
+/* Content */
+.cl-item-body { flex: 1; min-width: 0; }
+.cl-item-name {
+  font-size: 15px; font-weight: 600; color: #fff;
+  line-height: 1.35; display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+}
+.cl-item-model {
+  font-family: var(--mono); font-size: 12px;
+  color: var(--accent); margin-top: 2px; opacity: 0.85;
+}
+.cl-item-detail {
+  font-size: 13px; color: var(--text2); margin-top: 4px;
+  line-height: 1.55; display: none;
+}
+.cl-item-detail.open { display: block; }
+.cl-expand-btn {
+  font-size: 12px; color: var(--text3); cursor: pointer;
+  margin-top: 3px; display: inline-flex; align-items: center; gap: 3px;
+  background: none; border: none; padding: 0; font-family: var(--font);
+  transition: color 0.15s;
+}
+.cl-expand-btn:hover { color: var(--accent); }
+
+/* Price */
+.cl-item-price {
+  font-family: var(--mono); font-size: 13px; font-weight: 700;
+  white-space: nowrap; flex-shrink: 0; padding-top: 2px;
+  transition: color 0.2s;
+}
+.price-free { color: var(--green); }
+.price-dash { color: var(--text3); }
+.price-cost { color: var(--orange); }
+
+/* Tags */
+.cl-tag {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 8px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
+  font-family: var(--mono); flex-shrink: 0;
+}
+.tag-warn { background: var(--warn-bg); color: var(--orange); border: 1px solid rgba(251,146,60,0.3); }
+.tag-free { background: rgba(52,211,153,0.1); color: var(--green); border: 1px solid rgba(52,211,153,0.2); }
+
+/* Edit controls */
+.cl-edit-btns { display: flex; gap: 4px; flex-shrink: 0; margin-top: 1px; }
+.cl-edit-btn {
+  padding: 3px 8px; border-radius: 6px; font-size: 12px;
+  font-weight: 700; cursor: pointer; border: none;
+  transition: all 0.15s; font-family: var(--font);
+}
+.cl-edit-btn.edit { background: rgba(56,189,248,0.12); color: var(--accent); border: 1px solid rgba(56,189,248,0.25); }
+.cl-edit-btn.del  { background: rgba(248,113,113,0.1);  color: var(--red);   border: 1px solid rgba(248,113,113,0.2); }
+
+/* Edit form */
+.cl-edit-form { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.cl-input {
+  background: rgba(255,255,255,0.06); border: 1px solid var(--border2);
+  color: var(--text); border-radius: 8px; padding: 8px 12px;
+  font-size: 14px; width: 100%; font-family: var(--font);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.cl-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(56,189,248,0.12); }
+.cl-form-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.cl-form-row .cl-input { flex: 1; min-width: 80px; }
+
+/* Add item */
+.cl-add-row { padding: 8px 16px; border-top: 1px solid rgba(255,255,255,0.05); }
+.cl-add-btn {
+  width: 100%; padding: 9px; background: transparent;
+  border: 1px dashed rgba(255,255,255,0.12); border-radius: 10px;
+  color: var(--text3); font-size: 14px; cursor: pointer;
+  font-family: var(--font); transition: all 0.2s;
+}
+.cl-add-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Add section */
+.cl-add-section {
+  background: var(--glass); border: 1px dashed var(--border2);
+  border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;
+}
+
+/* Section complete badge */
+.cl-sec-complete {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12px; font-weight: 700; color: var(--green);
+}
+
+/* Toast */
+.cl-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: #162540; border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px; padding: 10px 20px;
+  font-size: 14px; font-weight: 600; color: var(--green);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  z-index: 9999; white-space: nowrap;
+  animation: fadeUp 0.2s ease;
+}
+
+/* Saving indicator */
+.cl-saving {
+  font-family: var(--mono); font-size: 11px; color: var(--accent);
+  text-align: center; padding: 4px; opacity: 0.7;
+}
+
+/* Section del button */
+.cl-sec-del { padding: 2px 7px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+
+/* Footer */
+.cl-footer {
+  text-align: center; padding: 24px 0 8px;
+  font-size: 13px; color: var(--text3);
+  font-family: var(--mono);
+}
+
+/* ── PRINT STYLES ─────────────────────────────────── */
+@media print {
+  body > *:not(#checklist-app):not([id]) { display: none !important; }
+  .cl-actions, .cl-btn, .cl-edit-btns, .cl-add-row,
+  .cl-add-section, .cl-toast, .cl-saving { display: none !important; }
+  #checklist-app { color: #000 !important; background: #fff !important; }
+  .cl-header { background: #f8fafc !important; border: 1px solid #ddd !important; }
+  .cl-header::before { display: none; }
+  .cl-section { border: 1px solid #ddd !important; background: #fff !important; break-inside: avoid; margin-bottom: 8px; }
+  .cl-sec-header { background: #f1f5f9 !important; }
+  .cl-sec-title, .cl-item-name { color: #111 !important; }
+  .cl-item-model { color: #2563eb !important; }
+  .cl-sec-hint, .cl-item-detail { color: #555 !important; }
+  .cl-item-detail { display: block !important; }
+  .cl-item-detail.open { display: block !important; }
+  .cl-item-price { color: #d97706 !important; }
+  .cl-item-num { color: #94a3b8 !important; }
+  .price-free { color: #059669 !important; }
+  .cl-cb { border-color: #94a3b8 !important; }
+  .cl-cb.on { background: #059669 !important; border-color: #059669 !important; }
+  .done .cl-item-name, .done .cl-item-model { color: #059669 !important; }
+  .cl-costs { display: none; }
+  .cl-ring svg circle:last-child { stroke: #2563eb !important; }
+  .cl-ring-label { color: #2563eb !important; }
+  .cl-title-block h2 { color: #111 !important; }
+  .cl-title-block p  { color: #555 !important; }
+  .tag-warn { background: #fff7ed !important; color: #d97706 !important; }
+  .tag-free { background: #f0fdf4 !important; color: #059669 !important; }
+  .cl-sec-count { color: #555 !important; }
+  .cl-sec-count.done { color: #059669 !important; }
+  .cl-items { border-top: 1px solid #e2e8f0 !important; }
+  .cl-item { border-bottom: 1px solid #f1f5f9 !important; }
+  .cl-footer { color: #94a3b8 !important; border-top: 1px solid #e2e8f0; margin-top: 16px; padding-top: 12px; }
+  @page { margin: 15mm; size: A4; }
+}
+
+/* ── Mobile ───────────────────────────────────────── */
+@media (max-width: 480px) {
+  .cl-costs { grid-template-columns: repeat(3,1fr); }
+  .cl-cost-val { font-size: 12px; }
+  .cl-cost-lbl { font-size: 11px; }
+  .cl-btn { font-size: 13px; padding: 7px 11px; }
+  .cl-item { padding: 11px 12px; }
+  .cl-item-name { font-size: 14px; }
+  .cl-item-detail { font-size: 13px; }
+  .cl-title-block h2 { font-size: 18px; }
+  .cl-sec-header { padding: 12px; }
+  .cl-sec-icon { width: 32px; height: 32px; font-size: 16px; }
+}
+</style>
+
+<div id="checklist-app">
+  <div id="cl-root"><div style="text-align:center;padding:40px;color:#38bdf8;font-family:monospace">Loading…</div></div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-<style>
-  :root {
-    --bg:        #080f1a;
-    --bg1:       #0d1829;
-    --bg2:       #111f36;
-    --bg3:       #162540;
-    --glass:     rgba(255,255,255,0.04);
-    --glass2:    rgba(255,255,255,0.07);
-    --border:    rgba(255,255,255,0.08);
-    --border2:   rgba(255,255,255,0.13);
-    --accent:    #38bdf8;
-    --accent2:   #34d399;
-    --orange:    #fb923c;
-    --red:       #f87171;
-    --purple:    #a78bfa;
-    --text:      #e2eaf4;
-    --text2:     #8ba3bf;
-    --text3:     #4d6a85;
-    --done-bg:   rgba(52,211,153,0.07);
-    --done-text: #34d399;
-    --warn-bg:   rgba(251,146,60,0.1);
-  }
-  * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
-  html { scroll-behavior:smooth; }
-  body {
-    background: var(--bg);
-    background-image:
-      radial-gradient(ellipse 80% 50% at 20% -10%, rgba(56,189,248,0.07) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(52,211,153,0.05) 0%, transparent 60%);
-    min-height: 100vh;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--text);
-    font-size: 14px;
-    padding-bottom: 60px;
-  }
-  /* Scrollbar */
-  ::-webkit-scrollbar { width:4px; }
-  ::-webkit-scrollbar-track { background:transparent; }
-  ::-webkit-scrollbar-thumb { background:var(--bg3); border-radius:4px; }
+<script type="text/babel" data-presets="react">
 
-  /* Animations */
-  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
-  @keyframes checkPop { 0%{transform:scale(0)} 60%{transform:scale(1.3)} 100%{transform:scale(1)} }
-  @keyframes slideDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes spin { to{stroke-dashoffset:0} }
-
-  .fade-in { animation: fadeIn 0.35s ease forwards; }
-  .slide-down { animation: slideDown 0.2s ease forwards; }
-
-  /* Glass card */
-  .card {
-    background: var(--glass);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    backdrop-filter: blur(12px);
-  }
-  .card:hover { border-color: var(--border2); }
-
-  button { cursor:pointer; border:none; outline:none; font-family:inherit; }
-  input  { font-family:inherit; outline:none; }
-  input:focus { border-color: var(--accent) !important; box-shadow: 0 0 0 2px rgba(56,189,248,0.15); }
-
-  /* Category icons */
-  .sec-icon {
-    width:32px; height:32px; border-radius:10px;
-    display:flex; align-items:center; justify-content:center;
-    font-size:16px; flex-shrink:0;
-  }
-
-  /* Item row */
-  .item-row {
-    display:flex; align-items:flex-start; gap:10px;
-    padding:11px 14px; cursor:pointer;
-    border-bottom:1px solid var(--border);
-    transition: background 0.15s;
-    position:relative;
-  }
-  .item-row:last-child { border-bottom:none; }
-  .item-row:hover { background:var(--glass2); }
-  .item-row.done { background:var(--done-bg); }
-  .item-row.done .item-name { color:var(--done-text); text-decoration:line-through; opacity:0.7; }
-  .item-row.done .item-model { color:var(--done-text); opacity:0.5; text-decoration:line-through; }
-  .item-row.done .item-price { opacity:0.4; text-decoration:line-through; }
-
-  /* Checkbox */
-  .cb {
-    width:20px; height:20px; border-radius:6px; flex-shrink:0;
-    border:2px solid var(--text3); display:flex; align-items:center;
-    justify-content:center; margin-top:1px; transition:all 0.2s;
-    background:transparent;
-  }
-  .cb.checked {
-    background:var(--accent2); border-color:var(--accent2);
-  }
-  .cb.checked svg { animation:checkPop 0.25s ease; }
-
-  /* Tags */
-  .tag {
-    display:inline-flex; align-items:center; gap:3px;
-    padding:2px 7px; border-radius:20px; font-size:10px;
-    font-weight:600; letter-spacing:0.02em; font-family:'JetBrains Mono',monospace;
-  }
-  .tag-warn { background:var(--warn-bg); color:var(--orange); border:1px solid rgba(251,146,60,0.3); }
-  .tag-free { background:rgba(52,211,153,0.1); color:var(--accent2); border:1px solid rgba(52,211,153,0.2); }
-  .tag-info { background:rgba(56,189,248,0.1); color:var(--accent); border:1px solid rgba(56,189,248,0.2); }
-
-  /* Progress ring */
-  .ring-wrap { position:relative; width:56px; height:56px; flex-shrink:0; }
-  .ring-bg { fill:none; stroke:var(--bg3); stroke-width:4; }
-  .ring-fg { fill:none; stroke-width:4; stroke-linecap:round; transform:rotate(-90deg); transform-origin:center; transition:stroke-dashoffset 0.6s ease; }
-
-  /* Dropdown */
-  .dropdown-menu {
-    position:absolute; top:calc(100% + 8px); right:0;
-    background:var(--bg2); border:1px solid var(--border2);
-    border-radius:12px; min-width:220px; z-index:100;
-    box-shadow:0 20px 60px rgba(0,0,0,0.5);
-    overflow:hidden;
-  }
-  .dropdown-item {
-    display:flex; align-items:center; gap:10px;
-    padding:10px 14px; font-size:13px; color:var(--text2);
-    cursor:pointer; transition:background 0.15s;
-    text-decoration:none;
-  }
-  .dropdown-item:hover { background:var(--glass2); color:var(--text); }
-  .dropdown-item .di-icon { font-size:16px; width:24px; text-align:center; }
-
-  /* Section complete banner */
-  .sec-complete {
-    background:linear-gradient(135deg,rgba(52,211,153,0.1),rgba(52,211,153,0.05));
-    border:1px solid rgba(52,211,153,0.2);
-    border-radius:8px; padding:6px 12px; margin:8px 14px;
-    font-size:11px; color:var(--accent2); font-weight:600;
-    display:flex; align-items:center; gap:6px;
-  }
-
-  /* Notification toast */
-  .toast {
-    position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
-    background:var(--bg2); border:1px solid var(--border2);
-    border-radius:20px; padding:8px 18px;
-    font-size:12px; font-weight:600; color:var(--accent2);
-    box-shadow:0 8px 32px rgba(0,0,0,0.4);
-    z-index:999; white-space:nowrap;
-    animation:fadeIn 0.2s ease;
-  }
-
-  /* Edit inputs */
-  .edit-input {
-    background:var(--bg1); border:1px solid var(--border2);
-    color:var(--text); border-radius:8px; padding:6px 10px;
-    font-size:12px; width:100%; transition:all 0.2s;
-  }
-  .edit-btn {
-    padding:5px 12px; border-radius:8px; font-size:11px;
-    font-weight:700; transition:all 0.15s;
-  }
-  .btn-save { background:var(--accent2); color:#0a1628; }
-  .btn-cancel { background:var(--bg3); color:var(--text2); border:1px solid var(--border); }
-  .btn-add { background:transparent; border:1px dashed var(--border2); color:var(--text3); border-radius:10px; padding:8px; width:100%; font-size:12px; transition:all 0.2s; }
-  .btn-add:hover { border-color:var(--accent); color:var(--accent); }
-
-  /* Section header */
-  .sec-header {
-    display:flex; align-items:center; gap:10px;
-    padding:12px 14px; cursor:pointer; user-select:none;
-    transition:background 0.15s; border-radius:16px 16px 0 0;
-  }
-  .sec-header:hover { background:var(--glass2); }
-
-  /* Sticky header */
-  .sticky-header {
-    position:sticky; top:0; z-index:50;
-    background:rgba(8,15,26,0.85);
-    backdrop-filter:blur(20px);
-    border-bottom:1px solid var(--border);
-  }
-</style>
-</head>
-<body>
-<div id="root"></div>
-
-<script type="text/babel">
 const WORKER_URL = "https://checklist-api.3rc0.workers.dev";
 const { useState, useEffect, useRef, useCallback } = React;
 
-// ─── Data ──────────────────────────────────────────────────────────────────
-const SECTION_META = {
-  A:{ icon:"🖥️",  color:"#38bdf8", hint:"The main devices that make the system work" },
+const SEC_META = {
+  A:{ icon:"🖥️",  color:"#38bdf8", hint:"Main devices that power the whole system" },
   B:{ icon:"📡",  color:"#a78bfa", hint:"Door and window sensors for intrusion alerts" },
-  C:{ icon:"💾",  color:"#34d399", hint:"Storage drives for saving camera footage" },
-  D:{ icon:"⚡",  color:"#fb923c", hint:"Backup power so nothing goes offline" },
-  E:{ icon:"🗄️",  color:"#60a5fa", hint:"The cabinet that holds all equipment" },
-  F:{ icon:"🔇",  color:"#4ade80", hint:"Makes the system run silently" },
-  G:{ icon:"🌐",  color:"#f472b6", hint:"Access your system remotely for free" },
-  H:{ icon:"🛡️",  color:"#f87171", hint:"Built-in security features to protect your network" },
-  I:{ icon:"🚪",  color:"#fbbf24", hint:"Set up door access and motion alerts" },
-  J:{ icon:"📶",  color:"#38bdf8", hint:"Connect your internet provider to the system" },
+  C:{ icon:"💾",  color:"#34d399", hint:"Drives that store camera footage" },
+  D:{ icon:"⚡",  color:"#fb923c", hint:"Backup power — keeps everything on during outages" },
+  E:{ icon:"🗄️",  color:"#60a5fa", hint:"Cabinet that holds all the equipment" },
+  F:{ icon:"🔇",  color:"#4ade80", hint:"Mods to make the system run silently" },
+  G:{ icon:"🌐",  color:"#f472b6", hint:"Access cameras and doors from anywhere, free" },
+  H:{ icon:"🛡️",  color:"#f87171", hint:"Built-in security features — all free" },
+  I:{ icon:"🚪",  color:"#fbbf24", hint:"Configure door locks, access codes and alerts" },
+  J:{ icon:"📶",  color:"#38bdf8", hint:"Connect your Xfinity internet to the system" },
 };
 
-const DEFAULT_SECTIONS = [
+const DEFAULTS = [
   { id:"A", title:"Main Hardware", items:[
-    { n:1,  name:"Central Controller", model:"Ubiquiti UDM-SE", detail:"The brain of the whole system — manages cameras, doors, network and security in one box", price:"$599", warn:false },
-    { n:2,  name:"Panoramic Cameras ×3", model:"UniFi G6 180", detail:"180° wide-angle cameras, 4K quality, AI detects people and vehicles automatically", price:"$897", warn:false },
-    { n:3,  name:"Front Door Camera", model:"UniFi G6 Entry", detail:"Camera with NFC tap, Face ID and PIN code entry for your front door", price:"~$200", warn:true },
-    { n:4,  name:"Front Door Access Hub", model:"UA-Hub-Door", detail:"Controls the electric lock on your front door — connects to the G6 Entry camera", price:"$199", warn:false },
-    { n:5,  name:"Backyard Door Hub", model:"UA-Hub-Door-Mini", detail:"Smaller hub for the backyard door — phone unlock only, no reader needed", price:"$99", warn:false },
-    { n:6,  name:"Garage Door Controller", model:"UA-Hub-Gate", detail:"Wires to your existing garage opener — open/close from your phone", price:"$279", warn:true },
-    { n:7,  name:"Front Door Electric Lock", model:"UA-Lock-Electric", detail:"Fail-secure bolt — keeps door locked without power, your physical key still works", price:"$79", warn:false },
-    { n:8,  name:"Backyard Electric Lock", model:"UA-Lock-Electric", detail:"Same bolt for the backyard door", price:"$79", warn:false },
-    { n:9,  name:"WiFi Access Point", model:"UniFi U7 Pro", detail:"WiFi 7 — fastest available. Also acts as the bridge for door/window sensors via Bluetooth", price:"$199", warn:false },
+    { n:1,  name:"Central Controller", model:"Ubiquiti UDM-SE", detail:"The brain of the whole system — manages cameras, door locks, WiFi network and security all in one box.", price:"$599", warn:false },
+    { n:2,  name:"Panoramic Cameras ×3", model:"UniFi G6 180", detail:"Three 180° wide-angle cameras with 4K quality. AI automatically detects and tags people, vehicles and faces.", price:"$897", warn:false },
+    { n:3,  name:"Front Door Camera", model:"UniFi G6 Entry", detail:"Doorbell camera with NFC tap-to-enter, Face ID recognition and PIN keypad for your front door.", price:"~$200", warn:true },
+    { n:4,  name:"Front Door Access Hub", model:"UA-Hub-Door", detail:"The controller box that activates your front door electric bolt — wires between the camera and the lock.", price:"$199", warn:false },
+    { n:5,  name:"Backyard Door Hub", model:"UA-Hub-Door-Mini", detail:"Smaller hub for the backyard door. Phone unlock only, no keypad or camera needed.", price:"$99", warn:false },
+    { n:6,  name:"Garage Door Controller", model:"UA-Hub-Gate", detail:"Wires directly to your existing garage opener. Open and close the garage from your phone.", price:"$279", warn:true },
+    { n:7,  name:"Front Door Electric Bolt", model:"UA-Lock-Electric", detail:"Fail-secure bolt. If power goes out it stays locked. Your physical key always works regardless.", price:"$79", warn:false },
+    { n:8,  name:"Backyard Electric Bolt", model:"UA-Lock-Electric", detail:"Same fail-secure bolt for the backyard door.", price:"$79", warn:false },
+    { n:9,  name:"WiFi Access Point", model:"UniFi U7 Pro", detail:"WiFi 7 — the fastest WiFi available. Also acts as the Bluetooth bridge for all door and window sensors.", price:"$199", warn:false },
   ]},
   { id:"B", title:"Security Sensors", items:[
-    { n:10, name:"Door Sensors ×2", model:"UniFi UP-SENSE", detail:"Backyard + Kitchen doors — detects motion, opening, sound (glass break, smoke alarm, CO)", price:"$70", warn:false },
-    { n:11, name:"Window Sensors ×10", model:"UniFi USL-Entry", detail:"All 10 windows — simple open/close detection, 6-year battery life, set and forget", price:"$250", warn:false },
+    { n:10, name:"Door Sensors ×2", model:"UniFi UP-SENSE", detail:"Backyard and kitchen doors. Detects motion, opening, alarm sounds like glass break or smoke detector.", price:"$70", warn:false },
+    { n:11, name:"Window Sensors ×10", model:"UniFi USL-Entry", detail:"All 10 windows. Simple open/close detection. 6-year battery life — install once, forget for years.", price:"$250", warn:false },
   ]},
   { id:"C", title:"Storage Drives", items:[
-    { n:12, name:"Silent SSD Drives ×2", model:"WD Red SA500 2TB", detail:"Solid state — completely silent, no moving parts. Stores months of camera recordings", price:"$160", warn:false },
+    { n:12, name:"Silent SSD Drives ×2", model:"WD Red SA500 2TB", detail:"Solid state drives — completely silent with no moving parts. Stores months of continuous camera recordings.", price:"$160", warn:false },
   ]},
   { id:"D", title:"Backup Power (UPS)", items:[
-    { n:13, name:"Uninterruptible Power Supply", model:"Tripp Lite SU2200RTXLCD2U", detail:"If power goes out — system stays on for ~45 min. Pure sine wave, zero switchover time, auto restarts when power comes back", price:"$450", warn:false },
+    { n:13, name:"Uninterruptible Power Supply", model:"Tripp Lite SU2200RTXLCD2U", detail:"If power goes out — the system stays fully on for ~45 minutes. Zero switchover time. Automatically restarts when power returns.", price:"$450", warn:false },
   ]},
   { id:"E", title:"Rack Cabinet", items:[
-    { n:14, name:"Soundproof Rack 9U", model:"XRackPro2", detail:"Holds all equipment in one quiet cabinet — reduces noise by up to 80%", price:"$300", warn:false },
-    { n:15, name:"Shelf for Internet Modem", model:"1U Vented Shelf", detail:"Holds the Xfinity XB8 modem inside the rack with proper airflow", price:"$35", warn:false },
-    { n:16, name:"Cable Organizer", model:"1U D-Ring", detail:"Keeps all cables tidy inside the cabinet", price:"$20", warn:false },
+    { n:14, name:"Soundproof Rack 9U", model:"XRackPro2", detail:"Holds all equipment in one tidy, quiet cabinet. Reduces fan and drive noise by up to 80%.", price:"$300", warn:false },
+    { n:15, name:"Shelf for Modem", model:"1U Vented Shelf", detail:"Mounts the Xfinity XB8 modem inside the rack lying flat with proper ventilation.", price:"$35", warn:false },
+    { n:16, name:"Cable Organizer", model:"1U D-Ring", detail:"Keeps all cables neatly routed inside the cabinet.", price:"$20", warn:false },
   ]},
   { id:"F", title:"Noise Reduction", items:[
-    { n:17, name:"Silent Fan Replacement", model:"Noctua NF-A6x25 PWM", detail:"Replaces the noisy default fan in the UDM-SE — near-silent operation", price:"$15", warn:false },
-    { n:18, name:"Fan Speed Script", model:"SSH configuration", detail:"Slows down fan speed at idle via software — further reduces noise", price:"FREE", warn:false },
+    { n:17, name:"Silent Fan Replacement", model:"Noctua NF-A6x25 PWM", detail:"Replaces the stock fan inside the UDM-SE controller with an almost-silent Noctua fan.", price:"$15", warn:false },
+    { n:18, name:"Fan Speed Script", model:"SSH configuration", detail:"Reduces fan speed during idle periods via a software script. Combined with the Noctua fan this makes the system near-inaudible.", price:"FREE", warn:false },
   ]},
   { id:"G", title:"Remote Access Setup", items:[
-    { n:19, name:"Zero Trust Account", model:"Cloudflare Zero Trust", detail:"Free account — lets you access your cameras remotely without exposing your home IP", price:"FREE", warn:false },
-    { n:20, name:"Free Domain Name (DDNS)", model:"DuckDNS", detail:"Gives your home a permanent address even when your internet IP changes", price:"FREE", warn:false },
-    { n:21, name:"Tunnel Software", model:"cloudflared on UDM-SE", detail:"Install on the controller via SSH — creates a secure outbound tunnel, no ports opened", price:"FREE", warn:false },
-    { n:22, name:"Remote Access App", model:"Cloudflare WARP", detail:"Install on your phone — connects you securely to your home system from anywhere", price:"FREE", warn:false },
-    { n:23, name:"Disable Modem WiFi", model:"Xfinity XB8 admin panel", detail:"Turn off the XB8's own WiFi — the U7 Pro AP handles all WiFi instead", price:"FREE", warn:false },
+    { n:19, name:"Zero Trust Account", model:"Cloudflare Zero Trust", detail:"Free account. Lets you access all your cameras and doors remotely without ever exposing your home IP address.", price:"FREE", warn:false },
+    { n:20, name:"Dynamic DNS Account", model:"DuckDNS", detail:"Gives your home a permanent web address even when your internet provider changes your IP address.", price:"FREE", warn:false },
+    { n:21, name:"Tunnel Software Install", model:"cloudflared on UDM-SE", detail:"Installed on the controller via SSH. Creates a secure outbound tunnel — no ports opened on your router.", price:"FREE", warn:false },
+    { n:22, name:"Remote App on Phone", model:"Cloudflare WARP", detail:"Install on your phone. Securely connects you back to your home system from anywhere in the world.", price:"FREE", warn:false },
+    { n:23, name:"Disable Modem WiFi", model:"Xfinity XB8 admin", detail:"Turn off the XB8's own WiFi radio. The U7 Pro Access Point handles all WiFi, giving you better coverage and control.", price:"FREE", warn:false },
   ]},
-  { id:"H", title:"Security Settings", items:[
-    { n:24, name:"Threat Detection (IDS/IPS)", model:"Suricata engine", detail:"Automatically scans all internet traffic and blocks known threats — 25,000+ threat signatures", price:"FREE", warn:false },
-    { n:25, name:"Country Blocking", model:"GeoIP filter", detail:"Block entire countries from accessing your network with one click", price:"FREE", warn:false },
-    { n:26, name:"Honeypot Trap", model:"UDM-SE built-in", detail:"Creates a fake target on your network — any hacker who finds it gets instantly flagged", price:"FREE", warn:false },
-    { n:27, name:"DNS Protection", model:"UDM-SE built-in", detail:"Blocks malicious websites before they even load on any device in your home", price:"FREE", warn:false },
-    { n:28, name:"Tor & Malicious IP Block", model:"UDM-SE built-in", detail:"Blocks known hacker tools and anonymous networks from reaching your system", price:"FREE", warn:false },
-    { n:29, name:"Camera Network (VLAN 10)", model:"192.168.10.0/24", detail:"Cameras get their own isolated network — they can't talk to your phone or laptop", price:"FREE", warn:false },
-    { n:30, name:"Door Access Network (VLAN 20)", model:"192.168.20.0/24", detail:"All door/lock devices on their own network segment for extra security", price:"FREE", warn:false },
-    { n:31, name:"Smart Home Network (VLAN 30)", model:"192.168.30.0/24", detail:"Separate network for any smart home devices — isolated from main devices", price:"FREE", warn:false },
-    { n:32, name:"Disable Ubiquiti Cloud", model:"Local admin only", detail:"Turn off Ubiquiti's cloud connection — everything runs locally, nothing goes to their servers", price:"FREE", warn:false },
+  { id:"H", title:"Security Configuration", items:[
+    { n:24, name:"Threat Detection IDS/IPS", model:"Suricata engine", detail:"Scans all internet traffic in real time and blocks known threats automatically. Over 25,000 threat signatures included.", price:"FREE", warn:false },
+    { n:25, name:"Country Blocking", model:"GeoIP filter", detail:"Block all traffic from specific countries with one click. Significantly reduces attack surface.", price:"FREE", warn:false },
+    { n:26, name:"Honeypot Trap", model:"UDM-SE built-in", detail:"Creates a decoy target on your network. Any attacker who probes it gets instantly detected and flagged.", price:"FREE", warn:false },
+    { n:27, name:"DNS Protection", model:"UDM-SE built-in", detail:"Blocks connections to malicious websites and phishing domains before they load on any device in your home.", price:"FREE", warn:false },
+    { n:28, name:"Tor and Malicious IP Block", model:"UDM-SE built-in", detail:"Blocks known attack tools, anonymous proxy networks and IP addresses linked to hacking activity.", price:"FREE", warn:false },
+    { n:29, name:"Camera Network VLAN 10", model:"192.168.10.0/24", detail:"Cameras get their own isolated network segment. They cannot communicate with your phone, laptop or other devices.", price:"FREE", warn:false },
+    { n:30, name:"Door Access Network VLAN 20", model:"192.168.20.0/24", detail:"All door locks, hubs and entry devices on a separate network. Isolated from cameras and main devices.", price:"FREE", warn:false },
+    { n:31, name:"Smart Home Network VLAN 30", model:"192.168.30.0/24", detail:"Separate network for any smart home or IoT devices. Keeps them isolated from your computers and phones.", price:"FREE", warn:false },
+    { n:32, name:"Disable Cloud Connection", model:"Ubiquiti local-only mode", detail:"Turns off Ubiquiti's cloud connection after initial setup. Everything runs locally — nothing is sent to external servers.", price:"FREE", warn:false },
   ]},
-  { id:"I", title:"Door & Alarm Config", items:[
-    { n:33, name:"Front Door Access Setup", model:"UniFi Access app", detail:"Configure NFC cards, Face ID profiles, PIN codes for the front door entry", price:"FREE", warn:false },
-    { n:34, name:"Backyard Door Setup", model:"UniFi Access app", detail:"Configure phone unlock for the backyard door in the Access app", price:"FREE", warn:false },
-    { n:35, name:"Garage Door Setup", model:"UniFi Access app", detail:"Test open/close trigger, set schedules and access logs for the garage", price:"FREE", warn:false },
-    { n:36, name:"Alarm Rules Setup", model:"Alarm Manager", detail:"Configure what happens when motion, door open, or sounds are detected — notifications, recording, sirens", price:"FREE", warn:false },
-    { n:37, name:"Pair Door Sensors", model:"Bluetooth via U7 Pro", detail:"Pair the 2 UP-SENSE door sensors through the U7 Pro WiFi AP's Bluetooth radio", price:"FREE", warn:false },
-    { n:38, name:"Install Window Sensors", model:"USL-Entry ×10", detail:"Stick sensors on all 10 window frames — magnetic, no wiring needed", price:"FREE", warn:false },
-    { n:39, name:"Set Up Geofencing", model:"UniFi Protect", detail:"Optional — system arms/disarms automatically based on your phone's location", price:"FREE", warn:false },
+  { id:"I", title:"Door & Alarm Setup", items:[
+    { n:33, name:"Front Door Access Config", model:"UniFi Access app", detail:"Set up NFC cards, register faces for Face ID, and create PIN codes for the front door entry system.", price:"FREE", warn:false },
+    { n:34, name:"Backyard Door Config", model:"UniFi Access app", detail:"Configure phone-based unlocking for the backyard door in the UniFi Access mobile app.", price:"FREE", warn:false },
+    { n:35, name:"Garage Door Config", model:"UniFi Access app", detail:"Test the open/close trigger, set access schedules and review access logs for the garage.", price:"FREE", warn:false },
+    { n:36, name:"Alarm Rules Setup", model:"UniFi Alarm Manager", detail:"Set what happens when motion, door openings or sounds are detected. Options include push notifications, recording triggers and siren alerts.", price:"FREE", warn:false },
+    { n:37, name:"Pair Door Sensors", model:"Bluetooth via U7 Pro", detail:"Pair the 2 UP-SENSE door sensors through the U7 Pro's built-in Bluetooth radio in the UniFi app.", price:"FREE", warn:false },
+    { n:38, name:"Install Window Sensors", model:"USL-Entry ×10", detail:"Attach magnetic sensors to all 10 window frames. No wiring — just stick in place and pair via the app.", price:"FREE", warn:false },
+    { n:39, name:"Geofencing Setup", model:"UniFi Protect", detail:"Optional. System automatically arms when you leave home and disarms when you return, based on your phone's location.", price:"FREE", warn:false },
   ]},
   { id:"J", title:"Internet Connection", items:[
-    { n:40, name:"Mount Modem in Rack", model:"Xfinity XB8", detail:"Place XB8 on the vented shelf inside the rack — horizontal with airflow", price:"—", warn:false },
-    { n:41, name:"Disable Modem WiFi", model:"Xfinity admin panel", detail:"Log into 10.0.0.1 and turn off the XB8's built-in WiFi radio", price:"—", warn:false },
-    { n:42, name:"Connect WAN Cable", model:"Cat6 Ethernet", detail:"Run a Cat6 cable from XB8 LAN port → UDM-SE WAN port. This is your internet feed", price:"—", warn:false },
+    { n:40, name:"Mount Modem in Rack", model:"Xfinity XB8", detail:"Place the XB8 modem flat on the vented shelf in the rack. Ensure airflow is not blocked.", price:"—", warn:false },
+    { n:41, name:"Disable Modem WiFi", model:"Xfinity admin panel", detail:"Log into 10.0.0.1 and turn off the XB8's internal WiFi radio so it acts as a pure modem.", price:"—", warn:false },
+    { n:42, name:"Connect Internet Cable", model:"Cat6 Ethernet", detail:"Run a Cat6 Ethernet cable from the XB8 LAN port to the UDM-SE WAN port. This carries your internet feed.", price:"—", warn:false },
   ]},
 ];
 
-// ─── API ───────────────────────────────────────────────────────────────────
+/* ── API ─────────────────────────────────────────── */
 async function apiGet() {
   try {
     const r = await fetch(`${WORKER_URL}/api/data`);
-    return await r.json();
+    const d = await r.json();
+    return d;
   } catch(e) {
     return {
-      sections: JSON.parse(localStorage.getItem("sections")||"null"),
-      checks:   JSON.parse(localStorage.getItem("checks")||"{}"),
+      sections: JSON.parse(localStorage.getItem("cl_sections")||"null"),
+      checks:   JSON.parse(localStorage.getItem("cl_checks")||"{}"),
     };
   }
 }
-async function apiSet(key, value) {
+async function apiSet(key, val) {
   try {
     await fetch(`${WORKER_URL}/api/data`, {
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({key,value}),
+      body: JSON.stringify({key, value:val}),
     });
   } catch(e) {
-    localStorage.setItem(key, JSON.stringify(value));
+    localStorage.setItem("cl_"+key, JSON.stringify(val));
   }
 }
 
-// ─── Progress Ring ─────────────────────────────────────────────────────────
-function Ring({pct, size=56, stroke=4, color="#38bdf8"}) {
-  const r = (size-stroke*2)/2;
-  const circ = 2*Math.PI*r;
-  const offset = circ*(1-pct/100);
+/* ── Progress Ring ───────────────────────────────── */
+function Ring({pct}) {
+  const size=64, stroke=5, r=(size-stroke*2)/2, circ=2*Math.PI*r;
+  const color = pct===100 ? "#34d399" : "#38bdf8";
   return (
-    <div className="ring-wrap" style={{width:size,height:size}}>
+    <div className="cl-ring">
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        <circle className="ring-bg" cx={size/2} cy={size/2} r={r} strokeWidth={stroke}/>
-        <circle className="ring-fg" cx={size/2} cy={size/2} r={r}
-          stroke={color} strokeWidth={stroke}
-          strokeDasharray={circ} strokeDashoffset={offset}
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={stroke}/>
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={stroke}
+          strokeLinecap="round" strokeDasharray={circ}
+          strokeDashoffset={circ*(1-pct/100)}
           style={{transformOrigin:`${size/2}px ${size/2}px`,transform:"rotate(-90deg)",transition:"stroke-dashoffset 0.6s ease"}}/>
       </svg>
-      <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",
-        fontFamily:"'JetBrains Mono',monospace",fontSize:11,fontWeight:700,color}}>
-        {pct}%
-      </div>
+      <div className="cl-ring-label" style={{color}}>{pct}%</div>
     </div>
   );
 }
 
-// ─── Main App ──────────────────────────────────────────────────────────────
+/* ── App ─────────────────────────────────────────── */
 function App() {
-  const [sections,setSections]       = useState(DEFAULT_SECTIONS);
-  const [checks,setChecks]           = useState({});
-  const [collapsed,setCollapsed]     = useState({});
-  const [editMode,setEditMode]       = useState(false);
-  const [editingItem,setEditingItem] = useState(null);
-  const [editDraft,setEditDraft]     = useState({});
-  const [addingSec,setAddingSec]     = useState(null);
-  const [newItem,setNewItem]         = useState({name:"",model:"",detail:"",price:"",warn:false});
+  const [secs,setSecs]             = useState(DEFAULTS);
+  const [checks,setChecks]         = useState({});
+  const [collapsed,setCollapsed]   = useState({});
+  const [editMode,setEditMode]     = useState(false);
+  const [editItem,setEditItem]     = useState(null);
+  const [editDraft,setEditDraft]   = useState({});
+  const [addingSec,setAddingSec]   = useState(null);
+  const [newItem,setNewItem]       = useState({name:"",model:"",detail:"",price:"",warn:false});
   const [newSecTitle,setNewSecTitle] = useState("");
-  const [loading,setLoading]         = useState(true);
-  const [saving,setSaving]           = useState(false);
-  const [toast,setToast]             = useState("");
-  const [showDropdown,setShowDropdown] = useState(false);
-  const [expandedItem,setExpandedItem] = useState(null);
-  const toastTimer = useRef(null);
-  const dropRef = useRef(null);
+  const [loading,setLoading]       = useState(true);
+  const [saving,setSaving]         = useState(false);
+  const [toast,setToast]           = useState("");
+  const [expanded,setExpanded]     = useState({});
+  const toastRef = useRef(null);
 
-  const notify = m => { setToast(m); clearTimeout(toastTimer.current); toastTimer.current=setTimeout(()=>setToast(""),2500); };
+  const notify = m => {
+    setToast(m);
+    clearTimeout(toastRef.current);
+    toastRef.current = setTimeout(()=>setToast(""), 2500);
+  };
 
   useEffect(()=>{
-    apiGet().then(d=>{ if(d.sections)setSections(d.sections); if(d.checks)setChecks(d.checks); setLoading(false); });
-  },[]);
-
-  // Close dropdown on outside click
-  useEffect(()=>{
-    const h = e => { if(dropRef.current&&!dropRef.current.contains(e.target)) setShowDropdown(false); };
-    document.addEventListener("mousedown",h);
-    return ()=>document.removeEventListener("mousedown",h);
+    apiGet().then(d=>{
+      if(d?.sections) setSecs(d.sections);
+      if(d?.checks)   setChecks(d.checks);
+      setLoading(false);
+    });
   },[]);
 
   const saveSecs = async s => { setSaving(true); await apiSet("sections",s); setSaving(false); };
   const saveCks  = async c => { await apiSet("checks",c); };
-  const toggleCheck = n => { const nx={...checks,[n]:!checks[n]}; setChecks(nx); saveCks(nx); };
-  const toggleSec   = id => setCollapsed(p=>({...p,[id]:!p[id]}));
-  const renumber    = secs => { let n=1; return secs.map(s=>({...s,items:s.items.map(i=>({...i,n:n++}))})); };
 
-  const allItems = sections.flatMap(s=>s.items);
-  const total=allItems.length, done=allItems.filter(i=>checks[i.n]).length, pct=total?Math.round(done/total*100):0;
-
-  const secProgress = sec => {
-    const t=sec.items.length, d=sec.items.filter(i=>checks[i.n]).length;
-    return {t,d,pct:t?Math.round(d/t*100):0};
+  const toggleCheck = n => {
+    const nx = {...checks,[n]:!checks[n]};
+    setChecks(nx); saveCks(nx);
   };
+  const toggleSec  = id => setCollapsed(p=>({...p,[id]:!p[id]}));
+  const toggleExp  = key => setExpanded(p=>({...p,[key]:!p[key]}));
+  const renumber   = s => { let n=1; return s.map(sec=>({...sec,items:sec.items.map(i=>({...i,n:n++}))})); };
 
-  const startEdit = (si,ii,item) => { setEditingItem({si,ii}); setEditDraft({name:item.name,model:item.model,detail:item.detail||"",price:item.price,warn:item.warn}); };
+  const allItems = secs.flatMap(s=>s.items);
+  const total=allItems.length, done=allItems.filter(i=>checks[i.n]).length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  const secProg = sec => { const t=sec.items.length,d=sec.items.filter(i=>checks[i.n]).length; return {t,d,pct:t?Math.round(d/t*100):0}; };
+
+  const startEdit = (si,ii,item) => { setEditItem({si,ii}); setEditDraft({...item}); };
   const commitEdit = async () => {
-    const {si,ii}=editingItem;
-    const nx=sections.map((s,i)=>i!==si?s:{...s,items:s.items.map((it,j)=>j!==ii?it:{...it,...editDraft})});
-    setSections(nx); setEditingItem(null); await saveSecs(nx); notify("✓ Item updated");
+    const {si,ii}=editItem;
+    const nx=secs.map((s,i)=>i!==si?s:{...s,items:s.items.map((it,j)=>j!==ii?it:{...it,...editDraft})});
+    setSecs(nx); setEditItem(null); await saveSecs(nx); notify("✓ Item updated");
   };
-  const deleteItem = async (si,ii) => {
-    const nx=renumber(sections.map((s,i)=>i!==si?s:{...s,items:s.items.filter((_,j)=>j!==ii)}).filter(s=>s.items.length>0));
-    setSections(nx); await saveSecs(nx); notify("✓ Item removed");
+  const delItem = async (si,ii) => {
+    const nx=renumber(secs.map((s,i)=>i!==si?s:{...s,items:s.items.filter((_,j)=>j!==ii)}).filter(s=>s.items.length>0));
+    setSecs(nx); await saveSecs(nx); notify("✓ Item removed");
   };
   const commitAdd = async si => {
     if(!newItem.name.trim()) return;
-    const maxN=Math.max(0,...sections.flatMap(s=>s.items.map(i=>i.n)));
-    const nx=renumber(sections.map((s,i)=>i!==si?s:{...s,items:[...s.items,{n:maxN+1,...newItem}]}));
-    setSections(nx); setNewItem({name:"",model:"",detail:"",price:"",warn:false}); setAddingSec(null); await saveSecs(nx); notify("✓ Item added");
+    const maxN=Math.max(0,...secs.flatMap(s=>s.items.map(i=>i.n)));
+    const nx=renumber(secs.map((s,i)=>i!==si?s:{...s,items:[...s.items,{n:maxN+1,...newItem}]}));
+    setSecs(nx); setNewItem({name:"",model:"",detail:"",price:"",warn:false}); setAddingSec(null);
+    await saveSecs(nx); notify("✓ Item added");
   };
-  const addSection = async () => {
+  const addSec = async () => {
     if(!newSecTitle.trim()) return;
     const ids="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const nx=[...sections,{id:ids[sections.length]||String(sections.length+1),title:newSecTitle,items:[]}];
-    setSections(nx); setNewSecTitle(""); await saveSecs(nx); notify("✓ Section added");
+    const nx=[...secs,{id:ids[secs.length]||String(secs.length+1),title:newSecTitle,items:[]}];
+    setSecs(nx); setNewSecTitle(""); await saveSecs(nx); notify("✓ Section added");
   };
-  const deleteSection = async si => { const nx=renumber(sections.filter((_,i)=>i!==si)); setSections(nx); await saveSecs(nx); notify("✓ Section removed"); };
+  const delSec = async si => {
+    const nx=renumber(secs.filter((_,i)=>i!==si));
+    setSecs(nx); await saveSecs(nx); notify("✓ Section removed");
+  };
   const resetChecks = async () => { setChecks({}); await saveCks({}); notify("✓ Progress cleared"); };
-  const resetAll    = async () => { if(!confirm("Reset everything to default?"))return; setSections(DEFAULT_SECTIONS); setChecks({}); await saveSecs(DEFAULT_SECTIONS); await saveCks({}); notify("✓ Fully reset"); };
+  const resetAll    = async () => {
+    if(!window.confirm("Reset everything back to default? This cannot be undone.")) return;
+    setSecs(DEFAULTS); setChecks({}); await saveSecs(DEFAULTS); await saveCks({}); notify("✓ Fully reset to default");
+  };
+  const printPDF = () => {
+    setCollapsed({});
+    setTimeout(()=>window.print(), 300);
+  };
 
   if(loading) return (
-    <div style={{height:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:16}}>
-      <div style={{width:40,height:40,border:"3px solid rgba(56,189,248,0.2)",borderTopColor:"#38bdf8",borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/>
-      <span style={{color:"#38bdf8",fontFamily:"'JetBrains Mono',monospace",fontSize:12}}>Loading your checklist…</span>
+    <div style={{textAlign:"center",padding:"60px 0",color:"var(--accent)",fontFamily:"var(--mono)",fontSize:"14px"}}>
+      <div style={{width:28,height:28,border:"3px solid rgba(56,189,248,0.2)",borderTopColor:"#38bdf8",borderRadius:"50%",animation:"spin 0.8s linear infinite",margin:"0 auto 12px"}}/>
+      Loading your checklist…
     </div>
   );
 
   return (
-    <div style={{maxWidth:600,margin:"0 auto",padding:"0 12px"}}>
+    <>
+      {toast && <div className="cl-toast">{toast}</div>}
 
-      {/* Toast */}
-      {toast && <div className="toast">{toast}</div>}
-
-      {/* ── Sticky Header ── */}
-      <div className="sticky-header" style={{padding:"12px 0"}}>
-        <div style={{display:"flex",alignItems:"center",gap:12}}>
-
-          {/* Progress Ring */}
+      {/* ── Header ── */}
+      <div className="cl-header fade-up">
+        <div className="cl-header-top">
           <Ring pct={pct}/>
-
-          {/* Title */}
-          <div style={{flex:1,minWidth:0}}>
-            <div style={{fontWeight:700,fontSize:16,color:"#fff",letterSpacing:"-0.01em",lineHeight:1.2}}>
-              Home Security Setup
-            </div>
-            <div style={{fontSize:12,color:"#8ba3bf",marginTop:2}}>
-              {done} of {total} tasks done · Reston, VA
-            </div>
-            {/* Progress bar */}
-            <div style={{height:3,background:"rgba(255,255,255,0.07)",borderRadius:99,marginTop:6,overflow:"hidden"}}>
-              <div style={{height:"100%",width:pct+"%",background:"linear-gradient(90deg,#38bdf8,#34d399)",borderRadius:99,transition:"width 0.5s ease"}}/>
+          <div className="cl-title-block">
+            <h2>Home Security Setup</h2>
+            <p>{done} of {total} tasks completed · Reston, VA 2025</p>
+            <div className="cl-progress-bar">
+              <div className="cl-progress-fill" style={{width:pct+"%"}}/>
             </div>
           </div>
+        </div>
+        <div className="cl-actions">
+          <button className={`cl-btn ${editMode?"cl-btn-edit-on":"cl-btn-ghost"}`} onClick={()=>setEditMode(e=>!e)}>
+            {editMode ? "✓ Done Editing" : "✏️ Edit Checklist"}
+          </button>
+          <button className="cl-btn cl-btn-success" onClick={printPDF}>
+            🖨️ Print / Save PDF
+          </button>
+          <button className="cl-btn cl-btn-ghost" onClick={resetChecks}>↺ Reset Progress</button>
+          <button className="cl-btn cl-btn-danger" onClick={resetAll}>⚠ Reset All</button>
+        </div>
+        {saving && <div className="cl-saving">● syncing…</div>}
+      </div>
 
-          {/* Right buttons */}
-          <div style={{display:"flex",gap:8,flexShrink:0}}>
-
-            {/* Projects dropdown */}
-            <div style={{position:"relative"}} ref={dropRef}>
-              <button onClick={()=>setShowDropdown(v=>!v)}
-                style={{background:"rgba(56,189,248,0.1)",border:"1px solid rgba(56,189,248,0.25)",color:"#38bdf8",borderRadius:10,padding:"7px 10px",fontSize:12,fontWeight:600,display:"flex",alignItems:"center",gap:5}}>
-                📋 <span style={{fontSize:10}}>▾</span>
-              </button>
-              {showDropdown && (
-                <div className="dropdown-menu slide-down">
-                  <div style={{padding:"10px 14px 6px",fontSize:10,fontWeight:700,color:"#4d6a85",letterSpacing:"0.08em",textTransform:"uppercase",fontFamily:"'JetBrains Mono',monospace"}}>Jump to Section</div>
-                  {sections.map((sec,si)=>{
-                    const {d,t,pct:sp}=secProgress(sec);
-                    const meta=SECTION_META[sec.id]||{icon:"📌",color:"#8ba3bf"};
-                    return (
-                      <div key={sec.id} className="dropdown-item"
-                        onClick={()=>{ setCollapsed(p=>({...p,[sec.id]:false})); setShowDropdown(false); setTimeout(()=>document.getElementById("sec-"+sec.id)?.scrollIntoView({behavior:"smooth",block:"start"}),100); }}>
-                        <span className="di-icon">{meta.icon}</span>
-                        <span style={{flex:1,fontSize:12}}>{sec.title}</span>
-                        <span style={{fontFamily:"'JetBrains Mono',monospace",fontSize:10,color:sp===100?"#34d399":"#4d6a85"}}>{d}/{t}</span>
-                      </div>
-                    );
-                  })}
-                  <div style={{borderTop:"1px solid rgba(255,255,255,0.06)",margin:"4px 0"}}/>
-                  <div className="dropdown-item" onClick={()=>{resetChecks();setShowDropdown(false);}}>
-                    <span className="di-icon">↺</span>
-                    <span style={{fontSize:12,color:"#fb923c"}}>Reset Progress</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Edit toggle */}
-            <button onClick={()=>setEditMode(e=>!e)}
-              style={{background:editMode?"rgba(251,146,60,0.15)":"rgba(255,255,255,0.05)",border:`1px solid ${editMode?"rgba(251,146,60,0.4)":"rgba(255,255,255,0.1)"}`,color:editMode?"#fb923c":"#8ba3bf",borderRadius:10,padding:"7px 10px",fontSize:12,fontWeight:600}}>
-              {editMode?"✓ Done":"✏️"}
-            </button>
+      {/* ── Cost Summary ── */}
+      <div className="cl-costs">
+        {[["💰","~$4,298","Total incl. tax"],["📅","$0 / yr","No subscriptions"],["⚡","~$138 / yr","Electricity"]].map(([icon,val,lbl])=>(
+          <div key={lbl} className="cl-cost-card">
+            <div style={{fontSize:"18px"}}>{icon}</div>
+            <div className="cl-cost-val">{val}</div>
+            <div className="cl-cost-lbl">{lbl}</div>
           </div>
-        </div>
-
-        {/* Cost strip */}
-        <div style={{display:"flex",gap:8,marginTop:10,overflowX:"auto",paddingBottom:2}}>
-          {[["💰","~$4,298","Total cost"],["📅","$0 / year","Subscriptions"],["⚡","~$138 / year","Electricity"]].map(([icon,val,lbl])=>(
-            <div key={lbl} style={{flex:1,minWidth:90,background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,padding:"6px 10px",textAlign:"center",flexShrink:0}}>
-              <div style={{fontSize:10}}>{icon}</div>
-              <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:11,fontWeight:700,color:"#fb923c",marginTop:1}}>{val}</div>
-              <div style={{fontSize:9,color:"#4d6a85",marginTop:1}}>{lbl}</div>
-            </div>
-          ))}
-        </div>
-        {saving && <div style={{textAlign:"center",fontSize:10,color:"#38bdf8",marginTop:6,fontFamily:"'JetBrains Mono',monospace",animation:"pulse 1s infinite"}}>● saving…</div>}
+        ))}
       </div>
 
       {/* ── Sections ── */}
-      <div style={{marginTop:12,display:"flex",flexDirection:"column",gap:10}}>
-        {sections.map((sec,si)=>{
-          const meta = SECTION_META[sec.id]||{icon:"📌",color:"#8ba3bf",hint:""};
-          const {d,t,pct:sp} = secProgress(sec);
-          const isComplete = d===t && t>0;
-          const isCollapsed = collapsed[sec.id];
+      {secs.map((sec,si)=>{
+        const meta = SEC_META[sec.id]||{icon:"📌",color:"#8ba3bf",hint:""};
+        const {t,d,pct:sp} = secProg(sec);
+        const isComplete = d===t && t>0;
+        const isOpen = !collapsed[sec.id];
 
-          return (
-            <div key={sec.id} id={"sec-"+sec.id} className="card fade-in"
-              style={{borderRadius:16,overflow:"hidden",animationDelay:`${si*0.04}s`}}>
+        return (
+          <div key={sec.id} id={"sec-"+sec.id}
+            className={`cl-section fade-up${isComplete?" complete":""}`}
+            style={{animationDelay:`${si*0.03}s`}}>
 
-              {/* Section Header */}
-              <div className="sec-header" onClick={()=>toggleSec(sec.id)}>
-                <div className="sec-icon" style={{background:`${meta.color}18`,border:`1px solid ${meta.color}30`}}>
-                  {meta.icon}
-                </div>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{display:"flex",alignItems:"center",gap:8}}>
-                    <span style={{fontWeight:600,fontSize:14,color:isComplete?"#34d399":"#fff"}}>{sec.title}</span>
-                    {isComplete && <span style={{fontSize:11}}>✅</span>}
-                  </div>
-                  <div style={{fontSize:11,color:"#4d6a85",marginTop:1}}>{meta.hint}</div>
-                </div>
-                <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
-                  {editMode && (
-                    <button onClick={e=>{e.stopPropagation();deleteSection(si);}}
-                      style={{background:"rgba(248,113,113,0.1)",border:"1px solid rgba(248,113,113,0.2)",color:"#f87171",borderRadius:6,padding:"2px 7px",fontSize:11,fontWeight:700}}>✕</button>
-                  )}
-                  <div style={{textAlign:"right"}}>
-                    <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:11,color:isComplete?"#34d399":"#4d6a85",fontWeight:600}}>{d}/{t}</div>
-                    <div style={{height:3,width:40,background:"rgba(255,255,255,0.07)",borderRadius:99,marginTop:3,overflow:"hidden"}}>
-                      <div style={{height:"100%",width:sp+"%",background:meta.color,borderRadius:99,transition:"width 0.4s"}}/>
-                    </div>
-                  </div>
-                  <span style={{color:"#4d6a85",fontSize:12,transform:isCollapsed?"rotate(-90deg)":"rotate(0)",transition:"transform 0.2s",display:"inline-block"}}>▾</span>
-                </div>
+            {/* Header */}
+            <div className="cl-sec-header" onClick={()=>toggleSec(sec.id)}>
+              <div className="cl-sec-icon" style={{background:`${meta.color}18`,border:`1px solid ${meta.color}28`}}>
+                {meta.icon}
               </div>
+              <div className="cl-sec-info">
+                <div className="cl-sec-title">
+                  {sec.title}
+                  {isComplete && <span style={{marginLeft:8,fontSize:"13px"}}>✅</span>}
+                </div>
+                <div className="cl-sec-hint">{meta.hint}</div>
+              </div>
+              <div className="cl-sec-right">
+                {editMode && <button className="cl-sec-del" onClick={e=>{e.stopPropagation();delSec(si);}}>✕</button>}
+                <div>
+                  <div className={`cl-sec-count${isComplete?" done":""}`}>{d}/{t}</div>
+                  <div className="cl-sec-bar">
+                    <div className="cl-sec-bar-fill" style={{width:sp+"%",background:meta.color}}/>
+                  </div>
+                </div>
+                <span className={`cl-chevron${isOpen?" open":""}`}>▾</span>
+              </div>
+            </div>
 
-              {/* Items */}
-              {!isCollapsed && (
-                <div style={{borderTop:"1px solid rgba(255,255,255,0.06)"}}>
-                  {sec.items.map((item,ii)=>{
-                    const isDone = checks[item.n];
-                    const isEditing = editingItem?.si===si && editingItem?.ii===ii;
-                    const isExpanded = expandedItem===`${si}-${ii}`;
+            {/* Items */}
+            {isOpen && (
+              <div className="cl-items">
+                {sec.items.map((item,ii)=>{
+                  const isDone = !!checks[item.n];
+                  const isEditing = editItem?.si===si && editItem?.ii===ii;
+                  const expKey = `${si}-${ii}`;
+                  const isExp = !!expanded[expKey];
 
-                    return (
-                      <div key={item.n} className={`item-row${isDone?" done":""}`}
-                        style={{flexDirection:"column",gap:0,cursor:"default"}}>
-                        <div style={{display:"flex",alignItems:"flex-start",gap:10,width:"100%"}}
-                          onClick={()=>{ if(!editMode&&!isEditing) toggleCheck(item.n); }}>
+                  return (
+                    <div key={item.n} className={`cl-item${isDone?" done":""}`}
+                      onClick={()=>{ if(!editMode&&!isEditing) toggleCheck(item.n); }}>
 
-                          {/* Number */}
-                          <span style={{fontFamily:"'JetBrains Mono',monospace",fontSize:10,fontWeight:700,color:isDone?"#34d399":"rgba(56,189,248,0.5)",width:20,flexShrink:0,marginTop:1,textAlign:"right"}}>
-                            {item.n}
-                          </span>
+                      <span className="cl-item-num">#{item.n}</span>
 
-                          {/* Checkbox */}
-                          <div className={`cb${isDone?" checked":""}`}
-                            onClick={e=>{e.stopPropagation();toggleCheck(item.n);}}>
-                            {isDone && (
-                              <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-                                <path d="M1 4L4 7.5L10 1" stroke="#0a1628" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                              </svg>
-                            )}
-                          </div>
-
-                          {/* Content */}
-                          {isEditing ? (
-                            <div style={{flex:1,display:"flex",flexDirection:"column",gap:6}} onClick={e=>e.stopPropagation()}>
-                              <input className="edit-input" value={editDraft.name} onChange={e=>setEditDraft(p=>({...p,name:e.target.value}))} placeholder="Name"/>
-                              <input className="edit-input" value={editDraft.model} onChange={e=>setEditDraft(p=>({...p,model:e.target.value}))} placeholder="Model"/>
-                              <input className="edit-input" value={editDraft.detail||""} onChange={e=>setEditDraft(p=>({...p,detail:e.target.value}))} placeholder="Description for users"/>
-                              <div style={{display:"flex",gap:6,alignItems:"center"}}>
-                                <input className="edit-input" style={{width:80}} value={editDraft.price} onChange={e=>setEditDraft(p=>({...p,price:e.target.value}))} placeholder="Price"/>
-                                <label style={{fontSize:11,color:"#8ba3bf",display:"flex",alignItems:"center",gap:4,cursor:"pointer"}}>
-                                  <input type="checkbox" checked={editDraft.warn} onChange={e=>setEditDraft(p=>({...p,warn:e.target.checked}))}/>⚠️ Pending
-                                </label>
-                              </div>
-                              <div style={{display:"flex",gap:6}}>
-                                <button className="edit-btn btn-save" onClick={commitEdit}>Save</button>
-                                <button className="edit-btn btn-cancel" onClick={()=>setEditingItem(null)}>Cancel</button>
-                              </div>
-                            </div>
-                          ) : (
-                            <div style={{flex:1,minWidth:0}}>
-                              <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
-                                <span className="item-name" style={{fontWeight:600,fontSize:13,color:isDone?"#34d399":"#fff",lineHeight:1.3}}>{item.name}</span>
-                                {item.warn && <span className="tag tag-warn">⚠ Pending</span>}
-                                {item.price==="FREE" && <span className="tag tag-free">FREE</span>}
-                              </div>
-                              <div className="item-model" style={{fontFamily:"'JetBrains Mono',monospace",fontSize:10,color:"#38bdf8",marginTop:2,opacity:isDone?0.5:0.8}}>{item.model}</div>
-                              {item.detail && (
-                                <div onClick={e=>{e.stopPropagation();setExpandedItem(isExpanded?null:`${si}-${ii}`);}}
-                                  style={{fontSize:11,color:isExpanded?"#8ba3bf":"#4d6a85",marginTop:3,lineHeight:1.5,cursor:"pointer",display:"flex",alignItems:"flex-start",gap:4}}>
-                                  <span style={{flexShrink:0,marginTop:1,fontSize:9,color:"#38bdf8"}}>{isExpanded?"▾":"▸"}</span>
-                                  <span>{isExpanded?item.detail:"What is this?"}</span>
-                                </div>
-                              )}
-                            </div>
-                          )}
-
-                          {/* Right side */}
-                          {!isEditing && (
-                            <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4,flexShrink:0}}>
-                              <span className="item-price" style={{fontFamily:"'JetBrains Mono',monospace",fontSize:11,fontWeight:700,color:item.price==="FREE"?"#34d399":item.price==="—"?"#4d6a85":"#fb923c",whiteSpace:"nowrap"}}>
-                                {item.price}
-                              </span>
-                              {editMode && (
-                                <div style={{display:"flex",gap:4}}>
-                                  <button onClick={e=>{e.stopPropagation();startEdit(si,ii,item);}}
-                                    style={{background:"rgba(56,189,248,0.1)",border:"1px solid rgba(56,189,248,0.2)",color:"#38bdf8",borderRadius:5,padding:"2px 6px",fontSize:11}}>✏</button>
-                                  <button onClick={e=>{e.stopPropagation();deleteItem(si,ii);}}
-                                    style={{background:"rgba(248,113,113,0.1)",border:"1px solid rgba(248,113,113,0.2)",color:"#f87171",borderRadius:5,padding:"2px 6px",fontSize:11}}>✕</button>
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
+                      <div className={`cl-cb${isDone?" on":""}`}
+                        onClick={e=>{e.stopPropagation();toggleCheck(item.n);}}>
+                        {isDone && (
+                          <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+                            <path d="M1 5L4.5 8.5L11 1" stroke="#065f46" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        )}
                       </div>
-                    );
-                  })}
 
-                  {/* Add item */}
-                  {editMode && (
-                    <div style={{padding:"8px 14px",borderTop:"1px solid rgba(255,255,255,0.05)"}}>
-                      {addingSec===si ? (
-                        <div style={{display:"flex",flexDirection:"column",gap:6}} onClick={e=>e.stopPropagation()}>
-                          <input className="edit-input" value={newItem.name} placeholder="Item name *" onChange={e=>setNewItem(p=>({...p,name:e.target.value}))}/>
-                          <input className="edit-input" value={newItem.model} placeholder="Model / spec" onChange={e=>setNewItem(p=>({...p,model:e.target.value}))}/>
-                          <input className="edit-input" value={newItem.detail} placeholder="Plain English description for users" onChange={e=>setNewItem(p=>({...p,detail:e.target.value}))}/>
-                          <div style={{display:"flex",gap:6,alignItems:"center"}}>
-                            <input className="edit-input" style={{width:80}} value={newItem.price} placeholder="Price" onChange={e=>setNewItem(p=>({...p,price:e.target.value}))}/>
-                            <label style={{fontSize:11,color:"#8ba3bf",display:"flex",alignItems:"center",gap:4,cursor:"pointer"}}>
-                              <input type="checkbox" checked={newItem.warn} onChange={e=>setNewItem(p=>({...p,warn:e.target.checked}))}/>⚠️
+                      {isEditing ? (
+                        <div className="cl-edit-form" onClick={e=>e.stopPropagation()}>
+                          <input className="cl-input" value={editDraft.name} placeholder="Item name" onChange={e=>setEditDraft(p=>({...p,name:e.target.value}))}/>
+                          <input className="cl-input" value={editDraft.model||""} placeholder="Model / spec" onChange={e=>setEditDraft(p=>({...p,model:e.target.value}))}/>
+                          <input className="cl-input" value={editDraft.detail||""} placeholder="Plain English description" onChange={e=>setEditDraft(p=>({...p,detail:e.target.value}))}/>
+                          <div className="cl-form-row">
+                            <input className="cl-input" style={{maxWidth:100}} value={editDraft.price||""} placeholder="Price" onChange={e=>setEditDraft(p=>({...p,price:e.target.value}))}/>
+                            <label style={{fontSize:"13px",color:"var(--text2)",display:"flex",alignItems:"center",gap:5,cursor:"pointer",whiteSpace:"nowrap"}}>
+                              <input type="checkbox" checked={!!editDraft.warn} onChange={e=>setEditDraft(p=>({...p,warn:e.target.checked}))}/>
+                              ⚠️ Pending
                             </label>
-                            <button className="edit-btn btn-save" onClick={()=>commitAdd(si)}>Add</button>
-                            <button className="edit-btn btn-cancel" onClick={()=>{setAddingSec(null);setNewItem({name:"",model:"",detail:"",price:"",warn:false});}}>✕</button>
+                            <button className="cl-btn cl-btn-success" style={{padding:"6px 12px",fontSize:"13px"}} onClick={commitEdit}>Save</button>
+                            <button className="cl-btn cl-btn-ghost" style={{padding:"6px 12px",fontSize:"13px"}} onClick={()=>setEditItem(null)}>Cancel</button>
                           </div>
                         </div>
                       ) : (
-                        <button className="btn-add" onClick={()=>setAddingSec(si)}>+ Add item to {sec.title}</button>
+                        <div className="cl-item-body">
+                          <div className="cl-item-name">
+                            {item.name}
+                            {item.warn && <span className="cl-tag tag-warn">⚠ Pending</span>}
+                            {item.price==="FREE" && !isDone && <span className="cl-tag tag-free">FREE</span>}
+                          </div>
+                          {item.model && <div className="cl-item-model">{item.model}</div>}
+                          {item.detail && (
+                            <>
+                              <button className="cl-expand-btn" onClick={e=>{e.stopPropagation();toggleExp(expKey);}}>
+                                {isExp?"▾ Hide":"▸ What is this?"}
+                              </button>
+                              <div className={`cl-item-detail${isExp?" open":""}`}>{item.detail}</div>
+                            </>
+                          )}
+                        </div>
+                      )}
+
+                      {!isEditing && (
+                        <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:5,flexShrink:0}}>
+                          <span className={`cl-item-price ${item.price==="FREE"?"price-free":item.price==="—"?"price-dash":"price-cost"}`}>
+                            {item.price}
+                          </span>
+                          {editMode && (
+                            <div className="cl-edit-btns">
+                              <button className="cl-edit-btn edit" onClick={e=>{e.stopPropagation();startEdit(si,ii,item);}}>✏</button>
+                              <button className="cl-edit-btn del"  onClick={e=>{e.stopPropagation();delItem(si,ii);}}>✕</button>
+                            </div>
+                          )}
+                        </div>
                       )}
                     </div>
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })}
+                  );
+                })}
 
-        {/* Add section */}
-        {editMode && (
-          <div className="card" style={{padding:"12px 14px",borderStyle:"dashed"}}>
-            <div style={{fontSize:11,color:"#4d6a85",marginBottom:8,fontFamily:"'JetBrains Mono',monospace",textTransform:"uppercase",letterSpacing:"0.06em"}}>+ New Section</div>
-            <div style={{display:"flex",gap:8}}>
-              <input className="edit-input" style={{flex:1}} value={newSecTitle} placeholder="Section title (e.g. Cabling)" onChange={e=>setNewSecTitle(e.target.value)} onKeyDown={e=>e.key==="Enter"&&addSection()}/>
-              <button className="edit-btn btn-save" onClick={addSection} style={{padding:"6px 14px"}}>Add</button>
-            </div>
+                {/* Add item row */}
+                {editMode && (
+                  <div className="cl-add-row">
+                    {addingSec===si ? (
+                      <div style={{display:"flex",flexDirection:"column",gap:8}} onClick={e=>e.stopPropagation()}>
+                        <input className="cl-input" value={newItem.name} placeholder="Item name *" onChange={e=>setNewItem(p=>({...p,name:e.target.value}))}/>
+                        <input className="cl-input" value={newItem.model} placeholder="Model / spec" onChange={e=>setNewItem(p=>({...p,model:e.target.value}))}/>
+                        <input className="cl-input" value={newItem.detail} placeholder="Plain English description" onChange={e=>setNewItem(p=>({...p,detail:e.target.value}))}/>
+                        <div className="cl-form-row">
+                          <input className="cl-input" style={{maxWidth:100}} value={newItem.price} placeholder="Price" onChange={e=>setNewItem(p=>({...p,price:e.target.value}))}/>
+                          <label style={{fontSize:"13px",color:"var(--text2)",display:"flex",alignItems:"center",gap:5,cursor:"pointer"}}>
+                            <input type="checkbox" checked={newItem.warn} onChange={e=>setNewItem(p=>({...p,warn:e.target.checked}))}/>⚠️ Pending
+                          </label>
+                          <button className="cl-btn cl-btn-success" style={{padding:"6px 12px",fontSize:"13px"}} onClick={()=>commitAdd(si)}>Add</button>
+                          <button className="cl-btn cl-btn-ghost" style={{padding:"6px 12px",fontSize:"13px"}} onClick={()=>{setAddingSec(null);setNewItem({name:"",model:"",detail:"",price:"",warn:false});}}>Cancel</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button className="cl-add-btn" onClick={()=>setAddingSec(si)}>+ Add item to {sec.title}</button>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-        )}
+        );
+      })}
 
-        {/* Bottom actions */}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginTop:4}}>
-          <button onClick={resetChecks}
-            style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)",color:"#4d6a85",padding:10,borderRadius:12,fontSize:12,fontWeight:600,fontFamily:"'DM Sans',sans-serif"}}>
-            ↺ Reset Progress
-          </button>
-          <button onClick={resetAll}
-            style={{background:"rgba(248,113,113,0.06)",border:"1px solid rgba(248,113,113,0.2)",color:"#f87171",padding:10,borderRadius:12,fontSize:12,fontWeight:600,fontFamily:"'DM Sans',sans-serif"}}>
-            ⚠ Reset All
-          </button>
+      {/* Add section */}
+      {editMode && (
+        <div className="cl-add-section">
+          <div style={{fontSize:"12px",color:"var(--text3)",marginBottom:10,fontFamily:"var(--mono)",textTransform:"uppercase",letterSpacing:"0.06em"}}>+ New Section</div>
+          <div style={{display:"flex",gap:8}}>
+            <input className="cl-input" style={{flex:1}} value={newSecTitle} placeholder="Section title e.g. Cabling" onChange={e=>setNewSecTitle(e.target.value)} onKeyDown={e=>e.key==="Enter"&&addSec()}/>
+            <button className="cl-btn cl-btn-primary" onClick={addSec}>Add</button>
+          </div>
         </div>
+      )}
 
-        <div style={{textAlign:"center",padding:"8px 0 16px",fontSize:10,color:"#4d6a85",fontFamily:"'JetBrains Mono',monospace"}}>
-          3rc0.github.io · Cloudflare Workers KV · Shared sync
-        </div>
-      </div>
-    </div>
+      {/* Footer */}
+      <div className="cl-footer">Diyar Hussein 2026</div>
+    </>
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+ReactDOM.createRoot(document.getElementById("cl-root")).render(<App/>);
 </script>
-</body>
-</html>
