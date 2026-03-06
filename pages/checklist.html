@@ -645,7 +645,7 @@ function renderChecklist() {
           h("div",{"class":"cl-sec-count"+(isComplete?" done":"")},`${d}/${t}`),
           h("div",{"class":"cl-sec-bar"},h("div",{"class":"cl-sec-bar-fill","style":`width:${sp}%;background:${meta.color}`}))
         ),
-        h("span",{"class":"cl-chevron"+(isOpen?" open":"")"},"▾")
+        h("span",{"class":"cl-chevron"+(isOpen?" open":"")},"▾")
       )
     );
     secEl.appendChild(secHdr);
