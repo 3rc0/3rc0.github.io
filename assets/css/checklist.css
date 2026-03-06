@@ -1,0 +1,247 @@
+/*
+ * checklist.css — scoped component styles
+ * Strategy: ALL rules prefixed with #cl-app so they never
+ * touch the rest of the Beautiful Jekyll / Bootstrap theme.
+ * No !important used except in @media print where it's standard.
+ * Bootstrap + Beautiful Jekyll conflicts neutralised by scoping,
+ * not by overriding global selectors.
+ */
+
+/* ── Scoped reset: neutralise Bootstrap/Jekyll inheritance ── */
+#cl-app {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #e2eaf4;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 0 60px;
+  box-sizing: border-box;
+}
+#cl-app *, #cl-app *::before, #cl-app *::after { box-sizing: border-box; }
+
+/* Bootstrap bleeds: p margins, anchor colours, heading fonts */
+#cl-app p      { margin: 0; line-height: inherit; font-family: inherit; }
+#cl-app a      { color: inherit; text-decoration: none; font-family: inherit; }
+#cl-app h2     { font-family: inherit; font-weight: 700; line-height: 1.2; margin: 0; font-size: inherit; }
+#cl-app button { font-family: inherit; }
+#cl-app input  { font-family: inherit; }
+#cl-app label  { font-family: inherit; margin: 0; font-weight: inherit; }
+
+/* ── CSS custom properties (prefixed cl- to avoid theme conflicts) ── */
+#cl-app {
+  --cl-glass:   rgba(255,255,255,0.04);
+  --cl-glass2:  rgba(255,255,255,0.07);
+  --cl-border:  rgba(255,255,255,0.08);
+  --cl-border2: rgba(255,255,255,0.14);
+  --cl-accent:  #38bdf8;
+  --cl-green:   #34d399;
+  --cl-orange:  #fb923c;
+  --cl-red:     #f87171;
+  --cl-purple:  #a78bfa;
+  --cl-text:    #e2eaf4;
+  --cl-text2:   #8ba3bf;
+  --cl-text3:   #4d6a85;
+  --cl-done-bg: rgba(52,211,153,0.07);
+  --cl-radius:  14px;
+  --cl-mono:    "SF Mono","Fira Code","Consolas",monospace;
+}
+
+/* ── Animations (prefixed to avoid collisions) ── */
+@keyframes cl-fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes cl-spin   { to{transform:rotate(360deg)} }
+@keyframes cl-shake  { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+#cl-app .fade-up { animation: cl-fadeUp 0.3s ease both; }
+#cl-app .shake   { animation: cl-shake 0.35s ease; }
+
+/* ── Auth card ── */
+#cl-app .cl-auth      { max-width: 400px; margin: 0 auto; padding-top: 20px; }
+#cl-app .cl-auth-card {
+  background: linear-gradient(135deg,#0f2240,#0a1628);
+  border: 1px solid var(--cl-border2); border-radius: 20px;
+  padding: 36px 28px; position: relative; overflow: hidden;
+}
+#cl-app .cl-auth-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background: linear-gradient(90deg,var(--cl-accent),var(--cl-green),var(--cl-purple),var(--cl-orange));
+}
+#cl-app .cl-auth-logo  { font-size: 36px; text-align: center; margin-bottom: 10px; }
+#cl-app .cl-auth-title { font-size: 22px; font-weight: 700; color: #fff; text-align: center; margin-bottom: 6px; }
+#cl-app .cl-auth-sub   { font-size: 15px; color: var(--cl-text2); text-align: center; margin-bottom: 24px; }
+#cl-app .cl-tabs  { display: flex; gap: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; padding: 4px; margin-bottom: 22px; }
+#cl-app .cl-tab   { flex:1; padding: 10px; border: none; border-radius: 8px; background: transparent; color: var(--cl-text2); font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+#cl-app .cl-tab.active { background: rgba(56,189,248,0.15); color: var(--cl-accent); }
+#cl-app .cl-field     { margin-bottom: 16px; }
+#cl-app .cl-label     { font-size: 13px; font-weight: 600; color: var(--cl-text2); margin-bottom: 6px; display: block; letter-spacing: 0.04em; text-transform: uppercase; }
+#cl-app .cl-input {
+  width: 100%; background: rgba(255,255,255,0.06); border: 1px solid var(--cl-border2);
+  color: var(--cl-text); border-radius: 10px; padding: 13px 16px; font-size: 16px; transition: all 0.2s;
+}
+#cl-app .cl-input:focus { outline: none; border-color: var(--cl-accent); box-shadow: 0 0 0 3px rgba(56,189,248,0.12); }
+#cl-app .cl-input.error { border-color: var(--cl-red); box-shadow: 0 0 0 3px rgba(248,113,113,0.12); }
+#cl-app .cl-input-hint  { font-size: 13px; color: var(--cl-text3); margin-top: 5px; }
+#cl-app .cl-auth-error  { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.2); border-radius: 8px; padding: 12px 14px; font-size: 14px; color: var(--cl-red); margin-bottom: 16px; display: none; }
+#cl-app .cl-auth-error.show { display: block; }
+
+/* ── Buttons ── */
+#cl-app .cl-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 11px 20px; border-radius: 10px; font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s; border: none; text-decoration: none; line-height: 1;
+}
+#cl-app .cl-btn:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
+#cl-app .cl-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+#cl-app .cl-btn-full    { width: 100%; }
+#cl-app .cl-btn-primary { background: linear-gradient(135deg,#0ea5e9,#38bdf8); color: #0a1628; font-weight: 700; }
+#cl-app .cl-btn-ghost   { background: rgba(255,255,255,0.05); color: var(--cl-text2); border: 1px solid var(--cl-border); }
+#cl-app .cl-btn-danger  { background: rgba(248,113,113,0.08); color: var(--cl-red);    border: 1px solid rgba(248,113,113,0.2); }
+#cl-app .cl-btn-success { background: rgba(52,211,153,0.12);  color: var(--cl-green);  border: 1px solid rgba(52,211,153,0.3); }
+#cl-app .cl-btn-warn    { background: rgba(251,146,60,0.12);  color: var(--cl-orange); border: 1px solid rgba(251,146,60,0.3); }
+#cl-app .cl-btn-sm      { padding: 7px 14px; font-size: 13px; }
+
+/* ── App header ── */
+#cl-app .cl-header {
+  background: linear-gradient(135deg,#0f2240,#0a1628);
+  border: 1px solid var(--cl-border2); border-radius: var(--cl-radius);
+  padding: 20px 22px; margin-bottom: 14px; position: relative; overflow: hidden;
+}
+#cl-app .cl-header::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background: linear-gradient(90deg,var(--cl-accent),var(--cl-green),var(--cl-purple),var(--cl-orange));
+}
+#cl-app .cl-header-top        { display: flex; align-items: center; gap: 16px; }
+#cl-app .cl-ring              { position: relative; width: 64px; height: 64px; flex-shrink: 0; }
+#cl-app .cl-ring svg          { transform: rotate(-90deg); display: block; }
+#cl-app .cl-ring-label        { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; font-family: var(--cl-mono); }
+#cl-app .cl-title-block       { flex: 1; min-width: 0; }
+#cl-app .cl-title-block h2    { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 3px; letter-spacing: -0.01em; }
+#cl-app .cl-user-badge        { font-size: 13px; color: var(--cl-accent); margin-bottom: 6px; font-family: var(--cl-mono); }
+#cl-app .cl-progress-bar      { height: 4px; background: rgba(255,255,255,0.08); border-radius: 99px; overflow: hidden; margin-top: 8px; }
+#cl-app .cl-progress-fill     { height: 100%; background: linear-gradient(90deg,var(--cl-accent),var(--cl-green)); border-radius: 99px; transition: width 0.5s ease; }
+#cl-app .cl-header-actions    { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--cl-border); }
+
+/* ── Cost strip ── */
+#cl-app .cl-costs     { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 14px; }
+#cl-app .cl-cost-card { background: var(--cl-glass); border: 1px solid var(--cl-border); border-radius: 12px; padding: 12px; text-align: center; }
+#cl-app .cl-cost-val  { font-size: 14px; font-weight: 700; color: var(--cl-orange); font-family: var(--cl-mono); }
+#cl-app .cl-cost-lbl  { font-size: 12px; color: var(--cl-text3); margin-top: 3px; }
+
+/* ── Sections ── */
+#cl-app .cl-section          { background: var(--cl-glass); border: 1px solid var(--cl-border); border-radius: var(--cl-radius); margin-bottom: 10px; overflow: hidden; transition: border-color 0.2s; }
+#cl-app .cl-section:hover    { border-color: var(--cl-border2); }
+#cl-app .cl-section.complete { border-color: rgba(52,211,153,0.25); }
+#cl-app .cl-sec-header       { display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; user-select: none; transition: background 0.15s; }
+#cl-app .cl-sec-header:hover { background: var(--cl-glass2); }
+#cl-app .cl-sec-icon         { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+#cl-app .cl-sec-info         { flex: 1; min-width: 0; }
+#cl-app .cl-sec-title        { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+#cl-app .cl-sec-hint         { font-size: 13px; color: var(--cl-text3); }
+#cl-app .cl-sec-right        { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+#cl-app .cl-sec-count        { font-size: 13px; color: var(--cl-text3); font-weight: 600; font-family: var(--cl-mono); }
+#cl-app .cl-sec-count.done   { color: var(--cl-green); }
+#cl-app .cl-sec-bar          { width: 44px; height: 3px; background: rgba(255,255,255,0.07); border-radius: 99px; overflow: hidden; }
+#cl-app .cl-sec-bar-fill     { height: 100%; border-radius: 99px; transition: width 0.4s; }
+#cl-app .cl-chevron          { color: var(--cl-text3); font-size: 14px; transition: transform 0.2s; display: inline-block; }
+#cl-app .cl-chevron.open     { transform: rotate(180deg); }
+
+/* ── Items ── */
+#cl-app .cl-items                      { border-top: 1px solid rgba(255,255,255,0.06); }
+#cl-app .cl-item                       { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: background 0.15s; }
+#cl-app .cl-item:last-child            { border-bottom: none; }
+#cl-app .cl-item:hover                 { background: var(--cl-glass2); }
+#cl-app .cl-item.done                  { background: var(--cl-done-bg); }
+#cl-app .cl-item.done .cl-item-name   { text-decoration: line-through; color: var(--cl-green); opacity: 0.7; }
+#cl-app .cl-item.done .cl-item-model  { text-decoration: line-through; opacity: 0.4; }
+#cl-app .cl-item.done .cl-item-price  { opacity: 0.35; text-decoration: line-through; }
+#cl-app .cl-item-num                   { font-size: 12px; font-weight: 700; color: rgba(56,189,248,0.4); width: 24px; text-align: right; flex-shrink: 0; padding-top: 3px; font-family: var(--cl-mono); }
+#cl-app .cl-item.done .cl-item-num    { color: var(--cl-green); opacity: 0.6; }
+#cl-app .cl-cb                         { width: 24px; height: 24px; border-radius: 7px; border: 2px solid var(--cl-text3); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; background: transparent; cursor: pointer; }
+#cl-app .cl-cb.on                      { background: var(--cl-green); border-color: var(--cl-green); }
+#cl-app .cl-item-body                  { flex: 1; min-width: 0; }
+#cl-app .cl-item-name                  { font-size: 16px; font-weight: 600; color: #fff; line-height: 1.4; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+#cl-app .cl-item-model                 { font-size: 13px; color: var(--cl-accent); margin-top: 3px; opacity: 0.9; font-family: var(--cl-mono); }
+#cl-app .cl-item-detail                { font-size: 14px; color: var(--cl-text2); margin-top: 6px; line-height: 1.6; display: none; }
+#cl-app .cl-item-detail.open          { display: block; }
+#cl-app .cl-expand-btn                 { font-size: 13px; color: var(--cl-text3); cursor: pointer; margin-top: 4px; display: inline-flex; align-items: center; gap: 3px; background: none; border: none; padding: 0; transition: color 0.15s; }
+#cl-app .cl-expand-btn:hover          { color: var(--cl-accent); }
+#cl-app .cl-item-right                 { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+#cl-app .cl-item-price                 { font-size: 14px; font-weight: 700; white-space: nowrap; font-family: var(--cl-mono); }
+#cl-app .price-free                    { color: var(--cl-green); }
+#cl-app .price-dash                    { color: var(--cl-text3); }
+#cl-app .price-cost                    { color: var(--cl-orange); }
+
+/* ── Tags ── */
+#cl-app .cl-tag   { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px; border-radius: 20px; font-size: 12px; font-weight: 700; font-family: var(--cl-mono); }
+#cl-app .tag-warn { background: rgba(251,146,60,0.1); color: var(--cl-orange); border: 1px solid rgba(251,146,60,0.3); }
+#cl-app .tag-free { background: rgba(52,211,153,0.1); color: var(--cl-green);  border: 1px solid rgba(52,211,153,0.2); }
+
+/* ── Edit controls ── */
+#cl-app .cl-edit-btns     { display: flex; gap: 4px; }
+#cl-app .cl-edit-btn      { padding: 5px 10px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; }
+#cl-app .cl-edit-btn.edit { background: rgba(56,189,248,0.12); color: var(--cl-accent); border: 1px solid rgba(56,189,248,0.25); }
+#cl-app .cl-edit-btn.del  { background: rgba(248,113,113,0.1);  color: var(--cl-red);    border: 1px solid rgba(248,113,113,0.2); }
+#cl-app .cl-sec-del       { padding: 3px 9px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; background: rgba(248,113,113,0.1); color: var(--cl-red); border: 1px solid rgba(248,113,113,0.2); }
+
+/* ── Inline edit form ── */
+#cl-app .cl-edit-form  { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+#cl-app .cl-form-input { background: rgba(255,255,255,0.06); border: 1px solid var(--cl-border2); color: var(--cl-text); border-radius: 8px; padding: 9px 12px; font-size: 14px; width: 100%; transition: all 0.2s; }
+#cl-app .cl-form-input:focus { outline: none; border-color: var(--cl-accent); box-shadow: 0 0 0 2px rgba(56,189,248,0.1); }
+#cl-app .cl-form-row   { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+#cl-app .cl-add-row    { padding: 10px 16px; border-top: 1px solid rgba(255,255,255,0.05); }
+#cl-app .cl-add-btn    { width: 100%; padding: 11px; background: transparent; border: 1px dashed rgba(255,255,255,0.12); border-radius: 10px; color: var(--cl-text3); font-size: 14px; cursor: pointer; transition: all 0.2s; }
+#cl-app .cl-add-btn:hover { border-color: var(--cl-accent); color: var(--cl-accent); }
+#cl-app .cl-add-section { background: var(--cl-glass); border: 1px dashed var(--cl-border2); border-radius: var(--cl-radius); padding: 16px; margin-bottom: 10px; }
+
+/* ── Toast (fixed position — outside #cl-app scope) ── */
+.cl-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #162540; border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 12px 22px; font-size: 15px; font-weight: 600; color: #34d399; box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 9999; white-space: nowrap; animation: cl-fadeUp 0.2s ease; pointer-events: none; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+
+/* ── Activity log ── */
+#cl-app .cl-log-panel   { background: var(--cl-glass); border: 1px solid var(--cl-border); border-radius: var(--cl-radius); overflow: hidden; margin-bottom: 10px; }
+#cl-app .cl-log-header  { padding: 14px 16px; border-bottom: 1px solid var(--cl-border); display: flex; align-items: center; justify-content: space-between; }
+#cl-app .cl-log-title   { font-size: 15px; font-weight: 700; color: #fff; }
+#cl-app .cl-log-empty   { padding: 24px; text-align: center; font-size: 14px; color: var(--cl-text3); }
+#cl-app .cl-log-entry   { display: flex; gap: 10px; align-items: flex-start; padding: 11px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+#cl-app .cl-log-entry:last-child { border-bottom: none; }
+#cl-app .cl-log-time    { font-size: 12px; color: var(--cl-text3); white-space: nowrap; padding-top: 2px; min-width: 100px; font-family: var(--cl-mono); }
+#cl-app .cl-log-action  { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; font-family: var(--cl-mono); }
+#cl-app .log-check      { background: rgba(52,211,153,0.1); color: var(--cl-green); }
+#cl-app .log-uncheck    { background: rgba(248,113,113,0.1); color: var(--cl-red); }
+#cl-app .log-edit       { background: rgba(56,189,248,0.1);  color: var(--cl-accent); }
+#cl-app .log-login      { background: rgba(167,139,250,0.1); color: var(--cl-purple); }
+#cl-app .log-register   { background: rgba(251,146,60,0.1);  color: var(--cl-orange); }
+#cl-app .cl-log-detail  { font-size: 14px; color: var(--cl-text2); flex: 1; }
+#cl-app .cl-saving      { font-size: 12px; color: var(--cl-accent); text-align: center; padding: 4px; opacity: 0.7; font-family: var(--cl-mono); }
+#cl-app .cl-spinner     { width: 32px; height: 32px; border: 3px solid rgba(56,189,248,0.2); border-top-color: #38bdf8; border-radius: 50%; animation: cl-spin 0.8s linear infinite; margin: 0 auto 14px; }
+
+/* ── Print ── */
+@media print {
+  #cl-app .cl-header-actions, #cl-app .cl-btn, #cl-app .cl-edit-btns,
+  #cl-app .cl-add-row, #cl-app .cl-add-section, .cl-toast,
+  #cl-app .cl-saving, #cl-app .cl-log-panel, #cl-app .cl-auth,
+  #cl-app .cl-tabs, #cl-app .cl-sec-del, #cl-app .cl-expand-btn { display: none !important; }
+  #cl-app                          { color: #000; }
+  #cl-app .cl-header               { background: #f8fafc !important; border: 1px solid #ddd !important; }
+  #cl-app .cl-header::before       { display: none; }
+  #cl-app .cl-section              { border: 1px solid #ddd !important; background: #fff !important; break-inside: avoid; }
+  #cl-app .cl-sec-header           { background: #f1f5f9 !important; }
+  #cl-app .cl-sec-title            { color: #111 !important; }
+  #cl-app .cl-item-name            { color: #111 !important; }
+  #cl-app .cl-item-model           { color: #2563eb !important; }
+  #cl-app .cl-item-detail          { display: block !important; color: #555 !important; }
+  #cl-app .cl-item-price           { color: #d97706 !important; }
+  #cl-app .price-free              { color: #059669 !important; }
+  #cl-app .cl-title-block h2       { color: #111 !important; }
+  @page { margin: 15mm; size: A4; }
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  #cl-app                      { padding: 0 0 40px; }
+  #cl-app .cl-header-actions   { gap: 6px; }
+  #cl-app .cl-btn              { font-size: 14px; padding: 9px 13px; }
+  #cl-app .cl-item             { padding: 12px; }
+  #cl-app .cl-item-name        { font-size: 15px; }
+  #cl-app .cl-sec-title        { font-size: 15px; }
+  #cl-app .cl-title-block h2   { font-size: 18px; }
+  #cl-app .cl-cost-val         { font-size: 13px; }
+}
