@@ -4,710 +4,847 @@ title: Home Security Checklist
 subtitle: Home Network Infrastructure
 permalink: /checklist/
 ---
-
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-
+{% raw %}
 <style>
-*, *::before, *::after { box-sizing: border-box; }
-:root {
-  --bg:#080f1a; --bg1:#0d1829; --bg2:#111f36; --bg3:#162540;
-  --glass:rgba(255,255,255,0.04); --glass2:rgba(255,255,255,0.07);
-  --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.14);
-  --accent:#38bdf8; --green:#34d399; --orange:#fb923c;
-  --red:#f87171; --text:#e2eaf4; --text2:#8ba3bf; --text3:#4d6a85;
-  --done-bg:rgba(52,211,153,0.07); --warn-bg:rgba(251,146,60,0.1);
+/* ── Reset & Base ─────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#080f1a;--bg1:#0d1829;--bg2:#111f36;--bg3:#162540;
+  --glass:rgba(255,255,255,0.04);--glass2:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --accent:#38bdf8;--green:#34d399;--orange:#fb923c;
+  --red:#f87171;--purple:#a78bfa;
+  --text:#e2eaf4;--text2:#8ba3bf;--text3:#4d6a85;
+  --done-bg:rgba(52,211,153,0.07);
   --radius:14px;
-  --font:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
-  --mono:'JetBrains Mono','Fira Code',monospace;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono","Fira Code","Consolas",monospace;
 }
-#checklist-app { font-family:var(--font); font-size:16px; line-height:1.5; color:var(--text); max-width:680px; margin:0 auto; padding:0 0 48px; }
+#cl-app{font-family:var(--font);font-size:16px;line-height:1.5;color:var(--text);max-width:680px;margin:0 auto;padding:0 0 60px;}
 
-@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-@keyframes popIn  { 0%{transform:scale(0.6)} 70%{transform:scale(1.15)} 100%{transform:scale(1)} }
-@keyframes spin   { to{transform:rotate(360deg)} }
-@keyframes shake  { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-5px)} 40%,80%{transform:translateX(5px)} }
-.fade-up { animation:fadeUp 0.3s ease both; }
+/* ── Animations ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes popIn{0%{transform:scale(0.6)}70%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.fade-up{animation:fadeUp 0.3s ease both;}
+.shake{animation:shake 0.35s ease;}
 
-/* ── Password prompt (inline, not modal) ── */
-.cl-pw-banner {
-  background: linear-gradient(135deg,rgba(56,189,248,0.07),rgba(56,189,248,0.03));
-  border: 1px solid rgba(56,189,248,0.25);
-  border-radius: var(--radius);
-  padding: 18px 20px;
-  margin-bottom: 14px;
-  animation: fadeUp 0.25s ease;
+/* ── Auth Screen ── */
+.cl-auth{
+  max-width:380px;margin:0 auto;padding-top:20px;
 }
-.cl-pw-banner h4 {
-  font-size:15px; font-weight:700; color:#fff;
-  margin:0 0 4px; display:flex; align-items:center; gap:8px;
+.cl-auth-card{
+  background:linear-gradient(135deg,#0f2240,#0a1628);
+  border:1px solid var(--border2);border-radius:20px;
+  padding:32px 28px;position:relative;overflow:hidden;
 }
-.cl-pw-banner p { font-size:13px; color:var(--text2); margin:0 0 14px; }
-.cl-pw-row { display:flex; gap:8px; align-items:center; }
-.cl-pw-input {
-  flex:1; background:rgba(255,255,255,0.06);
-  border:1px solid rgba(56,189,248,0.3);
-  color:var(--text); border-radius:10px; padding:10px 14px;
-  font-size:15px; font-family:var(--font);
-  transition:border-color 0.2s, box-shadow 0.2s;
+.cl-auth-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),var(--green),var(--purple),var(--orange));
 }
-.cl-pw-input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(56,189,248,0.12); }
-.cl-pw-input.error { border-color:var(--red); box-shadow:0 0 0 3px rgba(248,113,113,0.12); animation:shake 0.4s ease; }
-.cl-pw-error { font-size:13px; color:var(--red); margin-top:8px; display:flex; align-items:center; gap:5px; }
+.cl-auth-logo{font-size:32px;text-align:center;margin-bottom:8px;}
+.cl-auth-title{font-size:20px;font-weight:700;color:#fff;text-align:center;margin-bottom:4px;}
+.cl-auth-sub{font-size:13px;color:var(--text2);text-align:center;margin-bottom:24px;}
+.cl-tabs{display:flex;gap:4px;background:rgba(255,255,255,0.05);border-radius:10px;padding:4px;margin-bottom:20px;}
+.cl-tab{flex:1;padding:8px;border:none;border-radius:8px;background:transparent;color:var(--text2);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
+.cl-tab.active{background:rgba(56,189,248,0.15);color:var(--accent);}
+.cl-field{margin-bottom:14px;}
+.cl-label{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px;display:block;letter-spacing:0.04em;text-transform:uppercase;}
+.cl-input{width:100%;background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:var(--text);border-radius:10px;padding:11px 14px;font-size:15px;font-family:var(--font);transition:all 0.2s;}
+.cl-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(56,189,248,0.12);}
+.cl-input.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(248,113,113,0.12);}
+.cl-input-hint{font-size:11px;color:var(--text3);margin-top:4px;}
+.cl-auth-error{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--red);margin-bottom:14px;display:none;}
+.cl-auth-error.show{display:block;}
 
 /* ── Buttons ── */
-.cl-btn {
-  display:inline-flex; align-items:center; gap:6px;
-  padding:9px 16px; border-radius:10px;
-  font-family:var(--font); font-size:14px; font-weight:600;
-  cursor:pointer; transition:all 0.15s; border:none;
-}
-.cl-btn:hover { opacity:0.85; transform:translateY(-1px); }
-.cl-btn-primary { background:rgba(56,189,248,0.12); color:var(--accent); border:1px solid rgba(56,189,248,0.3); }
-.cl-btn-success { background:rgba(52,211,153,0.12); color:var(--green); border:1px solid rgba(52,211,153,0.3); }
-.cl-btn-warning { background:rgba(251,146,60,0.12); color:var(--orange); border:1px solid rgba(251,146,60,0.3); }
-.cl-btn-danger  { background:rgba(248,113,113,0.08); color:var(--red); border:1px solid rgba(248,113,113,0.2); }
-.cl-btn-ghost   { background:rgba(255,255,255,0.04); color:var(--text2); border:1px solid var(--border); }
-.cl-btn-edit-on { background:rgba(251,146,60,0.15); color:var(--orange); border:1px solid rgba(251,146,60,0.4); }
-.cl-btn-sm { padding:6px 12px; font-size:13px; }
+.cl-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border-radius:10px;font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s;border:none;text-decoration:none;}
+.cl-btn:hover:not(:disabled){opacity:0.85;transform:translateY(-1px);}
+.cl-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.cl-btn-full{width:100%;}
+.cl-btn-primary{background:linear-gradient(135deg,#0ea5e9,#38bdf8);color:#0a1628;font-weight:700;}
+.cl-btn-ghost{background:rgba(255,255,255,0.05);color:var(--text2);border:1px solid var(--border);}
+.cl-btn-danger{background:rgba(248,113,113,0.08);color:var(--red);border:1px solid rgba(248,113,113,0.2);}
+.cl-btn-success{background:rgba(52,211,153,0.12);color:var(--green);border:1px solid rgba(52,211,153,0.3);}
+.cl-btn-warn{background:rgba(251,146,60,0.12);color:var(--orange);border:1px solid rgba(251,146,60,0.3);}
+.cl-btn-sm{padding:5px 12px;font-size:13px;}
 
-/* ── Header ── */
-.cl-header {
+/* ── App Header ── */
+.cl-header{
   background:linear-gradient(135deg,#0f2240,#0a1628);
-  border:1px solid var(--border2); border-radius:var(--radius);
-  padding:20px; margin-bottom:14px; position:relative; overflow:hidden;
+  border:1px solid var(--border2);border-radius:var(--radius);
+  padding:18px 20px;margin-bottom:14px;position:relative;overflow:hidden;
 }
-.cl-header::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:3px;
-  background:linear-gradient(90deg,var(--accent),var(--green),var(--purple,#a78bfa),var(--orange));
-}
-.cl-header-top { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
-.cl-ring { position:relative; width:64px; height:64px; flex-shrink:0; }
-.cl-ring svg { transform:rotate(-90deg); }
-.cl-ring-label {
-  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-  font-family:var(--mono); font-size:13px; font-weight:700; color:var(--accent);
-}
-.cl-title-block { flex:1; min-width:0; }
-.cl-title-block h2 { font-size:20px; font-weight:700; color:#fff; margin:0 0 2px; letter-spacing:-0.01em; }
-.cl-title-block p  { font-size:14px; color:var(--text2); margin:0 0 8px; }
-.cl-progress-bar  { height:4px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden; }
-.cl-progress-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--green)); border-radius:99px; transition:width 0.5s ease; }
-.cl-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; padding-top:14px; border-top:1px solid var(--border); }
-.cl-saving  { font-family:var(--mono); font-size:11px; color:var(--accent); text-align:center; padding:4px; opacity:0.7; }
+.cl-header::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--green),var(--purple),var(--orange));}
+.cl-header-top{display:flex;align-items:center;gap:14px;}
+.cl-ring{position:relative;width:60px;height:60px;flex-shrink:0;}
+.cl-ring svg{transform:rotate(-90deg);}
+.cl-ring-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;}
+.cl-title-block{flex:1;min-width:0;}
+.cl-title-block h2{font-size:18px;font-weight:700;color:#fff;margin-bottom:2px;}
+.cl-user-badge{font-size:12px;color:var(--accent);margin-bottom:6px;font-family:var(--mono);}
+.cl-progress-bar{height:4px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;}
+.cl-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:99px;transition:width 0.5s ease;}
+.cl-header-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
 
 /* ── Cost strip ── */
-.cl-costs { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
-.cl-cost-card { background:var(--glass); border:1px solid var(--border); border-radius:12px; padding:10px 12px; text-align:center; }
-.cl-cost-val { font-family:var(--mono); font-size:14px; font-weight:700; color:var(--orange); }
-.cl-cost-lbl { font-size:12px; color:var(--text3); margin-top:2px; }
+.cl-costs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.cl-cost-card{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:10px 12px;text-align:center;}
+.cl-cost-val{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--orange);}
+.cl-cost-lbl{font-size:11px;color:var(--text3);margin-top:2px;}
 
 /* ── Sections ── */
-.cl-section { background:var(--glass); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:10px; overflow:hidden; transition:border-color 0.2s; }
-.cl-section:hover { border-color:var(--border2); }
-.cl-section.complete { border-color:rgba(52,211,153,0.25); }
-.cl-sec-header { display:flex; align-items:center; gap:12px; padding:14px 16px; cursor:pointer; user-select:none; transition:background 0.15s; }
-.cl-sec-header:hover { background:var(--glass2); }
-.cl-sec-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
-.cl-sec-info { flex:1; min-width:0; }
-.cl-sec-title { font-size:15px; font-weight:600; color:#fff; margin:0 0 1px; }
-.cl-sec-hint  { font-size:12px; color:var(--text3); }
-.cl-sec-right { display:flex; align-items:center; gap:10px; flex-shrink:0; }
-.cl-sec-count { font-family:var(--mono); font-size:12px; color:var(--text3); font-weight:600; }
-.cl-sec-count.done { color:var(--green); }
-.cl-sec-bar { width:48px; height:3px; background:rgba(255,255,255,0.07); border-radius:99px; overflow:hidden; }
-.cl-sec-bar-fill { height:100%; border-radius:99px; transition:width 0.4s; }
-.cl-chevron { color:var(--text3); font-size:12px; transition:transform 0.2s; display:inline-block; }
-.cl-chevron.open { transform:rotate(180deg); }
-.cl-sec-del { padding:2px 7px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; background:rgba(248,113,113,0.1); color:var(--red); border:1px solid rgba(248,113,113,0.2); }
+.cl-section{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden;transition:border-color 0.2s;}
+.cl-section:hover{border-color:var(--border2);}
+.cl-section.complete{border-color:rgba(52,211,153,0.25);}
+.cl-sec-header{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;user-select:none;transition:background 0.15s;}
+.cl-sec-header:hover{background:var(--glass2);}
+.cl-sec-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.cl-sec-info{flex:1;min-width:0;}
+.cl-sec-title{font-size:15px;font-weight:600;color:#fff;margin-bottom:1px;}
+.cl-sec-hint{font-size:12px;color:var(--text3);}
+.cl-sec-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.cl-sec-count{font-family:var(--mono);font-size:12px;color:var(--text3);font-weight:600;}
+.cl-sec-count.done{color:var(--green);}
+.cl-sec-bar{width:44px;height:3px;background:rgba(255,255,255,0.07);border-radius:99px;overflow:hidden;}
+.cl-sec-bar-fill{height:100%;border-radius:99px;transition:width 0.4s;}
+.cl-chevron{color:var(--text3);font-size:11px;transition:transform 0.2s;display:inline-block;}
+.cl-chevron.open{transform:rotate(180deg);}
 
 /* ── Items ── */
-.cl-items { border-top:1px solid rgba(255,255,255,0.06); }
-.cl-item {
-  display:flex; align-items:flex-start; gap:10px;
-  padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.05);
-  cursor:pointer; transition:background 0.15s;
-}
-.cl-item:last-child { border-bottom:none; }
-.cl-item:hover { background:var(--glass2); }
-.cl-item.done { background:var(--done-bg); }
-.cl-item.done .cl-item-name  { text-decoration:line-through; color:var(--green); opacity:0.7; }
-.cl-item.done .cl-item-model { text-decoration:line-through; opacity:0.4; }
-.cl-item.done .cl-item-price { opacity:0.35; text-decoration:line-through; }
-.cl-item-num { font-family:var(--mono); font-size:11px; font-weight:700; color:rgba(56,189,248,0.4); width:22px; text-align:right; flex-shrink:0; padding-top:2px; }
-.done .cl-item-num { color:var(--green); opacity:0.6; }
-.cl-cb { width:22px; height:22px; border-radius:7px; border:2px solid var(--text3); flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.2s; background:transparent; }
-.cl-cb.on { background:var(--green); border-color:var(--green); }
-.cl-cb.on svg { animation:popIn 0.25s ease; }
-.cl-item-body { flex:1; min-width:0; }
-.cl-item-name  { font-size:15px; font-weight:600; color:#fff; line-height:1.35; display:flex; align-items:center; flex-wrap:wrap; gap:6px; }
-.cl-item-model { font-family:var(--mono); font-size:12px; color:var(--accent); margin-top:2px; opacity:0.85; }
-.cl-item-detail { font-size:13px; color:var(--text2); margin-top:4px; line-height:1.55; display:none; }
-.cl-item-detail.open { display:block; }
-.cl-expand-btn { font-size:12px; color:var(--text3); cursor:pointer; margin-top:3px; display:inline-flex; align-items:center; gap:3px; background:none; border:none; padding:0; font-family:var(--font); transition:color 0.15s; }
-.cl-expand-btn:hover { color:var(--accent); }
-.cl-item-price { font-family:var(--mono); font-size:13px; font-weight:700; white-space:nowrap; flex-shrink:0; padding-top:2px; }
-.price-free { color:var(--green); }
-.price-dash { color:var(--text3); }
-.price-cost { color:var(--orange); }
-.cl-tag { display:inline-flex; align-items:center; gap:3px; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:700; letter-spacing:0.02em; font-family:var(--mono); flex-shrink:0; }
-.tag-warn { background:var(--warn-bg); color:var(--orange); border:1px solid rgba(251,146,60,0.3); }
-.tag-free { background:rgba(52,211,153,0.1); color:var(--green); border:1px solid rgba(52,211,153,0.2); }
-.cl-edit-btns { display:flex; gap:4px; flex-shrink:0; margin-top:1px; }
-.cl-edit-btn { padding:3px 8px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; border:none; transition:all 0.15s; font-family:var(--font); }
-.cl-edit-btn.edit { background:rgba(56,189,248,0.12); color:var(--accent); border:1px solid rgba(56,189,248,0.25); }
-.cl-edit-btn.del  { background:rgba(248,113,113,0.1); color:var(--red); border:1px solid rgba(248,113,113,0.2); }
-.cl-edit-form { display:flex; flex-direction:column; gap:8px; flex:1; }
-.cl-input { background:rgba(255,255,255,0.06); border:1px solid var(--border2); color:var(--text); border-radius:8px; padding:8px 12px; font-size:14px; width:100%; font-family:var(--font); transition:border-color 0.2s,box-shadow 0.2s; }
-.cl-input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(56,189,248,0.12); }
-.cl-form-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-.cl-form-row .cl-input { flex:1; min-width:80px; }
-.cl-add-row { padding:8px 16px; border-top:1px solid rgba(255,255,255,0.05); }
-.cl-add-btn { width:100%; padding:9px; background:transparent; border:1px dashed rgba(255,255,255,0.12); border-radius:10px; color:var(--text3); font-size:14px; cursor:pointer; font-family:var(--font); transition:all 0.2s; }
-.cl-add-btn:hover { border-color:var(--accent); color:var(--accent); }
-.cl-add-section { background:var(--glass); border:1px dashed var(--border2); border-radius:var(--radius); padding:14px 16px; margin-bottom:10px; }
-.cl-toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#162540; border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:10px 20px; font-size:14px; font-weight:600; color:var(--green); box-shadow:0 8px 32px rgba(0,0,0,0.5); z-index:9999; white-space:nowrap; animation:fadeUp 0.2s ease; }
-.cl-footer { text-align:center; padding:24px 0 8px; font-size:13px; color:var(--text3); font-family:var(--mono); }
-.cl-lock-badge { display:inline-flex; align-items:center; gap:5px; font-size:12px; color:var(--text3); font-family:var(--mono); padding:3px 8px; border:1px solid var(--border); border-radius:20px; }
+.cl-items{border-top:1px solid rgba(255,255,255,0.06);}
+.cl-item{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;transition:background 0.15s;}
+.cl-item:last-child{border-bottom:none;}
+.cl-item:hover{background:var(--glass2);}
+.cl-item.done{background:var(--done-bg);}
+.cl-item.done .cl-item-name{text-decoration:line-through;color:var(--green);opacity:0.7;}
+.cl-item.done .cl-item-model{text-decoration:line-through;opacity:0.4;}
+.cl-item.done .cl-item-price{opacity:0.35;text-decoration:line-through;}
+.cl-item-num{font-family:var(--mono);font-size:11px;font-weight:700;color:rgba(56,189,248,0.4);width:22px;text-align:right;flex-shrink:0;padding-top:2px;}
+.cl-item.done .cl-item-num{color:var(--green);opacity:0.6;}
+.cl-cb{width:22px;height:22px;border-radius:7px;border:2px solid var(--text3);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;background:transparent;cursor:pointer;}
+.cl-cb.on{background:var(--green);border-color:var(--green);}
+.cl-item-body{flex:1;min-width:0;}
+.cl-item-name{font-size:15px;font-weight:600;color:#fff;line-height:1.35;display:flex;align-items:center;flex-wrap:wrap;gap:6px;}
+.cl-item-model{font-family:var(--mono);font-size:12px;color:var(--accent);margin-top:2px;opacity:0.85;}
+.cl-item-detail{font-size:13px;color:var(--text2);margin-top:4px;line-height:1.55;display:none;}
+.cl-item-detail.open{display:block;}
+.cl-expand-btn{font-size:12px;color:var(--text3);cursor:pointer;margin-top:3px;display:inline-flex;align-items:center;gap:3px;background:none;border:none;padding:0;font-family:var(--font);transition:color 0.15s;}
+.cl-expand-btn:hover{color:var(--accent);}
+.cl-item-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
+.cl-item-price{font-family:var(--mono);font-size:13px;font-weight:700;white-space:nowrap;}
+.price-free{color:var(--green);}
+.price-dash{color:var(--text3);}
+.price-cost{color:var(--orange);}
+
+/* ── Tags ── */
+.cl-tag{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:11px;font-weight:700;font-family:var(--mono);}
+.tag-warn{background:rgba(251,146,60,0.1);color:var(--orange);border:1px solid rgba(251,146,60,0.3);}
+.tag-free{background:rgba(52,211,153,0.1);color:var(--green);border:1px solid rgba(52,211,153,0.2);}
+
+/* ── Edit controls ── */
+.cl-edit-btns{display:flex;gap:4px;}
+.cl-edit-btn{padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:var(--font);}
+.cl-edit-btn.edit{background:rgba(56,189,248,0.12);color:var(--accent);border:1px solid rgba(56,189,248,0.25);}
+.cl-edit-btn.del{background:rgba(248,113,113,0.1);color:var(--red);border:1px solid rgba(248,113,113,0.2);}
+.cl-sec-del{padding:2px 7px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;background:rgba(248,113,113,0.1);color:var(--red);border:1px solid rgba(248,113,113,0.2);}
+
+/* ── Inline edit form ── */
+.cl-edit-form{flex:1;display:flex;flex-direction:column;gap:7px;}
+.cl-form-input{background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:var(--text);border-radius:8px;padding:7px 11px;font-size:13px;width:100%;font-family:var(--font);transition:all 0.2s;}
+.cl-form-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(56,189,248,0.1);}
+.cl-form-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.cl-add-row{padding:8px 16px;border-top:1px solid rgba(255,255,255,0.05);}
+.cl-add-btn{width:100%;padding:9px;background:transparent;border:1px dashed rgba(255,255,255,0.12);border-radius:10px;color:var(--text3);font-size:14px;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
+.cl-add-btn:hover{border-color:var(--accent);color:var(--accent);}
+.cl-add-section{background:var(--glass);border:1px dashed var(--border2);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;}
+
+/* ── Toast ── */
+.cl-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#162540;border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:10px 20px;font-size:14px;font-weight:600;color:var(--green);box-shadow:0 8px 32px rgba(0,0,0,0.5);z-index:9999;white-space:nowrap;animation:fadeUp 0.2s ease;pointer-events:none;}
+
+/* ── Log panel ── */
+.cl-log-panel{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:10px;}
+.cl-log-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.cl-log-title{font-size:14px;font-weight:700;color:#fff;}
+.cl-log-empty{padding:20px;text-align:center;font-size:13px;color:var(--text3);}
+.cl-log-entry{display:flex;gap:10px;align-items:flex-start;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.cl-log-entry:last-child{border-bottom:none;}
+.cl-log-time{font-family:var(--mono);font-size:10px;color:var(--text3);white-space:nowrap;padding-top:2px;min-width:90px;}
+.cl-log-action{font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;font-family:var(--mono);flex-shrink:0;}
+.log-check{background:rgba(52,211,153,0.1);color:var(--green);}
+.log-uncheck{background:rgba(248,113,113,0.1);color:var(--red);}
+.log-edit{background:rgba(56,189,248,0.1);color:var(--accent);}
+.log-login{background:rgba(167,139,250,0.1);color:var(--purple);}
+.log-register{background:rgba(251,146,60,0.1);color:var(--orange);}
+.cl-log-detail{font-size:13px;color:var(--text2);flex:1;}
+
+/* ── Saving ── */
+.cl-saving{font-family:var(--mono);font-size:11px;color:var(--accent);text-align:center;padding:4px;opacity:0.7;}
+
+/* ── Loading spinner ── */
+.cl-spinner{width:28px;height:28px;border:3px solid rgba(56,189,248,0.2);border-top-color:#38bdf8;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;}
 
 /* ── Print ── */
-@media print {
-  .cl-actions,.cl-btn,.cl-edit-btns,.cl-add-row,.cl-add-section,
-  .cl-toast,.cl-saving,.cl-pw-banner { display:none!important; }
-  #checklist-app { color:#000!important; background:#fff!important; }
-  .cl-header { background:#f8fafc!important; border:1px solid #ddd!important; }
-  .cl-header::before { display:none; }
-  .cl-section { border:1px solid #ddd!important; background:#fff!important; break-inside:avoid; margin-bottom:8px; }
-  .cl-sec-header { background:#f1f5f9!important; }
-  .cl-sec-title,.cl-item-name { color:#111!important; }
-  .cl-item-model { color:#2563eb!important; }
-  .cl-sec-hint,.cl-item-detail { color:#555!important; }
-  .cl-item-detail { display:block!important; }
-  .cl-item-price { color:#d97706!important; }
-  .price-free { color:#059669!important; }
-  .cl-item-num { color:#94a3b8!important; }
-  .cl-cb { border-color:#94a3b8!important; }
-  .cl-cb.on { background:#059669!important; border-color:#059669!important; }
-  .done .cl-item-name { color:#059669!important; }
-  .cl-costs { display:none; }
-  .cl-ring-label { color:#2563eb!important; }
-  .cl-title-block h2 { color:#111!important; }
-  .cl-title-block p  { color:#555!important; }
-  .tag-warn { background:#fff7ed!important; color:#d97706!important; }
-  .tag-free { background:#f0fdf4!important; color:#059669!important; }
-  .cl-footer { color:#94a3b8!important; border-top:1px solid #e2e8f0; margin-top:16px; padding-top:12px; }
-  @page { margin:15mm; size:A4; }
+@media print{
+  .cl-header-actions,.cl-btn,.cl-edit-btns,.cl-add-row,.cl-add-section,
+  .cl-toast,.cl-saving,.cl-log-panel,.cl-auth,.cl-tabs,
+  .cl-sec-del,.cl-expand-btn{display:none!important;}
+  #cl-app{color:#000!important;}
+  .cl-header{background:#f8fafc!important;border:1px solid #ddd!important;}
+  .cl-header::before{display:none;}
+  .cl-section{border:1px solid #ddd!important;background:#fff!important;break-inside:avoid;}
+  .cl-sec-header{background:#f1f5f9!important;}
+  .cl-sec-title,.cl-item-name{color:#111!important;}
+  .cl-item-model{color:#2563eb!important;}
+  .cl-item-detail{display:block!important;color:#555!important;}
+  .cl-item-price{color:#d97706!important;}
+  .price-free{color:#059669!important;}
+  .cl-item-num{color:#94a3b8!important;}
+  .cl-cb.on{background:#059669!important;border-color:#059669!important;}
+  .done .cl-item-name{color:#059669!important;}
+  .cl-title-block h2{color:#111!important;}
+  .cl-ring-label{color:#2563eb!important;}
+  @page{margin:15mm;size:A4;}
 }
 
 /* ── Mobile ── */
-@media (max-width:480px) {
-  .cl-cost-val { font-size:12px; }
-  .cl-btn { font-size:13px; padding:7px 11px; }
-  .cl-item { padding:11px 12px; }
-  .cl-item-name { font-size:14px; }
-  .cl-title-block h2 { font-size:18px; }
+@media(max-width:480px){
+  .cl-header-actions{gap:6px;}
+  .cl-btn{font-size:13px;padding:8px 12px;}
+  .cl-item{padding:10px 12px;}
+  .cl-item-name{font-size:14px;}
+  .cl-title-block h2{font-size:17px;}
+  .cl-costs{grid-template-columns:repeat(3,1fr);}
+  .cl-cost-val{font-size:12px;}
 }
 </style>
 
-<div id="checklist-app">
-  <div id="cl-root">
-    <div style="text-align:center;padding:60px 0;color:#38bdf8;font-family:monospace;font-size:14px">
-      <div style="width:28px;height:28px;border:3px solid rgba(56,189,248,0.2);border-top-color:#38bdf8;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px"></div>
-      Loading checklist…
-    </div>
+<div id="cl-app">
+  <div id="cl-root" style="text-align:center;padding:60px 0;color:#38bdf8;font-family:monospace;font-size:14px;">
+    <div class="cl-spinner"></div>
+    Loading…
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-{% raw %}<script type="text/babel">
+<script>
+(function(){
+"use strict";
 
-const WORKER_URL = "https://checklist-api.3rc0.workers.dev";
-const { useState, useEffect, useRef } = React;
+const API  = "https://checklist-api.3rc0.workers.dev";
+const STORE_KEY = "cl_session";
 
+// ── Default checklist data ─────────────────────────
 const SEC_META = {
-  A:{ icon:"🖥️", color:"#38bdf8", hint:"Main devices that power the whole system" },
-  B:{ icon:"📡", color:"#a78bfa", hint:"Door and window sensors for intrusion alerts" },
-  C:{ icon:"💾", color:"#34d399", hint:"Drives that store camera footage" },
-  D:{ icon:"⚡", color:"#fb923c", hint:"Backup power — keeps everything on during outages" },
-  E:{ icon:"🗄️", color:"#60a5fa", hint:"Cabinet that holds all equipment" },
-  F:{ icon:"🔇", color:"#4ade80", hint:"Mods to make the system run silently" },
-  G:{ icon:"🌐", color:"#f472b6", hint:"Access cameras and doors from anywhere, free" },
-  H:{ icon:"🛡️", color:"#f87171", hint:"Built-in security features — all free" },
-  I:{ icon:"🚪", color:"#fbbf24", hint:"Configure door locks, access codes and alerts" },
-  J:{ icon:"📶", color:"#38bdf8", hint:"Connect your Xfinity internet to the system" },
+  A:{icon:"🖥️",color:"#38bdf8",hint:"Main devices that power the whole system"},
+  B:{icon:"📡",color:"#a78bfa",hint:"Door and window sensors for intrusion alerts"},
+  C:{icon:"💾",color:"#34d399",hint:"Drives that store camera footage"},
+  D:{icon:"⚡",color:"#fb923c",hint:"Backup power — keeps everything on during outages"},
+  E:{icon:"🗄️",color:"#60a5fa",hint:"Cabinet that holds all equipment"},
+  F:{icon:"🔇",color:"#4ade80",hint:"Mods to make the system run silently"},
+  G:{icon:"🌐",color:"#f472b6",hint:"Access cameras and doors from anywhere, free"},
+  H:{icon:"🛡️",color:"#f87171",hint:"Built-in security features — all free"},
+  I:{icon:"🚪",color:"#fbbf24",hint:"Configure door locks, access codes and alerts"},
+  J:{icon:"📶",color:"#38bdf8",hint:"Connect your internet to the system"},
 };
 
-const DEFAULTS = [
-  { id:"A", title:"Main Hardware", items:[
-    { n:1,  name:"Central Controller", model:"Ubiquiti UDM-SE", detail:"The brain of the whole system — manages cameras, door locks, WiFi and security all in one box.", price:"$599", warn:false },
-    { n:2,  name:"Panoramic Cameras ×3", model:"UniFi G6 180", detail:"Three 180° wide-angle cameras, 4K quality. AI automatically detects and tags people, vehicles and faces.", price:"$897", warn:false },
-    { n:3,  name:"Front Door Camera", model:"UniFi G6 Entry", detail:"Doorbell camera with NFC tap-to-enter, Face ID and PIN keypad for your front door.", price:"~$200", warn:true },
-    { n:4,  name:"Front Door Access Hub", model:"UA-Hub-Door", detail:"Controller box that activates your front door electric bolt.", price:"$199", warn:false },
-    { n:5,  name:"Backyard Door Hub", model:"UA-Hub-Door-Mini", detail:"Smaller hub for the backyard door. Phone unlock only.", price:"$99", warn:false },
-    { n:6,  name:"Garage Door Controller", model:"UA-Hub-Gate", detail:"Wires to your existing garage opener. Open/close from your phone.", price:"$279", warn:true },
-    { n:7,  name:"Front Door Electric Bolt", model:"UA-Lock-Electric", detail:"Fail-secure bolt. Physical key always works regardless of power.", price:"$79", warn:false },
-    { n:8,  name:"Backyard Electric Bolt", model:"UA-Lock-Electric", detail:"Same fail-secure bolt for the backyard door.", price:"$79", warn:false },
-    { n:9,  name:"WiFi Access Point", model:"UniFi U7 Pro", detail:"WiFi 7 — fastest available. Also acts as Bluetooth bridge for all sensors.", price:"$199", warn:false },
+const DEFAULT_SECTIONS = [
+  {id:"A",title:"Main Hardware",items:[
+    {n:1,name:"Central Controller",model:"Ubiquiti UDM-SE",detail:"The brain of the whole system — manages cameras, door locks, WiFi and security all in one box.",price:"$599",warn:false},
+    {n:2,name:"Panoramic Cameras ×3",model:"UniFi G6 180",detail:"Three 180° wide-angle cameras, 4K quality. AI detects people, vehicles and faces automatically.",price:"$897",warn:false},
+    {n:3,name:"Front Door Camera",model:"UniFi G6 Entry",detail:"Doorbell camera with NFC tap-to-enter, Face ID and PIN keypad.",price:"~$200",warn:true},
+    {n:4,name:"Front Door Access Hub",model:"UA-Hub-Door",detail:"Controller that activates the front door electric bolt.",price:"$199",warn:false},
+    {n:5,name:"Backyard Door Hub",model:"UA-Hub-Door-Mini",detail:"Smaller hub for the backyard door. Phone unlock only.",price:"$99",warn:false},
+    {n:6,name:"Garage Door Controller",model:"UA-Hub-Gate",detail:"Wires to your existing garage opener. Open/close from your phone.",price:"$279",warn:true},
+    {n:7,name:"Front Door Electric Bolt",model:"UA-Lock-Electric",detail:"Fail-secure bolt. Physical key always works regardless of power.",price:"$79",warn:false},
+    {n:8,name:"Backyard Electric Bolt",model:"UA-Lock-Electric",detail:"Same fail-secure bolt for the backyard door.",price:"$79",warn:false},
+    {n:9,name:"WiFi Access Point",model:"UniFi U7 Pro",detail:"WiFi 7 — fastest available. Also Bluetooth bridge for all sensors.",price:"$199",warn:false},
   ]},
-  { id:"B", title:"Security Sensors", items:[
-    { n:10, name:"Door Sensors ×2", model:"UniFi UP-SENSE", detail:"Backyard and kitchen doors. Detects motion, opening, alarm sounds.", price:"$70", warn:false },
-    { n:11, name:"Window Sensors ×10", model:"UniFi USL-Entry", detail:"All 10 windows. Simple open/close. 6-year battery — set and forget.", price:"$250", warn:false },
+  {id:"B",title:"Security Sensors",items:[
+    {n:10,name:"Door Sensors ×2",model:"UniFi UP-SENSE",detail:"Backyard and kitchen doors. Detects motion, opening, alarm sounds.",price:"$70",warn:false},
+    {n:11,name:"Window Sensors ×10",model:"UniFi USL-Entry",detail:"All 10 windows. Simple open/close. 6-year battery — set and forget.",price:"$250",warn:false},
   ]},
-  { id:"C", title:"Storage Drives", items:[
-    { n:12, name:"Silent SSD Drives ×2", model:"WD Red SA500 2TB", detail:"Completely silent, no moving parts. Stores months of camera recordings.", price:"$160", warn:false },
+  {id:"C",title:"Storage Drives",items:[
+    {n:12,name:"Silent SSD Drives ×2",model:"WD Red SA500 2TB",detail:"Completely silent, no moving parts. Stores months of camera recordings.",price:"$160",warn:false},
   ]},
-  { id:"D", title:"Backup Power (UPS)", items:[
-    { n:13, name:"Uninterruptible Power Supply", model:"Tripp Lite SU2200RTXLCD2U", detail:"System stays on ~45 min if power goes out. Zero switchover time. Auto restarts.", price:"$450", warn:false },
+  {id:"D",title:"Backup Power (UPS)",items:[
+    {n:13,name:"Uninterruptible Power Supply",model:"Tripp Lite SU2200RTXLCD2U",detail:"System stays on ~45 min if power goes out. Zero switchover time. Auto restarts.",price:"$450",warn:false},
   ]},
-  { id:"E", title:"Rack Cabinet", items:[
-    { n:14, name:"Soundproof Rack 9U", model:"XRackPro2", detail:"Holds all equipment in one quiet cabinet. Reduces noise by up to 80%.", price:"$300", warn:false },
-    { n:15, name:"Shelf for Modem", model:"1U Vented Shelf", detail:"Mounts the XB8 modem flat with proper ventilation.", price:"$35", warn:false },
-    { n:16, name:"Cable Organizer", model:"1U D-Ring", detail:"Keeps all cables neatly routed inside the cabinet.", price:"$20", warn:false },
+  {id:"E",title:"Rack Cabinet",items:[
+    {n:14,name:"Soundproof Rack 9U",model:"XRackPro2",detail:"Holds all equipment in one quiet cabinet. Reduces noise by up to 80%.",price:"$300",warn:false},
+    {n:15,name:"Shelf for Modem",model:"1U Vented Shelf",detail:"Mounts the XB8 modem flat with proper ventilation.",price:"$35",warn:false},
+    {n:16,name:"Cable Organizer",model:"1U D-Ring",detail:"Keeps all cables neatly routed inside the cabinet.",price:"$20",warn:false},
   ]},
-  { id:"F", title:"Noise Reduction", items:[
-    { n:17, name:"Silent Fan Replacement", model:"Noctua NF-A6x25 PWM", detail:"Replaces the stock fan in the UDM-SE with a near-silent Noctua fan.", price:"$15", warn:false },
-    { n:18, name:"Fan Speed Script", model:"SSH configuration", detail:"Reduces fan speed at idle via software. Near-inaudible combined with Noctua fan.", price:"FREE", warn:false },
+  {id:"F",title:"Noise Reduction",items:[
+    {n:17,name:"Silent Fan Replacement",model:"Noctua NF-A6x25 PWM",detail:"Replaces the stock fan in the UDM-SE with a near-silent Noctua fan.",price:"$15",warn:false},
+    {n:18,name:"Fan Speed Script",model:"SSH configuration",detail:"Reduces fan speed at idle via software. Near-inaudible combined with Noctua fan.",price:"FREE",warn:false},
   ]},
-  { id:"G", title:"Remote Access Setup", items:[
-    { n:19, name:"Zero Trust Account", model:"Cloudflare Zero Trust", detail:"Free. Access cameras remotely without exposing your home IP address.", price:"FREE", warn:false },
-    { n:20, name:"Dynamic DNS Account", model:"DuckDNS", detail:"Gives your home a permanent address even when your IP changes.", price:"FREE", warn:false },
-    { n:21, name:"Tunnel Software Install", model:"cloudflared on UDM-SE", detail:"Secure outbound tunnel — no ports opened on your router.", price:"FREE", warn:false },
-    { n:22, name:"Remote App on Phone", model:"Cloudflare WARP", detail:"Connect securely to your home system from anywhere in the world.", price:"FREE", warn:false },
-    { n:23, name:"Disable Modem WiFi", model:"Xfinity XB8 admin", detail:"Turn off XB8 WiFi. U7 Pro handles all WiFi instead.", price:"FREE", warn:false },
+  {id:"G",title:"Remote Access Setup",items:[
+    {n:19,name:"Zero Trust Account",model:"Cloudflare Zero Trust",detail:"Free. Access cameras remotely without exposing your home IP address.",price:"FREE",warn:false},
+    {n:20,name:"Dynamic DNS Account",model:"DuckDNS",detail:"Gives your home a permanent address even when your IP changes.",price:"FREE",warn:false},
+    {n:21,name:"Tunnel Software Install",model:"cloudflared on UDM-SE",detail:"Secure outbound tunnel — no ports opened on your router.",price:"FREE",warn:false},
+    {n:22,name:"Remote App on Phone",model:"Cloudflare WARP",detail:"Connect securely to your home system from anywhere in the world.",price:"FREE",warn:false},
+    {n:23,name:"Disable Modem WiFi",model:"Xfinity XB8 admin",detail:"Turn off XB8 WiFi. U7 Pro handles all WiFi instead.",price:"FREE",warn:false},
   ]},
-  { id:"H", title:"Security Configuration", items:[
-    { n:24, name:"Threat Detection IDS/IPS", model:"Suricata engine", detail:"Scans all internet traffic and blocks known threats. 25,000+ threat signatures.", price:"FREE", warn:false },
-    { n:25, name:"Country Blocking", model:"GeoIP filter", detail:"Block all traffic from specific countries with one click.", price:"FREE", warn:false },
-    { n:26, name:"Honeypot Trap", model:"UDM-SE built-in", detail:"Decoy target — any attacker who probes it gets instantly detected.", price:"FREE", warn:false },
-    { n:27, name:"DNS Protection", model:"UDM-SE built-in", detail:"Blocks malicious and phishing sites before they load on any device.", price:"FREE", warn:false },
-    { n:28, name:"Tor and Malicious IP Block", model:"UDM-SE built-in", detail:"Blocks known attack tools and anonymous proxy networks.", price:"FREE", warn:false },
-    { n:29, name:"Camera Network VLAN 10", model:"192.168.10.0/24", detail:"Cameras on their own isolated network — cannot talk to your other devices.", price:"FREE", warn:false },
-    { n:30, name:"Door Access Network VLAN 20", model:"192.168.20.0/24", detail:"All door locks and hubs isolated from cameras and main network.", price:"FREE", warn:false },
-    { n:31, name:"Smart Home Network VLAN 30", model:"192.168.30.0/24", detail:"IoT devices isolated from computers and phones.", price:"FREE", warn:false },
-    { n:32, name:"Disable Cloud Connection", model:"Ubiquiti local-only mode", detail:"Everything runs locally — nothing sent to external servers after setup.", price:"FREE", warn:false },
+  {id:"H",title:"Security Configuration",items:[
+    {n:24,name:"Threat Detection IDS/IPS",model:"Suricata engine",detail:"Scans all internet traffic and blocks known threats. 25,000+ threat signatures.",price:"FREE",warn:false},
+    {n:25,name:"Country Blocking",model:"GeoIP filter",detail:"Block all traffic from specific countries with one click.",price:"FREE",warn:false},
+    {n:26,name:"Honeypot Trap",model:"UDM-SE built-in",detail:"Decoy target — any attacker who probes it gets instantly detected.",price:"FREE",warn:false},
+    {n:27,name:"DNS Protection",model:"UDM-SE built-in",detail:"Blocks malicious and phishing sites before they load on any device.",price:"FREE",warn:false},
+    {n:28,name:"Tor and Malicious IP Block",model:"UDM-SE built-in",detail:"Blocks known attack tools and anonymous proxy networks.",price:"FREE",warn:false},
+    {n:29,name:"Camera Network VLAN 10",model:"192.168.10.0/24",detail:"Cameras on their own isolated network — cannot talk to your other devices.",price:"FREE",warn:false},
+    {n:30,name:"Door Access Network VLAN 20",model:"192.168.20.0/24",detail:"All door locks and hubs isolated from cameras and main network.",price:"FREE",warn:false},
+    {n:31,name:"Smart Home Network VLAN 30",model:"192.168.30.0/24",detail:"IoT devices isolated from computers and phones.",price:"FREE",warn:false},
+    {n:32,name:"Disable Cloud Connection",model:"Ubiquiti local-only mode",detail:"Everything runs locally — nothing sent to external servers after setup.",price:"FREE",warn:false},
   ]},
-  { id:"I", title:"Door & Alarm Setup", items:[
-    { n:33, name:"Front Door Access Config", model:"UniFi Access app", detail:"Set up NFC cards, Face ID profiles and PIN codes for the front door.", price:"FREE", warn:false },
-    { n:34, name:"Backyard Door Config", model:"UniFi Access app", detail:"Configure phone-based unlocking for the backyard door.", price:"FREE", warn:false },
-    { n:35, name:"Garage Door Config", model:"UniFi Access app", detail:"Test open/close trigger, set schedules and review access logs.", price:"FREE", warn:false },
-    { n:36, name:"Alarm Rules Setup", model:"UniFi Alarm Manager", detail:"Set what happens when motion, door openings or sounds are detected.", price:"FREE", warn:false },
-    { n:37, name:"Pair Door Sensors", model:"Bluetooth via U7 Pro", detail:"Pair 2 UP-SENSE sensors through the U7 Pro Bluetooth radio.", price:"FREE", warn:false },
-    { n:38, name:"Install Window Sensors", model:"USL-Entry ×10", detail:"Attach magnetic sensors to all 10 windows. No wiring needed.", price:"FREE", warn:false },
-    { n:39, name:"Geofencing Setup", model:"UniFi Protect", detail:"Optional. System arms/disarms automatically based on your phone location.", price:"FREE", warn:false },
+  {id:"I",title:"Door & Alarm Setup",items:[
+    {n:33,name:"Front Door Access Config",model:"UniFi Access app",detail:"Set up NFC cards, Face ID profiles and PIN codes for the front door.",price:"FREE",warn:false},
+    {n:34,name:"Backyard Door Config",model:"UniFi Access app",detail:"Configure phone-based unlocking for the backyard door.",price:"FREE",warn:false},
+    {n:35,name:"Garage Door Config",model:"UniFi Access app",detail:"Test open/close trigger, set schedules and review access logs.",price:"FREE",warn:false},
+    {n:36,name:"Alarm Rules Setup",model:"UniFi Alarm Manager",detail:"Set what happens when motion, door openings or sounds are detected.",price:"FREE",warn:false},
+    {n:37,name:"Pair Door Sensors",model:"Bluetooth via U7 Pro",detail:"Pair 2 UP-SENSE sensors through the U7 Pro Bluetooth radio.",price:"FREE",warn:false},
+    {n:38,name:"Install Window Sensors",model:"USL-Entry ×10",detail:"Attach magnetic sensors to all 10 windows. No wiring needed.",price:"FREE",warn:false},
+    {n:39,name:"Geofencing Setup",model:"UniFi Protect",detail:"Optional. System arms/disarms automatically based on your phone location.",price:"FREE",warn:false},
   ]},
-  { id:"J", title:"Internet Connection", items:[
-    { n:40, name:"Mount Modem in Rack", model:"Xfinity XB8", detail:"Place XB8 flat on vented shelf inside the rack with airflow clear.", price:"—", warn:false },
-    { n:41, name:"Disable Modem WiFi", model:"Xfinity admin panel", detail:"Log into 10.0.0.1 and turn off the XB8 internal WiFi radio.", price:"—", warn:false },
-    { n:42, name:"Connect Internet Cable", model:"Cat6 Ethernet", detail:"Cat6 from XB8 LAN port → UDM-SE WAN port. This is your internet feed.", price:"—", warn:false },
+  {id:"J",title:"Internet Connection",items:[
+    {n:40,name:"Mount Modem in Rack",model:"Xfinity XB8",detail:"Place XB8 flat on vented shelf inside the rack with airflow clear.",price:"—",warn:false},
+    {n:41,name:"Disable Modem WiFi",model:"Xfinity admin panel",detail:"Log into 10.0.0.1 and turn off the XB8 internal WiFi radio.",price:"—",warn:false},
+    {n:42,name:"Connect Internet Cable",model:"Cat6 Ethernet",detail:"Cat6 from XB8 LAN port to UDM-SE WAN port. This is your internet feed.",price:"—",warn:false},
   ]},
 ];
 
-/* ── API with password header ─────────────────────── */
-async function apiGet() {
-  try {
-    const r = await fetch(`${WORKER_URL}/api/data`);
-    return await r.json();
-  } catch(e) {
-    return {
-      sections: JSON.parse(localStorage.getItem("cl_sections")||"null"),
-      checks:   JSON.parse(localStorage.getItem("cl_checks")||"{}"),
-    };
-  }
+// ── State ────────────────────────────────────────────
+let state = {
+  view: "loading",   // loading | auth | app | log
+  authTab: "login",
+  session: null,     // { token, username }
+  sections: DEFAULT_SECTIONS,
+  checks: {},
+  collapsed: {},
+  expanded: {},
+  editMode: false,
+  editItem: null,    // { si, ii }
+  editDraft: {},
+  addingSec: null,
+  newItem: {name:"",model:"",detail:"",price:"",warn:false},
+  newSecTitle: "",
+  saving: false,
+  logs: [],
+  showLog: false,
+};
+
+// ── Session storage (sessionStorage — no cross-tab persistence) ──
+function loadSession() {
+  try { return JSON.parse(sessionStorage.getItem(STORE_KEY)); } catch(e) { return null; }
+}
+function saveSession(s) {
+  try { sessionStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch(e) {}
+}
+function clearSession() {
+  try { sessionStorage.removeItem(STORE_KEY); } catch(e) {}
 }
 
-async function apiSet(key, value, password) {
-  try {
-    const r = await fetch(`${WORKER_URL}/api/data`, {
-      method: "POST",
-      headers: { "Content-Type":"application/json", "X-Edit-Password": password||"" },
-      body: JSON.stringify({ key, value }),
-    });
-    const data = await r.json();
-    if (!data.ok) throw new Error(data.error||"Failed");
-    return { ok: true };
-  } catch(e) {
-    localStorage.setItem("cl_"+key, JSON.stringify(value));
-    return { ok: false, error: e.message };
-  }
+// ── API ──────────────────────────────────────────────
+async function apiFetch(path, opts) {
+  const headers = { "Content-Type": "application/json", ...(opts && opts.headers || {}) };
+  if (state.session) headers["X-Session-Token"] = state.session.token;
+  const r = await fetch(API + path, { method: opts && opts.method || "GET", headers, body: opts && opts.body });
+  return r.json();
 }
 
-// Returns { ok, locked, error }
-async function apiVerifyPassword(password) {
-  try {
-    const r = await fetch(`${WORKER_URL}/api/auth`, {
-      method: "POST",
-      headers: { "Content-Type":"application/json" },
-      body: JSON.stringify({ password }),
-    });
-    const data = await r.json();
-    if (r.status === 429) return { ok: false, locked: true, error: data.error };
-    return { ok: data.ok === true, locked: false, error: data.error || "" };
-  } catch(e) {
-    return { ok: false, locked: false, error: "Could not reach server" };
-  }
+// ── Toast ────────────────────────────────────────────
+let toastTimer;
+function toast(msg, color) {
+  let t = document.getElementById("cl-toast");
+  if (!t) { t = document.createElement("div"); t.id = "cl-toast"; t.className = "cl-toast"; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.style.color = color || "var(--green)";
+  t.style.display = "block";
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.style.display = "none"; }, 2500);
 }
 
-/* ── Progress Ring ─────────────────────────────────── */
-function Ring({pct}) {
-  const size=64, stroke=5, r=(size-stroke*2)/2, circ=2*Math.PI*r;
+// ── Render helpers ───────────────────────────────────
+function h(tag, attrs, ...children) {
+  const el = document.createElement(tag);
+  if (attrs) Object.entries(attrs).forEach(([k,v]) => {
+    if (k === "class") el.className = v;
+    else if (k === "style") el.style.cssText = v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2).toLowerCase(), v);
+    else el.setAttribute(k, v);
+  });
+  children.flat().forEach(c => {
+    if (c === null || c === undefined) return;
+    el.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+  });
+  return el;
+}
+
+function ring(pct) {
+  const size=60, stroke=5, r=(size-stroke*2)/2, circ=2*Math.PI*r;
   const color = pct===100?"#34d399":"#38bdf8";
-  return (
-    <div className="cl-ring">
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={stroke}/>
-        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={stroke}
-          strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={circ*(1-pct/100)}
-          style={{transformOrigin:`${size/2}px ${size/2}px`,transform:"rotate(-90deg)",transition:"stroke-dashoffset 0.6s ease"}}/>
-      </svg>
-      <div className="cl-ring-label" style={{color}}>{pct}%</div>
-    </div>
-  );
+  const offset = circ*(1-pct/100);
+  const wrap = h("div",{"class":"cl-ring"});
+  wrap.innerHTML = `
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="transform:rotate(-90deg)">
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="${stroke}"/>
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${stroke}"
+        stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"
+        style="transition:stroke-dashoffset 0.6s ease"/>
+    </svg>
+    <div class="cl-ring-label" style="color:${color}">${pct}%</div>`;
+  return wrap;
 }
 
-/* ── Password Prompt (inline banner) ──────────────── */
-function PasswordPrompt({ onSuccess, onCancel }) {
-  const [pw, setPw]           = useState("");
-  const [error, setError]     = useState("");
-  const [loading, setLoading] = useState(false);
-  const [locked, setLocked]   = useState(false);
-  const [shake, setShake]     = useState(false);
-  const inputRef = useRef(null);
+// ── Auth view ────────────────────────────────────────
+function renderAuth() {
+  const isLogin = state.authTab === "login";
+  const wrap = h("div",{"class":"cl-auth fade-up"});
+  const card = h("div",{"class":"cl-auth-card"});
 
-  useEffect(() => { inputRef.current?.focus(); }, []);
+  const logo  = h("div",{"class":"cl-auth-logo"},"🔐");
+  const title = h("div",{"class":"cl-auth-title"},"Home Security Checklist");
+  const sub   = h("div",{"class":"cl-auth-sub"},"Sign in to access your personal checklist");
 
-  const submit = async () => {
-    if (!pw.trim() || locked) return;
-    if (pw.length > 200) { setError("Password too long."); return; }
-    setLoading(true); setError("");
-    const result = await apiVerifyPassword(pw);
-    setLoading(false);
-    if (result.locked) {
-      setLocked(true);
-      setError(result.error || "Too many failed attempts. Try again in 15 minutes.");
-      setPw("");
-      return;
+  const tabs = h("div",{"class":"cl-tabs"},
+    h("button",{"class":"cl-tab"+(isLogin?" active":""), onClick:()=>{ state.authTab="login"; render(); }},"Sign In"),
+    h("button",{"class":"cl-tab"+(!isLogin?" active":""), onClick:()=>{ state.authTab="register"; render(); }},"Create Account"),
+  );
+
+  const errBox = h("div",{"class":"cl-auth-error","id":"cl-auth-err"});
+
+  const userField = h("div",{"class":"cl-field"},
+    h("label",{"class":"cl-label"},"Username"),
+    h("input",{"class":"cl-input","id":"cl-user","type":"text","placeholder":"your_username","autocomplete":"username","maxlength":"30"}),
+    !isLogin ? h("div",{"class":"cl-input-hint"},"3–30 characters, letters/numbers/dash/underscore only") : null,
+  );
+
+  const passField = h("div",{"class":"cl-field"},
+    h("label",{"class":"cl-label"},"Password"),
+    h("input",{"class":"cl-input","id":"cl-pass","type":"password","placeholder":"••••••••","autocomplete":isLogin?"current-password":"new-password","maxlength":"100"}),
+    !isLogin ? h("div",{"class":"cl-input-hint"},"Minimum 8 characters") : null,
+  );
+
+  const submitBtn = h("button",{"class":"cl-btn cl-btn-primary cl-btn-full","id":"cl-auth-btn",
+    onClick: async () => {
+      const username = document.getElementById("cl-user").value.trim().toLowerCase();
+      const password = document.getElementById("cl-pass").value;
+      const err = document.getElementById("cl-auth-err");
+      const btn = document.getElementById("cl-auth-btn");
+      err.className = "cl-auth-error";
+      if (!username || !password) { showAuthErr("Please enter username and password."); return; }
+      btn.disabled = true;
+      btn.textContent = isLogin ? "Signing in…" : "Creating account…";
+      try {
+        const d = await apiFetch(isLogin ? "/api/login" : "/api/register", {
+          method:"POST", body: JSON.stringify({username, password})
+        });
+        if (d.locked) { showAuthErr("Too many failed attempts. Try again in 15 minutes."); btn.disabled=false; btn.textContent=isLogin?"Sign In":"Create Account"; return; }
+        if (!d.ok) { showAuthErr(d.error || "Something went wrong."); btn.disabled=false; btn.textContent=isLogin?"Sign In":"Create Account"; return; }
+        if (isLogin) {
+          state.session = {token: d.token, username: d.username};
+          saveSession(state.session);
+          await loadUserData();
+          state.view = "app";
+          render();
+        } else {
+          toast("Account created! Please sign in.");
+          state.authTab = "login";
+          render();
+        }
+      } catch(e) {
+        showAuthErr("Could not connect to server. Try again.");
+        btn.disabled=false; btn.textContent=isLogin?"Sign In":"Create Account";
+      }
     }
-    if (result.ok) {
-      onSuccess(pw);
-    } else {
-      setError(result.error === "Could not reach server"
-        ? "Could not reach server. Check your connection."
-        : "Incorrect password.");
-      setPw("");
-      setShake(true);
-      setTimeout(() => setShake(false), 500);
-      inputRef.current?.focus();
+  }, isLogin ? "Sign In" : "Create Account");
+
+  function showAuthErr(msg) {
+    const e = document.getElementById("cl-auth-err");
+    if (e) { e.textContent = msg; e.className = "cl-auth-error show"; }
+  }
+
+  const fields = isLogin ? [userField, passField] : [userField, passField];
+  card.append(logo, title, sub, tabs, errBox, ...fields, submitBtn);
+  wrap.appendChild(card);
+  return wrap;
+}
+
+// ── Load user data from API ──────────────────────────
+async function loadUserData() {
+  try {
+    const d = await apiFetch("/api/data");
+    if (d.ok !== false) {
+      state.sections = d.sections || DEFAULT_SECTIONS;
+      state.checks   = d.checks   || {};
     }
-  };
-
-  return (
-    <div className="cl-pw-banner">
-      <h4>🔒 Editor Password Required</h4>
-      <p>Enter the password to edit, add or remove items. Viewing is always public.</p>
-      {locked ? (
-        <div className="cl-pw-error" style={{marginTop:8}}>
-          🚫 {error}
-        </div>
-      ) : (
-        <>
-          <div className="cl-pw-row">
-            <input
-              ref={inputRef}
-              className={`cl-pw-input${shake?" error":""}`}
-              type="password"
-              placeholder="Enter password…"
-              value={pw}
-              maxLength={200}
-              autoComplete="current-password"
-              onChange={e => { setPw(e.target.value); setError(""); }}
-              onKeyDown={e => e.key==="Enter" && submit()}
-            />
-            <button className="cl-btn cl-btn-primary" onClick={submit} disabled={loading || locked}>
-              {loading ? "Checking…" : "Unlock ✓"}
-            </button>
-            <button className="cl-btn cl-btn-ghost" onClick={onCancel}>Cancel</button>
-          </div>
-          {error && <div className="cl-pw-error">⚠ {error}</div>}
-        </>
-      )}
-    </div>
-  );
+  } catch(e) {}
 }
 
-/* ── Main App ─────────────────────────────────────── */
-function App() {
-  const [secs,setSecs]           = useState(DEFAULTS);
-  const [checks,setChecks]       = useState({});
-  const [collapsed,setCollapsed] = useState({});
-  const [editMode,setEditMode]   = useState(false);
-  const [showPwPrompt,setShowPwPrompt] = useState(false);
-  const [editPassword,setEditPassword] = useState("");
-  const [editItem,setEditItem]   = useState(null);
-  const [editDraft,setEditDraft] = useState({});
-  const [addingSec,setAddingSec] = useState(null);
-  const [newItem,setNewItem]     = useState({name:"",model:"",detail:"",price:"",warn:false});
-  const [newSecTitle,setNewSecTitle] = useState("");
-  const [loading,setLoading]     = useState(true);
-  const [saving,setSaving]       = useState(false);
-  const [toast,setToast]         = useState("");
-  const [expanded,setExpanded]   = useState({});
-  const toastRef = useRef(null);
-
-  const notify = m => { setToast(m); clearTimeout(toastRef.current); toastRef.current=setTimeout(()=>setToast(""),2500); };
-
-  useEffect(()=>{
-    const timeout = setTimeout(()=>setLoading(false), 6000);
-    apiGet().then(d=>{
-      clearTimeout(timeout);
-      if(d?.sections) setSecs(d.sections);
-      if(d?.checks)   setChecks(d.checks);
-      setLoading(false);
-    }).catch(()=>{ clearTimeout(timeout); setLoading(false); });
-  },[]);
-
-  const saveSecs = async s => { setSaving(true); await apiSet("sections",s,editPassword); setSaving(false); };
-  const saveCks  = async c => { await apiSet("checks",c,editPassword); };
-
-  const toggleCheck = n => { const nx={...checks,[n]:!checks[n]}; setChecks(nx); saveCks(nx); };
-  const toggleSec   = id => setCollapsed(p=>({...p,[id]:!p[id]}));
-  const toggleExp   = k  => setExpanded(p=>({...p,[k]:!p[k]}));
-  const renumber    = s  => { let n=1; return s.map(sec=>({...sec,items:sec.items.map(i=>({...i,n:n++}))})); };
-
-  const allItems = secs.flatMap(s=>s.items);
-  const total=allItems.length, done=allItems.filter(i=>checks[i.n]).length;
-  const pct = total ? Math.round(done/total*100) : 0;
-  const secProg = sec => { const t=sec.items.length,d=sec.items.filter(i=>checks[i.n]).length; return {t,d,pct:t?Math.round(d/t*100):0}; };
-
-  const handleEditClick = () => {
-    if (editMode) { setEditMode(false); setEditItem(null); setAddingSec(null); return; }
-    setShowPwPrompt(true);
-  };
-  const onPasswordSuccess = pw => {
-    setEditPassword(pw); setShowPwPrompt(false); setEditMode(true);
-    notify("✓ Edit mode unlocked");
-  };
-
-  const startEdit = (si,ii,item) => { setEditItem({si,ii}); setEditDraft({...item}); };
-  const commitEdit = async () => {
-    const {si,ii}=editItem;
-    const nx=secs.map((s,i)=>i!==si?s:{...s,items:s.items.map((it,j)=>j!==ii?it:{...it,...editDraft})});
-    setSecs(nx); setEditItem(null); await saveSecs(nx); notify("✓ Item updated");
-  };
-  const delItem = async (si,ii) => {
-    const nx=renumber(secs.map((s,i)=>i!==si?s:{...s,items:s.items.filter((_,j)=>j!==ii)}).filter(s=>s.items.length>0));
-    setSecs(nx); await saveSecs(nx); notify("✓ Item removed");
-  };
-  const commitAdd = async si => {
-    if(!newItem.name.trim()) return;
-    const maxN=Math.max(0,...secs.flatMap(s=>s.items.map(i=>i.n)));
-    const nx=renumber(secs.map((s,i)=>i!==si?s:{...s,items:[...s.items,{n:maxN+1,...newItem}]}));
-    setSecs(nx); setNewItem({name:"",model:"",detail:"",price:"",warn:false}); setAddingSec(null);
-    await saveSecs(nx); notify("✓ Item added");
-  };
-  const addSec = async () => {
-    if(!newSecTitle.trim()) return;
-    const ids="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const nx=[...secs,{id:ids[secs.length]||String(secs.length+1),title:newSecTitle,items:[]}];
-    setSecs(nx); setNewSecTitle(""); await saveSecs(nx); notify("✓ Section added");
-  };
-  const delSec = async si => {
-    const nx=renumber(secs.filter((_,i)=>i!==si));
-    setSecs(nx); await saveSecs(nx); notify("✓ Section removed");
-  };
-  const resetChecks = async () => { setChecks({}); await saveCks({}); notify("✓ Progress cleared"); };
-  const resetAll    = async () => {
-    if(!window.confirm("Reset everything to default? This cannot be undone.")) return;
-    setSecs(DEFAULTS); setChecks({}); await saveSecs(DEFAULTS); await saveCks({});
-    setEditMode(false); notify("✓ Reset to default");
-  };
-  const printPDF = () => { setCollapsed({}); setTimeout(()=>window.print(),300); };
-
-  if(loading) return (
-    <div style={{textAlign:"center",padding:"60px 0",color:"var(--accent)",fontFamily:"var(--mono)",fontSize:"14px"}}>
-      <div style={{width:28,height:28,border:"3px solid rgba(56,189,248,0.2)",borderTopColor:"#38bdf8",borderRadius:"50%",animation:"spin 0.8s linear infinite",margin:"0 auto 12px"}}/>
-      Loading checklist…
-    </div>
-  );
-
-  return (
-    <>
-      {toast && <div className="cl-toast">{toast}</div>}
-
-      {/* Password prompt — inline at top */}
-      {showPwPrompt && (
-        <PasswordPrompt
-          onSuccess={onPasswordSuccess}
-          onCancel={()=>setShowPwPrompt(false)}
-        />
-      )}
-
-      {/* Header */}
-      <div className="cl-header fade-up">
-        <div className="cl-header-top">
-          <Ring pct={pct}/>
-          <div className="cl-title-block">
-            <h2>Home Security Setup</h2>
-            <p>{done} of {total} tasks completed · Reston, VA 2025</p>
-            <div className="cl-progress-bar">
-              <div className="cl-progress-fill" style={{width:pct+"%"}}/>
-            </div>
-          </div>
-        </div>
-        <div className="cl-actions">
-          <button className={`cl-btn ${editMode?"cl-btn-edit-on":"cl-btn-ghost"}`} onClick={handleEditClick}>
-            {editMode ? "✓ Done Editing" : "🔒 Edit Checklist"}
-          </button>
-          <button className="cl-btn cl-btn-success" onClick={printPDF}>🖨️ Print / Save PDF</button>
-          <button className="cl-btn cl-btn-ghost" onClick={resetChecks}>↺ Reset Progress</button>
-          {editMode && <button className="cl-btn cl-btn-danger" onClick={resetAll}>⚠ Reset All</button>}
-        </div>
-        {saving && <div className="cl-saving">● syncing…</div>}
-        {editMode && (
-          <div style={{marginTop:10,display:"flex",alignItems:"center",gap:6}}>
-            <span className="cl-lock-badge">🔓 Edit mode active</span>
-            <span style={{fontSize:12,color:"var(--text3)"}}>— click "Done Editing" when finished</span>
-          </div>
-        )}
-      </div>
-
-      {/* Cost summary */}
-      <div className="cl-costs">
-        {[["💰","~$4,298","Total incl. tax"],["📅","$0 / yr","No subscriptions"],["⚡","~$138 / yr","Electricity"]].map(([icon,val,lbl])=>(
-          <div key={lbl} className="cl-cost-card">
-            <div style={{fontSize:"18px"}}>{icon}</div>
-            <div className="cl-cost-val">{val}</div>
-            <div className="cl-cost-lbl">{lbl}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* Sections */}
-      {secs.map((sec,si)=>{
-        const meta=SEC_META[sec.id]||{icon:"📌",color:"#8ba3bf",hint:""};
-        const {t,d,pct:sp}=secProg(sec);
-        const isComplete=d===t&&t>0, isOpen=!collapsed[sec.id];
-        return (
-          <div key={sec.id} id={"sec-"+sec.id}
-            className={`cl-section fade-up${isComplete?" complete":""}`}
-            style={{animationDelay:`${si*0.03}s`}}>
-
-            <div className="cl-sec-header" onClick={()=>toggleSec(sec.id)}>
-              <div className="cl-sec-icon" style={{background:`${meta.color}18`,border:`1px solid ${meta.color}28`}}>{meta.icon}</div>
-              <div className="cl-sec-info">
-                <div className="cl-sec-title">{sec.title}{isComplete&&<span style={{marginLeft:8,fontSize:"13px"}}>✅</span>}</div>
-                <div className="cl-sec-hint">{meta.hint}</div>
-              </div>
-              <div className="cl-sec-right">
-                {editMode&&<button className="cl-sec-del" onClick={e=>{e.stopPropagation();delSec(si);}}>✕</button>}
-                <div>
-                  <div className={`cl-sec-count${isComplete?" done":""}`}>{d}/{t}</div>
-                  <div className="cl-sec-bar"><div className="cl-sec-bar-fill" style={{width:sp+"%",background:meta.color}}/></div>
-                </div>
-                <span className={`cl-chevron${isOpen?" open":""}`}>▾</span>
-              </div>
-            </div>
-
-            {isOpen&&(
-              <div className="cl-items">
-                {sec.items.map((item,ii)=>{
-                  const isDone=!!checks[item.n];
-                  const isEditing=editItem?.si===si&&editItem?.ii===ii;
-                  const expKey=`${si}-${ii}`, isExp=!!expanded[expKey];
-                  return (
-                    <div key={item.n} className={`cl-item${isDone?" done":""}`}
-                      onClick={()=>{if(!editMode&&!isEditing)toggleCheck(item.n);}}>
-                      <span className="cl-item-num">#{item.n}</span>
-                      <div className={`cl-cb${isDone?" on":""}`} onClick={e=>{e.stopPropagation();toggleCheck(item.n);}}>
-                        {isDone&&<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1" stroke="#065f46" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-                      </div>
-                      {isEditing?(
-                        <div className="cl-edit-form" onClick={e=>e.stopPropagation()}>
-                          <input className="cl-input" value={editDraft.name||""} placeholder="Item name" onChange={e=>setEditDraft(p=>({...p,name:e.target.value}))}/>
-                          <input className="cl-input" value={editDraft.model||""} placeholder="Model / spec" onChange={e=>setEditDraft(p=>({...p,model:e.target.value}))}/>
-                          <input className="cl-input" value={editDraft.detail||""} placeholder="Plain English description" onChange={e=>setEditDraft(p=>({...p,detail:e.target.value}))}/>
-                          <div className="cl-form-row">
-                            <input className="cl-input" style={{maxWidth:100}} value={editDraft.price||""} placeholder="Price" onChange={e=>setEditDraft(p=>({...p,price:e.target.value}))}/>
-                            <label style={{fontSize:"13px",color:"var(--text2)",display:"flex",alignItems:"center",gap:5,cursor:"pointer",whiteSpace:"nowrap"}}>
-                              <input type="checkbox" checked={!!editDraft.warn} onChange={e=>setEditDraft(p=>({...p,warn:e.target.checked}))}/>⚠️ Pending
-                            </label>
-                            <button className="cl-btn cl-btn-success cl-btn-sm" onClick={commitEdit}>Save</button>
-                            <button className="cl-btn cl-btn-ghost cl-btn-sm" onClick={()=>setEditItem(null)}>Cancel</button>
-                          </div>
-                        </div>
-                      ):(
-                        <div className="cl-item-body">
-                          <div className="cl-item-name">
-                            {item.name}
-                            {item.warn&&<span className="cl-tag tag-warn">⚠ Pending</span>}
-                            {item.price==="FREE"&&!isDone&&<span className="cl-tag tag-free">FREE</span>}
-                          </div>
-                          {item.model&&<div className="cl-item-model">{item.model}</div>}
-                          {item.detail&&(
-                            <>
-                              <button className="cl-expand-btn" onClick={e=>{e.stopPropagation();toggleExp(expKey);}}>
-                                {isExp?"▾ Hide":"▸ What is this?"}
-                              </button>
-                              <div className={`cl-item-detail${isExp?" open":""}`}>{item.detail}</div>
-                            </>
-                          )}
-                        </div>
-                      )}
-                      {!isEditing&&(
-                        <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:5,flexShrink:0}}>
-                          <span className={`cl-item-price ${item.price==="FREE"?"price-free":item.price==="—"?"price-dash":"price-cost"}`}>{item.price}</span>
-                          {editMode&&(
-                            <div className="cl-edit-btns">
-                              <button className="cl-edit-btn edit" onClick={e=>{e.stopPropagation();startEdit(si,ii,item);}}>✏</button>
-                              <button className="cl-edit-btn del"  onClick={e=>{e.stopPropagation();delItem(si,ii);}}>✕</button>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-                {editMode&&(
-                  <div className="cl-add-row">
-                    {addingSec===si?(
-                      <div style={{display:"flex",flexDirection:"column",gap:8}} onClick={e=>e.stopPropagation()}>
-                        <input className="cl-input" value={newItem.name} placeholder="Item name *" onChange={e=>setNewItem(p=>({...p,name:e.target.value}))}/>
-                        <input className="cl-input" value={newItem.model} placeholder="Model / spec" onChange={e=>setNewItem(p=>({...p,model:e.target.value}))}/>
-                        <input className="cl-input" value={newItem.detail} placeholder="Plain English description" onChange={e=>setNewItem(p=>({...p,detail:e.target.value}))}/>
-                        <div className="cl-form-row">
-                          <input className="cl-input" style={{maxWidth:100}} value={newItem.price} placeholder="Price" onChange={e=>setNewItem(p=>({...p,price:e.target.value}))}/>
-                          <label style={{fontSize:"13px",color:"var(--text2)",display:"flex",alignItems:"center",gap:5,cursor:"pointer"}}>
-                            <input type="checkbox" checked={newItem.warn} onChange={e=>setNewItem(p=>({...p,warn:e.target.checked}))}/>⚠️ Pending
-                          </label>
-                          <button className="cl-btn cl-btn-success cl-btn-sm" onClick={()=>commitAdd(si)}>Add</button>
-                          <button className="cl-btn cl-btn-ghost cl-btn-sm" onClick={()=>{setAddingSec(null);setNewItem({name:"",model:"",detail:"",price:"",warn:false});}}>Cancel</button>
-                        </div>
-                      </div>
-                    ):(
-                      <button className="cl-add-btn" onClick={()=>setAddingSec(si)}>+ Add item to {sec.title}</button>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        );
-      })}
-
-      {editMode&&(
-        <div className="cl-add-section">
-          <div style={{fontSize:"12px",color:"var(--text3)",marginBottom:10,fontFamily:"var(--mono)",textTransform:"uppercase",letterSpacing:"0.06em"}}>+ New Section</div>
-          <div style={{display:"flex",gap:8}}>
-            <input className="cl-input" style={{flex:1}} value={newSecTitle} placeholder="Section title e.g. Cabling" onChange={e=>setNewSecTitle(e.target.value)} onKeyDown={e=>e.key==="Enter"&&addSec()}/>
-            <button className="cl-btn cl-btn-primary" onClick={addSec}>Add</button>
-          </div>
-        </div>
-      )}
-
-      <div className="cl-footer">Diyar Hussein 2026</div>
-    </>
-  );
+// ── Save to API ──────────────────────────────────────
+async function saveData(key, value, logEntry) {
+  state.saving = true; renderSaving();
+  try {
+    await apiFetch("/api/save", {
+      method:"POST",
+      body: JSON.stringify({key, value, entry: logEntry})
+    });
+  } catch(e) {}
+  state.saving = false; renderSaving();
 }
 
-ReactDOM.createRoot(document.getElementById("cl-root")).render(<App/>);
-</script>{% endraw %}
+function renderSaving() {
+  const el = document.getElementById("cl-saving");
+  if (el) el.style.display = state.saving ? "block" : "none";
+}
+
+// ── Progress calc ────────────────────────────────────
+function calcProgress() {
+  const all   = state.sections.flatMap(s=>s.items);
+  const done  = all.filter(i=>state.checks[i.n]);
+  const pct   = all.length ? Math.round(done.length/all.length*100) : 0;
+  return {total:all.length, done:done.length, pct};
+}
+function secProg(sec) {
+  const t=sec.items.length, d=sec.items.filter(i=>state.checks[i.n]).length;
+  return {t, d, pct:t?Math.round(d/t*100):0};
+}
+function renumber(secs) {
+  let n=1; return secs.map(s=>({...s,items:s.items.map(i=>({...i,n:n++}))}));
+}
+
+// ── Render app header ────────────────────────────────
+function renderHeader() {
+  const {total,done,pct} = calcProgress();
+  const wrap = h("div",{"class":"cl-header fade-up"});
+
+  const top = h("div",{"class":"cl-header-top"},
+    ring(pct),
+    h("div",{"class":"cl-title-block"},
+      h("h2",{},"Home Security Checklist"),
+      h("div",{"class":"cl-user-badge"},"👤 "+state.session.username),
+      h("div",{},`${done} of ${total} tasks completed`),
+      h("div",{"class":"cl-progress-bar","style":"margin-top:6px"},
+        h("div",{"class":"cl-progress-fill","style":`width:${pct}%`})
+      )
+    )
+  );
+
+  const editBtn = h("button",{"class":"cl-btn "+(state.editMode?"cl-btn-warn":"cl-btn-ghost"),
+    onClick:()=>{ state.editMode=!state.editMode; state.editItem=null; state.addingSec=null; render(); }},
+    state.editMode ? "✓ Done Editing" : "✏️ Edit");
+
+  const logBtn = h("button",{"class":"cl-btn cl-btn-ghost",
+    onClick: async ()=>{
+      if (!state.showLog) {
+        const d = await apiFetch("/api/log");
+        state.logs = d.logs || [];
+      }
+      state.showLog = !state.showLog;
+      render();
+    }}, state.showLog ? "✕ Close Log" : "📋 Activity Log");
+
+  const printBtn = h("button",{"class":"cl-btn cl-btn-success",
+    onClick:()=>{ state.collapsed={}; setTimeout(()=>window.print(),300); }},
+    "🖨️ Print PDF");
+
+  const logoutBtn = h("button",{"class":"cl-btn cl-btn-danger",
+    onClick: async ()=>{
+      await apiFetch("/api/logout",{method:"POST"});
+      clearSession();
+      state.session=null; state.checks={}; state.sections=DEFAULT_SECTIONS;
+      state.editMode=false; state.showLog=false; state.view="auth";
+      render();
+    }}, "Sign Out");
+
+  const actions = h("div",{"class":"cl-header-actions"}, editBtn, logBtn, printBtn, logoutBtn);
+  const saving  = h("div",{"class":"cl-saving","id":"cl-saving","style":"display:none"},"● syncing…");
+  wrap.append(top, actions, saving);
+  return wrap;
+}
+
+// ── Render log ───────────────────────────────────────
+function renderLog() {
+  const panel = h("div",{"class":"cl-log-panel fade-up"});
+  const hdr   = h("div",{"class":"cl-log-header"},
+    h("div",{"class":"cl-log-title"},"📋 Activity Log"),
+    h("div",{"class":"cl-saving","style":"font-size:11px;color:var(--text3)"},
+      `${state.logs.length} entries`)
+  );
+  panel.appendChild(hdr);
+  if (!state.logs.length) {
+    panel.appendChild(h("div",{"class":"cl-log-empty"},"No activity yet."));
+    return panel;
+  }
+  const actionClass = {
+    check:"log-check", uncheck:"log-uncheck", login:"log-login",
+    register:"log-register", logout:"log-login",
+    "add-item":"log-edit","del-item":"log-edit","edit-item":"log-edit",
+    "add-section":"log-edit","del-section":"log-edit",
+  };
+  state.logs.slice(0,50).forEach(entry => {
+    const d   = new Date(entry.ts);
+    const ts  = d.toLocaleDateString()+" "+d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+    const cls = actionClass[entry.action] || "log-edit";
+    panel.appendChild(h("div",{"class":"cl-log-entry"},
+      h("div",{"class":"cl-log-time"},ts),
+      h("div",{"class":"cl-log-action "+cls},entry.action),
+      h("div",{"class":"cl-log-detail"},entry.detail)
+    ));
+  });
+  return panel;
+}
+
+// ── Render checklist ─────────────────────────────────
+function renderChecklist() {
+  const frag = document.createDocumentFragment();
+
+  // Header
+  frag.appendChild(renderHeader());
+
+  // Cost strip
+  const costs = h("div",{"class":"cl-costs"},
+    ...[["💰","~$4,298","Total incl. tax"],["📅","$0 / yr","No subscriptions"],["⚡","~$138 / yr","Electricity"]]
+      .map(([icon,val,lbl])=>h("div",{"class":"cl-cost-card"},
+        h("div",{"style":"font-size:18px"},icon),
+        h("div",{"class":"cl-cost-val"},val),
+        h("div",{"class":"cl-cost-lbl"},lbl)
+      ))
+  );
+  frag.appendChild(costs);
+
+  // Log panel
+  if (state.showLog) frag.appendChild(renderLog());
+
+  // Sections
+  state.sections.forEach((sec, si) => {
+    const meta  = SEC_META[sec.id] || {icon:"📌",color:"#8ba3bf",hint:""};
+    const {t,d,pct:sp} = secProg(sec);
+    const isComplete   = d===t && t>0;
+    const isOpen       = !state.collapsed[sec.id];
+
+    const secEl = h("div",{"class":"cl-section fade-up"+(isComplete?" complete":""),"id":"sec-"+sec.id,"style":`animation-delay:${si*0.03}s`});
+
+    // Section header
+    const secHdr = h("div",{"class":"cl-sec-header",
+      onClick:()=>{ state.collapsed[sec.id]=!state.collapsed[sec.id]; render(); }},
+      h("div",{"class":"cl-sec-icon","style":`background:${meta.color}18;border:1px solid ${meta.color}28`},meta.icon),
+      h("div",{"class":"cl-sec-info"},
+        h("div",{"class":"cl-sec-title"},sec.title, isComplete?" ✅":""),
+        h("div",{"class":"cl-sec-hint"},meta.hint)
+      ),
+      h("div",{"class":"cl-sec-right"},
+        state.editMode ? h("button",{"class":"cl-sec-del",
+          onClick:async e=>{ e.stopPropagation();
+            const nx=renumber(state.sections.filter((_,i)=>i!==si));
+            state.sections=nx;
+            await saveData("sections",nx,{action:"del-section",detail:`Removed section: ${sec.title}`});
+            render();
+          }},"✕") : null,
+        h("div",{},
+          h("div",{"class":"cl-sec-count"+(isComplete?" done":"")},`${d}/${t}`),
+          h("div",{"class":"cl-sec-bar"},h("div",{"class":"cl-sec-bar-fill","style":`width:${sp}%;background:${meta.color}`}))
+        ),
+        h("span",{"class":"cl-chevron"+(isOpen?" open":"")"},"▾")
+      )
+    );
+    secEl.appendChild(secHdr);
+
+    // Items
+    if (isOpen) {
+      const itemsWrap = h("div",{"class":"cl-items"});
+
+      sec.items.forEach((item, ii) => {
+        const isDone    = !!state.checks[item.n];
+        const isEditing = state.editItem && state.editItem.si===si && state.editItem.ii===ii;
+        const expKey    = `${si}-${ii}`;
+        const isExp     = !!state.expanded[expKey];
+
+        const row = h("div",{"class":"cl-item"+(isDone?" done":""),
+          onClick:async ()=>{
+            if (state.editMode || isEditing) return;
+            const val = !state.checks[item.n];
+            state.checks[item.n] = val;
+            const action = val?"check":"uncheck";
+            await saveData("checks",state.checks,{action,detail:`${action==="check"?"Checked":"Unchecked"}: #${item.n} ${item.name}`});
+            render();
+          }
+        });
+
+        row.appendChild(h("span",{"class":"cl-item-num"},`#${item.n}`));
+
+        const cb = h("div",{"class":"cl-cb"+(isDone?" on":""),
+          onClick:async e=>{ e.stopPropagation();
+            const val=!state.checks[item.n];
+            state.checks[item.n]=val;
+            const action=val?"check":"uncheck";
+            await saveData("checks",state.checks,{action,detail:`${action==="check"?"Checked":"Unchecked"}: #${item.n} ${item.name}`});
+            render();
+          }
+        });
+        if (isDone) cb.innerHTML = `<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1" stroke="#065f46" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+        row.appendChild(cb);
+
+        if (isEditing) {
+          const d = state.editDraft;
+          const nameI  = h("input",{"class":"cl-form-input","value":d.name||"","placeholder":"Name"});
+          const modelI = h("input",{"class":"cl-form-input","value":d.model||"","placeholder":"Model"});
+          const detI   = h("input",{"class":"cl-form-input","value":d.detail||"","placeholder":"Description"});
+          const priceI = h("input",{"class":"cl-form-input","value":d.price||"","placeholder":"Price","style":"max-width:90px"});
+          const warnI  = h("input",{"type":"checkbox"}); warnI.checked = !!d.warn;
+
+          const saveBtn = h("button",{"class":"cl-btn cl-btn-success cl-btn-sm",
+            onClick:async ()=>{
+              const nx=state.sections.map((s,i)=>i!==si?s:{...s,items:s.items.map((it,j)=>j!==ii?it:{...it,
+                name:nameI.value,model:modelI.value,detail:detI.value,price:priceI.value,warn:warnI.checked
+              })});
+              state.sections=nx; state.editItem=null;
+              await saveData("sections",nx,{action:"edit-item",detail:`Edited: #${item.n} ${nameI.value}`});
+              render(); toast("✓ Item updated");
+            }},"Save");
+          const cancelBtn = h("button",{"class":"cl-btn cl-btn-ghost cl-btn-sm",onClick:()=>{state.editItem=null;render();}},"Cancel");
+          const form = h("div",{"class":"cl-edit-form"},nameI,modelI,detI,h("div",{"class":"cl-form-row"},priceI,h("label",{"style":"font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px;cursor:pointer"},warnI,"⚠ Pending"),saveBtn,cancelBtn));
+          row.appendChild(form);
+        } else {
+          const nameRow = h("div",{"class":"cl-item-name"},item.name,
+            item.warn?h("span",{"class":"cl-tag tag-warn"},"⚠ Pending"):null,
+            item.price==="FREE"&&!isDone?h("span",{"class":"cl-tag tag-free"},"FREE"):null
+          );
+          const body = h("div",{"class":"cl-item-body"},nameRow);
+          if (item.model) body.appendChild(h("div",{"class":"cl-item-model"},item.model));
+          if (item.detail) {
+            const expBtn = h("button",{"class":"cl-expand-btn",onClick:e=>{e.stopPropagation();state.expanded[expKey]=!isExp;render();}},isExp?"▾ Hide":"▸ What is this?");
+            const detail = h("div",{"class":"cl-item-detail"+(isExp?" open":"")},item.detail);
+            body.append(expBtn,detail);
+          }
+          row.appendChild(body);
+
+          const priceClass = item.price==="FREE"?"price-free":item.price==="—"?"price-dash":"price-cost";
+          const right = h("div",{"class":"cl-item-right"},
+            h("span",{"class":"cl-item-price "+priceClass},item.price)
+          );
+          if (state.editMode) {
+            const editBtns = h("div",{"class":"cl-edit-btns"},
+              h("button",{"class":"cl-edit-btn edit",onClick:e=>{e.stopPropagation();state.editItem={si,ii};state.editDraft={...item};render();}},  "✏"),
+              h("button",{"class":"cl-edit-btn del", onClick:async e=>{e.stopPropagation();
+                const nx=renumber(state.sections.map((s,i)=>i!==si?s:{...s,items:s.items.filter((_,j)=>j!==ii)}));
+                state.sections=nx;
+                await saveData("sections",nx,{action:"del-item",detail:`Removed: #${item.n} ${item.name}`});
+                render(); toast("✓ Item removed","var(--red)");
+              }},"✕")
+            );
+            right.appendChild(editBtns);
+          }
+          row.appendChild(right);
+        }
+
+        itemsWrap.appendChild(row);
+      });
+
+      // Add item row
+      if (state.editMode) {
+        const addRow = h("div",{"class":"cl-add-row"});
+        if (state.addingSec === si) {
+          const ni = state.newItem;
+          const nameI  = h("input",{"class":"cl-form-input","value":ni.name,"placeholder":"Item name *"});
+          const modelI = h("input",{"class":"cl-form-input","value":ni.model,"placeholder":"Model / spec"});
+          const detI   = h("input",{"class":"cl-form-input","value":ni.detail,"placeholder":"Plain English description"});
+          const priceI = h("input",{"class":"cl-form-input","value":ni.price,"placeholder":"Price","style":"max-width:90px"});
+          const warnI  = h("input",{"type":"checkbox"}); warnI.checked=ni.warn;
+          nameI.oninput  = e=>{ state.newItem.name   =e.target.value; };
+          modelI.oninput = e=>{ state.newItem.model  =e.target.value; };
+          detI.oninput   = e=>{ state.newItem.detail =e.target.value; };
+          priceI.oninput = e=>{ state.newItem.price  =e.target.value; };
+          warnI.onchange = e=>{ state.newItem.warn   =e.target.checked; };
+          const addBtn = h("button",{"class":"cl-btn cl-btn-success cl-btn-sm",
+            onClick:async()=>{
+              if(!state.newItem.name.trim()) return;
+              const maxN=Math.max(0,...state.sections.flatMap(s=>s.items.map(i=>i.n)));
+              const nx=renumber(state.sections.map((s,i)=>i!==si?s:{...s,items:[...s.items,{n:maxN+1,...state.newItem}]}));
+              state.sections=nx; state.addingSec=null; state.newItem={name:"",model:"",detail:"",price:"",warn:false};
+              await saveData("sections",nx,{action:"add-item",detail:`Added: ${nameI.value}`});
+              render(); toast("✓ Item added");
+            }},"Add");
+          const cancelBtn = h("button",{"class":"cl-btn cl-btn-ghost cl-btn-sm",
+            onClick:()=>{state.addingSec=null;state.newItem={name:"",model:"",detail:"",price:"",warn:false};render();}},"Cancel");
+          addRow.appendChild(h("div",{"class":"cl-edit-form","style":"gap:7px"},nameI,modelI,detI,h("div",{"class":"cl-form-row"},priceI,h("label",{"style":"font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px;cursor:pointer"},warnI,"⚠"),addBtn,cancelBtn)));
+        } else {
+          addRow.appendChild(h("button",{"class":"cl-add-btn",onClick:()=>{state.addingSec=si;render();}},"+ Add item to "+sec.title));
+        }
+        itemsWrap.appendChild(addRow);
+      }
+
+      secEl.appendChild(itemsWrap);
+    }
+    frag.appendChild(secEl);
+  });
+
+  // Add section
+  if (state.editMode) {
+    const addSec = h("div",{"class":"cl-add-section"});
+    const label  = h("div",{"style":"font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono)"},"+ New Section");
+    const inp    = h("input",{"class":"cl-form-input","placeholder":"Section title e.g. Cabling","style":"flex:1"});
+    const btn    = h("button",{"class":"cl-btn cl-btn-primary",style:"margin-left:8px",
+      onClick:async()=>{
+        if(!inp.value.trim()) return;
+        const ids="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const nx=[...state.sections,{id:ids[state.sections.length]||String(state.sections.length+1),title:inp.value.trim(),items:[]}];
+        state.sections=nx;
+        await saveData("sections",nx,{action:"add-section",detail:`Added section: ${inp.value.trim()}`});
+        render(); toast("✓ Section added");
+      }},"Add");
+    addSec.append(label,h("div",{"style":"display:flex;align-items:center"},inp,btn));
+    frag.appendChild(addSec);
+  }
+
+  frag.appendChild(h("div",{"style":"text-align:center;padding:20px 0 8px;font-size:12px;color:var(--text3);font-family:var(--mono)"},"3rc0.github.io"));
+  return frag;
+}
+
+// ── Main render ──────────────────────────────────────
+function render() {
+  const root = document.getElementById("cl-root");
+  root.innerHTML = "";
+  if (state.view === "loading") {
+    root.innerHTML = `<div style="text-align:center;padding:60px 0;color:#38bdf8;font-family:monospace;font-size:14px"><div class="cl-spinner"></div>Loading…</div>`;
+    return;
+  }
+  if (state.view === "auth") {
+    root.appendChild(renderAuth());
+    return;
+  }
+  if (state.view === "app") {
+    root.appendChild(renderChecklist());
+    return;
+  }
+}
+
+// ── Boot ─────────────────────────────────────────────
+async function boot() {
+  state.view = "loading";
+  render();
+  const saved = loadSession();
+  if (saved && saved.token) {
+    state.session = saved;
+    try {
+      const d = await apiFetch("/api/data");
+      if (d.ok === false && d.error === "Not authenticated") {
+        clearSession(); state.session = null; state.view = "auth";
+      } else {
+        state.sections = d.sections || DEFAULT_SECTIONS;
+        state.checks   = d.checks   || {};
+        state.view = "app";
+      }
+    } catch(e) {
+      clearSession(); state.session = null; state.view = "auth";
+    }
+  } else {
+    state.view = "auth";
+  }
+  render();
+}
+
+boot();
+})();
+</script>
+{% endraw %}
