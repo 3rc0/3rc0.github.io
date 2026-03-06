@@ -565,9 +565,17 @@ function dndStart(e, type, si, ii, handle) {
     targetSi: -1, targetIi: -1,
   });
 
-  // Ghost
+  // Ghost — clone then strip inner content so only compact header shows
   dnd.ghost = srcEl.cloneNode(true);
   dnd.ghost.removeAttribute("id");
+
+  // Sections: remove items list so ghost shows only the header bar
+  const ghostItems = dnd.ghost.querySelector(".cl-items");
+  if (ghostItems) ghostItems.remove();
+
+  // Items: remove detail panel, edit forms, move buttons, expand button
+  dnd.ghost.querySelectorAll(".cl-item-detail, .cl-edit-form, .cl-move-btns, .cl-expand-btn, .cl-add-row").forEach(el => el.remove());
+
   Object.assign(dnd.ghost.style, {
     position:"fixed", top:rect.top+"px", left:rect.left+"px",
     width:rect.width+"px", margin:"0",
