@@ -10,6 +10,10 @@
 /* ── Scoped reset: neutralise Bootstrap/Jekyll inheritance ── */
 #cl-app {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+/* Force font on all descendants — beats any monospace/serif parent Jekyll wraps content in */
+#cl-app, #cl-app * {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.6;
   color: #e2eaf4;
@@ -47,7 +51,19 @@
   --cl-mono:    "SF Mono","Fira Code","Consolas",monospace;
 }
 
-/* ── Animations (prefixed to avoid collisions) ── */
+#cl-app .cl-ring-label,
+#cl-app .cl-user-badge,
+#cl-app .cl-item-num,
+#cl-app .cl-item-model,
+#cl-app .cl-item-price,
+#cl-app .cl-cost-val,
+#cl-app .cl-sec-count,
+#cl-app .cl-log-time,
+#cl-app .cl-log-action,
+#cl-app .cl-saving,
+#cl-app .cl-tag {
+  font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+}
 @keyframes cl-fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 @keyframes cl-spin   { to{transform:rotate(360deg)} }
 @keyframes cl-shake  { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
