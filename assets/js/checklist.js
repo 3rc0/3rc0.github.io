@@ -3,6 +3,7 @@
 
 const API  = "https://checklist-api.3rc0.workers.dev";
 const STORE_KEY = "cl_session";
+const THEME_KEY = "cl_theme";
 
 // ── Default checklist data ─────────────────────────
 const SEC_META = {
@@ -99,6 +100,7 @@ let state = {
   newItem: {name:"",model:"",detail:"",price:"",warn:false},
   newSecTitle: "",
   saving: false,
+  theme: localStorage.getItem(THEME_KEY) || "dark",
   logs: [],
   showLog: false,
 };
@@ -151,13 +153,14 @@ function h(tag, attrs, ...children) {
 }
 
 function ring(pct) {
-  const size=60, stroke=5, r=(size-stroke*2)/2, circ=2*Math.PI*r;
-  const color = pct===100?"#34d399":"#38bdf8";
+  const size=64, stroke=5, r=(size-stroke*2)/2, circ=2*Math.PI*r;
+  const color = pct===100?"#5dbb8a":"#c9a96e";
+  const trackColor = "rgba(201,169,110,0.12)";
   const offset = circ*(1-pct/100);
   const wrap = h("div",{"class":"cl-ring"});
   wrap.innerHTML = `
     <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="transform:rotate(-90deg)">
-      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="${stroke}"/>
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${trackColor}" stroke-width="${stroke}"/>
       <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${stroke}"
         stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"
         style="transition:stroke-dashoffset 0.6s ease"/>
@@ -327,7 +330,21 @@ function renderHeader() {
       render();
     }}, "Sign Out");
 
-  const actions = h("div",{"class":"cl-header-actions"}, editBtn, logBtn, printBtn, logoutBtn);
+  const themeBtn = h("button",{"class":"cl-theme-toggle",
+    onClick:()=>{
+      state.theme = state.theme === "dark" ? "light" : "dark";
+      localStorage.setItem(THEME_KEY, state.theme);
+      applyTheme();
+      // Re-render saving indicator only — no full re-render needed
+      const app = document.getElementById("cl-app");
+      if(app) app.setAttribute("data-theme", state.theme);
+      // Update button text
+      themeBtn.textContent = state.theme === "dark" ? "☀ Light Mode" : "◑ Dark Mode";
+    }},
+    state.theme === "dark" ? "☀ Light Mode" : "◑ Dark Mode"
+  );
+
+  const actions = h("div",{"class":"cl-header-actions"}, editBtn, logBtn, printBtn, themeBtn, logoutBtn);
   const saving  = h("div",{"class":"cl-saving","id":"cl-saving","style":"display:none"},"● syncing…");
   wrap.append(top, actions, saving);
   return wrap;
@@ -571,8 +588,15 @@ function renderChecklist() {
   return frag;
 }
 
+// ── Theme ────────────────────────────────────────────
+function applyTheme() {
+  const app = document.getElementById("cl-app");
+  if (app) app.setAttribute("data-theme", state.theme);
+}
+
 // ── Main render ──────────────────────────────────────
 function render() {
+  applyTheme();
   const root = document.getElementById("cl-root");
   root.innerHTML = "";
   if (state.view === "loading") {
@@ -591,6 +615,7 @@ function render() {
 
 // ── Boot ─────────────────────────────────────────────
 async function boot() {
+  applyTheme();
   state.view = "loading";
   render();
   const saved = loadSession();
