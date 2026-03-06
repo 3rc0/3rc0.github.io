@@ -2,480 +2,311 @@
 layout: page
 title: Home Security Checklist
 subtitle: Home Network Infrastructure
-permalink: /checklist/
 ---
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* ── Reset & Base ─────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
-
 :root {
-  --bg:       #080f1a;
-  --bg1:      #0d1829;
-  --bg2:      #111f36;
-  --bg3:      #162540;
-  --glass:    rgba(255,255,255,0.04);
-  --glass2:   rgba(255,255,255,0.07);
-  --border:   rgba(255,255,255,0.08);
-  --border2:  rgba(255,255,255,0.14);
-  --accent:   #38bdf8;
-  --green:    #34d399;
-  --orange:   #fb923c;
-  --red:      #f87171;
-  --purple:   #a78bfa;
-  --text:     #e2eaf4;
-  --text2:    #8ba3bf;
-  --text3:    #4d6a85;
-  --done-bg:  rgba(52,211,153,0.07);
-  --warn-bg:  rgba(251,146,60,0.1);
-  --radius:   14px;
-  --font:     'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --mono:     'JetBrains Mono', 'Fira Code', monospace;
+  --bg:#080f1a; --bg1:#0d1829; --bg2:#111f36; --bg3:#162540;
+  --glass:rgba(255,255,255,0.04); --glass2:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.14);
+  --accent:#38bdf8; --green:#34d399; --orange:#fb923c;
+  --red:#f87171; --text:#e2eaf4; --text2:#8ba3bf; --text3:#4d6a85;
+  --done-bg:rgba(52,211,153,0.07); --warn-bg:rgba(251,146,60,0.1);
+  --radius:14px;
+  --font:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'JetBrains Mono','Fira Code',monospace;
 }
+#checklist-app { font-family:var(--font); font-size:16px; line-height:1.5; color:var(--text); max-width:680px; margin:0 auto; padding:0 0 48px; }
 
-#checklist-app {
-  font-family: var(--font);
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--text);
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 0 0 48px;
-}
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes popIn  { 0%{transform:scale(0.6)} 70%{transform:scale(1.15)} 100%{transform:scale(1)} }
+@keyframes spin   { to{transform:rotate(360deg)} }
+@keyframes shake  { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-5px)} 40%,80%{transform:translateX(5px)} }
+.fade-up { animation:fadeUp 0.3s ease both; }
 
-/* ── Animations ──────────────────────────────────── */
-@keyframes fadeUp   { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-@keyframes popIn    { 0%{transform:scale(0.6)} 70%{transform:scale(1.15)} 100%{transform:scale(1)} }
-@keyframes shimmer  { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
-@keyframes spin     { to{transform:rotate(360deg)} }
-
-.fade-up { animation: fadeUp 0.3s ease both; }
-
-/* ── Progress Header ─────────────────────────────── */
-.cl-header {
-  background: linear-gradient(135deg, #0f2240 0%, #0a1628 100%);
-  border: 1px solid var(--border2);
+/* ── Password prompt (inline, not modal) ── */
+.cl-pw-banner {
+  background: linear-gradient(135deg,rgba(56,189,248,0.07),rgba(56,189,248,0.03));
+  border: 1px solid rgba(56,189,248,0.25);
   border-radius: var(--radius);
-  padding: 20px;
-  margin-bottom: 16px;
-  position: relative;
-  overflow: hidden;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  animation: fadeUp 0.25s ease;
+}
+.cl-pw-banner h4 {
+  font-size:15px; font-weight:700; color:#fff;
+  margin:0 0 4px; display:flex; align-items:center; gap:8px;
+}
+.cl-pw-banner p { font-size:13px; color:var(--text2); margin:0 0 14px; }
+.cl-pw-row { display:flex; gap:8px; align-items:center; }
+.cl-pw-input {
+  flex:1; background:rgba(255,255,255,0.06);
+  border:1px solid rgba(56,189,248,0.3);
+  color:var(--text); border-radius:10px; padding:10px 14px;
+  font-size:15px; font-family:var(--font);
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.cl-pw-input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(56,189,248,0.12); }
+.cl-pw-input.error { border-color:var(--red); box-shadow:0 0 0 3px rgba(248,113,113,0.12); animation:shake 0.4s ease; }
+.cl-pw-error { font-size:13px; color:var(--red); margin-top:8px; display:flex; align-items:center; gap:5px; }
+
+/* ── Buttons ── */
+.cl-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:9px 16px; border-radius:10px;
+  font-family:var(--font); font-size:14px; font-weight:600;
+  cursor:pointer; transition:all 0.15s; border:none;
+}
+.cl-btn:hover { opacity:0.85; transform:translateY(-1px); }
+.cl-btn-primary { background:rgba(56,189,248,0.12); color:var(--accent); border:1px solid rgba(56,189,248,0.3); }
+.cl-btn-success { background:rgba(52,211,153,0.12); color:var(--green); border:1px solid rgba(52,211,153,0.3); }
+.cl-btn-warning { background:rgba(251,146,60,0.12); color:var(--orange); border:1px solid rgba(251,146,60,0.3); }
+.cl-btn-danger  { background:rgba(248,113,113,0.08); color:var(--red); border:1px solid rgba(248,113,113,0.2); }
+.cl-btn-ghost   { background:rgba(255,255,255,0.04); color:var(--text2); border:1px solid var(--border); }
+.cl-btn-edit-on { background:rgba(251,146,60,0.15); color:var(--orange); border:1px solid rgba(251,146,60,0.4); }
+.cl-btn-sm { padding:6px 12px; font-size:13px; }
+
+/* ── Header ── */
+.cl-header {
+  background:linear-gradient(135deg,#0f2240,#0a1628);
+  border:1px solid var(--border2); border-radius:var(--radius);
+  padding:20px; margin-bottom:14px; position:relative; overflow:hidden;
 }
 .cl-header::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--green), var(--purple), var(--orange));
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg,var(--accent),var(--green),var(--purple,#a78bfa),var(--orange));
 }
-.cl-header-top {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.cl-ring { position: relative; width: 64px; height: 64px; flex-shrink: 0; }
-.cl-ring svg { transform: rotate(-90deg); }
+.cl-header-top { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+.cl-ring { position:relative; width:64px; height:64px; flex-shrink:0; }
+.cl-ring svg { transform:rotate(-90deg); }
 .cl-ring-label {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--mono); font-size: 13px; font-weight: 700;
-  color: var(--accent);
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-family:var(--mono); font-size:13px; font-weight:700; color:var(--accent);
 }
-.cl-title-block { flex: 1; min-width: 0; }
-.cl-title-block h2 {
-  font-size: 20px; font-weight: 700; color: #fff;
-  margin: 0 0 2px; letter-spacing: -0.01em;
-}
-.cl-title-block p { font-size: 14px; color: var(--text2); margin: 0 0 8px; }
-.cl-progress-bar {
-  height: 4px; background: rgba(255,255,255,0.08);
-  border-radius: 99px; overflow: hidden;
-}
-.cl-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--green));
-  border-radius: 99px;
-  transition: width 0.5s ease;
-}
-.cl-actions {
-  display: flex; gap: 8px; flex-wrap: wrap;
-  margin-top: 16px; padding-top: 14px;
-  border-top: 1px solid var(--border);
-}
-.cl-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 14px; border-radius: 10px;
-  font-family: var(--font); font-size: 14px; font-weight: 600;
-  cursor: pointer; transition: all 0.15s; border: none;
-  text-decoration: none;
-}
-.cl-btn-primary  { background: rgba(56,189,248,0.12); color: var(--accent); border: 1px solid rgba(56,189,248,0.3); }
-.cl-btn-success  { background: rgba(52,211,153,0.12); color: var(--green);  border: 1px solid rgba(52,211,153,0.3); }
-.cl-btn-warning  { background: rgba(251,146,60,0.12);  color: var(--orange); border: 1px solid rgba(251,146,60,0.3); }
-.cl-btn-danger   { background: rgba(248,113,113,0.08); color: var(--red);   border: 1px solid rgba(248,113,113,0.2); }
-.cl-btn-ghost    { background: rgba(255,255,255,0.04); color: var(--text2); border: 1px solid var(--border); }
-.cl-btn:hover    { opacity: 0.85; transform: translateY(-1px); }
-.cl-btn-edit-on  { background: rgba(251,146,60,0.15); color: var(--orange); border: 1px solid rgba(251,146,60,0.4); }
+.cl-title-block { flex:1; min-width:0; }
+.cl-title-block h2 { font-size:20px; font-weight:700; color:#fff; margin:0 0 2px; letter-spacing:-0.01em; }
+.cl-title-block p  { font-size:14px; color:var(--text2); margin:0 0 8px; }
+.cl-progress-bar  { height:4px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden; }
+.cl-progress-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--green)); border-radius:99px; transition:width 0.5s ease; }
+.cl-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; padding-top:14px; border-top:1px solid var(--border); }
+.cl-saving  { font-family:var(--mono); font-size:11px; color:var(--accent); text-align:center; padding:4px; opacity:0.7; }
 
-/* ── Cost Strip ───────────────────────────────────── */
-.cl-costs {
-  display: grid; grid-template-columns: repeat(3,1fr);
-  gap: 8px; margin-bottom: 16px;
-}
-.cl-cost-card {
-  background: var(--glass);
-  border: 1px solid var(--border);
-  border-radius: 12px; padding: 10px 12px;
-  text-align: center;
-}
-.cl-cost-val { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--orange); }
-.cl-cost-lbl { font-size: 12px; color: var(--text3); margin-top: 2px; }
+/* ── Cost strip ── */
+.cl-costs { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
+.cl-cost-card { background:var(--glass); border:1px solid var(--border); border-radius:12px; padding:10px 12px; text-align:center; }
+.cl-cost-val { font-family:var(--mono); font-size:14px; font-weight:700; color:var(--orange); }
+.cl-cost-lbl { font-size:12px; color:var(--text3); margin-top:2px; }
 
-/* ── Section ──────────────────────────────────────── */
-.cl-section {
-  background: var(--glass);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  margin-bottom: 10px;
-  overflow: hidden;
-  transition: border-color 0.2s;
-}
-.cl-section:hover { border-color: var(--border2); }
-.cl-section.complete { border-color: rgba(52,211,153,0.25); }
+/* ── Sections ── */
+.cl-section { background:var(--glass); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:10px; overflow:hidden; transition:border-color 0.2s; }
+.cl-section:hover { border-color:var(--border2); }
+.cl-section.complete { border-color:rgba(52,211,153,0.25); }
+.cl-sec-header { display:flex; align-items:center; gap:12px; padding:14px 16px; cursor:pointer; user-select:none; transition:background 0.15s; }
+.cl-sec-header:hover { background:var(--glass2); }
+.cl-sec-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.cl-sec-info { flex:1; min-width:0; }
+.cl-sec-title { font-size:15px; font-weight:600; color:#fff; margin:0 0 1px; }
+.cl-sec-hint  { font-size:12px; color:var(--text3); }
+.cl-sec-right { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.cl-sec-count { font-family:var(--mono); font-size:12px; color:var(--text3); font-weight:600; }
+.cl-sec-count.done { color:var(--green); }
+.cl-sec-bar { width:48px; height:3px; background:rgba(255,255,255,0.07); border-radius:99px; overflow:hidden; }
+.cl-sec-bar-fill { height:100%; border-radius:99px; transition:width 0.4s; }
+.cl-chevron { color:var(--text3); font-size:12px; transition:transform 0.2s; display:inline-block; }
+.cl-chevron.open { transform:rotate(180deg); }
+.cl-sec-del { padding:2px 7px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; background:rgba(248,113,113,0.1); color:var(--red); border:1px solid rgba(248,113,113,0.2); }
 
-.cl-sec-header {
-  display: flex; align-items: center; gap: 12px;
-  padding: 14px 16px; cursor: pointer;
-  user-select: none; transition: background 0.15s;
-}
-.cl-sec-header:hover { background: var(--glass2); }
-
-.cl-sec-icon {
-  width: 36px; height: 36px; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; flex-shrink: 0;
-}
-.cl-sec-info { flex: 1; min-width: 0; }
-.cl-sec-title {
-  font-size: 15px; font-weight: 600; color: #fff;
-  margin: 0 0 1px; line-height: 1.3;
-}
-.cl-sec-hint { font-size: 12px; color: var(--text3); }
-.cl-sec-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-.cl-sec-count { font-family: var(--mono); font-size: 12px; color: var(--text3); font-weight: 600; }
-.cl-sec-count.done { color: var(--green); }
-.cl-chevron {
-  color: var(--text3); font-size: 12px;
-  transition: transform 0.2s; display: inline-block;
-}
-.cl-chevron.open { transform: rotate(180deg); }
-
-/* ── Mini progress bar in section header ─────────── */
-.cl-sec-bar {
-  width: 48px; height: 3px;
-  background: rgba(255,255,255,0.07);
-  border-radius: 99px; overflow: hidden;
-}
-.cl-sec-bar-fill { height: 100%; border-radius: 99px; transition: width 0.4s; }
-
-/* ── Items ────────────────────────────────────────── */
-.cl-items { border-top: 1px solid rgba(255,255,255,0.06); }
-
+/* ── Items ── */
+.cl-items { border-top:1px solid rgba(255,255,255,0.06); }
 .cl-item {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 12px 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  cursor: pointer; transition: background 0.15s;
-  position: relative;
+  display:flex; align-items:flex-start; gap:10px;
+  padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.05);
+  cursor:pointer; transition:background 0.15s;
 }
-.cl-item:last-child { border-bottom: none; }
-.cl-item:hover { background: var(--glass2); }
-.cl-item.done { background: var(--done-bg); }
-.cl-item.done .cl-item-name  { text-decoration: line-through; color: var(--green); opacity: 0.7; }
-.cl-item.done .cl-item-model { text-decoration: line-through; opacity: 0.4; }
-.cl-item.done .cl-item-price { opacity: 0.35; text-decoration: line-through; }
+.cl-item:last-child { border-bottom:none; }
+.cl-item:hover { background:var(--glass2); }
+.cl-item.done { background:var(--done-bg); }
+.cl-item.done .cl-item-name  { text-decoration:line-through; color:var(--green); opacity:0.7; }
+.cl-item.done .cl-item-model { text-decoration:line-through; opacity:0.4; }
+.cl-item.done .cl-item-price { opacity:0.35; text-decoration:line-through; }
+.cl-item-num { font-family:var(--mono); font-size:11px; font-weight:700; color:rgba(56,189,248,0.4); width:22px; text-align:right; flex-shrink:0; padding-top:2px; }
+.done .cl-item-num { color:var(--green); opacity:0.6; }
+.cl-cb { width:22px; height:22px; border-radius:7px; border:2px solid var(--text3); flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.2s; background:transparent; }
+.cl-cb.on { background:var(--green); border-color:var(--green); }
+.cl-cb.on svg { animation:popIn 0.25s ease; }
+.cl-item-body { flex:1; min-width:0; }
+.cl-item-name  { font-size:15px; font-weight:600; color:#fff; line-height:1.35; display:flex; align-items:center; flex-wrap:wrap; gap:6px; }
+.cl-item-model { font-family:var(--mono); font-size:12px; color:var(--accent); margin-top:2px; opacity:0.85; }
+.cl-item-detail { font-size:13px; color:var(--text2); margin-top:4px; line-height:1.55; display:none; }
+.cl-item-detail.open { display:block; }
+.cl-expand-btn { font-size:12px; color:var(--text3); cursor:pointer; margin-top:3px; display:inline-flex; align-items:center; gap:3px; background:none; border:none; padding:0; font-family:var(--font); transition:color 0.15s; }
+.cl-expand-btn:hover { color:var(--accent); }
+.cl-item-price { font-family:var(--mono); font-size:13px; font-weight:700; white-space:nowrap; flex-shrink:0; padding-top:2px; }
+.price-free { color:var(--green); }
+.price-dash { color:var(--text3); }
+.price-cost { color:var(--orange); }
+.cl-tag { display:inline-flex; align-items:center; gap:3px; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:700; letter-spacing:0.02em; font-family:var(--mono); flex-shrink:0; }
+.tag-warn { background:var(--warn-bg); color:var(--orange); border:1px solid rgba(251,146,60,0.3); }
+.tag-free { background:rgba(52,211,153,0.1); color:var(--green); border:1px solid rgba(52,211,153,0.2); }
+.cl-edit-btns { display:flex; gap:4px; flex-shrink:0; margin-top:1px; }
+.cl-edit-btn { padding:3px 8px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; border:none; transition:all 0.15s; font-family:var(--font); }
+.cl-edit-btn.edit { background:rgba(56,189,248,0.12); color:var(--accent); border:1px solid rgba(56,189,248,0.25); }
+.cl-edit-btn.del  { background:rgba(248,113,113,0.1); color:var(--red); border:1px solid rgba(248,113,113,0.2); }
+.cl-edit-form { display:flex; flex-direction:column; gap:8px; flex:1; }
+.cl-input { background:rgba(255,255,255,0.06); border:1px solid var(--border2); color:var(--text); border-radius:8px; padding:8px 12px; font-size:14px; width:100%; font-family:var(--font); transition:border-color 0.2s,box-shadow 0.2s; }
+.cl-input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(56,189,248,0.12); }
+.cl-form-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.cl-form-row .cl-input { flex:1; min-width:80px; }
+.cl-add-row { padding:8px 16px; border-top:1px solid rgba(255,255,255,0.05); }
+.cl-add-btn { width:100%; padding:9px; background:transparent; border:1px dashed rgba(255,255,255,0.12); border-radius:10px; color:var(--text3); font-size:14px; cursor:pointer; font-family:var(--font); transition:all 0.2s; }
+.cl-add-btn:hover { border-color:var(--accent); color:var(--accent); }
+.cl-add-section { background:var(--glass); border:1px dashed var(--border2); border-radius:var(--radius); padding:14px 16px; margin-bottom:10px; }
+.cl-toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#162540; border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:10px 20px; font-size:14px; font-weight:600; color:var(--green); box-shadow:0 8px 32px rgba(0,0,0,0.5); z-index:9999; white-space:nowrap; animation:fadeUp 0.2s ease; }
+.cl-footer { text-align:center; padding:24px 0 8px; font-size:13px; color:var(--text3); font-family:var(--mono); }
+.cl-lock-badge { display:inline-flex; align-items:center; gap:5px; font-size:12px; color:var(--text3); font-family:var(--mono); padding:3px 8px; border:1px solid var(--border); border-radius:20px; }
 
-/* Number */
-.cl-item-num {
-  font-family: var(--mono); font-size: 11px; font-weight: 700;
-  color: rgba(56,189,248,0.4); width: 22px;
-  text-align: right; flex-shrink: 0; padding-top: 2px;
-}
-.done .cl-item-num { color: var(--green); opacity: 0.6; }
-
-/* Checkbox */
-.cl-cb {
-  width: 22px; height: 22px; border-radius: 7px;
-  border: 2px solid var(--text3); flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s; background: transparent; margin-top: 0;
-}
-.cl-cb.on { background: var(--green); border-color: var(--green); }
-.cl-cb.on svg { animation: popIn 0.25s ease; }
-
-/* Content */
-.cl-item-body { flex: 1; min-width: 0; }
-.cl-item-name {
-  font-size: 15px; font-weight: 600; color: #fff;
-  line-height: 1.35; display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
-}
-.cl-item-model {
-  font-family: var(--mono); font-size: 12px;
-  color: var(--accent); margin-top: 2px; opacity: 0.85;
-}
-.cl-item-detail {
-  font-size: 13px; color: var(--text2); margin-top: 4px;
-  line-height: 1.55; display: none;
-}
-.cl-item-detail.open { display: block; }
-.cl-expand-btn {
-  font-size: 12px; color: var(--text3); cursor: pointer;
-  margin-top: 3px; display: inline-flex; align-items: center; gap: 3px;
-  background: none; border: none; padding: 0; font-family: var(--font);
-  transition: color 0.15s;
-}
-.cl-expand-btn:hover { color: var(--accent); }
-
-/* Price */
-.cl-item-price {
-  font-family: var(--mono); font-size: 13px; font-weight: 700;
-  white-space: nowrap; flex-shrink: 0; padding-top: 2px;
-  transition: color 0.2s;
-}
-.price-free { color: var(--green); }
-.price-dash { color: var(--text3); }
-.price-cost { color: var(--orange); }
-
-/* Tags */
-.cl-tag {
-  display: inline-flex; align-items: center; gap: 3px;
-  padding: 2px 8px; border-radius: 20px;
-  font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
-  font-family: var(--mono); flex-shrink: 0;
-}
-.tag-warn { background: var(--warn-bg); color: var(--orange); border: 1px solid rgba(251,146,60,0.3); }
-.tag-free { background: rgba(52,211,153,0.1); color: var(--green); border: 1px solid rgba(52,211,153,0.2); }
-
-/* Edit controls */
-.cl-edit-btns { display: flex; gap: 4px; flex-shrink: 0; margin-top: 1px; }
-.cl-edit-btn {
-  padding: 3px 8px; border-radius: 6px; font-size: 12px;
-  font-weight: 700; cursor: pointer; border: none;
-  transition: all 0.15s; font-family: var(--font);
-}
-.cl-edit-btn.edit { background: rgba(56,189,248,0.12); color: var(--accent); border: 1px solid rgba(56,189,248,0.25); }
-.cl-edit-btn.del  { background: rgba(248,113,113,0.1);  color: var(--red);   border: 1px solid rgba(248,113,113,0.2); }
-
-/* Edit form */
-.cl-edit-form { display: flex; flex-direction: column; gap: 8px; flex: 1; }
-.cl-input {
-  background: rgba(255,255,255,0.06); border: 1px solid var(--border2);
-  color: var(--text); border-radius: 8px; padding: 8px 12px;
-  font-size: 14px; width: 100%; font-family: var(--font);
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-.cl-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(56,189,248,0.12); }
-.cl-form-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.cl-form-row .cl-input { flex: 1; min-width: 80px; }
-
-/* Add item */
-.cl-add-row { padding: 8px 16px; border-top: 1px solid rgba(255,255,255,0.05); }
-.cl-add-btn {
-  width: 100%; padding: 9px; background: transparent;
-  border: 1px dashed rgba(255,255,255,0.12); border-radius: 10px;
-  color: var(--text3); font-size: 14px; cursor: pointer;
-  font-family: var(--font); transition: all 0.2s;
-}
-.cl-add-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-/* Add section */
-.cl-add-section {
-  background: var(--glass); border: 1px dashed var(--border2);
-  border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;
-}
-
-/* Section complete badge */
-.cl-sec-complete {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: 12px; font-weight: 700; color: var(--green);
-}
-
-/* Toast */
-.cl-toast {
-  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-  background: #162540; border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 20px; padding: 10px 20px;
-  font-size: 14px; font-weight: 600; color: var(--green);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  z-index: 9999; white-space: nowrap;
-  animation: fadeUp 0.2s ease;
-}
-
-/* Saving indicator */
-.cl-saving {
-  font-family: var(--mono); font-size: 11px; color: var(--accent);
-  text-align: center; padding: 4px; opacity: 0.7;
-}
-
-/* Section del button */
-.cl-sec-del { padding: 2px 7px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
-
-/* Footer */
-.cl-footer {
-  text-align: center; padding: 24px 0 8px;
-  font-size: 13px; color: var(--text3);
-  font-family: var(--mono);
-}
-
-/* ── PRINT STYLES ─────────────────────────────────── */
+/* ── Print ── */
 @media print {
-  body > *:not(#checklist-app):not([id]) { display: none !important; }
-  .cl-actions, .cl-btn, .cl-edit-btns, .cl-add-row,
-  .cl-add-section, .cl-toast, .cl-saving { display: none !important; }
-  #checklist-app { color: #000 !important; background: #fff !important; }
-  .cl-header { background: #f8fafc !important; border: 1px solid #ddd !important; }
-  .cl-header::before { display: none; }
-  .cl-section { border: 1px solid #ddd !important; background: #fff !important; break-inside: avoid; margin-bottom: 8px; }
-  .cl-sec-header { background: #f1f5f9 !important; }
-  .cl-sec-title, .cl-item-name { color: #111 !important; }
-  .cl-item-model { color: #2563eb !important; }
-  .cl-sec-hint, .cl-item-detail { color: #555 !important; }
-  .cl-item-detail { display: block !important; }
-  .cl-item-detail.open { display: block !important; }
-  .cl-item-price { color: #d97706 !important; }
-  .cl-item-num { color: #94a3b8 !important; }
-  .price-free { color: #059669 !important; }
-  .cl-cb { border-color: #94a3b8 !important; }
-  .cl-cb.on { background: #059669 !important; border-color: #059669 !important; }
-  .done .cl-item-name, .done .cl-item-model { color: #059669 !important; }
-  .cl-costs { display: none; }
-  .cl-ring svg circle:last-child { stroke: #2563eb !important; }
-  .cl-ring-label { color: #2563eb !important; }
-  .cl-title-block h2 { color: #111 !important; }
-  .cl-title-block p  { color: #555 !important; }
-  .tag-warn { background: #fff7ed !important; color: #d97706 !important; }
-  .tag-free { background: #f0fdf4 !important; color: #059669 !important; }
-  .cl-sec-count { color: #555 !important; }
-  .cl-sec-count.done { color: #059669 !important; }
-  .cl-items { border-top: 1px solid #e2e8f0 !important; }
-  .cl-item { border-bottom: 1px solid #f1f5f9 !important; }
-  .cl-footer { color: #94a3b8 !important; border-top: 1px solid #e2e8f0; margin-top: 16px; padding-top: 12px; }
-  @page { margin: 15mm; size: A4; }
+  .cl-actions,.cl-btn,.cl-edit-btns,.cl-add-row,.cl-add-section,
+  .cl-toast,.cl-saving,.cl-pw-banner { display:none!important; }
+  #checklist-app { color:#000!important; background:#fff!important; }
+  .cl-header { background:#f8fafc!important; border:1px solid #ddd!important; }
+  .cl-header::before { display:none; }
+  .cl-section { border:1px solid #ddd!important; background:#fff!important; break-inside:avoid; margin-bottom:8px; }
+  .cl-sec-header { background:#f1f5f9!important; }
+  .cl-sec-title,.cl-item-name { color:#111!important; }
+  .cl-item-model { color:#2563eb!important; }
+  .cl-sec-hint,.cl-item-detail { color:#555!important; }
+  .cl-item-detail { display:block!important; }
+  .cl-item-price { color:#d97706!important; }
+  .price-free { color:#059669!important; }
+  .cl-item-num { color:#94a3b8!important; }
+  .cl-cb { border-color:#94a3b8!important; }
+  .cl-cb.on { background:#059669!important; border-color:#059669!important; }
+  .done .cl-item-name { color:#059669!important; }
+  .cl-costs { display:none; }
+  .cl-ring-label { color:#2563eb!important; }
+  .cl-title-block h2 { color:#111!important; }
+  .cl-title-block p  { color:#555!important; }
+  .tag-warn { background:#fff7ed!important; color:#d97706!important; }
+  .tag-free { background:#f0fdf4!important; color:#059669!important; }
+  .cl-footer { color:#94a3b8!important; border-top:1px solid #e2e8f0; margin-top:16px; padding-top:12px; }
+  @page { margin:15mm; size:A4; }
 }
 
-/* ── Mobile ───────────────────────────────────────── */
-@media (max-width: 480px) {
-  .cl-costs { grid-template-columns: repeat(3,1fr); }
-  .cl-cost-val { font-size: 12px; }
-  .cl-cost-lbl { font-size: 11px; }
-  .cl-btn { font-size: 13px; padding: 7px 11px; }
-  .cl-item { padding: 11px 12px; }
-  .cl-item-name { font-size: 14px; }
-  .cl-item-detail { font-size: 13px; }
-  .cl-title-block h2 { font-size: 18px; }
-  .cl-sec-header { padding: 12px; }
-  .cl-sec-icon { width: 32px; height: 32px; font-size: 16px; }
+/* ── Mobile ── */
+@media (max-width:480px) {
+  .cl-cost-val { font-size:12px; }
+  .cl-btn { font-size:13px; padding:7px 11px; }
+  .cl-item { padding:11px 12px; }
+  .cl-item-name { font-size:14px; }
+  .cl-title-block h2 { font-size:18px; }
 }
 </style>
 
 <div id="checklist-app">
-  <div id="cl-root"><div style="text-align:center;padding:40px;color:#38bdf8;font-family:monospace">Loading…</div></div>
+  <div id="cl-root">
+    <div style="text-align:center;padding:60px 0;color:#38bdf8;font-family:monospace;font-size:14px">
+      <div style="width:28px;height:28px;border:3px solid rgba(56,189,248,0.2);border-top-color:#38bdf8;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px"></div>
+      Loading checklist…
+    </div>
+  </div>
 </div>
-{% raw %}
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-<script type="text/babel" data-presets="react">
+<script type="text/babel">
 
 const WORKER_URL = "https://checklist-api.3rc0.workers.dev";
-const { useState, useEffect, useRef, useCallback } = React;
+const { useState, useEffect, useRef } = React;
 
 const SEC_META = {
-  A:{ icon:"🖥️",  color:"#38bdf8", hint:"Main devices that power the whole system" },
-  B:{ icon:"📡",  color:"#a78bfa", hint:"Door and window sensors for intrusion alerts" },
-  C:{ icon:"💾",  color:"#34d399", hint:"Drives that store camera footage" },
-  D:{ icon:"⚡",  color:"#fb923c", hint:"Backup power — keeps everything on during outages" },
-  E:{ icon:"🗄️",  color:"#60a5fa", hint:"Cabinet that holds all the equipment" },
-  F:{ icon:"🔇",  color:"#4ade80", hint:"Mods to make the system run silently" },
-  G:{ icon:"🌐",  color:"#f472b6", hint:"Access cameras and doors from anywhere, free" },
-  H:{ icon:"🛡️",  color:"#f87171", hint:"Built-in security features — all free" },
-  I:{ icon:"🚪",  color:"#fbbf24", hint:"Configure door locks, access codes and alerts" },
-  J:{ icon:"📶",  color:"#38bdf8", hint:"Connect your Xfinity internet to the system" },
+  A:{ icon:"🖥️", color:"#38bdf8", hint:"Main devices that power the whole system" },
+  B:{ icon:"📡", color:"#a78bfa", hint:"Door and window sensors for intrusion alerts" },
+  C:{ icon:"💾", color:"#34d399", hint:"Drives that store camera footage" },
+  D:{ icon:"⚡", color:"#fb923c", hint:"Backup power — keeps everything on during outages" },
+  E:{ icon:"🗄️", color:"#60a5fa", hint:"Cabinet that holds all equipment" },
+  F:{ icon:"🔇", color:"#4ade80", hint:"Mods to make the system run silently" },
+  G:{ icon:"🌐", color:"#f472b6", hint:"Access cameras and doors from anywhere, free" },
+  H:{ icon:"🛡️", color:"#f87171", hint:"Built-in security features — all free" },
+  I:{ icon:"🚪", color:"#fbbf24", hint:"Configure door locks, access codes and alerts" },
+  J:{ icon:"📶", color:"#38bdf8", hint:"Connect your Xfinity internet to the system" },
 };
 
 const DEFAULTS = [
   { id:"A", title:"Main Hardware", items:[
-    { n:1,  name:"Central Controller", model:"Ubiquiti UDM-SE", detail:"The brain of the whole system — manages cameras, door locks, WiFi network and security all in one box.", price:"$599", warn:false },
-    { n:2,  name:"Panoramic Cameras ×3", model:"UniFi G6 180", detail:"Three 180° wide-angle cameras with 4K quality. AI automatically detects and tags people, vehicles and faces.", price:"$897", warn:false },
-    { n:3,  name:"Front Door Camera", model:"UniFi G6 Entry", detail:"Doorbell camera with NFC tap-to-enter, Face ID recognition and PIN keypad for your front door.", price:"~$200", warn:true },
-    { n:4,  name:"Front Door Access Hub", model:"UA-Hub-Door", detail:"The controller box that activates your front door electric bolt — wires between the camera and the lock.", price:"$199", warn:false },
-    { n:5,  name:"Backyard Door Hub", model:"UA-Hub-Door-Mini", detail:"Smaller hub for the backyard door. Phone unlock only, no keypad or camera needed.", price:"$99", warn:false },
-    { n:6,  name:"Garage Door Controller", model:"UA-Hub-Gate", detail:"Wires directly to your existing garage opener. Open and close the garage from your phone.", price:"$279", warn:true },
-    { n:7,  name:"Front Door Electric Bolt", model:"UA-Lock-Electric", detail:"Fail-secure bolt. If power goes out it stays locked. Your physical key always works regardless.", price:"$79", warn:false },
+    { n:1,  name:"Central Controller", model:"Ubiquiti UDM-SE", detail:"The brain of the whole system — manages cameras, door locks, WiFi and security all in one box.", price:"$599", warn:false },
+    { n:2,  name:"Panoramic Cameras ×3", model:"UniFi G6 180", detail:"Three 180° wide-angle cameras, 4K quality. AI automatically detects and tags people, vehicles and faces.", price:"$897", warn:false },
+    { n:3,  name:"Front Door Camera", model:"UniFi G6 Entry", detail:"Doorbell camera with NFC tap-to-enter, Face ID and PIN keypad for your front door.", price:"~$200", warn:true },
+    { n:4,  name:"Front Door Access Hub", model:"UA-Hub-Door", detail:"Controller box that activates your front door electric bolt.", price:"$199", warn:false },
+    { n:5,  name:"Backyard Door Hub", model:"UA-Hub-Door-Mini", detail:"Smaller hub for the backyard door. Phone unlock only.", price:"$99", warn:false },
+    { n:6,  name:"Garage Door Controller", model:"UA-Hub-Gate", detail:"Wires to your existing garage opener. Open/close from your phone.", price:"$279", warn:true },
+    { n:7,  name:"Front Door Electric Bolt", model:"UA-Lock-Electric", detail:"Fail-secure bolt. Physical key always works regardless of power.", price:"$79", warn:false },
     { n:8,  name:"Backyard Electric Bolt", model:"UA-Lock-Electric", detail:"Same fail-secure bolt for the backyard door.", price:"$79", warn:false },
-    { n:9,  name:"WiFi Access Point", model:"UniFi U7 Pro", detail:"WiFi 7 — the fastest WiFi available. Also acts as the Bluetooth bridge for all door and window sensors.", price:"$199", warn:false },
+    { n:9,  name:"WiFi Access Point", model:"UniFi U7 Pro", detail:"WiFi 7 — fastest available. Also acts as Bluetooth bridge for all sensors.", price:"$199", warn:false },
   ]},
   { id:"B", title:"Security Sensors", items:[
-    { n:10, name:"Door Sensors ×2", model:"UniFi UP-SENSE", detail:"Backyard and kitchen doors. Detects motion, opening, alarm sounds like glass break or smoke detector.", price:"$70", warn:false },
-    { n:11, name:"Window Sensors ×10", model:"UniFi USL-Entry", detail:"All 10 windows. Simple open/close detection. 6-year battery life — install once, forget for years.", price:"$250", warn:false },
+    { n:10, name:"Door Sensors ×2", model:"UniFi UP-SENSE", detail:"Backyard and kitchen doors. Detects motion, opening, alarm sounds.", price:"$70", warn:false },
+    { n:11, name:"Window Sensors ×10", model:"UniFi USL-Entry", detail:"All 10 windows. Simple open/close. 6-year battery — set and forget.", price:"$250", warn:false },
   ]},
   { id:"C", title:"Storage Drives", items:[
-    { n:12, name:"Silent SSD Drives ×2", model:"WD Red SA500 2TB", detail:"Solid state drives — completely silent with no moving parts. Stores months of continuous camera recordings.", price:"$160", warn:false },
+    { n:12, name:"Silent SSD Drives ×2", model:"WD Red SA500 2TB", detail:"Completely silent, no moving parts. Stores months of camera recordings.", price:"$160", warn:false },
   ]},
   { id:"D", title:"Backup Power (UPS)", items:[
-    { n:13, name:"Uninterruptible Power Supply", model:"Tripp Lite SU2200RTXLCD2U", detail:"If power goes out — the system stays fully on for ~45 minutes. Zero switchover time. Automatically restarts when power returns.", price:"$450", warn:false },
+    { n:13, name:"Uninterruptible Power Supply", model:"Tripp Lite SU2200RTXLCD2U", detail:"System stays on ~45 min if power goes out. Zero switchover time. Auto restarts.", price:"$450", warn:false },
   ]},
   { id:"E", title:"Rack Cabinet", items:[
-    { n:14, name:"Soundproof Rack 9U", model:"XRackPro2", detail:"Holds all equipment in one tidy, quiet cabinet. Reduces fan and drive noise by up to 80%.", price:"$300", warn:false },
-    { n:15, name:"Shelf for Modem", model:"1U Vented Shelf", detail:"Mounts the Xfinity XB8 modem inside the rack lying flat with proper ventilation.", price:"$35", warn:false },
+    { n:14, name:"Soundproof Rack 9U", model:"XRackPro2", detail:"Holds all equipment in one quiet cabinet. Reduces noise by up to 80%.", price:"$300", warn:false },
+    { n:15, name:"Shelf for Modem", model:"1U Vented Shelf", detail:"Mounts the XB8 modem flat with proper ventilation.", price:"$35", warn:false },
     { n:16, name:"Cable Organizer", model:"1U D-Ring", detail:"Keeps all cables neatly routed inside the cabinet.", price:"$20", warn:false },
   ]},
   { id:"F", title:"Noise Reduction", items:[
-    { n:17, name:"Silent Fan Replacement", model:"Noctua NF-A6x25 PWM", detail:"Replaces the stock fan inside the UDM-SE controller with an almost-silent Noctua fan.", price:"$15", warn:false },
-    { n:18, name:"Fan Speed Script", model:"SSH configuration", detail:"Reduces fan speed during idle periods via a software script. Combined with the Noctua fan this makes the system near-inaudible.", price:"FREE", warn:false },
+    { n:17, name:"Silent Fan Replacement", model:"Noctua NF-A6x25 PWM", detail:"Replaces the stock fan in the UDM-SE with a near-silent Noctua fan.", price:"$15", warn:false },
+    { n:18, name:"Fan Speed Script", model:"SSH configuration", detail:"Reduces fan speed at idle via software. Near-inaudible combined with Noctua fan.", price:"FREE", warn:false },
   ]},
   { id:"G", title:"Remote Access Setup", items:[
-    { n:19, name:"Zero Trust Account", model:"Cloudflare Zero Trust", detail:"Free account. Lets you access all your cameras and doors remotely without ever exposing your home IP address.", price:"FREE", warn:false },
-    { n:20, name:"Dynamic DNS Account", model:"DuckDNS", detail:"Gives your home a permanent web address even when your internet provider changes your IP address.", price:"FREE", warn:false },
-    { n:21, name:"Tunnel Software Install", model:"cloudflared on UDM-SE", detail:"Installed on the controller via SSH. Creates a secure outbound tunnel — no ports opened on your router.", price:"FREE", warn:false },
-    { n:22, name:"Remote App on Phone", model:"Cloudflare WARP", detail:"Install on your phone. Securely connects you back to your home system from anywhere in the world.", price:"FREE", warn:false },
-    { n:23, name:"Disable Modem WiFi", model:"Xfinity XB8 admin", detail:"Turn off the XB8's own WiFi radio. The U7 Pro Access Point handles all WiFi, giving you better coverage and control.", price:"FREE", warn:false },
+    { n:19, name:"Zero Trust Account", model:"Cloudflare Zero Trust", detail:"Free. Access cameras remotely without exposing your home IP address.", price:"FREE", warn:false },
+    { n:20, name:"Dynamic DNS Account", model:"DuckDNS", detail:"Gives your home a permanent address even when your IP changes.", price:"FREE", warn:false },
+    { n:21, name:"Tunnel Software Install", model:"cloudflared on UDM-SE", detail:"Secure outbound tunnel — no ports opened on your router.", price:"FREE", warn:false },
+    { n:22, name:"Remote App on Phone", model:"Cloudflare WARP", detail:"Connect securely to your home system from anywhere in the world.", price:"FREE", warn:false },
+    { n:23, name:"Disable Modem WiFi", model:"Xfinity XB8 admin", detail:"Turn off XB8 WiFi. U7 Pro handles all WiFi instead.", price:"FREE", warn:false },
   ]},
   { id:"H", title:"Security Configuration", items:[
-    { n:24, name:"Threat Detection IDS/IPS", model:"Suricata engine", detail:"Scans all internet traffic in real time and blocks known threats automatically. Over 25,000 threat signatures included.", price:"FREE", warn:false },
-    { n:25, name:"Country Blocking", model:"GeoIP filter", detail:"Block all traffic from specific countries with one click. Significantly reduces attack surface.", price:"FREE", warn:false },
-    { n:26, name:"Honeypot Trap", model:"UDM-SE built-in", detail:"Creates a decoy target on your network. Any attacker who probes it gets instantly detected and flagged.", price:"FREE", warn:false },
-    { n:27, name:"DNS Protection", model:"UDM-SE built-in", detail:"Blocks connections to malicious websites and phishing domains before they load on any device in your home.", price:"FREE", warn:false },
-    { n:28, name:"Tor and Malicious IP Block", model:"UDM-SE built-in", detail:"Blocks known attack tools, anonymous proxy networks and IP addresses linked to hacking activity.", price:"FREE", warn:false },
-    { n:29, name:"Camera Network VLAN 10", model:"192.168.10.0/24", detail:"Cameras get their own isolated network segment. They cannot communicate with your phone, laptop or other devices.", price:"FREE", warn:false },
-    { n:30, name:"Door Access Network VLAN 20", model:"192.168.20.0/24", detail:"All door locks, hubs and entry devices on a separate network. Isolated from cameras and main devices.", price:"FREE", warn:false },
-    { n:31, name:"Smart Home Network VLAN 30", model:"192.168.30.0/24", detail:"Separate network for any smart home or IoT devices. Keeps them isolated from your computers and phones.", price:"FREE", warn:false },
-    { n:32, name:"Disable Cloud Connection", model:"Ubiquiti local-only mode", detail:"Turns off Ubiquiti's cloud connection after initial setup. Everything runs locally — nothing is sent to external servers.", price:"FREE", warn:false },
+    { n:24, name:"Threat Detection IDS/IPS", model:"Suricata engine", detail:"Scans all internet traffic and blocks known threats. 25,000+ threat signatures.", price:"FREE", warn:false },
+    { n:25, name:"Country Blocking", model:"GeoIP filter", detail:"Block all traffic from specific countries with one click.", price:"FREE", warn:false },
+    { n:26, name:"Honeypot Trap", model:"UDM-SE built-in", detail:"Decoy target — any attacker who probes it gets instantly detected.", price:"FREE", warn:false },
+    { n:27, name:"DNS Protection", model:"UDM-SE built-in", detail:"Blocks malicious and phishing sites before they load on any device.", price:"FREE", warn:false },
+    { n:28, name:"Tor and Malicious IP Block", model:"UDM-SE built-in", detail:"Blocks known attack tools and anonymous proxy networks.", price:"FREE", warn:false },
+    { n:29, name:"Camera Network VLAN 10", model:"192.168.10.0/24", detail:"Cameras on their own isolated network — cannot talk to your other devices.", price:"FREE", warn:false },
+    { n:30, name:"Door Access Network VLAN 20", model:"192.168.20.0/24", detail:"All door locks and hubs isolated from cameras and main network.", price:"FREE", warn:false },
+    { n:31, name:"Smart Home Network VLAN 30", model:"192.168.30.0/24", detail:"IoT devices isolated from computers and phones.", price:"FREE", warn:false },
+    { n:32, name:"Disable Cloud Connection", model:"Ubiquiti local-only mode", detail:"Everything runs locally — nothing sent to external servers after setup.", price:"FREE", warn:false },
   ]},
   { id:"I", title:"Door & Alarm Setup", items:[
-    { n:33, name:"Front Door Access Config", model:"UniFi Access app", detail:"Set up NFC cards, register faces for Face ID, and create PIN codes for the front door entry system.", price:"FREE", warn:false },
-    { n:34, name:"Backyard Door Config", model:"UniFi Access app", detail:"Configure phone-based unlocking for the backyard door in the UniFi Access mobile app.", price:"FREE", warn:false },
-    { n:35, name:"Garage Door Config", model:"UniFi Access app", detail:"Test the open/close trigger, set access schedules and review access logs for the garage.", price:"FREE", warn:false },
-    { n:36, name:"Alarm Rules Setup", model:"UniFi Alarm Manager", detail:"Set what happens when motion, door openings or sounds are detected. Options include push notifications, recording triggers and siren alerts.", price:"FREE", warn:false },
-    { n:37, name:"Pair Door Sensors", model:"Bluetooth via U7 Pro", detail:"Pair the 2 UP-SENSE door sensors through the U7 Pro's built-in Bluetooth radio in the UniFi app.", price:"FREE", warn:false },
-    { n:38, name:"Install Window Sensors", model:"USL-Entry ×10", detail:"Attach magnetic sensors to all 10 window frames. No wiring — just stick in place and pair via the app.", price:"FREE", warn:false },
-    { n:39, name:"Geofencing Setup", model:"UniFi Protect", detail:"Optional. System automatically arms when you leave home and disarms when you return, based on your phone's location.", price:"FREE", warn:false },
+    { n:33, name:"Front Door Access Config", model:"UniFi Access app", detail:"Set up NFC cards, Face ID profiles and PIN codes for the front door.", price:"FREE", warn:false },
+    { n:34, name:"Backyard Door Config", model:"UniFi Access app", detail:"Configure phone-based unlocking for the backyard door.", price:"FREE", warn:false },
+    { n:35, name:"Garage Door Config", model:"UniFi Access app", detail:"Test open/close trigger, set schedules and review access logs.", price:"FREE", warn:false },
+    { n:36, name:"Alarm Rules Setup", model:"UniFi Alarm Manager", detail:"Set what happens when motion, door openings or sounds are detected.", price:"FREE", warn:false },
+    { n:37, name:"Pair Door Sensors", model:"Bluetooth via U7 Pro", detail:"Pair 2 UP-SENSE sensors through the U7 Pro Bluetooth radio.", price:"FREE", warn:false },
+    { n:38, name:"Install Window Sensors", model:"USL-Entry ×10", detail:"Attach magnetic sensors to all 10 windows. No wiring needed.", price:"FREE", warn:false },
+    { n:39, name:"Geofencing Setup", model:"UniFi Protect", detail:"Optional. System arms/disarms automatically based on your phone location.", price:"FREE", warn:false },
   ]},
   { id:"J", title:"Internet Connection", items:[
-    { n:40, name:"Mount Modem in Rack", model:"Xfinity XB8", detail:"Place the XB8 modem flat on the vented shelf in the rack. Ensure airflow is not blocked.", price:"—", warn:false },
-    { n:41, name:"Disable Modem WiFi", model:"Xfinity admin panel", detail:"Log into 10.0.0.1 and turn off the XB8's internal WiFi radio so it acts as a pure modem.", price:"—", warn:false },
-    { n:42, name:"Connect Internet Cable", model:"Cat6 Ethernet", detail:"Run a Cat6 Ethernet cable from the XB8 LAN port to the UDM-SE WAN port. This carries your internet feed.", price:"—", warn:false },
+    { n:40, name:"Mount Modem in Rack", model:"Xfinity XB8", detail:"Place XB8 flat on vented shelf inside the rack with airflow clear.", price:"—", warn:false },
+    { n:41, name:"Disable Modem WiFi", model:"Xfinity admin panel", detail:"Log into 10.0.0.1 and turn off the XB8 internal WiFi radio.", price:"—", warn:false },
+    { n:42, name:"Connect Internet Cable", model:"Cat6 Ethernet", detail:"Cat6 from XB8 LAN port → UDM-SE WAN port. This is your internet feed.", price:"—", warn:false },
   ]},
 ];
 
-/* ── API ─────────────────────────────────────────── */
+/* ── API with password header ─────────────────────── */
 async function apiGet() {
   try {
     const r = await fetch(`${WORKER_URL}/api/data`);
-    const d = await r.json();
-    return d;
+    return await r.json();
   } catch(e) {
     return {
       sections: JSON.parse(localStorage.getItem("cl_sections")||"null"),
@@ -483,86 +314,156 @@ async function apiGet() {
     };
   }
 }
-async function apiSet(key, val) {
+
+async function apiSet(key, value, password) {
   try {
-    await fetch(`${WORKER_URL}/api/data`, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({key, value:val}),
+    const r = await fetch(`${WORKER_URL}/api/data`, {
+      method: "POST",
+      headers: { "Content-Type":"application/json", "X-Edit-Password": password||"" },
+      body: JSON.stringify({ key, value }),
     });
+    const data = await r.json();
+    if (!data.ok) throw new Error(data.error||"Failed");
+    return { ok: true };
   } catch(e) {
-    localStorage.setItem("cl_"+key, JSON.stringify(val));
+    localStorage.setItem("cl_"+key, JSON.stringify(value));
+    return { ok: false, error: e.message };
   }
 }
 
-/* ── Progress Ring ───────────────────────────────── */
-function renderRing(pct){
-  const size=64, stroke=5;
-  const r=(size-stroke*2)/2;
-  const circ=2*Math.PI*r;
-  const color = pct===100 ? "#34d399" : "#38bdf8";
-
-  return `
-  <div class="cl-ring">
-    <svg width="${size}" height="${size}">
-      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none"
-        stroke="rgba(255,255,255,0.07)" stroke-width="${stroke}"/>
-      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none"
-        stroke="${color}" stroke-width="${stroke}"
-        stroke-dasharray="${circ}"
-        stroke-dashoffset="${circ*(1-pct/100)}"
-        style="transform-origin:32px 32px; transform:rotate(-90deg); transition:stroke-dashoffset 0.6s ease"/>
-    </svg>
-    <div class="cl-ring-label">${pct}%</div>
-  </div>`;
+async function apiVerifyPassword(password) {
+  try {
+    const r = await fetch(`${WORKER_URL}/api/auth`, {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify({ password }),
+    });
+    const data = await r.json();
+    return data.ok === true;
+  } catch(e) {
+    return false;
+  }
 }
 
-/* ── App ─────────────────────────────────────────── */
-function App() {
-  const [secs,setSecs]             = useState(DEFAULTS);
-  const [checks,setChecks]         = useState({});
-  const [collapsed,setCollapsed]   = useState({});
-  const [editMode,setEditMode]     = useState(false);
-  const [editItem,setEditItem]     = useState(null);
-  const [editDraft,setEditDraft]   = useState({});
-  const [addingSec,setAddingSec]   = useState(null);
-  const [newItem,setNewItem]       = useState({name:"",model:"",detail:"",price:"",warn:false});
-  const [newSecTitle,setNewSecTitle] = useState("");
-  const [loading,setLoading]       = useState(true);
-  const [saving,setSaving]         = useState(false);
-  const [toast,setToast]           = useState("");
-  const [expanded,setExpanded]     = useState({});
-  const toastRef = useRef(null);
+/* ── Progress Ring ─────────────────────────────────── */
+function Ring({pct}) {
+  const size=64, stroke=5, r=(size-stroke*2)/2, circ=2*Math.PI*r;
+  const color = pct===100?"#34d399":"#38bdf8";
+  return (
+    <div className="cl-ring">
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={stroke}/>
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={stroke}
+          strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={circ*(1-pct/100)}
+          style={{transformOrigin:`${size/2}px ${size/2}px`,transform:"rotate(-90deg)",transition:"stroke-dashoffset 0.6s ease"}}/>
+      </svg>
+      <div className="cl-ring-label" style={{color}}>{pct}%</div>
+    </div>
+  );
+}
 
-  const notify = m => {
-    setToast(m);
-    clearTimeout(toastRef.current);
-    toastRef.current = setTimeout(()=>setToast(""), 2500);
+/* ── Password Prompt (inline banner) ──────────────── */
+function PasswordPrompt({ onSuccess, onCancel }) {
+  const [pw, setPw]         = useState("");
+  const [error, setError]   = useState("");
+  const [loading, setLoading] = useState(false);
+  const [shake, setShake]   = useState(false);
+  const inputRef = useRef(null);
+
+  useEffect(() => { inputRef.current?.focus(); }, []);
+
+  const submit = async () => {
+    if (!pw.trim()) return;
+    setLoading(true); setError("");
+    const ok = await apiVerifyPassword(pw);
+    setLoading(false);
+    if (ok) {
+      onSuccess(pw);
+    } else {
+      setError("Incorrect password. Try again.");
+      setPw("");
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
+      inputRef.current?.focus();
+    }
   };
 
+  return (
+    <div className="cl-pw-banner">
+      <h4>🔒 Editor Password Required</h4>
+      <p>Enter the password to edit, add or remove items. Viewing is always public.</p>
+      <div className="cl-pw-row">
+        <input
+          ref={inputRef}
+          className={`cl-pw-input${shake?" error":""}`}
+          type="password"
+          placeholder="Enter password…"
+          value={pw}
+          onChange={e => { setPw(e.target.value); setError(""); }}
+          onKeyDown={e => e.key==="Enter" && submit()}
+        />
+        <button className="cl-btn cl-btn-primary" onClick={submit} disabled={loading}>
+          {loading ? "Checking…" : "Unlock ✓"}
+        </button>
+        <button className="cl-btn cl-btn-ghost" onClick={onCancel}>Cancel</button>
+      </div>
+      {error && <div className="cl-pw-error">⚠ {error}</div>}
+    </div>
+  );
+}
+
+/* ── Main App ─────────────────────────────────────── */
+function App() {
+  const [secs,setSecs]           = useState(DEFAULTS);
+  const [checks,setChecks]       = useState({});
+  const [collapsed,setCollapsed] = useState({});
+  const [editMode,setEditMode]   = useState(false);
+  const [showPwPrompt,setShowPwPrompt] = useState(false);
+  const [editPassword,setEditPassword] = useState("");
+  const [editItem,setEditItem]   = useState(null);
+  const [editDraft,setEditDraft] = useState({});
+  const [addingSec,setAddingSec] = useState(null);
+  const [newItem,setNewItem]     = useState({name:"",model:"",detail:"",price:"",warn:false});
+  const [newSecTitle,setNewSecTitle] = useState("");
+  const [loading,setLoading]     = useState(true);
+  const [saving,setSaving]       = useState(false);
+  const [toast,setToast]         = useState("");
+  const [expanded,setExpanded]   = useState({});
+  const toastRef = useRef(null);
+
+  const notify = m => { setToast(m); clearTimeout(toastRef.current); toastRef.current=setTimeout(()=>setToast(""),2500); };
+
   useEffect(()=>{
+    const timeout = setTimeout(()=>setLoading(false), 6000);
     apiGet().then(d=>{
+      clearTimeout(timeout);
       if(d?.sections) setSecs(d.sections);
       if(d?.checks)   setChecks(d.checks);
       setLoading(false);
-    });
+    }).catch(()=>{ clearTimeout(timeout); setLoading(false); });
   },[]);
 
-  const saveSecs = async s => { setSaving(true); await apiSet("sections",s); setSaving(false); };
-  const saveCks  = async c => { await apiSet("checks",c); };
+  const saveSecs = async s => { setSaving(true); await apiSet("sections",s,editPassword); setSaving(false); };
+  const saveCks  = async c => { await apiSet("checks",c,editPassword); };
 
-  const toggleCheck = n => {
-    const nx = {...checks,[n]:!checks[n]};
-    setChecks(nx); saveCks(nx);
-  };
-  const toggleSec  = id => setCollapsed(p=>({...p,[id]:!p[id]}));
-  const toggleExp  = key => setExpanded(p=>({...p,[key]:!p[key]}));
-  const renumber   = s => { let n=1; return s.map(sec=>({...sec,items:sec.items.map(i=>({...i,n:n++}))})); };
+  const toggleCheck = n => { const nx={...checks,[n]:!checks[n]}; setChecks(nx); saveCks(nx); };
+  const toggleSec   = id => setCollapsed(p=>({...p,[id]:!p[id]}));
+  const toggleExp   = k  => setExpanded(p=>({...p,[k]:!p[k]}));
+  const renumber    = s  => { let n=1; return s.map(sec=>({...sec,items:sec.items.map(i=>({...i,n:n++}))})); };
 
   const allItems = secs.flatMap(s=>s.items);
   const total=allItems.length, done=allItems.filter(i=>checks[i.n]).length;
   const pct = total ? Math.round(done/total*100) : 0;
   const secProg = sec => { const t=sec.items.length,d=sec.items.filter(i=>checks[i.n]).length; return {t,d,pct:t?Math.round(d/t*100):0}; };
+
+  const handleEditClick = () => {
+    if (editMode) { setEditMode(false); setEditItem(null); setAddingSec(null); return; }
+    setShowPwPrompt(true);
+  };
+  const onPasswordSuccess = pw => {
+    setEditPassword(pw); setShowPwPrompt(false); setEditMode(true);
+    notify("✓ Edit mode unlocked");
+  };
 
   const startEdit = (si,ii,item) => { setEditItem({si,ii}); setEditDraft({...item}); };
   const commitEdit = async () => {
@@ -593,18 +494,16 @@ function App() {
   };
   const resetChecks = async () => { setChecks({}); await saveCks({}); notify("✓ Progress cleared"); };
   const resetAll    = async () => {
-    if(!window.confirm("Reset everything back to default? This cannot be undone.")) return;
-    setSecs(DEFAULTS); setChecks({}); await saveSecs(DEFAULTS); await saveCks({}); notify("✓ Fully reset to default");
+    if(!window.confirm("Reset everything to default? This cannot be undone.")) return;
+    setSecs(DEFAULTS); setChecks({}); await saveSecs(DEFAULTS); await saveCks({});
+    setEditMode(false); notify("✓ Reset to default");
   };
-  const printPDF = () => {
-    setCollapsed({});
-    setTimeout(()=>window.print(), 300);
-  };
+  const printPDF = () => { setCollapsed({}); setTimeout(()=>window.print(),300); };
 
   if(loading) return (
     <div style={{textAlign:"center",padding:"60px 0",color:"var(--accent)",fontFamily:"var(--mono)",fontSize:"14px"}}>
       <div style={{width:28,height:28,border:"3px solid rgba(56,189,248,0.2)",borderTopColor:"#38bdf8",borderRadius:"50%",animation:"spin 0.8s linear infinite",margin:"0 auto 12px"}}/>
-      Loading your checklist…
+      Loading checklist…
     </div>
   );
 
@@ -612,7 +511,15 @@ function App() {
     <>
       {toast && <div className="cl-toast">{toast}</div>}
 
-      {/* ── Header ── */}
+      {/* Password prompt — inline at top */}
+      {showPwPrompt && (
+        <PasswordPrompt
+          onSuccess={onPasswordSuccess}
+          onCancel={()=>setShowPwPrompt(false)}
+        />
+      )}
+
+      {/* Header */}
       <div className="cl-header fade-up">
         <div className="cl-header-top">
           <Ring pct={pct}/>
@@ -625,19 +532,23 @@ function App() {
           </div>
         </div>
         <div className="cl-actions">
-          <button className={`cl-btn ${editMode?"cl-btn-edit-on":"cl-btn-ghost"}`} onClick={()=>setEditMode(e=>!e)}>
-            {editMode ? "✓ Done Editing" : "✏️ Edit Checklist"}
+          <button className={`cl-btn ${editMode?"cl-btn-edit-on":"cl-btn-ghost"}`} onClick={handleEditClick}>
+            {editMode ? "✓ Done Editing" : "🔒 Edit Checklist"}
           </button>
-          <button className="cl-btn cl-btn-success" onClick={printPDF}>
-            🖨️ Print / Save PDF
-          </button>
+          <button className="cl-btn cl-btn-success" onClick={printPDF}>🖨️ Print / Save PDF</button>
           <button className="cl-btn cl-btn-ghost" onClick={resetChecks}>↺ Reset Progress</button>
-          <button className="cl-btn cl-btn-danger" onClick={resetAll}>⚠ Reset All</button>
+          {editMode && <button className="cl-btn cl-btn-danger" onClick={resetAll}>⚠ Reset All</button>}
         </div>
         {saving && <div className="cl-saving">● syncing…</div>}
+        {editMode && (
+          <div style={{marginTop:10,display:"flex",alignItems:"center",gap:6}}>
+            <span className="cl-lock-badge">🔓 Edit mode active</span>
+            <span style={{fontSize:12,color:"var(--text3)"}}>— click "Done Editing" when finished</span>
+          </div>
+        )}
       </div>
 
-      {/* ── Cost Summary ── */}
+      {/* Cost summary */}
       <div className="cl-costs">
         {[["💰","~$4,298","Total incl. tax"],["📅","$0 / yr","No subscriptions"],["⚡","~$138 / yr","Electricity"]].map(([icon,val,lbl])=>(
           <div key={lbl} className="cl-cost-card">
@@ -648,93 +559,68 @@ function App() {
         ))}
       </div>
 
-      {/* ── Sections ── */}
+      {/* Sections */}
       {secs.map((sec,si)=>{
-        const meta = SEC_META[sec.id]||{icon:"📌",color:"#8ba3bf",hint:""};
-        const {t,d,pct:sp} = secProg(sec);
-        const isComplete = d===t && t>0;
-        const isOpen = !collapsed[sec.id];
-
+        const meta=SEC_META[sec.id]||{icon:"📌",color:"#8ba3bf",hint:""};
+        const {t,d,pct:sp}=secProg(sec);
+        const isComplete=d===t&&t>0, isOpen=!collapsed[sec.id];
         return (
-          <div
-            key={sec.id}
-            id={"sec-" + sec.id}
-            className={`cl-section fade-up${isComplete ? " complete" : ""}`}
-            style={{ animationDelay: `${si * 0.03}s` }}
-          >
+          <div key={sec.id} id={"sec-"+sec.id}
+            className={`cl-section fade-up${isComplete?" complete":""}`}
+            style={{animationDelay:`${si*0.03}s`}}>
 
-            {/* Header */}
             <div className="cl-sec-header" onClick={()=>toggleSec(sec.id)}>
-              <div className="cl-sec-icon" style={{background:`${meta.color}18`,border:`1px solid ${meta.color}28`}}>
-                {meta.icon}
-              </div>
+              <div className="cl-sec-icon" style={{background:`${meta.color}18`,border:`1px solid ${meta.color}28`}}>{meta.icon}</div>
               <div className="cl-sec-info">
-                <div className="cl-sec-title">
-                  {sec.title}
-                  {isComplete && <span style={{marginLeft:8,fontSize:"13px"}}>✅</span>}
-                </div>
+                <div className="cl-sec-title">{sec.title}{isComplete&&<span style={{marginLeft:8,fontSize:"13px"}}>✅</span>}</div>
                 <div className="cl-sec-hint">{meta.hint}</div>
               </div>
               <div className="cl-sec-right">
-                {editMode && <button className="cl-sec-del" onClick={e=>{e.stopPropagation();delSec(si);}}>✕</button>}
+                {editMode&&<button className="cl-sec-del" onClick={e=>{e.stopPropagation();delSec(si);}}>✕</button>}
                 <div>
                   <div className={`cl-sec-count${isComplete?" done":""}`}>{d}/{t}</div>
-                  <div className="cl-sec-bar">
-                    <div className="cl-sec-bar-fill" style={{width:sp+"%",background:meta.color}}/>
-                  </div>
+                  <div className="cl-sec-bar"><div className="cl-sec-bar-fill" style={{width:sp+"%",background:meta.color}}/></div>
                 </div>
                 <span className={`cl-chevron${isOpen?" open":""}`}>▾</span>
               </div>
             </div>
 
-            {/* Items */}
-            {isOpen && (
+            {isOpen&&(
               <div className="cl-items">
                 {sec.items.map((item,ii)=>{
-                  const isDone = !!checks[item.n];
-                  const isEditing = editItem?.si===si && editItem?.ii===ii;
-                  const expKey = `${si}-${ii}`;
-                  const isExp = !!expanded[expKey];
-
+                  const isDone=!!checks[item.n];
+                  const isEditing=editItem?.si===si&&editItem?.ii===ii;
+                  const expKey=`${si}-${ii}`, isExp=!!expanded[expKey];
                   return (
                     <div key={item.n} className={`cl-item${isDone?" done":""}`}
-                      onClick={()=>{ if(!editMode&&!isEditing) toggleCheck(item.n); }}>
-
+                      onClick={()=>{if(!editMode&&!isEditing)toggleCheck(item.n);}}>
                       <span className="cl-item-num">#{item.n}</span>
-
-                      <div className={`cl-cb${isDone?" on":""}`}
-                        onClick={e=>{e.stopPropagation();toggleCheck(item.n);}}>
-                        {isDone && (
-                          <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
-                            <path d="M1 5L4.5 8.5L11 1" stroke="#065f46" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                        )}
+                      <div className={`cl-cb${isDone?" on":""}`} onClick={e=>{e.stopPropagation();toggleCheck(item.n);}}>
+                        {isDone&&<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1" stroke="#065f46" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
                       </div>
-
-                      {isEditing ? (
+                      {isEditing?(
                         <div className="cl-edit-form" onClick={e=>e.stopPropagation()}>
-                          <input className="cl-input" value={editDraft.name} placeholder="Item name" onChange={e=>setEditDraft(p=>({...p,name:e.target.value}))}/>
+                          <input className="cl-input" value={editDraft.name||""} placeholder="Item name" onChange={e=>setEditDraft(p=>({...p,name:e.target.value}))}/>
                           <input className="cl-input" value={editDraft.model||""} placeholder="Model / spec" onChange={e=>setEditDraft(p=>({...p,model:e.target.value}))}/>
                           <input className="cl-input" value={editDraft.detail||""} placeholder="Plain English description" onChange={e=>setEditDraft(p=>({...p,detail:e.target.value}))}/>
                           <div className="cl-form-row">
                             <input className="cl-input" style={{maxWidth:100}} value={editDraft.price||""} placeholder="Price" onChange={e=>setEditDraft(p=>({...p,price:e.target.value}))}/>
                             <label style={{fontSize:"13px",color:"var(--text2)",display:"flex",alignItems:"center",gap:5,cursor:"pointer",whiteSpace:"nowrap"}}>
-                              <input type="checkbox" checked={!!editDraft.warn} onChange={e=>setEditDraft(p=>({...p,warn:e.target.checked}))}/>
-                              ⚠️ Pending
+                              <input type="checkbox" checked={!!editDraft.warn} onChange={e=>setEditDraft(p=>({...p,warn:e.target.checked}))}/>⚠️ Pending
                             </label>
-                            <button className="cl-btn cl-btn-success" style={{padding:"6px 12px",fontSize:"13px"}} onClick={commitEdit}>Save</button>
-                            <button className="cl-btn cl-btn-ghost" style={{padding:"6px 12px",fontSize:"13px"}} onClick={()=>setEditItem(null)}>Cancel</button>
+                            <button className="cl-btn cl-btn-success cl-btn-sm" onClick={commitEdit}>Save</button>
+                            <button className="cl-btn cl-btn-ghost cl-btn-sm" onClick={()=>setEditItem(null)}>Cancel</button>
                           </div>
                         </div>
-                      ) : (
+                      ):(
                         <div className="cl-item-body">
                           <div className="cl-item-name">
                             {item.name}
-                            {item.warn && <span className="cl-tag tag-warn">⚠ Pending</span>}
-                            {item.price==="FREE" && !isDone && <span className="cl-tag tag-free">FREE</span>}
+                            {item.warn&&<span className="cl-tag tag-warn">⚠ Pending</span>}
+                            {item.price==="FREE"&&!isDone&&<span className="cl-tag tag-free">FREE</span>}
                           </div>
-                          {item.model && <div className="cl-item-model">{item.model}</div>}
-                          {item.detail && (
+                          {item.model&&<div className="cl-item-model">{item.model}</div>}
+                          {item.detail&&(
                             <>
                               <button className="cl-expand-btn" onClick={e=>{e.stopPropagation();toggleExp(expKey);}}>
                                 {isExp?"▾ Hide":"▸ What is this?"}
@@ -744,13 +630,10 @@ function App() {
                           )}
                         </div>
                       )}
-
-                      {!isEditing && (
+                      {!isEditing&&(
                         <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:5,flexShrink:0}}>
-                          <span className={`cl-item-price ${item.price==="FREE"?"price-free":item.price==="—"?"price-dash":"price-cost"}`}>
-                            {item.price}
-                          </span>
-                          {editMode && (
+                          <span className={`cl-item-price ${item.price==="FREE"?"price-free":item.price==="—"?"price-dash":"price-cost"}`}>{item.price}</span>
+                          {editMode&&(
                             <div className="cl-edit-btns">
                               <button className="cl-edit-btn edit" onClick={e=>{e.stopPropagation();startEdit(si,ii,item);}}>✏</button>
                               <button className="cl-edit-btn del"  onClick={e=>{e.stopPropagation();delItem(si,ii);}}>✕</button>
@@ -761,11 +644,9 @@ function App() {
                     </div>
                   );
                 })}
-
-                {/* Add item row */}
-                {editMode && (
+                {editMode&&(
                   <div className="cl-add-row">
-                    {addingSec===si ? (
+                    {addingSec===si?(
                       <div style={{display:"flex",flexDirection:"column",gap:8}} onClick={e=>e.stopPropagation()}>
                         <input className="cl-input" value={newItem.name} placeholder="Item name *" onChange={e=>setNewItem(p=>({...p,name:e.target.value}))}/>
                         <input className="cl-input" value={newItem.model} placeholder="Model / spec" onChange={e=>setNewItem(p=>({...p,model:e.target.value}))}/>
@@ -775,11 +656,11 @@ function App() {
                           <label style={{fontSize:"13px",color:"var(--text2)",display:"flex",alignItems:"center",gap:5,cursor:"pointer"}}>
                             <input type="checkbox" checked={newItem.warn} onChange={e=>setNewItem(p=>({...p,warn:e.target.checked}))}/>⚠️ Pending
                           </label>
-                          <button className="cl-btn cl-btn-success" style={{padding:"6px 12px",fontSize:"13px"}} onClick={()=>commitAdd(si)}>Add</button>
-                          <button className="cl-btn cl-btn-ghost" style={{padding:"6px 12px",fontSize:"13px"}} onClick={()=>{setAddingSec(null);setNewItem({name:"",model:"",detail:"",price:"",warn:false});}}>Cancel</button>
+                          <button className="cl-btn cl-btn-success cl-btn-sm" onClick={()=>commitAdd(si)}>Add</button>
+                          <button className="cl-btn cl-btn-ghost cl-btn-sm" onClick={()=>{setAddingSec(null);setNewItem({name:"",model:"",detail:"",price:"",warn:false});}}>Cancel</button>
                         </div>
                       </div>
-                    ) : (
+                    ):(
                       <button className="cl-add-btn" onClick={()=>setAddingSec(si)}>+ Add item to {sec.title}</button>
                     )}
                   </div>
@@ -790,8 +671,7 @@ function App() {
         );
       })}
 
-      {/* Add section */}
-      {editMode && (
+      {editMode&&(
         <div className="cl-add-section">
           <div style={{fontSize:"12px",color:"var(--text3)",marginBottom:10,fontFamily:"var(--mono)",textTransform:"uppercase",letterSpacing:"0.06em"}}>+ New Section</div>
           <div style={{display:"flex",gap:8}}>
@@ -801,7 +681,6 @@ function App() {
         </div>
       )}
 
-      {/* Footer */}
       <div className="cl-footer">Diyar Hussein 2026</div>
     </>
   );
@@ -809,4 +688,3 @@ function App() {
 
 ReactDOM.createRoot(document.getElementById("cl-root")).render(<App/>);
 </script>
-{% endraw %}
