@@ -1,0 +1,26 @@
+{
+  "name": "Home Security Checklist",
+  "short_name": "SecCheck",
+  "description": "Infrastructure deployment tracker — UniFi, access control, cameras",
+  "start_url": "/checklist/",
+  "scope": "/checklist/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0d0d14",
+  "theme_color": "#c9a96e",
+  "categories": ["utilities", "productivity"],
+  "icons": [
+    {
+      "src": "/assets/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
