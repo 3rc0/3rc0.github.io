@@ -332,6 +332,7 @@ async function apiSet(key, value, password) {
   }
 }
 
+// Returns { ok, locked, error }
 async function apiVerifyPassword(password) {
   try {
     const r = await fetch(`${WORKER_URL}/api/auth`, {
@@ -340,9 +341,10 @@ async function apiVerifyPassword(password) {
       body: JSON.stringify({ password }),
     });
     const data = await r.json();
-    return data.ok === true;
+    if (r.status === 429) return { ok: false, locked: true, error: data.error };
+    return { ok: data.ok === true, locked: false, error: data.error || "" };
   } catch(e) {
-    return false;
+    return { ok: false, locked: false, error: "Could not reach server" };
   }
 }
 
@@ -365,23 +367,33 @@ function Ring({pct}) {
 
 /* ── Password Prompt (inline banner) ──────────────── */
 function PasswordPrompt({ onSuccess, onCancel }) {
-  const [pw, setPw]         = useState("");
-  const [error, setError]   = useState("");
+  const [pw, setPw]           = useState("");
+  const [error, setError]     = useState("");
   const [loading, setLoading] = useState(false);
-  const [shake, setShake]   = useState(false);
+  const [locked, setLocked]   = useState(false);
+  const [shake, setShake]     = useState(false);
   const inputRef = useRef(null);
 
   useEffect(() => { inputRef.current?.focus(); }, []);
 
   const submit = async () => {
-    if (!pw.trim()) return;
+    if (!pw.trim() || locked) return;
+    if (pw.length > 200) { setError("Password too long."); return; }
     setLoading(true); setError("");
-    const ok = await apiVerifyPassword(pw);
+    const result = await apiVerifyPassword(pw);
     setLoading(false);
-    if (ok) {
+    if (result.locked) {
+      setLocked(true);
+      setError(result.error || "Too many failed attempts. Try again in 15 minutes.");
+      setPw("");
+      return;
+    }
+    if (result.ok) {
       onSuccess(pw);
     } else {
-      setError("Incorrect password. Try again.");
+      setError(result.error === "Could not reach server"
+        ? "Could not reach server. Check your connection."
+        : "Incorrect password.");
       setPw("");
       setShake(true);
       setTimeout(() => setShake(false), 500);
@@ -393,22 +405,32 @@ function PasswordPrompt({ onSuccess, onCancel }) {
     <div className="cl-pw-banner">
       <h4>🔒 Editor Password Required</h4>
       <p>Enter the password to edit, add or remove items. Viewing is always public.</p>
-      <div className="cl-pw-row">
-        <input
-          ref={inputRef}
-          className={`cl-pw-input${shake?" error":""}`}
-          type="password"
-          placeholder="Enter password…"
-          value={pw}
-          onChange={e => { setPw(e.target.value); setError(""); }}
-          onKeyDown={e => e.key==="Enter" && submit()}
-        />
-        <button className="cl-btn cl-btn-primary" onClick={submit} disabled={loading}>
-          {loading ? "Checking…" : "Unlock ✓"}
-        </button>
-        <button className="cl-btn cl-btn-ghost" onClick={onCancel}>Cancel</button>
-      </div>
-      {error && <div className="cl-pw-error">⚠ {error}</div>}
+      {locked ? (
+        <div className="cl-pw-error" style={{marginTop:8}}>
+          🚫 {error}
+        </div>
+      ) : (
+        <>
+          <div className="cl-pw-row">
+            <input
+              ref={inputRef}
+              className={`cl-pw-input${shake?" error":""}`}
+              type="password"
+              placeholder="Enter password…"
+              value={pw}
+              maxLength={200}
+              autoComplete="current-password"
+              onChange={e => { setPw(e.target.value); setError(""); }}
+              onKeyDown={e => e.key==="Enter" && submit()}
+            />
+            <button className="cl-btn cl-btn-primary" onClick={submit} disabled={loading || locked}>
+              {loading ? "Checking…" : "Unlock ✓"}
+            </button>
+            <button className="cl-btn cl-btn-ghost" onClick={onCancel}>Cancel</button>
+          </div>
+          {error && <div className="cl-pw-error">⚠ {error}</div>}
+        </>
+      )}
     </div>
   );
 }
