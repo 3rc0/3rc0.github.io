@@ -978,7 +978,7 @@ function renderChecklist() {
     frag.appendChild(addSec);
   }
 
-  frag.appendChild(h("div",{"style":"text-align:center;padding:20px 0 8px;font-size:12px;color:var(--text3);font-family:var(--mono)"},"3rc0"));
+  frag.appendChild(h("div",{"style":"text-align:center;padding:20px 0 8px;font-size:12px;color:var(--text3);font-family:var(--mono)"}," "));
   return frag;
 }
 
