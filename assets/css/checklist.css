@@ -1127,3 +1127,72 @@
 #cl-app .cl-link-btn.disabled {
   opacity: 0.4; cursor: not-allowed; text-decoration: none;
 }
+
+/* ════════════════════════════════════════════════════
+   Phase B.3 — File Attachments
+   ════════════════════════════════════════════════════ */
+
+/* ── Attachment toggle button on item ──────────────── */
+#cl-app .cl-file-toggle {
+  background: none; border: 1px solid var(--border);
+  border-radius: 6px; padding: 2px 7px;
+  font-size: 12px; color: var(--text-dim);
+  cursor: pointer; margin-top: 5px;
+  transition: all 0.15s;
+}
+#cl-app .cl-file-toggle:hover { border-color: var(--gold); color: var(--gold); }
+#cl-app .cl-file-toggle.has-files {
+  border-color: var(--gold); color: var(--gold);
+  background: var(--gold-glow);
+}
+
+/* ── File panel ─────────────────────────────────────── */
+#cl-app .cl-file-panel {
+  margin-top: 8px; padding: 10px 12px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+/* ── Individual file row ────────────────────────────── */
+#cl-app .cl-file-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+#cl-app .cl-file-row:last-of-type { border-bottom: none; }
+
+#cl-app .cl-file-name {
+  flex: 1; font-size: 13px; color: var(--text);
+  min-width: 120px; word-break: break-all;
+}
+#cl-app .cl-file-meta {
+  font-size: 11px; color: var(--text-dim); white-space: nowrap;
+}
+#cl-app .cl-file-btn {
+  background: none; border: 1px solid var(--border);
+  border-radius: 5px; padding: 2px 8px;
+  font-size: 12px; color: var(--text-dim);
+  cursor: pointer; text-decoration: none;
+  transition: all 0.15s;
+}
+#cl-app .cl-file-btn:hover { border-color: var(--gold); color: var(--gold); }
+#cl-app .cl-file-btn.del:hover { border-color: var(--red); color: var(--red); }
+
+/* ── Empty state ────────────────────────────────────── */
+#cl-app .cl-file-empty {
+  font-size: 12px; color: var(--text-dim);
+  text-align: center; padding: 8px 0;
+}
+
+/* ── Upload button ──────────────────────────────────── */
+#cl-app .cl-file-input { display: none; }
+#cl-app .cl-file-upload-btn {
+  display: inline-block; margin-top: 8px;
+  padding: 5px 14px; border-radius: 7px;
+  border: 1px dashed var(--gold);
+  color: var(--gold); font-size: 12px;
+  cursor: pointer; transition: all 0.15s;
+  background: var(--gold-glow);
+}
+#cl-app .cl-file-upload-btn:hover { background: rgba(201,169,110,0.15); }
