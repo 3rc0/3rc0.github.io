@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sentinel Mesh — Detection Cascade</title>
   <meta name="description" content="Sentinel Mesh multi-scenario threat detection cascade — drone, gunshot, explosion, vehicle.">
-
-  <!-- Stylesheet — self-hosted fonts + all styles -->
   <link rel="stylesheet" href="../assets/css/viz.css">
 </head>
 <body>
@@ -39,72 +37,54 @@
       <span class="stat-label">Detection Flow</span>
     </div>
     <div class="stat-div"></div>
-    <div class="stat-tagline">
-      Distributed Early Detection Intelligence
-    </div>
+    <div class="stat-tagline">Distributed Early Detection Intelligence</div>
   </div>
 </div>
 
 <div class="wrap stats-bar-offset">
 
-  <!-- ── HEADER ─────────────────────────────────────────────── -->
+  <!-- ── HEADER ───────────────────────────────────────────────── -->
   <header class="sys-header">
     <div class="sys-logo">SENTINEL <span>//</span> DETECTION ENGINE</div>
     <div class="sys-tag">SM-VIZ-1.3</div>
     <div class="sys-tag">MULTI-SCENARIO LIVE SIM</div>
     <div class="sys-right">
       <div class="sys-clock" id="sys-clock">--:--:--Z</div>
-      <div class="sys-status">
-        <div class="pulse-dot"></div>
-        SYSTEM ACTIVE
-      </div>
+      <div class="sys-status"><div class="pulse-dot"></div>SYSTEM ACTIVE</div>
     </div>
   </header>
 
-  <!-- ── PAGE TITLE ─────────────────────────────────────────── -->
+  <!-- ── PAGE TITLE ───────────────────────────────────────────── -->
   <div class="viz-title">
     <h1>Detection <em>Cascade</em></h1>
     <p class="sub">One platform &nbsp;·&nbsp; Every threat type &nbsp;·&nbsp; All stages complete in seconds</p>
   </div>
 
-  <!-- ── SCENARIO SELECTOR ──────────────────────────────────── -->
+  <!-- ── SCENARIO SELECTOR ────────────────────────────────────── -->
   <div class="scenario-selector">
-
-    <button class="sc-btn" id="sc-btn-0"
-            style="--btn-accent:#f5a623"
-            onclick="selectScenario(0)">
+    <button class="sc-btn" id="sc-btn-0" style="--btn-accent:#f5a623" onclick="selectScenario(0)">
       <span class="sc-btn-icon">🚁</span>
       <span class="sc-btn-label">Drone Detection</span>
       <span class="sc-btn-status" id="sc-btn-status-0">—</span>
     </button>
-
-    <button class="sc-btn" id="sc-btn-1"
-            style="--btn-accent:#ff4757"
-            onclick="selectScenario(1)">
+    <button class="sc-btn" id="sc-btn-1" style="--btn-accent:#ff4757" onclick="selectScenario(1)">
       <span class="sc-btn-icon">💥</span>
       <span class="sc-btn-label">Gunshot</span>
       <span class="sc-btn-status" id="sc-btn-status-1">—</span>
     </button>
-
-    <button class="sc-btn" id="sc-btn-2"
-            style="--btn-accent:#ff4757"
-            onclick="selectScenario(2)">
+    <button class="sc-btn" id="sc-btn-2" style="--btn-accent:#ff4757" onclick="selectScenario(2)">
       <span class="sc-btn-icon">🔥</span>
       <span class="sc-btn-label">Explosion / IED</span>
       <span class="sc-btn-status" id="sc-btn-status-2">—</span>
     </button>
-
-    <button class="sc-btn" id="sc-btn-3"
-            style="--btn-accent:#00d4f5"
-            onclick="selectScenario(3)">
+    <button class="sc-btn" id="sc-btn-3" style="--btn-accent:#00d4f5" onclick="selectScenario(3)">
       <span class="sc-btn-icon">🚗</span>
       <span class="sc-btn-label">Susp. Vehicle</span>
       <span class="sc-btn-status" id="sc-btn-status-3">—</span>
     </button>
-
   </div>
 
-  <!-- ── SCENARIO INFO CARD ─────────────────────────────────── -->
+  <!-- ── SCENARIO INFO CARD ────────────────────────────────────── -->
   <div class="scenario-card">
     <div class="sc-icon" id="sc-icon">—</div>
     <div class="sc-left">
@@ -119,422 +99,132 @@
     </div>
   </div>
 
-  <!-- ── TIMER ──────────────────────────────────────────────── -->
+  <!-- ── TIMER ─────────────────────────────────────────────────── -->
   <div class="timer-bar-wrap">
     <div class="timer-label">Event Elapsed</div>
-    <div class="timer-track">
-      <div class="timer-fill" id="timer-fill"></div>
-    </div>
+    <div class="timer-track"><div class="timer-fill" id="timer-fill"></div></div>
     <div class="timer-elapsed" id="timer-elapsed">0.0s</div>
     <div class="timer-cycle" id="timer-cycle">INITIALISING</div>
   </div>
 
-  <!-- ── MAIN GRID ──────────────────────────────────────────── -->
+  <!-- ── MAIN GRID ─────────────────────────────────────────────── -->
   <div class="main-grid">
 
-    <!-- LEFT — DETECTION CASCADE PIPELINE -->
     <div class="pipeline">
 
-      <!-- Stage 1 -->
       <div class="stage" id="s1">
         <div class="stage-head" onclick="toggleStage('s1')">
-          <span class="stage-num">01</span>
-          <span class="stage-icon" id="s1-icon">👁</span>
+          <span class="stage-num">01</span><span class="stage-icon" id="s1-icon">👁</span>
           <span class="stage-name" id="s1-name">Suspicion</span>
-          <div class="stage-summary">
-            <div id="s1-sum">—</div>
-            <div class="conf-mini">
-              <div class="conf-track"><div class="conf-fill" id="s1-conf"></div></div>
-              <span class="conf-pct" id="s1-pct">—</span>
-            </div>
-          </div>
+          <div class="stage-summary"><div id="s1-sum">—</div><div class="conf-mini"><div class="conf-track"><div class="conf-fill" id="s1-conf"></div></div><span class="conf-pct" id="s1-pct">—</span></div></div>
           <span class="stage-toggle" id="s1-tog">▶</span>
         </div>
         <div class="stage-body" id="s1-body">
-          <button class="sub-btn" id="s1-btn-sr" onclick="toggleSub('s1','sr')">
-            <span class="sub-icon">📊</span>
-            <span class="sub-label">Sensor Reading</span>
-            <span class="sub-badge" id="s1-bdg-sr">—</span>
-            <span class="sub-arr">▶</span>
-          </button>
-          <div class="sub-content" id="s1-sub-sr">
-            <div class="sub-inner" id="s1-sr-inner"></div>
-          </div>
-          <button class="sub-btn" id="s1-btn-det" onclick="toggleSub('s1','det')">
-            <span class="sub-icon">🔎</span>
-            <span class="sub-label">Event Detail</span>
-            <span class="sub-badge" id="s1-bdg-det">—</span>
-            <span class="sub-arr">▶</span>
-          </button>
-          <div class="sub-content" id="s1-sub-det">
-            <div class="sub-inner"><table class="dtable" id="s1-det-table"></table></div>
-          </div>
-          <button class="sub-btn" id="s1-btn-log" onclick="toggleSub('s1','log')">
-            <span class="sub-icon">📋</span>
-            <span class="sub-label">Raw Log</span>
-            <span class="sub-badge" id="s1-bdg-log">—</span>
-            <span class="sub-arr">▶</span>
-          </button>
-          <div class="sub-content" id="s1-sub-log">
-            <div class="sub-inner"><div class="raw-log" id="s1-log"></div></div>
-          </div>
+          <button class="sub-btn" id="s1-btn-sr" onclick="toggleSub('s1','sr')"><span class="sub-icon">📊</span><span class="sub-label">Sensor Reading</span><span class="sub-badge" id="s1-bdg-sr">—</span><span class="sub-arr">▶</span></button>
+          <div class="sub-content" id="s1-sub-sr"><div class="sub-inner" id="s1-sr-inner"></div></div>
+          <button class="sub-btn" id="s1-btn-det" onclick="toggleSub('s1','det')"><span class="sub-icon">🔎</span><span class="sub-label">Event Detail</span><span class="sub-badge" id="s1-bdg-det">—</span><span class="sub-arr">▶</span></button>
+          <div class="sub-content" id="s1-sub-det"><div class="sub-inner"><table class="dtable" id="s1-det-table"></table></div></div>
+          <button class="sub-btn" id="s1-btn-log" onclick="toggleSub('s1','log')"><span class="sub-icon">📋</span><span class="sub-label">Raw Log</span><span class="sub-badge" id="s1-bdg-log">—</span><span class="sub-arr">▶</span></button>
+          <div class="sub-content" id="s1-sub-log"><div class="sub-inner"><div class="raw-log" id="s1-log"></div></div></div>
         </div>
       </div>
 
-      <!-- Stage 2 -->
       <div class="stage" id="s2">
         <div class="stage-head" onclick="toggleStage('s2')">
-          <span class="stage-num">02</span>
-          <span class="stage-icon" id="s2-icon">✓</span>
+          <span class="stage-num">02</span><span class="stage-icon" id="s2-icon">✓</span>
           <span class="stage-name" id="s2-name">Confirmation</span>
-          <div class="stage-summary">
-            <div id="s2-sum">—</div>
-            <div class="conf-mini">
-              <div class="conf-track"><div class="conf-fill" id="s2-conf"></div></div>
-              <span class="conf-pct" id="s2-pct">—</span>
-            </div>
-          </div>
+          <div class="stage-summary"><div id="s2-sum">—</div><div class="conf-mini"><div class="conf-track"><div class="conf-fill" id="s2-conf"></div></div><span class="conf-pct" id="s2-pct">—</span></div></div>
           <span class="stage-toggle" id="s2-tog">▶</span>
         </div>
         <div class="stage-body" id="s2-body">
-          <button class="sub-btn" id="s2-btn-sensors" onclick="toggleSub('s2','sensors')">
-            <span class="sub-icon">📊</span>
-            <span class="sub-label">Sensor Agreement</span>
-            <span class="sub-badge" id="s2-bdg-sensors">—</span>
-            <span class="sub-arr">▶</span>
-          </button>
-          <div class="sub-content" id="s2-sub-sensors">
-            <div class="sub-inner" id="s2-sensors-inner"></div>
-          </div>
-          <button class="sub-btn" id="s2-btn-fusion" onclick="toggleSub('s2','fusion')">
-            <span class="sub-icon">🧠</span>
-            <span class="sub-label">Fusion Result</span>
-            <span class="sub-badge" id="s2-bdg-fusion">—</span>
-            <span class="sub-arr">▶</span>
-          </button>
-          <div class="sub-content" id="s2-sub-fusion">
-            <div class="sub-inner"><table class="dtable" id="s2-fusion-table"></table></div>
-          </div>
-          <button class="sub-btn" id="s2-btn-log" onclick="toggleSub('s2','log')">
-            <span class="sub-icon">📋</span>
-            <span class="sub-label">Raw Log</span>
-            <span class="sub-badge" id="s2-bdg-log">—</span>
-            <span class="sub-arr">▶</span>
-          </button>
-          <div class="sub-content" id="s2-sub-log">
-            <div class="sub-inner"><div class="raw-log" id="s2-log"></div></div>
-          </div>
+          <button class="sub-btn" id="s2-btn-sensors" onclick="toggleSub('s2','sensors')"><span class="sub-icon">📊</span><span class="sub-label">Sensor Agreement</span><span class="sub-badge" id="s2-bdg-sensors">—</span><span class="sub-arr">▶</span></button>
+          <div class="sub-content" id="s2-sub-sensors"><div class="sub-inner" id="s2-sensors-inner"></div></div>
+          <button class="sub-btn" id="s2-btn-fusion" onclick="toggleSub('s2','fusion')"><span class="sub-icon">🧠</span><span class="sub-label">Fusion Result</span><span class="sub-badge" id="s2-bdg-fusion">—</span><span class="sub-arr">▶</span></button>
+          <div class="sub-content" id="s2-sub-fusion"><div class="sub-inner"><table class="dtable" id="s2-fusion-table"></table></div></div>
+          <button class="sub-btn" id="s2-btn-log" onclick="toggleSub('s2','log')"><span class="sub-icon">📋</span><span class="sub-label">Raw Log</span><span class="sub-badge" id="s2-bdg-log">—</span><span class="sub-arr">▶</span></button>
+          <div class="sub-content" id="s2-sub-log"><div class="sub-inner"><div class="raw-log" id="s2-log"></div></div></div>
         </div>
       </div>
 
-      <!-- Stage 3 -->
       <div class="stage" id="s3">
         <div class="stage-head" onclick="toggleStage('s3')">
-          <span class="stage-num">03</span>
-          <span class="stage-icon" id="s3-icon">📍</span>
+          <span class="stage-num">03</span><span class="stage-icon" id="s3-icon">📍</span>
           <span class="stage-name" id="s3-name">Location Fix</span>
-          <div class="stage-summary">
-            <div id="s3-sum">—</div>
-            <div class="conf-mini">
-              <div class="conf-track"><div class="conf-fill" id="s3-conf"></div></div>
-              <span class="conf-pct" id="s3-pct">—</span>
-            </div>
-          </div>
+          <div class="stage-summary"><div id="s3-sum">—</div><div class="conf-mini"><div class="conf-track"><div class="conf-fill" id="s3-conf"></div></div><span class="conf-pct" id="s3-pct">—</span></div></div>
           <span class="stage-toggle" id="s3-tog">▶</span>
         </div>
         <div class="stage-body" id="s3-body">
-          <button class="sub-btn" id="s3-btn-nodes" onclick="toggleSub('s3','nodes')">
-            <span class="sub-icon">📡</span>
-            <span class="sub-label" id="s3-sub1-label">Node Timing</span>
-            <span class="sub-badge" id="s3-bdg-nodes">—</span>
-            <span class="sub-arr">▶</span>
-          </button>
-          <div class="sub-content" id="s3-sub-nodes">
-            <div class="sub-inner" id="s3-nodes-inner"></div>
-          </div>
-          <button class="sub-btn" id="s3-btn-fix" onclick="toggleSub('s3','fix')">
-            <span class="sub-icon">🗺</span>
-            <span class="sub-label">Position Result</span>
-            <span class="sub-badge" id="s3-bdg-fix">—</span>
-            <span class="sub-arr">▶</span>
-          </button>
-          <div class="sub-content" id="s3-sub-fix">
-            <div class="sub-inner"><table class="dtable" id="s3-fix-table"></table></div>
-          </div>
-          <button class="sub-btn" id="s3-btn-log" onclick="toggleSub('s3','log')">
-            <span class="sub-icon">📋</span>
-            <span class="sub-label">Raw Log</span>
-            <span class="sub-badge" id="s3-bdg-log">—</span>
-            <span class="sub-arr">▶</span>
-          </button>
-          <div class="sub-content" id="s3-sub-log">
-            <div class="sub-inner"><div class="raw-log" id="s3-log"></div></div>
-          </div>
+          <button class="sub-btn" id="s3-btn-nodes" onclick="toggleSub('s3','nodes')"><span class="sub-icon">📡</span><span class="sub-label" id="s3-sub1-label">Node Timing</span><span class="sub-badge" id="s3-bdg-nodes">—</span><span class="sub-arr">▶</span></button>
+          <div class="sub-content" id="s3-sub-nodes"><div class="sub-inner" id="s3-nodes-inner"></div></div>
+          <button class="sub-btn" id="s3-btn-fix" onclick="toggleSub('s3','fix')"><span class="sub-icon">🗺</span><span class="sub-label">Position Result</span><span class="sub-badge" id="s3-bdg-fix">—</span><span class="sub-arr">▶</span></button>
+          <div class="sub-content" id="s3-sub-fix"><div class="sub-inner"><table class="dtable" id="s3-fix-table"></table></div></div>
+          <button class="sub-btn" id="s3-btn-log" onclick="toggleSub('s3','log')"><span class="sub-icon">📋</span><span class="sub-label">Raw Log</span><span class="sub-badge" id="s3-bdg-log">—</span><span class="sub-arr">▶</span></button>
+          <div class="sub-content" id="s3-sub-log"><div class="sub-inner"><div class="raw-log" id="s3-log"></div></div></div>
         </div>
       </div>
 
-      <!-- Stage 4 -->
       <div class="stage" id="s4">
         <div class="stage-head" onclick="toggleStage('s4')">
-          <span class="stage-num">04</span>
-          <span class="stage-icon" id="s4-icon">🛤</span>
+          <span class="stage-num">04</span><span class="stage-icon" id="s4-icon">🛤</span>
           <span class="stage-name" id="s4-name">Trail &amp; Tracking</span>
-          <div class="stage-summary">
-            <div id="s4-sum">—</div>
-            <div class="conf-mini">
-              <div class="conf-track"><div class="conf-fill" id="s4-conf"></div></div>
-              <span class="conf-pct" id="s4-pct">—</span>
-            </div>
-          </div>
+          <div class="stage-summary"><div id="s4-sum">—</div><div class="conf-mini"><div class="conf-track"><div class="conf-fill" id="s4-conf"></div></div><span class="conf-pct" id="s4-pct">—</span></div></div>
           <span class="stage-toggle" id="s4-tog">▶</span>
         </div>
         <div class="stage-body" id="s4-body">
-          <button class="sub-btn" id="s4-btn-move" onclick="toggleSub('s4','move')">
-            <span class="sub-icon">🧭</span>
-            <span class="sub-label" id="s4-sub1-label">Movement Data</span>
-            <span class="sub-badge" id="s4-bdg-move">—</span>
-            <span class="sub-arr">▶</span>
-          </button>
-          <div class="sub-content" id="s4-sub-move">
-            <div class="sub-inner"><table class="dtable" id="s4-move-table"></table></div>
-          </div>
-          <button class="sub-btn" id="s4-btn-trail" onclick="toggleSub('s4','trail')">
-            <span class="sub-icon">📈</span>
-            <span class="sub-label" id="s4-sub2-label">Log Status</span>
-            <span class="sub-badge" id="s4-bdg-trail">live</span>
-            <span class="sub-arr">▶</span>
-          </button>
-          <div class="sub-content" id="s4-sub-trail">
-            <div class="sub-inner"><table class="dtable" id="s4-trail-table"></table></div>
-          </div>
-          <button class="sub-btn" id="s4-btn-log" onclick="toggleSub('s4','log')">
-            <span class="sub-icon">📋</span>
-            <span class="sub-label">Raw Log</span>
-            <span class="sub-badge" id="s4-bdg-log">—</span>
-            <span class="sub-arr">▶</span>
-          </button>
-          <div class="sub-content" id="s4-sub-log">
-            <div class="sub-inner"><div class="raw-log" id="s4-log"></div></div>
-          </div>
+          <button class="sub-btn" id="s4-btn-move" onclick="toggleSub('s4','move')"><span class="sub-icon">🧭</span><span class="sub-label" id="s4-sub1-label">Movement Data</span><span class="sub-badge" id="s4-bdg-move">—</span><span class="sub-arr">▶</span></button>
+          <div class="sub-content" id="s4-sub-move"><div class="sub-inner"><table class="dtable" id="s4-move-table"></table></div></div>
+          <button class="sub-btn" id="s4-btn-trail" onclick="toggleSub('s4','trail')"><span class="sub-icon">📈</span><span class="sub-label" id="s4-sub2-label">Log Status</span><span class="sub-badge" id="s4-bdg-trail">live</span><span class="sub-arr">▶</span></button>
+          <div class="sub-content" id="s4-sub-trail"><div class="sub-inner"><table class="dtable" id="s4-trail-table"></table></div></div>
+          <button class="sub-btn" id="s4-btn-log" onclick="toggleSub('s4','log')"><span class="sub-icon">📋</span><span class="sub-label">Raw Log</span><span class="sub-badge" id="s4-bdg-log">—</span><span class="sub-arr">▶</span></button>
+          <div class="sub-content" id="s4-sub-log"><div class="sub-inner"><div class="raw-log" id="s4-log"></div></div></div>
         </div>
       </div>
 
-      <!-- Stage 5 -->
       <div class="stage" id="s5">
         <div class="stage-head" onclick="toggleStage('s5')">
-          <span class="stage-num">05</span>
-          <span class="stage-icon">🔔</span>
+          <span class="stage-num">05</span><span class="stage-icon">🔔</span>
           <span class="stage-name">Human Alert</span>
-          <div class="stage-summary">
-            <div id="s5-sum">—</div>
-            <div class="conf-mini">
-              <div class="conf-track"><div class="conf-fill" id="s5-conf"></div></div>
-              <span class="conf-pct" id="s5-pct">—</span>
-            </div>
-          </div>
+          <div class="stage-summary"><div id="s5-sum">—</div><div class="conf-mini"><div class="conf-track"><div class="conf-fill" id="s5-conf"></div></div><span class="conf-pct" id="s5-pct">—</span></div></div>
           <span class="stage-toggle" id="s5-tog">▶</span>
         </div>
         <div class="stage-body" id="s5-body">
-          <button class="sub-btn" id="s5-btn-pkg" onclick="toggleSub('s5','pkg')">
-            <span class="sub-icon">⚡</span>
-            <span class="sub-label">Alert Package</span>
-            <span class="sub-badge" id="s5-bdg-pkg">—</span>
-            <span class="sub-arr">▶</span>
-          </button>
-          <div class="sub-content" id="s5-sub-pkg">
-            <div class="sub-inner"><table class="dtable" id="s5-pkg-table"></table></div>
-          </div>
-          <button class="sub-btn" id="s5-btn-ev" onclick="toggleSub('s5','ev')">
-            <span class="sub-icon">🗂</span>
-            <span class="sub-label">Evidence Chain</span>
-            <span class="sub-badge" id="s5-bdg-ev">—</span>
-            <span class="sub-arr">▶</span>
-          </button>
-          <div class="sub-content" id="s5-sub-ev">
-            <div class="sub-inner" id="s5-ev-inner"></div>
-          </div>
-          <button class="sub-btn" id="s5-btn-log" onclick="toggleSub('s5','log')">
-            <span class="sub-icon">📋</span>
-            <span class="sub-label">Raw Log</span>
-            <span class="sub-badge" id="s5-bdg-log">—</span>
-            <span class="sub-arr">▶</span>
-          </button>
-          <div class="sub-content" id="s5-sub-log">
-            <div class="sub-inner"><div class="raw-log" id="s5-log"></div></div>
-          </div>
+          <button class="sub-btn" id="s5-btn-pkg" onclick="toggleSub('s5','pkg')"><span class="sub-icon">⚡</span><span class="sub-label">Alert Package</span><span class="sub-badge" id="s5-bdg-pkg">—</span><span class="sub-arr">▶</span></button>
+          <div class="sub-content" id="s5-sub-pkg"><div class="sub-inner"><table class="dtable" id="s5-pkg-table"></table></div></div>
+          <button class="sub-btn" id="s5-btn-ev" onclick="toggleSub('s5','ev')"><span class="sub-icon">🗂</span><span class="sub-label">Evidence Chain</span><span class="sub-badge" id="s5-bdg-ev">—</span><span class="sub-arr">▶</span></button>
+          <div class="sub-content" id="s5-sub-ev"><div class="sub-inner" id="s5-ev-inner"></div></div>
+          <button class="sub-btn" id="s5-btn-log" onclick="toggleSub('s5','log')"><span class="sub-icon">📋</span><span class="sub-label">Raw Log</span><span class="sub-badge" id="s5-bdg-log">—</span><span class="sub-arr">▶</span></button>
+          <div class="sub-content" id="s5-sub-log"><div class="sub-inner"><div class="raw-log" id="s5-log"></div></div></div>
         </div>
       </div>
 
     </div><!-- /pipeline -->
 
-    <!-- RIGHT — PANELS -->
     <div class="right-panel">
-
-      <!-- Node Grid Canvas -->
       <div class="panel-card">
-        <div class="panel-head">
-          <div class="dot"></div>
-          NODE GRID — LIVE DETECTION SPREAD
-        </div>
+        <div class="panel-head"><div class="dot"></div>NODE GRID — LIVE DETECTION SPREAD</div>
         <canvas id="node-canvas"></canvas>
         <div class="node-legend">
-          <div class="nl-item">
-            <div class="nl-dot" style="background:#304560"></div>Inactive
-          </div>
-          <div class="nl-item">
-            <div class="nl-dot" style="background:#f5a623"></div>Detecting
-          </div>
-          <div class="nl-item">
-            <div class="nl-dot" style="background:#39d353"></div>Confirmed
-          </div>
-          <div class="nl-item">
-            <div class="nl-dot" style="background:#ff4757"></div>Target
-          </div>
+          <div class="nl-item"><div class="nl-dot" style="background:#304560"></div>Inactive</div>
+          <div class="nl-item"><div class="nl-dot" style="background:#f5a623"></div>Detecting</div>
+          <div class="nl-item"><div class="nl-dot" style="background:#39d353"></div>Confirmed</div>
+          <div class="nl-item"><div class="nl-dot" style="background:#ff4757"></div>Target</div>
         </div>
       </div>
-
-      <!-- Evidence Chain -->
       <div class="panel-card">
-        <div class="panel-head">
-          <div class="dot" style="background:var(--amber)"></div>
-          EVIDENCE CHAIN
-        </div>
+        <div class="panel-head"><div class="dot" style="background:var(--amber)"></div>EVIDENCE CHAIN</div>
         <div id="ev-chain"></div>
       </div>
-
-      <!-- Alert Feed -->
       <div class="panel-card">
-        <div class="panel-head">
-          <div class="dot" style="background:var(--red)"></div>
-          ALERT FEED
-        </div>
+        <div class="panel-head"><div class="dot" style="background:var(--red)"></div>ALERT FEED</div>
         <div class="alert-list" id="alert-list">
-          <div class="alert-item">
-            <div class="alert-ts">—</div>
-            <div class="alert-msg">Awaiting first detection event...</div>
-          </div>
+          <div class="alert-item"><div class="alert-ts">—</div><div class="alert-msg">Awaiting first detection event...</div></div>
         </div>
       </div>
-
-    </div><!-- /right-panel -->
+    </div>
 
   </div><!-- /main-grid -->
 
-  <!-- ── COMPETITOR COMPARISON — SM-VIZ-2.0 ───────────────────── -->
-  <div class="comp-section">
-
-    <div class="comp-header">
-      <div class="comp-title">
-        <span class="comp-title-tag">SM-VIZ-2.0</span>
-        Platform <em>Comparison</em>
-      </div>
-      <div class="comp-subtitle">
-        Sentinel Mesh vs existing single-purpose detection systems
-      </div>
-    </div>
-
-    <!-- CAPABILITY MATRIX -->
-    <div class="matrix-wrap">
-      <div class="matrix-label">CAPABILITY MATRIX</div>
-      <div class="matrix-scroll">
-      <table class="matrix-table">
-        <thead>
-          <tr>
-            <th class="cap-col">Capability</th>
-            <th class="comp-col">ShotSpotter</th>
-            <th class="comp-col">Dedrone</th>
-            <th class="comp-col">DroneShield</th>
-            <th class="comp-col">CCTV Network</th>
-            <th class="comp-col sentinel-col">Sentinel Mesh</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="cap-name">🚁 Drone Detection</td>
-            <td><span class="cap no">✗</span></td>
-            <td><span class="cap partial">~</span><span class="cap-note">RF only</span></td>
-            <td><span class="cap yes">✓</span></td>
-            <td><span class="cap partial">~</span><span class="cap-note">line of sight</span></td>
-          </tr>
-          <tr>
-            <td class="cap-name">💥 Gunshot / Ballistic</td>
-            <td><span class="cap yes">✓</span><span class="cap-note">single sensor</span></td>
-            <td><span class="cap no">✗</span></td>
-            <td><span class="cap no">✗</span></td>
-            <td><span class="cap no">✗</span></td>
-          </tr>
-          <tr>
-            <td class="cap-name">🔥 Explosion / IED</td>
-            <td><span class="cap partial">~</span><span class="cap-note">acoustic only</span></td>
-            <td><span class="cap no">✗</span></td>
-            <td><span class="cap no">✗</span></td>
-            <td><span class="cap partial">~</span><span class="cap-note">post-event only</span></td>
-          </tr>
-          <tr>
-            <td class="cap-name">🚗 Vehicle Surveillance</td>
-            <td><span class="cap no">✗</span></td>
-            <td><span class="cap no">✗</span></td>
-            <td><span class="cap no">✗</span></td>
-            <td><span class="cap partial">~</span><span class="cap-note">visual only</span></td>
-          </tr>
-          <tr>
-            <td class="cap-name">📍 GPS Localisation</td>
-            <td><span class="cap partial">~</span><span class="cap-note">±50m</span></td>
-            <td><span class="cap partial">~</span><span class="cap-note">bearing only</span></td>
-            <td><span class="cap partial">~</span><span class="cap-note">bearing only</span></td>
-            <td><span class="cap no">✗</span></td>
-          </tr>
-          <tr>
-            <td class="cap-name">🧠 Multi-Sensor Fusion</td>
-            <td><span class="cap no">✗</span></td>
-            <td><span class="cap no">✗</span></td>
-            <td><span class="cap partial">~</span><span class="cap-note">2 sensors</span></td>
-            <td><span class="cap no">✗</span></td>
-          </tr>
-          <tr>
-            <td class="cap-name">🕸 Mesh / No Single Point of Failure</td>
-            <td><span class="cap no">✗</span></td>
-            <td><span class="cap no">✗</span></td>
-            <td><span class="cap no">✗</span></td>
-            <td><span class="cap no">✗</span></td>
-          </tr>
-          <tr>
-            <td class="cap-name">📡 Offline / No Cloud Required</td>
-            <td><span class="cap no">✗</span></td>
-            <td><span class="cap no">✗</span></td>
-            <td><span class="cap partial">~</span><span class="cap-note">limited</span></td>
-            <td><span class="cap no">✗</span></td>
-          </tr>
-          <tr>
-            <td class="cap-name">📊 Data Analytics &amp; Intelligence</td>
-            <td><span class="cap no">✗</span></td>
-            <td><span class="cap partial">~</span><span class="cap-note">basic</span></td>
-            <td><span class="cap partial">~</span><span class="cap-note">basic</span></td>
-            <td><span class="cap partial">~</span><span class="cap-note">VMS only</span></td>
-          </tr>
-          <tr>
-            <td class="cap-name">⚡ Alert Latency</td>
-            <td><span class="cap-text amber">~45s</span></td>
-            <td><span class="cap-text amber">~30s</span></td>
-            <td><span class="cap-text amber">~20s</span></td>
-            <td><span class="cap-text red">Minutes</span></td>
-          </tr>
-        </tbody>
-      </table>
-      </div><!-- /matrix-scroll -->
-
-      <!-- Legend -->
-      <div class="matrix-legend">
-        <div class="ml-item"><span class="cap yes">✓</span> Full capability</div>
-        <div class="ml-item"><span class="cap partial">~</span> Partial / limited</div>
-        <div class="ml-item"><span class="cap no">✗</span> Not supported</div>
-      </div>
-
-    </div>
-
-  </div><!-- /comp-section -->
-
-  <!-- ── BOTTOM LOG ──────────────────────────────────────────── -->
+  <!-- ── BOTTOM LOG ────────────────────────────────────────────── -->
   <div class="bottom-log">
     <div class="panel-head" style="border-bottom:1px solid rgba(74,100,128,0.2);padding:0.6rem 1.1rem">
       <div class="dot"></div>SYSTEM LOG
@@ -542,277 +232,231 @@
     <div class="log-stream" id="log-stream"></div>
   </div>
 
-
+  <!-- ── PLATFORM COMPARISON ───────────────────────────────────── -->
+  <div class="comp-section">
+    <div class="comp-header">
+      <div class="comp-title"><span class="comp-title-tag">SM-VIZ-2.0</span>Platform <em>Comparison</em></div>
+      <div class="comp-subtitle">Sentinel Mesh vs existing single-purpose detection systems</div>
+    </div>
+    <div class="matrix-wrap">
+      <div class="matrix-label">CAPABILITY MATRIX</div>
+      <div class="matrix-scroll">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th class="cap-col">Capability</th>
+              <th class="comp-col">ShotSpotter</th>
+              <th class="comp-col">Dedrone</th>
+              <th class="comp-col">DroneShield</th>
+              <th class="comp-col">CCTV Network</th>
+              <th class="comp-col sentinel-col">Sentinel Mesh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cap-name">🚁 Drone Detection</td>
+              <td><span class="cap no">✗</span></td>
+              <td><span class="cap partial">~</span><span class="cap-note">RF only</span></td>
+              <td><span class="cap yes">✓</span></td>
+              <td><span class="cap partial">~</span><span class="cap-note">line of sight</span></td>
+              <td class="sentinel-cell"><span class="cap yes">✓</span><span class="cap-note">4-sensor fusion</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">💥 Gunshot / Ballistic</td>
+              <td><span class="cap yes">✓</span><span class="cap-note">single sensor</span></td>
+              <td><span class="cap no">✗</span></td>
+              <td><span class="cap no">✗</span></td>
+              <td><span class="cap no">✗</span></td>
+              <td class="sentinel-cell"><span class="cap yes">✓</span><span class="cap-note">dual-sig TDOA</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">🔥 Explosion / IED</td>
+              <td><span class="cap partial">~</span><span class="cap-note">acoustic only</span></td>
+              <td><span class="cap no">✗</span></td>
+              <td><span class="cap no">✗</span></td>
+              <td><span class="cap partial">~</span><span class="cap-note">post-event only</span></td>
+              <td class="sentinel-cell"><span class="cap yes">✓</span><span class="cap-note">acoustic + seismic + thermal</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">🚗 Vehicle Surveillance</td>
+              <td><span class="cap no">✗</span></td>
+              <td><span class="cap no">✗</span></td>
+              <td><span class="cap no">✗</span></td>
+              <td><span class="cap partial">~</span><span class="cap-note">visual only</span></td>
+              <td class="sentinel-cell"><span class="cap yes">✓</span><span class="cap-note">engine + thermal + optical</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">📍 GPS Localisation</td>
+              <td><span class="cap partial">~</span><span class="cap-note">±50m</span></td>
+              <td><span class="cap partial">~</span><span class="cap-note">bearing only</span></td>
+              <td><span class="cap partial">~</span><span class="cap-note">bearing only</span></td>
+              <td><span class="cap no">✗</span></td>
+              <td class="sentinel-cell"><span class="cap yes">✓</span><span class="cap-note">±25m CEP90</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">🧠 Multi-Sensor Fusion</td>
+              <td><span class="cap no">✗</span></td>
+              <td><span class="cap no">✗</span></td>
+              <td><span class="cap partial">~</span><span class="cap-note">2 sensors</span></td>
+              <td><span class="cap no">✗</span></td>
+              <td class="sentinel-cell"><span class="cap yes">✓</span><span class="cap-note">up to 5 sensors</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">🕸 Mesh — No Single Point of Failure</td>
+              <td><span class="cap no">✗</span></td>
+              <td><span class="cap no">✗</span></td>
+              <td><span class="cap no">✗</span></td>
+              <td><span class="cap no">✗</span></td>
+              <td class="sentinel-cell"><span class="cap yes">✓</span><span class="cap-note">distributed mesh</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">📡 Offline / No Cloud Required</td>
+              <td><span class="cap no">✗</span></td>
+              <td><span class="cap no">✗</span></td>
+              <td><span class="cap partial">~</span><span class="cap-note">limited</span></td>
+              <td><span class="cap no">✗</span></td>
+              <td class="sentinel-cell"><span class="cap yes">✓</span><span class="cap-note">edge inference</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">⚡ Alert Latency</td>
+              <td><span class="cap-text amber">~45s</span></td>
+              <td><span class="cap-text amber">~30s</span></td>
+              <td><span class="cap-text amber">~20s</span></td>
+              <td><span class="cap-text red">Minutes</span></td>
+              <td class="sentinel-cell"><span class="cap-text green">≤ 90s Y1 → ≤ 30s Y2</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="matrix-legend">
+        <div class="ml-item"><span class="cap yes">✓</span> Full capability</div>
+        <div class="ml-item"><span class="cap partial">~</span> Partial / limited</div>
+        <div class="ml-item"><span class="cap no">✗</span> Not supported</div>
+      </div>
+    </div>
+  </div><!-- /comp-section -->
 
   <!-- ── COVERAGE MAP ───────────────────────────────────────────── -->
   <div class="cov-section">
-
     <div class="cov-header">
-      <div class="cov-title">
-        <span class="comp-title-tag">SM-COV-1.0</span>
-        Deployment <em>Coverage</em>
-      </div>
-      <div class="cov-sub">
-        Drag the slider to see how coverage scales with node count
-      </div>
+      <div class="cov-title"><span class="comp-title-tag">SM-COV-1.0</span>Deployment <em>Coverage</em></div>
+      <div class="cov-sub">Drag the slider to see how coverage scales with node count</div>
     </div>
-
     <div class="cov-grid">
-
-      <!-- Map canvas -->
       <div class="cov-canvas-wrap">
         <canvas id="cov-canvas" width="560" height="420"></canvas>
         <div class="cov-canvas-label">CITY GRID — ILLUSTRATIVE DEPLOYMENT</div>
       </div>
-
-      <!-- Controls + stats -->
       <div class="cov-controls">
-
         <div class="cov-stat-big">
           <div class="csb-num" id="cov-node-count">20</div>
           <div class="csb-label">Nodes deployed</div>
         </div>
-
-        <input
-          type="range"
-          id="cov-slider"
-          class="cov-slider"
-          min="1" max="200" value="20"
-          oninput="updateCoverage(this.value)"
-        >
-
+        <input type="range" id="cov-slider" class="cov-slider" min="1" max="200" value="20" oninput="covUpdate(this.value)">
         <div class="cov-presets">
-          <button class="cov-preset-btn" onclick="setCoverage(20)">20</button>
-          <button class="cov-preset-btn" onclick="setCoverage(50)">50</button>
-          <button class="cov-preset-btn" onclick="setCoverage(100)">100</button>
-          <button class="cov-preset-btn" onclick="setCoverage(200)">200</button>
+          <button class="cov-preset-btn" onclick="covUpdate(20)">20</button>
+          <button class="cov-preset-btn" onclick="covUpdate(50)">50</button>
+          <button class="cov-preset-btn" onclick="covUpdate(100)">100</button>
+          <button class="cov-preset-btn" onclick="covUpdate(200)">200</button>
         </div>
-
         <div class="cov-stats-grid">
-          <div class="cov-stat">
-            <div class="cov-stat-val accent" id="cov-area">—</div>
-            <div class="cov-stat-lbl">Area covered (km²)</div>
-          </div>
-          <div class="cov-stat">
-            <div class="cov-stat-val green" id="cov-pct">—</div>
-            <div class="cov-stat-lbl">Grid coverage %</div>
-          </div>
-          <div class="cov-stat">
-            <div class="cov-stat-val amber" id="cov-cost">—</div>
-            <div class="cov-stat-lbl">Est. BOM cost</div>
-          </div>
-          <div class="cov-stat">
-            <div class="cov-stat-val" id="cov-latency">≤ 90s</div>
-            <div class="cov-stat-lbl">Alert latency</div>
-          </div>
+          <div class="cov-stat"><div class="cov-stat-val accent" id="cov-area">—</div><div class="cov-stat-lbl">Area covered (km²)</div></div>
+          <div class="cov-stat"><div class="cov-stat-val green" id="cov-pct">—</div><div class="cov-stat-lbl">Grid coverage %</div></div>
+          <div class="cov-stat"><div class="cov-stat-val amber" id="cov-cost">—</div><div class="cov-stat-lbl">Est. BOM cost</div></div>
+          <div class="cov-stat"><div class="cov-stat-val" id="cov-latency">≤ 90s</div><div class="cov-stat-lbl">Alert latency</div></div>
         </div>
-
         <div class="cov-legend">
-          <div class="cov-leg-item">
-            <div class="cov-leg-dot" style="background:#39d353"></div>
-            Detection range (active node)
-          </div>
-          <div class="cov-leg-item">
-            <div class="cov-leg-dot" style="background:#00d4f5"></div>
-            Node position
-          </div>
-          <div class="cov-leg-item">
-            <div class="cov-leg-dot" style="background:rgba(245,166,35,0.3)"></div>
-            Overlap zone (redundancy)
-          </div>
+          <div class="cov-leg-item"><div class="cov-leg-dot" style="background:#39d353"></div>Detection range</div>
+          <div class="cov-leg-item"><div class="cov-leg-dot" style="background:#00d4f5"></div>Node position</div>
         </div>
-
-        <div class="cov-note">
-          Each node covers ~50m detection radius. Overlap provides redundancy —
-          a threat detected by 2+ nodes enables TDOA localisation to ±25m CEP90.
-        </div>
-
-      </div><!-- /cov-controls -->
-
-    </div><!-- /cov-grid -->
-
+        <div class="cov-note">Each node covers ~50m detection radius. Overlap provides redundancy — 2+ nodes enable TDOA localisation to ±25m CEP90.</div>
+      </div>
+    </div>
   </div><!-- /cov-section -->
-
-
 
 </div><!-- /wrap -->
 
-<!-- Title overlay removed — scenario selector used instead -->
-
-<!-- ── VERSION BADGE ───────────────────────────────────────────── -->
 <div class="version-badge">SM-VIZ-1.3 · SENTINEL DETECTION CASCADE</div>
 
-<!-- ── SCRIPTS — load order matters ───────────────────────────── -->
 <script src="../assets/js/scenarios.js"></script>
 <script src="../assets/js/canvas.js"></script>
 <script src="../assets/js/viz.js"></script>
 
 <script>
-/* ── COVERAGE MAP ─────────────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded', function() {
-  const covCanvas = document.getElementById('cov-canvas');
-  if (!covCanvas) return;
-  const canvas = covCanvas;
-  const ctx    = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
+(function() {
+  var cc = document.getElementById('cov-canvas');
+  if (!cc) return;
+  var ctx = cc.getContext('2d');
+  var W = 560, H = 420, SGAP = 52, NODE_R = 6, DET_R = 46;
+  var pts = [];
+  for (var x = 36; x < W - 20; x += SGAP)
+    for (var y = 36; y < H - 20; y += SGAP)
+      pts.push({x:x,y:y});
 
-  // Grid streets — horizontal and vertical lines
-  const STREET_GAP = 52;   // px between streets
-  const NODE_R     = 6;    // node dot radius
-  const DET_R      = 46;   // detection radius in px
-
-  // All valid node positions = street intersections
-  const intersections = [];
-  for (let x = 30; x < W - 20; x += STREET_GAP) {
-    for (let y = 30; y < H - 20; y += STREET_GAP) {
-      intersections.push({ x, y });
-    }
-  }
-
-  // Deterministic placement — spread evenly, no random jump on slider
   function getNodes(n) {
-    const count = Math.min(n, intersections.length);
-    // Spread: pick every Nth intersection using stride
-    const stride = Math.max(1, Math.floor(intersections.length / count));
-    const nodes = [];
-    for (let i = 0; i < intersections.length && nodes.length < count; i += stride) {
-      nodes.push(intersections[i]);
-    }
-    // Fill remaining if stride skipped some
-    if (nodes.length < count) {
-      for (let i = 0; i < intersections.length && nodes.length < count; i++) {
-        if (!nodes.includes(intersections[i])) nodes.push(intersections[i]);
-      }
-    }
+    var c = Math.min(n, pts.length);
+    var s = Math.max(1, Math.floor(pts.length / c));
+    var nodes = [];
+    for (var i = 0; i < pts.length && nodes.length < c; i += s) nodes.push(pts[i]);
+    for (var i = 0; i < pts.length && nodes.length < c; i++)
+      if (nodes.indexOf(pts[i]) === -1) nodes.push(pts[i]);
     return nodes;
   }
 
   function draw(n) {
-    ctx.clearRect(0, 0, W, H);
-
-    // Background
-    ctx.fillStyle = '#060d18';
-    ctx.fillRect(0, 0, W, H);
-
-    // Street grid
-    ctx.strokeStyle = 'rgba(48,69,96,0.45)';
-    ctx.lineWidth   = 1;
-    for (let x = 30; x < W; x += STREET_GAP) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-    }
-    for (let y = 30; y < H; y += STREET_GAP) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-    }
-
-    const nodes = getNodes(n);
-
-    // Detection zones — draw coverage circles
-    nodes.forEach(nd => {
-      const grad = ctx.createRadialGradient(nd.x, nd.y, 0, nd.x, nd.y, DET_R);
-      grad.addColorStop(0,   'rgba(57,211,83,0.13)');
-      grad.addColorStop(0.7, 'rgba(57,211,83,0.07)');
-      grad.addColorStop(1,   'rgba(57,211,83,0)');
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(nd.x, nd.y, DET_R, 0, Math.PI * 2);
-      ctx.fill();
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#060d18'; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = 'rgba(48,69,96,0.45)'; ctx.lineWidth = 1;
+    for (var x = 36; x < W; x += SGAP) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+    for (var y = 36; y < H; y += SGAP) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+    var nodes = getNodes(n);
+    nodes.forEach(function(nd) {
+      var g = ctx.createRadialGradient(nd.x,nd.y,0,nd.x,nd.y,DET_R);
+      g.addColorStop(0,'rgba(57,211,83,0.15)'); g.addColorStop(0.7,'rgba(57,211,83,0.07)'); g.addColorStop(1,'rgba(57,211,83,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(nd.x,nd.y,DET_R,0,Math.PI*2); ctx.fill();
     });
-
-    // Detection zone borders
-    nodes.forEach(nd => {
-      ctx.beginPath();
-      ctx.arc(nd.x, nd.y, DET_R, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(57,211,83,0.18)';
-      ctx.setLineDash([3, 4]);
-      ctx.lineWidth = 1;
-      ctx.stroke();
-      ctx.setLineDash([]);
+    nodes.forEach(function(nd) {
+      ctx.beginPath(); ctx.arc(nd.x,nd.y,DET_R,0,Math.PI*2);
+      ctx.strokeStyle='rgba(57,211,83,0.2)'; ctx.setLineDash([3,4]); ctx.lineWidth=1; ctx.stroke(); ctx.setLineDash([]);
     });
-
-    // Node dots
-    nodes.forEach(nd => {
-      // Glow
-      ctx.shadowColor = '#00d4f5';
-      ctx.shadowBlur  = 8;
-      ctx.beginPath();
-      ctx.arc(nd.x, nd.y, NODE_R, 0, Math.PI * 2);
-      ctx.fillStyle = '#00d4f5';
-      ctx.fill();
-      ctx.shadowBlur = 0;
-
-      // Inner bright
-      ctx.beginPath();
-      ctx.arc(nd.x, nd.y, NODE_R * 0.45, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(200,240,255,0.9)';
-      ctx.fill();
-    });
-
-    // Mesh lines between nearby nodes
-    nodes.forEach((a, i) => {
-      nodes.forEach((b, j) => {
-        if (j <= i) return;
-        const d = Math.hypot(a.x - b.x, a.y - b.y);
-        if (d > STREET_GAP * 2.2) return;
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.strokeStyle = 'rgba(0,212,245,0.12)';
-        ctx.lineWidth   = 0.7;
-        ctx.stroke();
+    nodes.forEach(function(a,i) {
+      nodes.forEach(function(b,j) {
+        if (j<=i) return;
+        if (Math.hypot(a.x-b.x,a.y-b.y) > SGAP*2.2) return;
+        ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle='rgba(0,212,245,0.1)'; ctx.lineWidth=0.7; ctx.stroke();
       });
     });
-
-    // Scale bar
-    ctx.fillStyle    = 'rgba(100,140,180,0.5)';
-    ctx.font         = '9px monospace';
-    ctx.fillText('0', 16, H - 10);
-    ctx.fillText('500m', 68, H - 10);
-    ctx.strokeStyle  = 'rgba(100,140,180,0.4)';
-    ctx.lineWidth    = 1.5;
-    ctx.beginPath(); ctx.moveTo(24, H - 14); ctx.lineTo(64, H - 14); ctx.stroke();
-    // End ticks
-    ctx.beginPath(); ctx.moveTo(24, H - 17); ctx.lineTo(24, H - 11); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(64, H - 17); ctx.lineTo(64, H - 11); ctx.stroke();
-  }
-
-  function updateStats(n) {
-    // Each px = ~5m at this scale. DET_R px = 50m real radius
-    // Area per node ~= π × 50² = ~7854 m² = ~0.008 km²
-    const areaPerNode = Math.PI * 50 * 50;  // m²
-    const totalArea   = Math.min(n * areaPerNode * 0.72, 9.1) / 1e6; // km², capped at grid size, overlap deducted
-    const gridArea    = 9.1; // km² (illustrative grid)
-    const pct         = Math.min(Math.round((totalArea / gridArea) * 100), 99);
-    const cost        = n * 802;
-
-    document.getElementById('cov-node-count').textContent = n;
-    document.getElementById('cov-area').textContent       = totalArea.toFixed(2) + ' km²';
-    document.getElementById('cov-pct').textContent        = pct + '%';
-    document.getElementById('cov-cost').textContent       = cost >= 1000000
-      ? '$' + (cost / 1e6).toFixed(2) + 'M'
-      : '$' + cost.toLocaleString();
-    document.getElementById('cov-latency').textContent    = n >= 50 ? '≤ 30s' : '≤ 90s';
-
-    // Highlight active preset button
-    document.querySelectorAll('.cov-preset-btn').forEach(btn => {
-      btn.classList.toggle('active', parseInt(btn.textContent) === n);
+    nodes.forEach(function(nd) {
+      ctx.shadowColor='#00d4f5'; ctx.shadowBlur=8;
+      ctx.beginPath(); ctx.arc(nd.x,nd.y,NODE_R,0,Math.PI*2); ctx.fillStyle='#00d4f5'; ctx.fill();
+      ctx.shadowBlur=0;
+      ctx.beginPath(); ctx.arc(nd.x,nd.y,NODE_R*0.4,0,Math.PI*2); ctx.fillStyle='rgba(200,240,255,0.9)'; ctx.fill();
     });
+    ctx.fillStyle='rgba(100,140,180,0.5)'; ctx.font='9px monospace';
+    ctx.fillText('0',16,H-10); ctx.fillText('500m',68,H-10);
+    ctx.strokeStyle='rgba(100,140,180,0.4)'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(24,H-14); ctx.lineTo(64,H-14); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(24,H-17); ctx.lineTo(24,H-11); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(64,H-17); ctx.lineTo(64,H-11); ctx.stroke();
   }
 
-  window.updateCoverage = function(val) {
-    const n = parseInt(val);
+  function stats(n) {
+    var area = Math.min(n*Math.PI*50*50*0.72/1e6, 9.1);
+    var pct  = Math.min(Math.round(area/9.1*100), 99);
+    var cost = n*802;
+    document.getElementById('cov-node-count').textContent = n;
+    document.getElementById('cov-area').textContent  = area.toFixed(2)+' km²';
+    document.getElementById('cov-pct').textContent   = pct+'%';
+    document.getElementById('cov-cost').textContent  = cost>=1000000 ? '$'+(cost/1e6).toFixed(2)+'M' : '$'+cost.toLocaleString();
+    document.getElementById('cov-latency').textContent = n>=50 ? '≤ 30s' : '≤ 90s';
+    document.querySelectorAll('.cov-preset-btn').forEach(function(b){ b.classList.toggle('active', parseInt(b.textContent)===n); });
     document.getElementById('cov-slider').value = n;
-    draw(n);
-    updateStats(n);
-  };
+  }
 
-  window.setCoverage = function(n) {
-    window.updateCoverage(n);
-  };
-
-  // Init
-  draw(20);
-  updateStats(20);
-});
+  window.covUpdate = function(v) { var n=parseInt(v); draw(n); stats(n); };
+  draw(20); stats(20);
+})();
 </script>
 
 </body>
