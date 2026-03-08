@@ -445,7 +445,6 @@
             <th class="comp-col">Dedrone</th>
             <th class="comp-col">DroneShield</th>
             <th class="comp-col">CCTV Network</th>
-            <th class="comp-col palantir-col">Palantir *</th>
             <th class="comp-col sentinel-col">Sentinel Mesh</th>
           </tr>
         </thead>
@@ -456,8 +455,6 @@
             <td><span class="cap partial">~</span><span class="cap-note">RF only</span></td>
             <td><span class="cap yes">✓</span></td>
             <td><span class="cap partial">~</span><span class="cap-note">line of sight</span></td>
-            <td class="palantir-cell"><span class="cap no">✗</span><span class="cap-note">no sensors</span></td>
-            <td class="sentinel-cell"><span class="cap yes">✓</span><span class="cap-note">4-sensor fusion</span></td>
           </tr>
           <tr>
             <td class="cap-name">💥 Gunshot / Ballistic</td>
@@ -465,8 +462,6 @@
             <td><span class="cap no">✗</span></td>
             <td><span class="cap no">✗</span></td>
             <td><span class="cap no">✗</span></td>
-            <td class="palantir-cell"><span class="cap no">✗</span><span class="cap-note">no sensors</span></td>
-            <td class="sentinel-cell"><span class="cap yes">✓</span><span class="cap-note">dual-sig TDOA</span></td>
           </tr>
           <tr>
             <td class="cap-name">🔥 Explosion / IED</td>
@@ -474,8 +469,6 @@
             <td><span class="cap no">✗</span></td>
             <td><span class="cap no">✗</span></td>
             <td><span class="cap partial">~</span><span class="cap-note">post-event only</span></td>
-            <td class="palantir-cell"><span class="cap no">✗</span><span class="cap-note">no sensors</span></td>
-            <td class="sentinel-cell"><span class="cap yes">✓</span><span class="cap-note">acoustic + seismic + thermal</span></td>
           </tr>
           <tr>
             <td class="cap-name">🚗 Vehicle Surveillance</td>
@@ -483,8 +476,6 @@
             <td><span class="cap no">✗</span></td>
             <td><span class="cap no">✗</span></td>
             <td><span class="cap partial">~</span><span class="cap-note">visual only</span></td>
-            <td class="palantir-cell"><span class="cap no">✗</span><span class="cap-note">no sensors</span></td>
-            <td class="sentinel-cell"><span class="cap yes">✓</span><span class="cap-note">engine + thermal + optical</span></td>
           </tr>
           <tr>
             <td class="cap-name">📍 GPS Localisation</td>
@@ -492,8 +483,6 @@
             <td><span class="cap partial">~</span><span class="cap-note">bearing only</span></td>
             <td><span class="cap partial">~</span><span class="cap-note">bearing only</span></td>
             <td><span class="cap no">✗</span></td>
-            <td class="palantir-cell"><span class="cap no">✗</span><span class="cap-note">no sensors</span></td>
-            <td class="sentinel-cell"><span class="cap yes">✓</span><span class="cap-note">±25m CEP90</span></td>
           </tr>
           <tr>
             <td class="cap-name">🧠 Multi-Sensor Fusion</td>
@@ -501,8 +490,6 @@
             <td><span class="cap no">✗</span></td>
             <td><span class="cap partial">~</span><span class="cap-note">2 sensors</span></td>
             <td><span class="cap no">✗</span></td>
-            <td class="palantir-cell"><span class="cap no">✗</span><span class="cap-note">no sensors</span></td>
-            <td class="sentinel-cell"><span class="cap yes">✓</span><span class="cap-note">up to 5 sensors</span></td>
           </tr>
           <tr>
             <td class="cap-name">🕸 Mesh / No Single Point of Failure</td>
@@ -510,8 +497,6 @@
             <td><span class="cap no">✗</span></td>
             <td><span class="cap no">✗</span></td>
             <td><span class="cap no">✗</span></td>
-            <td class="palantir-cell"><span class="cap no">✗</span><span class="cap-note">centralised cloud</span></td>
-            <td class="sentinel-cell"><span class="cap yes">✓</span><span class="cap-note">distributed mesh</span></td>
           </tr>
           <tr>
             <td class="cap-name">📡 Offline / No Cloud Required</td>
@@ -519,8 +504,6 @@
             <td><span class="cap no">✗</span></td>
             <td><span class="cap partial">~</span><span class="cap-note">limited</span></td>
             <td><span class="cap no">✗</span></td>
-            <td class="palantir-cell"><span class="cap no">✗</span><span class="cap-note">cloud dependent</span></td>
-            <td class="sentinel-cell"><span class="cap yes">✓</span><span class="cap-note">edge inference</span></td>
           </tr>
           <tr>
             <td class="cap-name">📊 Data Analytics &amp; Intelligence</td>
@@ -528,8 +511,6 @@
             <td><span class="cap partial">~</span><span class="cap-note">basic</span></td>
             <td><span class="cap partial">~</span><span class="cap-note">basic</span></td>
             <td><span class="cap partial">~</span><span class="cap-note">VMS only</span></td>
-            <td class="palantir-cell"><span class="cap yes">✓</span><span class="cap-note">world-class analytics</span></td>
-            <td class="sentinel-cell"><span class="cap partial">~</span><span class="cap-note">integrates upstream ↑</span></td>
           </tr>
           <tr>
             <td class="cap-name">⚡ Alert Latency</td>
@@ -537,8 +518,6 @@
             <td><span class="cap-text amber">~30s</span></td>
             <td><span class="cap-text amber">~20s</span></td>
             <td><span class="cap-text red">Minutes</span></td>
-            <td class="palantir-cell"><span class="cap-text red">Hours–Days</span><span class="cap-note">analyst-driven</span></td>
-            <td class="sentinel-cell"><span class="cap-text green">≤ 90s Y1 → ≤ 30s Y2</span></td>
           </tr>
         </tbody>
       </table>
@@ -562,6 +541,224 @@
     </div>
     <div class="log-stream" id="log-stream"></div>
   </div>
+
+  <!-- ── NODE COST BREAKDOWN ────────────────────────────────────── -->
+  <div class="cost-section">
+
+    <div class="cost-section-header">
+      <div class="cost-section-title">
+        <span class="comp-title-tag">SM-COST-1.0</span>
+        Node <em>Cost Breakdown</em>
+      </div>
+      <div class="cost-section-sub">
+        What is inside every Sentinel Mesh node — and what it costs to build one
+      </div>
+    </div>
+
+    <div class="cost-breakdown-grid">
+
+      <!-- Left — bar chart -->
+      <div class="cost-bars-wrap">
+        <div class="matrix-label">COMPONENT CATEGORIES — PER NODE BOM</div>
+
+        <div class="cost-bdown-row">
+          <div class="cbd-label">
+            <span class="cbd-icon">🖥</span>
+            <div>
+              <div class="cbd-name">Compute</div>
+              <div class="cbd-detail">Jetson Orin Nano 8GB</div>
+            </div>
+          </div>
+          <div class="cbd-bar-wrap">
+            <div class="cbd-bar" style="width:59%" data-w="59">
+              <span class="cbd-val">$299</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cost-bdown-row">
+          <div class="cbd-label">
+            <span class="cbd-icon">🔴</span>
+            <div>
+              <div class="cbd-name">Thermal IR</div>
+              <div class="cbd-detail">InfiRay LWIR module</div>
+            </div>
+          </div>
+          <div class="cbd-bar-wrap">
+            <div class="cbd-bar" style="width:32%" data-w="32">
+              <span class="cbd-val">$160</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cost-bdown-row">
+          <div class="cbd-label">
+            <span class="cbd-icon">📡</span>
+            <div>
+              <div class="cbd-name">RF / SDR</div>
+              <div class="cbd-detail">RTL-SDR v4 dongle</div>
+            </div>
+          </div>
+          <div class="cbd-bar-wrap">
+            <div class="cbd-bar" style="width:7%" data-w="7">
+              <span class="cbd-val">$35</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cost-bdown-row">
+          <div class="cbd-label">
+            <span class="cbd-icon">🎙</span>
+            <div>
+              <div class="cbd-name">Acoustic Array</div>
+              <div class="cbd-detail">4× MEMS mic + preamp</div>
+            </div>
+          </div>
+          <div class="cbd-bar-wrap">
+            <div class="cbd-bar" style="width:9%" data-w="9">
+              <span class="cbd-val">$48</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cost-bdown-row">
+          <div class="cbd-label">
+            <span class="cbd-icon">📷</span>
+            <div>
+              <div class="cbd-name">Optical Camera</div>
+              <div class="cbd-detail">IMX219 CSI module</div>
+            </div>
+          </div>
+          <div class="cbd-bar-wrap">
+            <div class="cbd-bar" style="width:6%" data-w="6">
+              <span class="cbd-val">$28</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cost-bdown-row">
+          <div class="cbd-label">
+            <span class="cbd-icon">📳</span>
+            <div>
+              <div class="cbd-name">Seismic MEMS</div>
+              <div class="cbd-detail">ADXL355 accelerometer</div>
+            </div>
+          </div>
+          <div class="cbd-bar-wrap">
+            <div class="cbd-bar" style="width:2%" data-w="2">
+              <span class="cbd-val">$12</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cost-bdown-row">
+          <div class="cbd-label">
+            <span class="cbd-icon">📍</span>
+            <div>
+              <div class="cbd-name">GPS / Timing</div>
+              <div class="cbd-detail">u-blox M9N module</div>
+            </div>
+          </div>
+          <div class="cbd-bar-wrap">
+            <div class="cbd-bar" style="width:5%" data-w="5">
+              <span class="cbd-val">$25</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cost-bdown-row">
+          <div class="cbd-label">
+            <span class="cbd-icon">🔌</span>
+            <div>
+              <div class="cbd-name">Power + Comms + Housing</div>
+              <div class="cbd-detail">PSU, LTE modem, IP67 enclosure, misc</div>
+            </div>
+          </div>
+          <div class="cbd-bar-wrap">
+            <div class="cbd-bar" style="width:30%" data-w="30">
+              <span class="cbd-val">$150</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /cost-bars-wrap -->
+
+      <!-- Right — totals card -->
+      <div class="cost-totals-wrap">
+        <div class="matrix-label">TOTAL PER NODE</div>
+
+        <div class="cost-total-card">
+          <div class="ct-row">
+            <span class="ct-label">Components (BOM)</span>
+            <span class="ct-val">$757</span>
+          </div>
+          <div class="ct-row">
+            <span class="ct-label">Assembly &amp; integration</span>
+            <span class="ct-val">$45</span>
+          </div>
+          <div class="ct-divider"></div>
+          <div class="ct-row total">
+            <span class="ct-label">Total per node</span>
+            <span class="ct-val accent">~$802</span>
+          </div>
+          <div class="ct-row">
+            <span class="ct-label">Tolerance</span>
+            <span class="ct-val muted">± 15%</span>
+          </div>
+        </div>
+
+        <div class="cost-vs-card">
+          <div class="matrix-label" style="margin-bottom:0.7rem">VS SINGLE-PURPOSE ALTERNATIVES</div>
+          <div class="cvs-row">
+            <span class="cvs-name">ShotSpotter</span>
+            <span class="cvs-val red">$15–25k</span>
+            <span class="cvs-mult">20–31×</span>
+          </div>
+          <div class="cvs-row">
+            <span class="cvs-name">Dedrone</span>
+            <span class="cvs-val red">$20–40k</span>
+            <span class="cvs-mult">25–50×</span>
+          </div>
+          <div class="cvs-row">
+            <span class="cvs-name">DroneShield</span>
+            <span class="cvs-val red">$30–60k</span>
+            <span class="cvs-mult">37–75×</span>
+          </div>
+          <div class="cvs-note">
+            Sentinel Mesh covers all four threat types.<br>
+            Each of the above covers only one.
+          </div>
+        </div>
+
+        <div class="cost-scale-card">
+          <div class="matrix-label" style="margin-bottom:0.7rem">DEPLOYMENT SCALE</div>
+          <div class="csc-row">
+            <span class="csc-nodes">20 nodes</span>
+            <span class="csc-cost accent">~$16k</span>
+            <span class="csc-area">small district</span>
+          </div>
+          <div class="csc-row">
+            <span class="csc-nodes">100 nodes</span>
+            <span class="csc-cost accent">~$80k</span>
+            <span class="csc-area">city sector</span>
+          </div>
+          <div class="csc-row">
+            <span class="csc-nodes">500 nodes</span>
+            <span class="csc-cost accent">~$401k</span>
+            <span class="csc-area">full city coverage</span>
+          </div>
+        </div>
+
+      </div><!-- /cost-totals-wrap -->
+
+    </div><!-- /cost-breakdown-grid -->
+
+    <div class="cost-footnote">
+      BOM prices are current Q1 2026 retail/distributor estimates. Volume pricing at 100+ units reduces compute cost by ~18% and thermal by ~12%.
+      Assembly cost assumes contract manufacturer in AU/SG. ±15% tolerance applies across all line items.
+    </div>
+
+  </div><!-- /cost-section -->
 
   <!-- ── CALL TO ACTION FOOTER ─────────────────────────────────── -->
   <div class="cta-section">
