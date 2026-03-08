@@ -260,13 +260,90 @@ body::after {
   text-transform: uppercase;
 }
 
-/* ── SCENARIO CARD ──────────────────────────────────────────── */
+/* ── SCENARIO SELECTOR ──────────────────────────────────────── */
+.scenario-selector {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.sc-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.75rem 0.5rem 0.65rem;
+  background: var(--surface);
+  border: 1px solid var(--muted);
+  cursor: pointer;
+  transition: border-color 0.25s, background 0.25s;
+  overflow: hidden;
+  color: inherit;
+  font-family: inherit;
+}
+.sc-btn::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--muted);
+  transition: background 0.25s, box-shadow 0.25s;
+}
+.sc-btn:hover {
+  border-color: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.025);
+}
+.sc-btn.active {
+  border-color: var(--btn-accent, var(--amber));
+  background: rgba(245,166,35,0.04);
+}
+.sc-btn.active::before {
+  background: var(--btn-accent, var(--amber));
+  box-shadow: 0 0 10px var(--btn-accent, var(--amber));
+}
+
+.sc-btn-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  filter: grayscale(1) opacity(0.4);
+  transition: filter 0.25s;
+}
+.sc-btn.active .sc-btn-icon { filter: none; }
+
+.sc-btn-label {
+  font-family: var(--f-head);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text2);
+  line-height: 1.1;
+  text-align: center;
+  transition: color 0.25s;
+}
+.sc-btn.active .sc-btn-label { color: var(--btn-accent, var(--amber)); }
+
+.sc-btn-status {
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.25s;
+}
+.sc-btn.active .sc-btn-status {
+  color: var(--btn-accent, var(--amber));
+}
+
+/* ── SCENARIO INFO CARD ─────────────────────────────────────── */
 .scenario-card {
   position: relative;
   background: var(--surface);
   border: 1px solid var(--muted);
   margin-bottom: 1rem;
-  padding: 1.1rem 1.5rem;
+  padding: 1rem 1.5rem;
   display: flex;
   align-items: center;
   gap: 1.4rem;
@@ -285,10 +362,10 @@ body::after {
 }
 
 .sc-icon {
-  font-size: 2.4rem;
+  font-size: 2.2rem;
   flex-shrink: 0;
   line-height: 1;
-  width: 50px;
+  width: 46px;
   text-align: center;
 }
 
@@ -296,16 +373,16 @@ body::after {
 
 .sc-label {
   font-family: var(--f-mono);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text2);
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.28rem;
 }
 
 .sc-name {
   font-family: var(--f-head);
-  font-size: 1.85rem;
+  font-size: 1.7rem;
   font-weight: 900;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -316,26 +393,26 @@ body::after {
 
 .sc-desc {
   font-family: var(--f-mono);
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   letter-spacing: 0.04em;
   color: var(--text2);
-  margin-top: 0.32rem;
+  margin-top: 0.3rem;
   line-height: 1.75;
 }
 
 .sc-sensors {
   display: flex;
   gap: 0.5rem;
-  margin-top: 0.55rem;
+  margin-top: 0.5rem;
   flex-wrap: wrap;
 }
 
 .sc-sensor-tag {
   font-family: var(--f-mono);
-  font-size: 0.65rem;
+  font-size: 0.63rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 0.2rem 0.55rem;
+  padding: 0.18rem 0.5rem;
   border: 1px solid var(--muted);
   color: var(--text2);
   background: rgba(0,0,0,0.3);
@@ -345,162 +422,34 @@ body::after {
   border-color: var(--accent);
 }
 
-.sc-right { text-align: right; flex-shrink: 0; }
-
-.sc-cycle-lbl {
+/* Auto-rotate indicator */
+.sc-auto {
   font-family: var(--f-mono);
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   letter-spacing: 0.1em;
-  color: var(--muted);
   text-transform: uppercase;
-}
-
-.sc-num {
-  font-family: var(--f-head);
-  font-size: 2.4rem;
-  font-weight: 900;
-  color: var(--accent);
-  line-height: 1;
-}
-
-.sc-of {
-  font-family: var(--f-mono);
-  font-size: 0.65rem;
   color: var(--muted);
-}
-
-.sc-dots {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.45rem;
-  justify-content: flex-end;
-}
-
-.sc-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--muted);
-  transition: background 0.3s, box-shadow 0.3s;
-}
-.sc-dot.done   { background: var(--green); }
-.sc-dot.active { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
-
-/* ── TITLE OVERLAY — 6 seconds ──────────────────────────────── */
-.title-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: rgba(3, 8, 16, 0.97);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.45s ease;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
-.title-overlay.show { opacity: 1; pointer-events: auto; }
-
-.title-inner {
-  text-align: center;
-  max-width: 720px;
-  padding: 2.5rem;
-}
-
-.to-label {
-  font-family: var(--f-mono);
-  font-size: 0.82rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--text2);
-  margin-bottom: 1rem;
-}
-
-.to-scenario-num {
-  font-family: var(--f-mono);
-  font-size: 0.88rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text2);
-  margin-bottom: 0.6rem;
-}
-
-.to-icon {
-  font-size: 4.5rem;
-  display: block;
-  margin-bottom: 0.8rem;
-}
-
-.to-name {
-  font-family: var(--f-head);
-  font-size: clamp(3rem, 8vw, 5.5rem);
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #fff;
-  line-height: 1;
-  margin-bottom: 1rem;
-}
-.to-name em { font-style: normal; color: var(--accent); }
-
-.to-desc {
-  font-family: var(--f-mono);
-  font-size: 0.84rem;
-  letter-spacing: 0.04em;
-  color: var(--text2);
-  line-height: 2.1;
-  margin-bottom: 1.4rem;
-}
-
-.to-sensors {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 2rem;
-}
-
-.to-tag {
-  font-family: var(--f-mono);
-  font-size: 0.74rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.35rem 0.85rem;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-}
-
-.to-countdown-wrap {
-  font-family: var(--f-mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.15em;
-  color: var(--muted);
-  text-transform: uppercase;
-}
-
-.countdown-num {
-  font-size: 1.4rem;
-  color: var(--amber);
-  display: block;
-  margin-top: 0.3rem;
-}
-
-.to-progress {
-  width: 200px;
-  height: 3px;
+.sc-auto .auto-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
   background: var(--muted);
-  margin: 0.6rem auto 0;
-  position: relative;
-  overflow: hidden;
+  transition: background 0.3s;
 }
+.sc-auto.running .auto-dot {
+  background: var(--green);
+  box-shadow: 0 0 5px var(--green);
+  animation: blink 2s infinite;
+}
+.sc-auto.manual .auto-dot { background: var(--amber); }
 
-.to-progress-fill {
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  background: var(--accent);
-  width: 100%;
-  transition: width 6s linear;
-}
+/* Title overlay removed — replaced by scenario selector buttons */
 
 /* ── TIMER BAR ──────────────────────────────────────────────── */
 .timer-bar-wrap {
@@ -1013,10 +962,10 @@ body::after {
 
 @media (max-width: 600px) {
   html { font-size: 16px; }
+  .scenario-selector { grid-template-columns: repeat(2, 1fr); }
   .scenario-card { flex-wrap: wrap; }
-  .sc-right { display: none; }
   .sensor-row {
-    grid-template-columns: 120px 80px 1fr 50px;
+    grid-template-columns: 110px 80px 1fr 48px;
     font-size: 0.68rem;
   }
 }
