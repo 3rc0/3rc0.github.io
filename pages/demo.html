@@ -1,4 +1,399 @@
-<link rel="stylesheet" href="../assets/css/viz.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentinel Mesh — Detection Cascade</title>
+  <meta name="description" content="Sentinel Mesh multi-scenario threat detection cascade — drone, gunshot, explosion, vehicle.">
+
+  <!-- Stylesheet — self-hosted fonts + all styles -->
+  <link rel="stylesheet" href="../assets/css/viz.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ── HEADER ─────────────────────────────────────────────── -->
+  <header class="sys-header">
+    <div class="sys-logo">SENTINEL <span>//</span> DETECTION ENGINE</div>
+    <div class="sys-tag">SM-VIZ-1.3</div>
+    <div class="sys-tag">MULTI-SCENARIO LIVE SIM</div>
+    <div class="sys-right">
+      <div class="sys-clock" id="sys-clock">--:--:--Z</div>
+      <div class="sys-status">
+        <div class="pulse-dot"></div>
+        SYSTEM ACTIVE
+      </div>
+    </div>
+  </header>
+
+  <!-- ── PAGE TITLE ─────────────────────────────────────────── -->
+  <div class="viz-title">
+    <h1>Detection <em>Cascade</em></h1>
+    <p class="sub">One platform &nbsp;·&nbsp; Every threat type &nbsp;·&nbsp; All stages complete in seconds</p>
+  </div>
+
+  <!-- ── SCENARIO CARD ──────────────────────────────────────── -->
+  <div class="scenario-card">
+    <div class="sc-icon" id="sc-icon">—</div>
+    <div class="sc-left">
+      <div class="sc-label">
+        SCENARIO <span id="sc-num-label">1</span> OF 4 &nbsp;·&nbsp; ACTIVE DETECTION
+      </div>
+      <div class="sc-name" id="sc-name">—</div>
+      <div class="sc-desc" id="sc-desc">—</div>
+      <div class="sc-sensors" id="sc-sensors"></div>
+    </div>
+    <div class="sc-right">
+      <div class="sc-cycle-lbl">SCENARIO</div>
+      <div class="sc-num" id="sc-cycle-num">1</div>
+      <div class="sc-of">of 4</div>
+      <div class="sc-dots">
+        <div class="sc-dot" id="dot-0"></div>
+        <div class="sc-dot" id="dot-1"></div>
+        <div class="sc-dot" id="dot-2"></div>
+        <div class="sc-dot" id="dot-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TIMER ──────────────────────────────────────────────── -->
+  <div class="timer-bar-wrap">
+    <div class="timer-label">Event Elapsed</div>
+    <div class="timer-track">
+      <div class="timer-fill" id="timer-fill"></div>
+    </div>
+    <div class="timer-elapsed" id="timer-elapsed">0.0s</div>
+    <div class="timer-cycle" id="timer-cycle">INITIALISING</div>
+  </div>
+
+  <!-- ── MAIN GRID ──────────────────────────────────────────── -->
+  <div class="main-grid">
+
+    <!-- LEFT — DETECTION CASCADE PIPELINE -->
+    <div class="pipeline">
+
+      <!-- Stage 1 -->
+      <div class="stage" id="s1">
+        <div class="stage-head" onclick="toggleStage('s1')">
+          <span class="stage-num">01</span>
+          <span class="stage-icon" id="s1-icon">👁</span>
+          <span class="stage-name" id="s1-name">Suspicion</span>
+          <div class="stage-summary">
+            <div id="s1-sum">—</div>
+            <div class="conf-mini">
+              <div class="conf-track"><div class="conf-fill" id="s1-conf"></div></div>
+              <span class="conf-pct" id="s1-pct">—</span>
+            </div>
+          </div>
+          <span class="stage-toggle" id="s1-tog">▶</span>
+        </div>
+        <div class="stage-body" id="s1-body">
+          <button class="sub-btn" id="s1-btn-sr" onclick="toggleSub('s1','sr')">
+            <span class="sub-icon">📊</span>
+            <span class="sub-label">Sensor Reading</span>
+            <span class="sub-badge" id="s1-bdg-sr">—</span>
+            <span class="sub-arr">▶</span>
+          </button>
+          <div class="sub-content" id="s1-sub-sr">
+            <div class="sub-inner" id="s1-sr-inner"></div>
+          </div>
+          <button class="sub-btn" id="s1-btn-det" onclick="toggleSub('s1','det')">
+            <span class="sub-icon">🔎</span>
+            <span class="sub-label">Event Detail</span>
+            <span class="sub-badge" id="s1-bdg-det">—</span>
+            <span class="sub-arr">▶</span>
+          </button>
+          <div class="sub-content" id="s1-sub-det">
+            <div class="sub-inner"><table class="dtable" id="s1-det-table"></table></div>
+          </div>
+          <button class="sub-btn" id="s1-btn-log" onclick="toggleSub('s1','log')">
+            <span class="sub-icon">📋</span>
+            <span class="sub-label">Raw Log</span>
+            <span class="sub-badge" id="s1-bdg-log">—</span>
+            <span class="sub-arr">▶</span>
+          </button>
+          <div class="sub-content" id="s1-sub-log">
+            <div class="sub-inner"><div class="raw-log" id="s1-log"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 2 -->
+      <div class="stage" id="s2">
+        <div class="stage-head" onclick="toggleStage('s2')">
+          <span class="stage-num">02</span>
+          <span class="stage-icon" id="s2-icon">✓</span>
+          <span class="stage-name" id="s2-name">Confirmation</span>
+          <div class="stage-summary">
+            <div id="s2-sum">—</div>
+            <div class="conf-mini">
+              <div class="conf-track"><div class="conf-fill" id="s2-conf"></div></div>
+              <span class="conf-pct" id="s2-pct">—</span>
+            </div>
+          </div>
+          <span class="stage-toggle" id="s2-tog">▶</span>
+        </div>
+        <div class="stage-body" id="s2-body">
+          <button class="sub-btn" id="s2-btn-sensors" onclick="toggleSub('s2','sensors')">
+            <span class="sub-icon">📊</span>
+            <span class="sub-label">Sensor Agreement</span>
+            <span class="sub-badge" id="s2-bdg-sensors">—</span>
+            <span class="sub-arr">▶</span>
+          </button>
+          <div class="sub-content" id="s2-sub-sensors">
+            <div class="sub-inner" id="s2-sensors-inner"></div>
+          </div>
+          <button class="sub-btn" id="s2-btn-fusion" onclick="toggleSub('s2','fusion')">
+            <span class="sub-icon">🧠</span>
+            <span class="sub-label">Fusion Result</span>
+            <span class="sub-badge" id="s2-bdg-fusion">—</span>
+            <span class="sub-arr">▶</span>
+          </button>
+          <div class="sub-content" id="s2-sub-fusion">
+            <div class="sub-inner"><table class="dtable" id="s2-fusion-table"></table></div>
+          </div>
+          <button class="sub-btn" id="s2-btn-log" onclick="toggleSub('s2','log')">
+            <span class="sub-icon">📋</span>
+            <span class="sub-label">Raw Log</span>
+            <span class="sub-badge" id="s2-bdg-log">—</span>
+            <span class="sub-arr">▶</span>
+          </button>
+          <div class="sub-content" id="s2-sub-log">
+            <div class="sub-inner"><div class="raw-log" id="s2-log"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 3 -->
+      <div class="stage" id="s3">
+        <div class="stage-head" onclick="toggleStage('s3')">
+          <span class="stage-num">03</span>
+          <span class="stage-icon" id="s3-icon">📍</span>
+          <span class="stage-name" id="s3-name">Location Fix</span>
+          <div class="stage-summary">
+            <div id="s3-sum">—</div>
+            <div class="conf-mini">
+              <div class="conf-track"><div class="conf-fill" id="s3-conf"></div></div>
+              <span class="conf-pct" id="s3-pct">—</span>
+            </div>
+          </div>
+          <span class="stage-toggle" id="s3-tog">▶</span>
+        </div>
+        <div class="stage-body" id="s3-body">
+          <button class="sub-btn" id="s3-btn-nodes" onclick="toggleSub('s3','nodes')">
+            <span class="sub-icon">📡</span>
+            <span class="sub-label" id="s3-sub1-label">Node Timing</span>
+            <span class="sub-badge" id="s3-bdg-nodes">—</span>
+            <span class="sub-arr">▶</span>
+          </button>
+          <div class="sub-content" id="s3-sub-nodes">
+            <div class="sub-inner" id="s3-nodes-inner"></div>
+          </div>
+          <button class="sub-btn" id="s3-btn-fix" onclick="toggleSub('s3','fix')">
+            <span class="sub-icon">🗺</span>
+            <span class="sub-label">Position Result</span>
+            <span class="sub-badge" id="s3-bdg-fix">—</span>
+            <span class="sub-arr">▶</span>
+          </button>
+          <div class="sub-content" id="s3-sub-fix">
+            <div class="sub-inner"><table class="dtable" id="s3-fix-table"></table></div>
+          </div>
+          <button class="sub-btn" id="s3-btn-log" onclick="toggleSub('s3','log')">
+            <span class="sub-icon">📋</span>
+            <span class="sub-label">Raw Log</span>
+            <span class="sub-badge" id="s3-bdg-log">—</span>
+            <span class="sub-arr">▶</span>
+          </button>
+          <div class="sub-content" id="s3-sub-log">
+            <div class="sub-inner"><div class="raw-log" id="s3-log"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 4 -->
+      <div class="stage" id="s4">
+        <div class="stage-head" onclick="toggleStage('s4')">
+          <span class="stage-num">04</span>
+          <span class="stage-icon" id="s4-icon">🛤</span>
+          <span class="stage-name" id="s4-name">Trail &amp; Tracking</span>
+          <div class="stage-summary">
+            <div id="s4-sum">—</div>
+            <div class="conf-mini">
+              <div class="conf-track"><div class="conf-fill" id="s4-conf"></div></div>
+              <span class="conf-pct" id="s4-pct">—</span>
+            </div>
+          </div>
+          <span class="stage-toggle" id="s4-tog">▶</span>
+        </div>
+        <div class="stage-body" id="s4-body">
+          <button class="sub-btn" id="s4-btn-move" onclick="toggleSub('s4','move')">
+            <span class="sub-icon">🧭</span>
+            <span class="sub-label" id="s4-sub1-label">Movement Data</span>
+            <span class="sub-badge" id="s4-bdg-move">—</span>
+            <span class="sub-arr">▶</span>
+          </button>
+          <div class="sub-content" id="s4-sub-move">
+            <div class="sub-inner"><table class="dtable" id="s4-move-table"></table></div>
+          </div>
+          <button class="sub-btn" id="s4-btn-trail" onclick="toggleSub('s4','trail')">
+            <span class="sub-icon">📈</span>
+            <span class="sub-label" id="s4-sub2-label">Log Status</span>
+            <span class="sub-badge" id="s4-bdg-trail">live</span>
+            <span class="sub-arr">▶</span>
+          </button>
+          <div class="sub-content" id="s4-sub-trail">
+            <div class="sub-inner"><table class="dtable" id="s4-trail-table"></table></div>
+          </div>
+          <button class="sub-btn" id="s4-btn-log" onclick="toggleSub('s4','log')">
+            <span class="sub-icon">📋</span>
+            <span class="sub-label">Raw Log</span>
+            <span class="sub-badge" id="s4-bdg-log">—</span>
+            <span class="sub-arr">▶</span>
+          </button>
+          <div class="sub-content" id="s4-sub-log">
+            <div class="sub-inner"><div class="raw-log" id="s4-log"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 5 -->
+      <div class="stage" id="s5">
+        <div class="stage-head" onclick="toggleStage('s5')">
+          <span class="stage-num">05</span>
+          <span class="stage-icon">🔔</span>
+          <span class="stage-name">Human Alert</span>
+          <div class="stage-summary">
+            <div id="s5-sum">—</div>
+            <div class="conf-mini">
+              <div class="conf-track"><div class="conf-fill" id="s5-conf"></div></div>
+              <span class="conf-pct" id="s5-pct">—</span>
+            </div>
+          </div>
+          <span class="stage-toggle" id="s5-tog">▶</span>
+        </div>
+        <div class="stage-body" id="s5-body">
+          <button class="sub-btn" id="s5-btn-pkg" onclick="toggleSub('s5','pkg')">
+            <span class="sub-icon">⚡</span>
+            <span class="sub-label">Alert Package</span>
+            <span class="sub-badge" id="s5-bdg-pkg">—</span>
+            <span class="sub-arr">▶</span>
+          </button>
+          <div class="sub-content" id="s5-sub-pkg">
+            <div class="sub-inner"><table class="dtable" id="s5-pkg-table"></table></div>
+          </div>
+          <button class="sub-btn" id="s5-btn-ev" onclick="toggleSub('s5','ev')">
+            <span class="sub-icon">🗂</span>
+            <span class="sub-label">Evidence Chain</span>
+            <span class="sub-badge" id="s5-bdg-ev">—</span>
+            <span class="sub-arr">▶</span>
+          </button>
+          <div class="sub-content" id="s5-sub-ev">
+            <div class="sub-inner" id="s5-ev-inner"></div>
+          </div>
+          <button class="sub-btn" id="s5-btn-log" onclick="toggleSub('s5','log')">
+            <span class="sub-icon">📋</span>
+            <span class="sub-label">Raw Log</span>
+            <span class="sub-badge" id="s5-bdg-log">—</span>
+            <span class="sub-arr">▶</span>
+          </button>
+          <div class="sub-content" id="s5-sub-log">
+            <div class="sub-inner"><div class="raw-log" id="s5-log"></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pipeline -->
+
+    <!-- RIGHT — PANELS -->
+    <div class="right-panel">
+
+      <!-- Node Grid Canvas -->
+      <div class="panel-card">
+        <div class="panel-head">
+          <div class="dot"></div>
+          NODE GRID — LIVE DETECTION SPREAD
+        </div>
+        <canvas id="node-canvas"></canvas>
+        <div class="node-legend">
+          <div class="nl-item">
+            <div class="nl-dot" style="background:#304560"></div>Inactive
+          </div>
+          <div class="nl-item">
+            <div class="nl-dot" style="background:#f5a623"></div>Detecting
+          </div>
+          <div class="nl-item">
+            <div class="nl-dot" style="background:#39d353"></div>Confirmed
+          </div>
+          <div class="nl-item">
+            <div class="nl-dot" style="background:#ff4757"></div>Target
+          </div>
+        </div>
+      </div>
+
+      <!-- Evidence Chain -->
+      <div class="panel-card">
+        <div class="panel-head">
+          <div class="dot" style="background:var(--amber)"></div>
+          EVIDENCE CHAIN
+        </div>
+        <div id="ev-chain"></div>
+      </div>
+
+      <!-- Alert Feed -->
+      <div class="panel-card">
+        <div class="panel-head">
+          <div class="dot" style="background:var(--red)"></div>
+          ALERT FEED
+        </div>
+        <div class="alert-list" id="alert-list">
+          <div class="alert-item">
+            <div class="alert-ts">—</div>
+            <div class="alert-msg">Awaiting first detection event...</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /right-panel -->
+
+  </div><!-- /main-grid -->
+
+  <!-- ── BOTTOM LOG ──────────────────────────────────────────── -->
+  <div class="bottom-log">
+    <div class="panel-head" style="border-bottom:1px solid rgba(74,100,128,0.2);padding:0.6rem 1.1rem">
+      <div class="dot"></div>SYSTEM LOG
+    </div>
+    <div class="log-stream" id="log-stream"></div>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- ── TITLE OVERLAY — 6 seconds ──────────────────────────────── -->
+<div class="title-overlay" id="title-overlay">
+  <div class="title-inner">
+    <div class="to-label">SENTINEL DETECTION ENGINE</div>
+    <span class="to-icon" id="to-icon">—</span>
+    <div class="to-scenario-num" id="to-scenario-num">SCENARIO 1 OF 4</div>
+    <div class="to-name" id="to-name">—</div>
+    <div class="to-desc" id="to-desc">—</div>
+    <div class="to-sensors" id="to-sensors"></div>
+    <div class="to-countdown-wrap">
+      STARTING IN
+      <span class="countdown-num" id="to-count">6</span>
+    </div>
+    <div class="to-progress">
+      <div class="to-progress-fill" id="to-progress-fill"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── VERSION BADGE ───────────────────────────────────────────── -->
+<div class="version-badge">SM-VIZ-1.3 · SENTINEL DETECTION CASCADE</div>
+
+<!-- ── SCRIPTS — load order matters ───────────────────────────── -->
 <script src="../assets/js/scenarios.js"></script>
 <script src="../assets/js/canvas.js"></script>
 <script src="../assets/js/viz.js"></script>
+
+</body>
+</html>
