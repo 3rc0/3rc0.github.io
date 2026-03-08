@@ -1196,3 +1196,31 @@
   background: var(--gold-glow);
 }
 #cl-app .cl-file-upload-btn:hover { background: rgba(201,169,110,0.15); }
+
+/* ════════════════════════════════════════════════════
+   Phase B.4 — Due Dates
+   ════════════════════════════════════════════════════ */
+
+#cl-app .cl-card-due {
+  font-size: 11px; font-weight: 600;
+  color: var(--text-dim);
+  margin-top: 6px; padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--glass2);
+  display: inline-block;
+}
+#cl-app .cl-card-due.soon {
+  color: #fb923c;
+  background: rgba(251,146,60,0.1);
+  border: 1px solid rgba(251,146,60,0.25);
+}
+#cl-app .cl-card-due.overdue {
+  color: var(--red);
+  background: var(--red2);
+  border: 1px solid var(--red-rim);
+  animation: cl-pulse 2s ease-in-out infinite;
+}
+@keyframes cl-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
