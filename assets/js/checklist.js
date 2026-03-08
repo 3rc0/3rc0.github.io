@@ -553,6 +553,14 @@ function renderProjectCard(p, isArchived) {
       <span class="cl-card-time">${timeAgo(p.updatedAt)}</span>
     </div>
     ${isArchived ? `<div class="cl-card-countdown ${daysLeft <= 7 ? "urgent" : ""}">Deletes in ${daysLeft}d</div>` : ""}
+    ${!isArchived && p.due_date ? (() => {
+      const due    = new Date(p.due_date + "T23:59:59Z");
+      const diffMs = due - Date.now();
+      const diffD  = Math.ceil(diffMs / 86400000);
+      if (diffD < 0)  return `<div class="cl-card-due overdue">🔴 Overdue · ${p.due_date}</div>`;
+      if (diffD <= 7) return `<div class="cl-card-due soon">⚠️ Due in ${diffD}d · ${p.due_date}</div>`;
+      return `<div class="cl-card-due">📅 Due ${p.due_date}</div>`;
+    })() : ""}
     <div class="cl-card-actions"></div>`;
 
   const actions = card.querySelector(".cl-card-actions");
@@ -623,7 +631,26 @@ function toggleCardMenu(p, card) {
     }
   }, "🗄️ Archive");
 
-  menu.append(renameBtn, archiveBtn);
+  const dueDateBtn = h("button", { class: "cl-dropdown-item",
+    onClick: async () => {
+      menu.remove();
+      const current = p.due_date || "";
+      const val = window.prompt("Set due date (YYYY-MM-DD), or leave blank to clear:", current);
+      if (val === null) return; // cancelled
+      const due = val.trim();
+      // Validate format
+      if (due && !/^\d{4}-\d{2}-\d{2}$/.test(due)) {
+        toast("Invalid date format. Use YYYY-MM-DD", "var(--red)"); return;
+      }
+      const d = await apiFetch(`/api/projects/${p.id}/due-date`, {
+        method: "PATCH", body: JSON.stringify({ due_date: due || null })
+      });
+      if (d.ok) { await loadProjects(); render(); toast(due ? `📅 Due date set: ${due}` : "Due date cleared"); }
+      else toast("Failed to set due date", "var(--red)");
+    }
+  }, "📅 Set Due Date");
+
+  menu.append(renameBtn, dueDateBtn, archiveBtn);
 
   // Position near the card
   const rect = card.getBoundingClientRect();
@@ -1223,7 +1250,14 @@ async function exportPDF() {
   doc.text(`Project:    ${state.activeProject?.name || "—"}`, ML, y); y += 7;
   doc.text(`Prepared by: ${state.session?.username || "—"}`, ML, y); y += 7;
   doc.text(`Date:        ${now.toLocaleDateString("en-GB", { day:"numeric", month:"long", year:"numeric" })}`, ML, y); y += 7;
-  doc.text(`Completion:  ${pct}% (${done} of ${total} tasks)`, ML, y); y += 20;
+  doc.text(`Completion:  ${pct}% (${done} of ${total} tasks)`, ML, y); y += 7;
+  if (state.activeProject?.due_date) {
+    const due    = new Date(state.activeProject.due_date + "T23:59:59Z");
+    const diffD  = Math.ceil((due - now) / 86400000);
+    const status = diffD < 0 ? " ⚠ OVERDUE" : diffD === 0 ? " (today)" : ` (in ${diffD} days)`;
+    doc.text(`Due date:    ${state.activeProject.due_date}${status}`, ML, y); y += 7;
+  }
+  y += 13;
 
   // Signature lines
   const sigY = y + 20;
