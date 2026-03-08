@@ -595,6 +595,122 @@ function escHtml(s) {
   return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
+
+// ── Due Date Modal ────────────────────────────────────────────
+function showDueDateModal(p) {
+  // Remove any existing modal
+  const existing = document.getElementById("cl-duedate-modal");
+  if (existing) existing.remove();
+
+  const today    = new Date().toISOString().slice(0, 10);
+  const current  = p.due_date || "";
+
+  const overlay = h("div", { class: "cl-modal-overlay", id: "cl-duedate-modal",
+    onClick: (e) => { if (e.target === overlay) overlay.remove(); }
+  });
+
+  const modal = h("div", { class: "cl-modal cl-duedate-modal" });
+
+  const closeBtn = h("button", { class: "cl-modal-close",
+    onClick: () => overlay.remove()
+  }, "✕");
+
+  modal.appendChild(closeBtn);
+  modal.appendChild(h("div", { class: "cl-modal-title" }, "📅 Set Due Date"));
+  modal.appendChild(h("div", { class: "cl-modal-sub" }, p.name));
+
+  // Calendar picker
+  const pickerWrap = h("div", { class: "cl-duedate-picker-wrap" });
+  const calLabel   = h("label", { class: "cl-label" }, "Pick from calendar");
+  const calInput   = h("input", {
+    type: "date", class: "cl-input cl-duedate-cal", id: "cl-duedate-cal",
+    value: current, min: today,
+    onChange: (e) => { textInput.value = e.target.value; }
+  });
+  pickerWrap.append(calLabel, calInput);
+  modal.appendChild(pickerWrap);
+
+  // Divider
+  modal.appendChild(h("div", { class: "cl-duedate-or" }, "— or type manually —"));
+
+  // Manual text input
+  const manualWrap = h("div", { class: "cl-field" });
+  const textInput  = h("input", {
+    type: "text", class: "cl-input", id: "cl-duedate-text",
+    placeholder: "YYYY-MM-DD", value: current, maxlength: "10",
+    onInput: (e) => {
+      const v = e.target.value;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(v)) {
+        const calEl = document.getElementById("cl-duedate-cal");
+        if (calEl) calEl.value = v;
+      }
+    }
+  });
+  manualWrap.append(h("label", { class: "cl-label" }, "Type a date"), textInput);
+  modal.appendChild(manualWrap);
+
+  // Error msg
+  const errEl = h("div", { class: "cl-auth-error", id: "cl-duedate-err" });
+  modal.appendChild(errEl);
+
+  // Quick shortcuts
+  const shortcuts = h("div", { class: "cl-duedate-shortcuts" });
+  [["+7d","In 7 days"], ["+14d","In 14 days"], ["+30d","In 30 days"], ["+90d","In 90 days"]].forEach(([k,label]) => {
+    const btn = h("button", { class: "cl-shortcut-btn",
+      onClick: () => {
+        const d  = new Date();
+        const days = parseInt(k);
+        d.setDate(d.getDate() + days);
+        const iso = d.toISOString().slice(0, 10);
+        textInput.value = iso;
+        const calEl = document.getElementById("cl-duedate-cal");
+        if (calEl) calEl.value = iso;
+      }
+    }, label);
+    shortcuts.appendChild(btn);
+  });
+  modal.appendChild(h("div", { class: "cl-label", style: "margin-bottom:6px" }, "Quick pick"));
+  modal.appendChild(shortcuts);
+
+  // Action buttons
+  const btnRow = h("div", { class: "cl-duedate-btns" });
+
+  const clearBtn = h("button", { class: "cl-btn cl-btn-ghost",
+    onClick: async () => {
+      const d = await apiFetch(`/api/projects/${p.id}/due-date`, {
+        method: "PATCH", body: JSON.stringify({ due_date: null })
+      });
+      if (d.ok) { await loadProjects(); render(); overlay.remove(); toast("Due date cleared"); }
+      else toast("Failed to clear due date", "var(--red)");
+    }
+  }, "✕ Clear");
+
+  const saveBtn = h("button", { class: "cl-btn cl-btn-primary",
+    onClick: async () => {
+      const due = textInput.value.trim();
+      const errBox = document.getElementById("cl-duedate-err");
+      if (!due) { if(errBox){errBox.textContent="Please enter a date.";errBox.className="cl-auth-error show";} return; }
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(due)) {
+        if(errBox){errBox.textContent="Use format YYYY-MM-DD (e.g. 2026-04-01)";errBox.className="cl-auth-error show";}
+        return;
+      }
+      const d = await apiFetch(`/api/projects/${p.id}/due-date`, {
+        method: "PATCH", body: JSON.stringify({ due_date: due })
+      });
+      if (d.ok) { await loadProjects(); render(); overlay.remove(); toast(`📅 Due date set: ${due}`); }
+      else toast("Failed to set due date", "var(--red)");
+    }
+  }, "Save");
+
+  btnRow.append(clearBtn, saveBtn);
+  modal.appendChild(btnRow);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  // Focus calendar
+  setTimeout(() => { document.getElementById("cl-duedate-cal")?.focus(); }, 80);
+}
+
 function toggleCardMenu(p, card) {
   // Remove existing menu if open
   const existing = document.querySelector(".cl-card-dropdown");
@@ -632,21 +748,9 @@ function toggleCardMenu(p, card) {
   }, "🗄️ Archive");
 
   const dueDateBtn = h("button", { class: "cl-dropdown-item",
-    onClick: async () => {
+    onClick: () => {
       menu.remove();
-      const current = p.due_date || "";
-      const val = window.prompt("Set due date (YYYY-MM-DD), or leave blank to clear:", current);
-      if (val === null) return; // cancelled
-      const due = val.trim();
-      // Validate format
-      if (due && !/^\d{4}-\d{2}-\d{2}$/.test(due)) {
-        toast("Invalid date format. Use YYYY-MM-DD", "var(--red)"); return;
-      }
-      const d = await apiFetch(`/api/projects/${p.id}/due-date`, {
-        method: "PATCH", body: JSON.stringify({ due_date: due || null })
-      });
-      if (d.ok) { await loadProjects(); render(); toast(due ? `📅 Due date set: ${due}` : "Due date cleared"); }
-      else toast("Failed to set due date", "var(--red)");
+      showDueDateModal(p);
     }
   }, "📅 Set Due Date");
 
@@ -2092,7 +2196,6 @@ function renderChecklist() {
     frag.appendChild(addSec);
   }
 
-  frag.appendChild(h("div",{"style":"text-align:center;padding:20px 0 8px;font-size:12px;color:var(--text3);font-family:var(--mono)"},"3rc0.github.io"));
   return frag;
 }
 
