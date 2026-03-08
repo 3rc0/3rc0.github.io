@@ -101,6 +101,10 @@ let state = {
 
   // Auth
   authTab:       "login",
+  authMethod:    "password",  // "password" | "otp"
+  authOTPStep:   "form",      // "form" | "sent" | "verify"
+  authOTPUser:   "",          // username locked in after OTP sent
+  authOTPCooldown: 0,         // timestamp when resend becomes available
   session:       null,        // { token, username }
 
   // Dashboard
@@ -215,29 +219,37 @@ function ring(pct) {
 
 // ── Auth ──────────────────────────────────────────────
 function renderAuth() {
-  const isLogin = state.authTab === "login";
+  const isLogin  = state.authTab === "login";
+  const isOTP    = state.authMethod === "otp";
+  const otpStep  = state.authOTPStep;   // "form" | "sent" | "verify"
+
   const wrap = h("div", { class: "cl-auth fade-up" });
   const card = h("div", { class: "cl-auth-card" });
 
-  // ── Header
-  const logo  = h("div", { class: "cl-auth-logo" }, "🔐");
-  const title = h("div", { class: "cl-auth-title" }, "SecCheck");
-  const sub   = h("div", { class: "cl-auth-sub" },
-    isLogin ? "Sign in to your account" : "Create your free account"
-  );
+  // ── Header ──────────────────────────────────────────────────
+  card.appendChild(h("div", { class: "cl-auth-logo" }, "🔐"));
+  card.appendChild(h("div", { class: "cl-auth-title" }, "SecCheck"));
+  card.appendChild(h("div", { class: "cl-auth-sub" },
+    isLogin
+      ? (isOTP && otpStep === "verify" ? "Enter the 6-digit code from your email" : "Sign in to your account")
+      : "Create your free account"
+  ));
 
-  // ── Tabs
-  const tabs = h("div", { class: "cl-tabs" },
-    h("button", { class: "cl-tab" + (isLogin ? " active" : ""),
-      onClick: () => { state.authTab = "login"; render(); }
-    }, "Sign In"),
-    h("button", { class: "cl-tab" + (!isLogin ? " active" : ""),
-      onClick: () => { state.authTab = "register"; render(); }
-    }, "Create Account"),
-  );
+  // ── Tabs (hidden on OTP verify step) ────────────────────────
+  if (!(isOTP && otpStep === "verify")) {
+    card.appendChild(h("div", { class: "cl-tabs" },
+      h("button", { class: "cl-tab" + (isLogin  ? " active" : ""),
+        onClick: () => { state.authTab = "login"; state.authMethod = "password"; state.authOTPStep = "form"; render(); }
+      }, "Sign In"),
+      h("button", { class: "cl-tab" + (!isLogin ? " active" : ""),
+        onClick: () => { state.authTab = "register"; state.authMethod = "password"; render(); }
+      }, "Create Account"),
+    ));
+  }
 
-  // ── Error box
+  // ── Error / info box ────────────────────────────────────────
   const errBox = h("div", { class: "cl-auth-error", id: "cl-auth-err" });
+  card.appendChild(errBox);
 
   function showAuthErr(msg, fieldId) {
     const e = document.getElementById("cl-auth-err");
@@ -247,13 +259,176 @@ function renderAuth() {
       if (f) { f.classList.add("error"); f.focus(); }
     }
   }
+  function showAuthInfo(msg) {
+    const e = document.getElementById("cl-auth-err");
+    if (e) { e.textContent = msg; e.className = "cl-auth-error show info"; }
+  }
   function clearAuthErr() {
     const e = document.getElementById("cl-auth-err");
     if (e) e.className = "cl-auth-error";
     document.querySelectorAll(".cl-input.error").forEach(f => f.classList.remove("error"));
   }
 
-  // ── Username field
+  // ════════════════════════════════════════════════════════════
+  // OTP VERIFY STEP — 6-box code entry
+  // ════════════════════════════════════════════════════════════
+  if (isLogin && isOTP && otpStep === "verify") {
+    const digits = h("div", { class: "cl-otp-digits" });
+
+    function getCode() {
+      return Array.from(digits.querySelectorAll(".cl-otp-box"))
+        .map(i => i.value).join("");
+    }
+
+    function focusNext(idx) {
+      const boxes = digits.querySelectorAll(".cl-otp-box");
+      if (idx + 1 < boxes.length) boxes[idx + 1].focus();
+    }
+    function focusPrev(idx) {
+      const boxes = digits.querySelectorAll(".cl-otp-box");
+      if (idx > 0) boxes[idx - 1].focus();
+    }
+
+    for (let di = 0; di < 6; di++) {
+      const box = h("input", {
+        class: "cl-otp-box", type: "text", maxlength: "1",
+        inputmode: "numeric", pattern: "[0-9]*",
+        onKeyDown: (e) => {
+          if (e.key === "Backspace" && !e.target.value) focusPrev(di);
+          if (e.key === "ArrowLeft")  focusPrev(di);
+          if (e.key === "ArrowRight") focusNext(di);
+        },
+        onInput: (e) => {
+          // Allow only digits
+          e.target.value = e.target.value.replace(/\D/g, "").slice(-1);
+          clearAuthErr();
+          if (e.target.value) focusNext(di);
+        },
+        onPaste: di === 0 ? (e) => {
+          e.preventDefault();
+          const pasted = (e.clipboardData || window.clipboardData).getData("text")
+            .replace(/\D/g, "").slice(0, 6);
+          const boxes = digits.querySelectorAll(".cl-otp-box");
+          pasted.split("").forEach((ch, idx) => {
+            if (boxes[idx]) boxes[idx].value = ch;
+          });
+          if (pasted.length > 0) boxes[Math.min(pasted.length, 5)].focus();
+        } : null,
+      });
+      digits.appendChild(box);
+    }
+    card.appendChild(digits);
+
+    // Countdown timer
+    const timerEl = h("div", { class: "cl-otp-timer", id: "cl-otp-timer" }, "");
+    card.appendChild(timerEl);
+
+    // Start countdown from when OTP was sent
+    function updateTimer() {
+      const el = document.getElementById("cl-otp-timer");
+      if (!el) return;
+      const sent    = state.authOTPSentAt || Date.now();
+      const elapsed = Math.floor((Date.now() - sent) / 1000);
+      const left    = Math.max(0, 600 - elapsed);
+      if (left === 0) {
+        el.textContent = "Code expired — request a new one";
+        el.style.color = "var(--red)";
+      } else {
+        const m = Math.floor(left / 60), s = left % 60;
+        el.textContent = `Expires in ${m}:${String(s).padStart(2,"0")}`;
+        el.style.color = "var(--text-dim)";
+      }
+    }
+    updateTimer();
+    const timerInterval = setInterval(() => {
+      if (!document.getElementById("cl-otp-timer")) { clearInterval(timerInterval); return; }
+      updateTimer();
+    }, 1000);
+
+    // Verify button
+    const verifyBtn = h("button", {
+      class: "cl-btn cl-btn-primary cl-btn-full", id: "cl-auth-btn",
+      onClick: async () => {
+        const code = getCode();
+        if (code.length < 6) { showAuthErr("Please enter all 6 digits."); return; }
+        const btn = document.getElementById("cl-auth-btn");
+        btn.disabled = true; btn.textContent = "Verifying…";
+        clearAuthErr();
+        try {
+          const d = await apiFetch("/api/otp/verify", {
+            method: "POST",
+            body: JSON.stringify({ username: state.authOTPUser, code })
+          });
+          if (!d.ok) {
+            if (d.expired) {
+              state.authOTPStep = "form"; render();
+              return;
+            }
+            showAuthErr(d.error || "Invalid code. Please try again.");
+            btn.disabled = false; btn.textContent = "Verify Code";
+            // Shake boxes
+            digits.querySelectorAll(".cl-otp-box").forEach(b => {
+              b.classList.add("error");
+              setTimeout(() => b.classList.remove("error"), 600);
+            });
+            return;
+          }
+          clearInterval(timerInterval);
+          state.session = { token: d.token, username: d.username };
+          saveSession(state.session); saveToken(d.token);
+          await loadProjects();
+          const onboarded = localStorage.getItem(ONBOARD_KEY);
+          if (state.projects.length === 0 && !onboarded) {
+            await loadTemplates(); state.view = "onboarding";
+          } else { state.view = "dashboard"; }
+          render();
+        } catch(e) {
+          showAuthErr("Connection error. Please try again.");
+          btn.disabled = false; btn.textContent = "Verify Code";
+        }
+      }
+    }, "Verify Code");
+    card.appendChild(verifyBtn);
+
+    // Resend + back links
+    const linksRow = h("div", { class: "cl-otp-links" });
+    const now = Date.now();
+    const canResend = !state.authOTPCooldown || now >= state.authOTPCooldown;
+
+    const resendBtn = h("button", {
+      class: "cl-link-btn" + (canResend ? "" : " disabled"),
+      disabled: !canResend,
+      onClick: canResend ? async () => {
+        try {
+          await apiFetch("/api/otp/request", {
+            method: "POST",
+            body: JSON.stringify({ username: state.authOTPUser })
+          });
+          state.authOTPSentAt   = Date.now();
+          state.authOTPCooldown = Date.now() + 60000;
+          showAuthInfo("New code sent! Check your email.");
+        } catch(e) { showAuthErr("Could not resend. Please try again."); }
+      } : null
+    }, canResend ? "Resend code" : "Resend in 60s");
+    linksRow.appendChild(resendBtn);
+
+    const backBtn = h("button", { class: "cl-link-btn",
+      onClick: () => { state.authOTPStep = "form"; render(); }
+    }, "← Use password instead");
+    linksRow.appendChild(backBtn);
+    card.appendChild(linksRow);
+
+    wrap.appendChild(card);
+    // Auto-focus first box
+    setTimeout(() => { const b = digits.querySelector(".cl-otp-box"); if(b) b.focus(); }, 80);
+    return wrap;
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // NORMAL FORM (login password / login OTP request / register)
+  // ════════════════════════════════════════════════════════════
+
+  // Username field
   const userField = h("div", { class: "cl-field" },
     h("label", { class: "cl-label" }, "Username"),
     h("input", {
@@ -264,56 +439,47 @@ function renderAuth() {
     }),
     !isLogin ? h("div", { class: "cl-input-hint" }, "3–30 chars · letters, numbers, dash, underscore") : null,
   );
+  card.appendChild(userField);
 
-  // ── Password field with show/hide toggle + caps lock warning
-  const passWrap = h("div", { class: "cl-field cl-pass-field" });
-  const passLabel = h("label", { class: "cl-label" }, "Password");
-  const passRow   = h("div", { class: "cl-pass-row" });
-  const passInput = h("input", {
-    class: "cl-input", id: "cl-pass", type: "password",
-    placeholder: "••••••••",
-    autocomplete: isLogin ? "current-password" : "new-password",
-    maxlength: "100",
-    onInput: (e) => {
-      clearAuthErr();
-      if (!isLogin) updateStrength(e.target.value);
-    },
-    onKeyUp: (e) => {
-      const capsWarn = document.getElementById("cl-caps-warn");
-      if (capsWarn) capsWarn.style.display = e.getModifierState("CapsLock") ? "block" : "none";
+  // Password field + show/hide (hidden on OTP request form)
+  if (!isOTP || !isLogin) {
+    const passWrap  = h("div", { class: "cl-field cl-pass-field" });
+    const passRow   = h("div", { class: "cl-pass-row" });
+    const passInput = h("input", {
+      class: "cl-input", id: "cl-pass", type: "password",
+      placeholder: "••••••••",
+      autocomplete: isLogin ? "current-password" : "new-password",
+      maxlength: "100",
+      onInput: (e) => { clearAuthErr(); if (!isLogin) updateStrength(e.target.value); },
+      onKeyUp: (e) => {
+        const capsWarn = document.getElementById("cl-caps-warn");
+        if (capsWarn) capsWarn.style.display = e.getModifierState("CapsLock") ? "block" : "none";
+      }
+    });
+    const toggleBtn = h("button", {
+      class: "cl-pass-toggle", type: "button", title: "Show/hide password",
+      onClick: () => {
+        const input = document.getElementById("cl-pass");
+        const isHidden = input.type === "password";
+        input.type = isHidden ? "text" : "password";
+        toggleBtn.textContent = isHidden ? "🙈" : "👁";
+      }
+    }, "👁");
+    passRow.append(passInput, toggleBtn);
+    const capsWarn = h("div", { class: "cl-caps-warn", id: "cl-caps-warn", style: "display:none" }, "⚠ Caps Lock is on");
+    passWrap.append(h("label", { class: "cl-label" }, "Password"), passRow, capsWarn);
+    card.appendChild(passWrap);
+
+    // Strength meter (register only)
+    if (!isLogin) {
+      const strengthMeter = h("div", { class: "cl-strength-wrap" });
+      strengthMeter.innerHTML = `<div class="cl-strength-bar"><div class="cl-strength-fill" id="cl-strength-fill"></div></div><div class="cl-strength-label" id="cl-strength-label"></div>`;
+      card.appendChild(strengthMeter);
     }
-  });
-
-  const toggleBtn = h("button", {
-    class: "cl-pass-toggle", type: "button", title: "Show/hide password",
-    onClick: () => {
-      const input = document.getElementById("cl-pass");
-      const isHidden = input.type === "password";
-      input.type = isHidden ? "text" : "password";
-      toggleBtn.textContent = isHidden ? "🙈" : "👁";
-    }
-  }, "👁");
-
-  passRow.append(passInput, toggleBtn);
-
-  const capsWarn = h("div", {
-    class: "cl-caps-warn", id: "cl-caps-warn", style: "display:none"
-  }, "⚠ Caps Lock is on");
-
-  passWrap.append(passLabel, passRow, capsWarn);
-
-  // ── Password strength meter (register only)
-  const strengthMeter = h("div", { class: "cl-strength-wrap", id: "cl-strength-wrap",
-    style: isLogin ? "display:none" : "display:block"
-  });
-  strengthMeter.innerHTML = `
-    <div class="cl-strength-bar">
-      <div class="cl-strength-fill" id="cl-strength-fill"></div>
-    </div>
-    <div class="cl-strength-label" id="cl-strength-label"></div>`;
+  }
 
   function updateStrength(pw) {
-    const fill  = document.getElementById("cl-strength-fill");
+    const fill = document.getElementById("cl-strength-fill");
     const label = document.getElementById("cl-strength-label");
     if (!fill || !label) return;
     let score = 0;
@@ -323,93 +489,124 @@ function renderAuth() {
     if (/[0-9]/.test(pw)) score++;
     if (/[^A-Za-z0-9]/.test(pw)) score++;
     const levels = [
-      { label: "",          color: "transparent", width: "0%" },
-      { label: "Weak",      color: "#f87171",     width: "25%" },
-      { label: "Fair",      color: "#fb923c",     width: "50%" },
-      { label: "Good",      color: "#facc15",     width: "75%" },
-      { label: "Strong",    color: "#5dbb8a",     width: "90%" },
-      { label: "Excellent", color: "#5dbb8a",     width: "100%" },
+      { label: "", color: "transparent", width: "0%" },
+      { label: "Weak",      color: "#f87171", width: "25%" },
+      { label: "Fair",      color: "#fb923c", width: "50%" },
+      { label: "Good",      color: "#facc15", width: "75%" },
+      { label: "Strong",    color: "#5dbb8a", width: "90%" },
+      { label: "Excellent", color: "#5dbb8a", width: "100%" },
     ];
     const lvl = levels[Math.min(score, 5)];
-    fill.style.width = lvl.width;
-    fill.style.background = lvl.color;
-    label.textContent = lvl.label;
-    label.style.color = lvl.color;
+    fill.style.width = lvl.width; fill.style.background = lvl.color;
+    label.textContent = lvl.label; label.style.color = lvl.color;
   }
 
-  // ── Forgot password (login only)
-  const forgotLink = isLogin ? h("div", { class: "cl-forgot" },
-    h("button", { class: "cl-link-btn",
-      onClick: () => {
-        document.getElementById("cl-auth-err").className = "cl-auth-error";
-        showAuthErr("Password reset via email is coming in the next update. For now, contact support.");
-      }
-    }, "Forgot password?")
-  ) : null;
+  // Forgot password link (login + password mode)
+  if (isLogin && !isOTP) {
+    card.appendChild(h("div", { class: "cl-forgot" },
+      h("button", { class: "cl-link-btn",
+        onClick: () => showAuthInfo("Password reset via email is coming soon. Contact support if urgent.")
+      }, "Forgot password?")
+    ));
+  }
 
-  // ── Privacy note (register only)
-  const privacyNote = !isLogin ? h("div", { class: "cl-privacy-note" },
-    "🔒 Your data stays on your account. We never sell or share it."
-  ) : null;
+  // OTP method toggle (login only) — switches between password and OTP
+  if (isLogin) {
+    const methodRow = h("div", { class: "cl-method-toggle" });
+    if (!isOTP) {
+      methodRow.appendChild(h("button", { class: "cl-link-btn",
+        onClick: () => { state.authMethod = "otp"; state.authOTPStep = "form"; render(); }
+      }, "📧 Sign in with email code instead"));
+    } else {
+      methodRow.appendChild(h("button", { class: "cl-link-btn",
+        onClick: () => { state.authMethod = "password"; render(); }
+      }, "🔑 Use password instead"));
+    }
+    card.appendChild(methodRow);
+  }
 
-  // ── Submit button
+  // Submit button
+  const btnLabel = isLogin
+    ? (isOTP ? "Send Login Code" : "Sign In")
+    : "Create Account";
+
   const submitBtn = h("button", {
     class: "cl-btn cl-btn-primary cl-btn-full", id: "cl-auth-btn",
     onClick: async () => {
-      const username = document.getElementById("cl-user").value.trim().toLowerCase();
-      const password = document.getElementById("cl-pass").value;
-      const btn      = document.getElementById("cl-auth-btn");
+      const username = (document.getElementById("cl-user")?.value || "").trim().toLowerCase();
+      const password = (document.getElementById("cl-pass")?.value || "");
+      const btn = document.getElementById("cl-auth-btn");
       clearAuthErr();
 
-      // ── Specific validation messages
+      // Validate username
       if (!username) { showAuthErr("Please enter your username.", "cl-user"); return; }
-      if (!/^[a-z0-9_-]{3,30}$/.test(username) && !isLogin) {
-        showAuthErr("Username must be 3–30 characters: letters, numbers, dash or underscore only.", "cl-user"); return;
+      if (!isLogin && !/^[a-z0-9_-]{3,30}$/.test(username)) {
+        showAuthErr("Username must be 3–30 characters: letters, numbers, dash or underscore.", "cl-user"); return;
       }
+
+      // OTP request flow
+      if (isLogin && isOTP) {
+        btn.disabled = true; btn.textContent = "Sending code…";
+        try {
+          const d = await apiFetch("/api/otp/request", {
+            method: "POST", body: JSON.stringify({ username })
+          });
+          if (!d.ok) {
+            const wait = d.wait;
+            showAuthErr(d.error || "Could not send code.");
+            if (wait) {
+              state.authOTPCooldown = Date.now() + (wait * 1000);
+            }
+            btn.disabled = false; btn.textContent = "Send Login Code";
+            return;
+          }
+          state.authOTPUser     = username;
+          state.authOTPStep     = "verify";
+          state.authOTPSentAt   = Date.now();
+          state.authOTPCooldown = Date.now() + 60000;
+          render();
+        } catch(e) {
+          showAuthErr("Connection error. Please try again.");
+          btn.disabled = false; btn.textContent = "Send Login Code";
+        }
+        return;
+      }
+
+      // Password / register flow
       if (!password) { showAuthErr("Please enter your password.", "cl-pass"); return; }
       if (!isLogin && password.length < 8) {
         showAuthErr("Password must be at least 8 characters.", "cl-pass"); return;
       }
 
-      btn.disabled = true;
-      btn.textContent = isLogin ? "Signing in…" : "Creating account…";
+      btn.disabled = true; btn.textContent = isLogin ? "Signing in…" : "Creating account…";
 
       try {
         const d = await apiFetch(
           isLogin ? "/api/login" : "/api/register",
           { method: "POST", body: JSON.stringify({ username, password }) }
         );
-
         if (d.locked) {
-          showAuthErr("Too many failed attempts. Please wait 15 minutes before trying again.");
+          showAuthErr("Too many failed attempts. Please wait 15 minutes.");
           btn.disabled = false; btn.textContent = isLogin ? "Sign In" : "Create Account";
           return;
         }
         if (!d.ok) {
-          // Map server errors to friendly messages
           const msg = d.error || "Something went wrong.";
-          const friendly = msg.includes("username") ? msg
-            : msg.includes("password") ? msg
-            : msg.includes("already") ? "That username is already taken. Try a different one."
-            : msg.includes("not found") || msg.includes("Invalid") ? "Incorrect username or password. Please try again."
+          const friendly = msg.includes("already") ? "That username is already taken. Try a different one."
+            : (msg.includes("Invalid") || msg.includes("not found")) ? "Incorrect username or password. Please try again."
             : msg;
           showAuthErr(friendly);
           btn.disabled = false; btn.textContent = isLogin ? "Sign In" : "Create Account";
           return;
         }
-
         if (isLogin) {
           state.session = { token: d.token, username: d.username };
-          saveSession(state.session);
-          saveToken(d.token);
+          saveSession(state.session); saveToken(d.token);
           await loadProjects();
           const onboarded = localStorage.getItem(ONBOARD_KEY);
           if (state.projects.length === 0 && !onboarded) {
-            await loadTemplates();
-            state.view = "onboarding";
-          } else {
-            state.view = "dashboard";
-          }
+            await loadTemplates(); state.view = "onboarding";
+          } else { state.view = "dashboard"; }
           render();
         } else {
           toast("✅ Account created! Please sign in.");
@@ -420,12 +617,16 @@ function renderAuth() {
         btn.disabled = false; btn.textContent = isLogin ? "Sign In" : "Create Account";
       }
     }
-  }, isLogin ? "Sign In" : "Create Account");
-
-  card.append(logo, title, sub, tabs, errBox, userField, passWrap, strengthMeter);
-  if (forgotLink)   card.appendChild(forgotLink);
+  }, btnLabel);
   card.appendChild(submitBtn);
-  if (privacyNote)  card.appendChild(privacyNote);
+
+  // Privacy note (register only)
+  if (!isLogin) {
+    card.appendChild(h("div", { class: "cl-privacy-note" },
+      "🔒 Your data stays on your account. We never sell or share it."
+    ));
+  }
+
   wrap.appendChild(card);
   return wrap;
 }
