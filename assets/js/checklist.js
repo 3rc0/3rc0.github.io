@@ -745,12 +745,27 @@ async function saveData(key,value,logEntry) {
   state.saving=true; renderSaving();
   try {
     if (state.activeProject) {
-      // New multi-project API
-      await apiFetch("/api/projects/"+state.activeProject.id+"/save",{
-        method:"POST",body:JSON.stringify({key,value,entry:logEntry})
-      });
+      if (key === "checks") {
+        // checks are saved per-item via checkItem() — saveData("checks") is a no-op here
+        // bulk update only used as fallback via /projects/:id/save with key=checks
+        await apiFetch("/api/projects/"+state.activeProject.id+"/save",{
+          method:"POST",body:JSON.stringify({key:"checks",value,entry:logEntry})
+        });
+      } else if (key === "sections" && Array.isArray(value)) {
+        // Embed current checked state into items before saving
+        const payload = value.map(sec => ({
+          ...sec,
+          items: (sec.items||[]).map(it => ({
+            ...it,
+            checked: !!state.checks[it.n]
+          }))
+        }));
+        await apiFetch("/api/projects/"+state.activeProject.id+"/save",{
+          method:"POST",body:JSON.stringify({sections:payload,entry:logEntry})
+        });
+      }
     } else {
-      // Legacy fallback
+      // Legacy fallback (old single-project API)
       await apiFetch("/api/save",{method:"POST",body:JSON.stringify({key,value,entry:logEntry})});
     }
   } catch(e){ console.error("saveData:", e); }
@@ -977,7 +992,6 @@ function applyReorder(type, srcSi, srcIi, dstSi, dstIi) {
 
   const label = type === "section" ? `Reordered sections` : `Reordered items in ${state.sections[srcSi]?.title || ""}`;
   saveData("sections", state.sections, {action:"reorder", detail:label});
-  saveData("checks", state.checks, null);
 }
 
 // ── Keyboard drag ─────────────────────────────────────
@@ -990,7 +1004,6 @@ function dndKeyboard(e, type, si, ii) {
     } else {
       kbDrag = {active:false, type:null, si:-1, ii:-1};
       saveData("sections", state.sections, {action:"reorder", detail:"Keyboard reorder"});
-      saveData("checks", state.checks, null);
       toast("✓ Position saved");
     }
   } else if (e.key === "Escape" && kbDrag.active) {
@@ -1256,7 +1269,6 @@ function doItemDrop() {
   if (document.startViewTransition) { document.startViewTransition(() => render()); }
   else { render(); }
   saveData("sections", state.sections, {action:"reorder", detail:`Reordered items in ${title}`});
-  saveData("checks",   state.checks,   null);
 }
 
 function doSectionDrop() {
@@ -1275,7 +1287,6 @@ function doSectionDrop() {
   if (document.startViewTransition) { document.startViewTransition(() => render()); }
   else { render(); }
   saveData("sections", state.sections, {action:"reorder", detail:"Reordered sections"});
-  saveData("checks",   state.checks,   null);
 }
 
 // ── Checklist render ──────────────────────────────────
@@ -1374,7 +1385,12 @@ function renderChecklist() {
             const val=!state.checks[item.n];
             state.checks[item.n]=val;
             const action=val?"check":"uncheck";
-            await saveData("checks",state.checks,{action,detail:`${val?"Checked":"Unchecked"}: #${item.n} ${item.name}`});
+            const logEntry={action,detail:`${val?"Checked":"Unchecked"}: #${item.n} ${item.name}`};
+            if (item.uid && state.activeProject) {
+              await checkItem(item.uid, val, logEntry);
+            } else {
+              await saveData("checks",state.checks,logEntry);
+            }
             render();
           }
         });
@@ -1442,7 +1458,12 @@ function renderChecklist() {
             const val=!state.checks[item.n];
             state.checks[item.n]=val;
             const action=val?"check":"uncheck";
-            await saveData("checks",state.checks,{action,detail:`${val?"Checked":"Unchecked"}: #${item.n} ${item.name}`});
+            const logEntry2={action,detail:`${val?"Checked":"Unchecked"}: #${item.n} ${item.name}`};
+            if (item.uid && state.activeProject) {
+              await checkItem(item.uid, val, logEntry2);
+            } else {
+              await saveData("checks",state.checks,logEntry2);
+            }
             render();
           });
           row.appendChild(right);
