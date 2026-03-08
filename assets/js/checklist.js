@@ -127,6 +127,8 @@ let state = {
   // UI state (preserved from v5)
   collapsed:     {},
   expanded:      {},
+  itemFiles:     {},          // { [itemUid]: [{id,name,size,type,uploaded}] }
+  filesOpen:     {},          // { [itemUid]: true } — panels open
   editMode:      false,
   editItem:      null,
   editDraft:     {},
@@ -163,10 +165,13 @@ function clearSession() { try { sessionStorage.removeItem(STORE_KEY); clearToken
 
 // ── API ───────────────────────────────────────────────
 async function apiFetch(path, opts) {
-  const headers = {"Content-Type":"application/json",...((opts&&opts.headers)||{})};
+  const isFormData = opts && opts.isFormData;
+  const headers = isFormData
+    ? {}  // Let browser set Content-Type with boundary for multipart
+    : {"Content-Type":"application/json", ...((opts&&opts.headers)||{})};
   const token = state.session && state.session.token;
   if (token) headers["X-Session-Token"] = token;
-  const r = await fetch(API+path,{method:(opts&&opts.method)||"GET",headers,body:opts&&opts.body});
+  const r = await fetch(API+path, { method:(opts&&opts.method)||"GET", headers, body: opts&&opts.body });
   return r.json();
 }
 
@@ -1846,6 +1851,110 @@ function renderChecklist() {
             const detail=h("div",{"class":"cl-item-detail"+(isExp?" open":"")},item.detail);
             body.append(expBtn,detail);
           }
+          // ── File attachment panel ──────────────────────────────
+          const fileKey  = item.uid;
+          const filesArr = state.itemFiles[fileKey] || [];
+          const fileOpen = !!state.filesOpen[fileKey];
+          const fileCount = filesArr.length;
+
+          const fileToggle = h("button", {
+            class: "cl-file-toggle" + (fileCount > 0 ? " has-files" : ""),
+            title: "Attachments",
+            onClick: async (e) => {
+              e.stopPropagation();
+              if (!state.filesOpen[fileKey]) {
+                // Load files from API on first open
+                try {
+                  const d = await apiFetch("/api/items/" + item.uid + "/files");
+                  state.itemFiles[fileKey] = d.files || [];
+                } catch(err) { state.itemFiles[fileKey] = []; }
+              }
+              state.filesOpen[fileKey] = !state.filesOpen[fileKey];
+              render();
+            }
+          }, fileCount > 0 ? `📎 ${fileCount}` : "📎");
+          body.appendChild(fileToggle);
+
+          if (fileOpen) {
+            const filePanel = h("div", { class: "cl-file-panel" });
+
+            // File list
+            if (filesArr.length > 0) {
+              filesArr.forEach(f => {
+                const fRow = h("div", { class: "cl-file-row" });
+                const icon = f.type?.startsWith("image/") ? "🖼" :
+                             f.type === "application/pdf" ? "📄" :
+                             f.type?.includes("word") ? "📝" :
+                             f.type?.includes("zip") ? "🗜" : "📁";
+                const size = f.size > 1048576 ? (f.size/1048576).toFixed(1)+"MB"
+                           : f.size > 1024 ? (f.size/1024).toFixed(0)+"KB" : f.size+"B";
+                const date = new Date(f.uploaded).toLocaleDateString("en-GB",
+                  {day:"2-digit", month:"short", year:"numeric"});
+
+                const nameEl = h("span", { class: "cl-file-name" }, `${icon} ${f.name}`);
+                const metaEl = h("span", { class: "cl-file-meta" }, `${size} · ${date}`);
+
+                const dlBtn = h("a", {
+                  class: "cl-file-btn",
+                  href: "https://checklist-api.3rc0.workers.dev/api/files/" + f.id,
+                  download: f.name,
+                  title: "Download",
+                  onClick: e => e.stopPropagation()
+                }, "⬇");
+
+                const delBtn = h("button", {
+                  class: "cl-file-btn del",
+                  title: "Delete",
+                  onClick: async (e) => {
+                    e.stopPropagation();
+                    if (!confirm(`Delete "${f.name}"?`)) return;
+                    await apiFetch("/api/files/" + f.id, { method: "DELETE" });
+                    state.itemFiles[fileKey] = state.itemFiles[fileKey].filter(x => x.id !== f.id);
+                    render();
+                    toast("🗑 File deleted");
+                  }
+                }, "✕");
+
+                fRow.append(nameEl, metaEl, dlBtn, delBtn);
+                filePanel.appendChild(fRow);
+              });
+            } else {
+              filePanel.appendChild(h("div", { class: "cl-file-empty" }, "No attachments yet"));
+            }
+
+            // Upload button
+            const uploadInput = h("input", {
+              type: "file", class: "cl-file-input", id: "cl-file-" + item.uid,
+              onChange: async (e) => {
+                e.stopPropagation();
+                const file = e.target.files[0];
+                if (!file) return;
+                if (file.size > 10 * 1024 * 1024) { toast("File too large (max 10MB)", "var(--red)"); return; }
+                const fd = new FormData();
+                fd.append("file", file);
+                toast("⬆ Uploading…");
+                try {
+                  const d = await apiFetch("/api/items/" + item.uid + "/files", {
+                    method: "POST", body: fd, isFormData: true
+                  });
+                  if (!d.ok) { toast(d.error || "Upload failed", "var(--red)"); return; }
+                  state.itemFiles[fileKey] = [...(state.itemFiles[fileKey] || []), d.file];
+                  render();
+                  toast("✅ File attached!");
+                } catch(err) { toast("Upload failed", "var(--red)"); }
+              }
+            });
+
+            const uploadBtn = h("label", {
+              class: "cl-file-upload-btn",
+              for: "cl-file-" + item.uid,
+              onClick: e => e.stopPropagation()
+            }, "+ Attach file");
+
+            filePanel.append(uploadInput, uploadBtn);
+            body.appendChild(filePanel);
+          }
+
           row.appendChild(body);
 
           const priceClass=item.price==="FREE"?"price-free":item.price==="—"?"price-dash":"price-cost";
