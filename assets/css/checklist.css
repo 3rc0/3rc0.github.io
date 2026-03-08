@@ -1060,3 +1060,70 @@
   border: 1px solid rgba(93,187,138,0.15);
   border-radius: 8px; line-height: 1.4;
 }
+
+/* ════════════════════════════════════════════════════
+   Phase B.1 — OTP Login
+   ════════════════════════════════════════════════════ */
+
+/* ── Auth error info variant ───────────────────────── */
+#cl-app .cl-auth-error.info {
+  background: rgba(93,187,138,0.08);
+  border-color: rgba(93,187,138,0.25);
+  color: var(--green);
+}
+
+/* ── Method toggle row ─────────────────────────────── */
+#cl-app .cl-method-toggle {
+  text-align: center;
+  margin: 2px 0 10px;
+}
+
+/* ── 6-digit OTP boxes ─────────────────────────────── */
+#cl-app .cl-otp-digits {
+  display: flex; gap: 8px; justify-content: center;
+  margin: 8px 0 16px;
+}
+#cl-app .cl-otp-box {
+  width: 46px; height: 58px;
+  text-align: center;
+  font-size: 26px; font-weight: 800; font-family: monospace;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg2);
+  color: var(--text);
+  caret-color: var(--gold);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+#cl-app .cl-otp-box:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+#cl-app .cl-otp-box.error {
+  border-color: var(--red);
+  animation: cl-shake 0.35s ease;
+}
+#cl-app[data-theme="light"] .cl-otp-box {
+  background: #fff; border-color: #d0c8c0;
+}
+
+/* ── Timer ─────────────────────────────────────────── */
+#cl-app .cl-otp-timer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+}
+
+/* ── Resend + back links row ───────────────────────── */
+#cl-app .cl-otp-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+#cl-app .cl-link-btn.disabled {
+  opacity: 0.4; cursor: not-allowed; text-decoration: none;
+}
