@@ -669,3 +669,328 @@
   font-family: var(--mono);
   letter-spacing: 0.03em;
 }
+
+/* ════════════════════════════════════════════════════
+   SecCheck v3.1 — Dashboard, Onboarding, Templates
+   Additive — no existing styles modified
+   ════════════════════════════════════════════════════ */
+
+/* ── Loading screen ─────────────────────────────── */
+.cl-loading-screen {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh;
+}
+.cl-loading-inner { text-align: center; }
+.cl-loading-text  { color: var(--gold); font-family: monospace; font-size: 14px; margin-top: 12px; }
+
+/* ── Dashboard header ───────────────────────────── */
+.cl-dash-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 10;
+  background: var(--bg);
+}
+.cl-dash-header-left { display: flex; align-items: center; gap: 10px; }
+.cl-dash-logo  { font-size: 24px; }
+.cl-dash-title { font-family: Georgia, serif; font-size: 20px; color: var(--gold); font-weight: 700; }
+.cl-dash-header-right { display: flex; align-items: center; gap: 10px; }
+.cl-dash-user  { font-size: 13px; color: var(--text-dim); }
+
+/* ── New project button ─────────────────────────── */
+.cl-btn--new-project {
+  display: block; margin: 20px 24px 8px; width: calc(100% - 48px);
+  font-size: 15px; padding: 12px;
+}
+
+/* ── Dashboard section ──────────────────────────── */
+.cl-dash-section { padding: 8px 24px 40px; }
+
+/* ── Project grid ───────────────────────────────── */
+.cl-project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* ── Project card ───────────────────────────────── */
+.cl-project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  position: relative;
+}
+.cl-project-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+.cl-project-card--archived {
+  opacity: 0.6;
+  cursor: default !important;
+}
+.cl-project-card--archived:hover {
+  transform: none;
+  border-color: var(--border);
+  box-shadow: none;
+}
+.cl-card-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.cl-card-icon   { font-size: 28px; }
+.cl-card-ring   { position: relative; display: inline-block; }
+.cl-card-ring-pct {
+  position: absolute; inset: 0; display: flex;
+  align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; font-family: monospace;
+}
+.cl-card-name {
+  font-size: 15px; font-weight: 600; color: var(--text);
+  margin-bottom: 8px; line-height: 1.3;
+}
+.cl-card-meta {
+  display: flex; justify-content: space-between;
+  font-size: 12px; color: var(--text-dim); margin-bottom: 12px;
+}
+.cl-card-countdown {
+  font-size: 11px; color: var(--text-dim);
+  margin-bottom: 8px; font-family: monospace;
+}
+.cl-card-countdown.urgent { color: #f87171; font-weight: 700; }
+.cl-card-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* ── Card dropdown menu ─────────────────────────── */
+.cl-card-dropdown {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px;
+  min-width: 150px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  z-index: 100;
+}
+.cl-dropdown-item {
+  display: block; width: 100%; text-align: left;
+  padding: 8px 12px; background: none; border: none;
+  color: var(--text); font-size: 14px; border-radius: 6px;
+  cursor: pointer;
+}
+.cl-dropdown-item:hover { background: var(--border); }
+.cl-dropdown-item--danger:hover { background: rgba(248,113,113,0.12); color: #f87171; }
+
+/* ── Empty state ────────────────────────────────── */
+.cl-dash-empty {
+  text-align: center; padding: 60px 24px;
+  color: var(--text-dim);
+}
+.cl-dash-empty-icon  { font-size: 48px; margin-bottom: 16px; }
+.cl-dash-empty-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+.cl-dash-empty-sub   { font-size: 14px; max-width: 320px; margin: 0 auto; }
+
+/* ── Archived section ───────────────────────────── */
+.cl-dash-archived { margin-top: 32px; }
+.cl-arch-toggle {
+  background: none; border: none; color: var(--text-dim);
+  font-size: 13px; cursor: pointer; padding: 0; display: flex;
+  align-items: center; gap: 6px;
+}
+.cl-arch-toggle:hover { color: var(--text); }
+.cl-arch-arrow { font-size: 10px; }
+.cl-arch-body  { margin-top: 12px; }
+
+/* ── Breadcrumb ─────────────────────────────────── */
+.cl-breadcrumb {
+  display: flex; align-items: center; gap: 4px;
+  padding: 12px 24px 0;
+  font-size: 13px; color: var(--text-dim);
+}
+.cl-breadcrumb-back {
+  background: none; border: none; color: var(--gold);
+  font-size: 13px; cursor: pointer; padding: 0;
+}
+.cl-breadcrumb-back:hover { text-decoration: underline; }
+.cl-breadcrumb-sep { color: var(--border); }
+.cl-breadcrumb-current { color: var(--text); font-weight: 500; }
+
+/* ── Confirm dialog ─────────────────────────────── */
+.cl-confirm-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200;
+}
+.cl-confirm-dialog {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 24px 20px;
+  max-width: 360px; width: 90%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.cl-confirm-message {
+  font-size: 15px; line-height: 1.5; color: var(--text);
+  margin-bottom: 20px;
+}
+.cl-confirm-message small { color: var(--text-dim); font-size: 13px; }
+.cl-confirm-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.cl-btn--danger {
+  background: #7f1d1d; color: #fca5a5;
+  border: 1px solid #f87171;
+}
+.cl-btn--danger:hover { background: #991b1b; }
+
+/* ── Modal overlay ──────────────────────────────── */
+.cl-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 150;
+  overflow-y: auto; padding: 20px;
+}
+.cl-modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%; max-width: 600px;
+  max-height: 90vh; overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.cl-modal-close {
+  position: absolute; top: 16px; right: 16px;
+  background: none; border: none; color: var(--text-dim);
+  font-size: 18px; cursor: pointer; width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px;
+}
+.cl-modal-close:hover { background: var(--border); color: var(--text); }
+.cl-modal-title { font-family: Georgia, serif; font-size: 20px; color: var(--gold); margin-bottom: 16px; }
+.cl-modal-sub   { font-size: 13px; color: var(--text-dim); margin-bottom: 16px; }
+
+/* ── Template picker ────────────────────────────── */
+.cl-template-search {
+  width: 100%; margin-bottom: 16px; box-sizing: border-box;
+}
+.cl-template-tabs {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px;
+}
+.cl-template-tab {
+  padding: 5px 12px; border-radius: 20px;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text-dim); font-size: 12px; cursor: pointer;
+}
+.cl-template-tab.active {
+  background: var(--gold); color: #1a1207;
+  border-color: var(--gold); font-weight: 700;
+}
+.cl-template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+.cl-template-card {
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 12px;
+  text-align: center; cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s;
+}
+.cl-template-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-1px);
+}
+.cl-template-card.selected { border-color: var(--gold); background: rgba(201,169,110,0.08); }
+.cl-tcard-icon { font-size: 28px; margin-bottom: 8px; }
+.cl-tcard-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; line-height: 1.3; }
+.cl-tcard-meta { font-size: 11px; color: var(--text-dim); }
+.cl-template-empty { text-align: center; padding: 32px; color: var(--text-dim); grid-column: 1/-1; }
+.cl-template-grid--onboard { max-height: 360px; overflow-y: auto; }
+
+/* ── Onboarding wizard ──────────────────────────── */
+.cl-onboarding {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; padding: 24px;
+}
+.cl-onboarding-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 32px 28px;
+  width: 100%; max-width: 500px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.cl-onboard-dots {
+  display: flex; gap: 8px; justify-content: center; margin-bottom: 20px;
+}
+.cl-onboard-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--border);
+}
+.cl-onboard-dot.active { background: var(--gold); }
+.cl-onboard-dot.done   { background: var(--green); }
+.cl-onboard-title {
+  font-family: Georgia, serif; font-size: 20px; color: var(--text);
+  text-align: center; margin-bottom: 20px;
+}
+.cl-onboard-cat-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin-bottom: 16px;
+}
+.cl-onboard-cat-btn {
+  background: var(--bg); border: 2px solid var(--border);
+  border-radius: 10px; padding: 14px 10px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  cursor: pointer; font-size: 13px; color: var(--text);
+  transition: border-color 0.15s;
+}
+.cl-onboard-cat-btn:hover, .cl-onboard-cat-btn.selected {
+  border-color: var(--gold);
+}
+.cl-onboard-cat-icon { font-size: 24px; }
+.cl-onboard-skip {
+  display: block; width: 100%; text-align: center;
+  background: none; border: none; color: var(--text-dim);
+  font-size: 13px; cursor: pointer; margin-top: 8px; padding: 8px;
+}
+.cl-onboard-skip:hover { color: var(--text); }
+.cl-onboard-body { margin-top: 4px; }
+
+/* ── Utility button variants ────────────────────── */
+.cl-btn--gold {
+  background: var(--gold); color: #1a1207;
+  border: 1px solid var(--gold); font-weight: 700;
+}
+.cl-btn--gold:hover { background: #d4b07a; }
+.cl-btn--ghost {
+  background: transparent; color: var(--text);
+  border: 1px solid var(--border);
+}
+.cl-btn--ghost:hover { border-color: var(--gold); color: var(--gold); }
+.cl-btn--sm   { font-size: 12px; padding: 5px 10px; }
+.cl-btn--full { width: 100%; }
+.cl-btn--icon { padding: 6px 8px; font-size: 16px; }
+
+/* ── Light theme adjustments ────────────────────── */
+[data-theme="light"] .cl-project-card { background: #fff; }
+[data-theme="light"] .cl-modal        { background: #fff; }
+[data-theme="light"] .cl-onboarding-card { background: #fff; }
+[data-theme="light"] .cl-card-dropdown { background: #fff; }
+[data-theme="light"] .cl-confirm-dialog { background: #fff; }
+[data-theme="light"] .cl-template-card { background: #f8f6f0; }
+[data-theme="light"] .cl-onboard-cat-btn { background: #f8f6f0; }
+
+/* ── Responsive ─────────────────────────────────── */
+@media (max-width: 640px) {
+  .cl-project-grid { grid-template-columns: 1fr; }
+  .cl-template-grid { grid-template-columns: repeat(2, 1fr); }
+  .cl-onboard-cat-grid { grid-template-columns: 1fr 1fr; }
+  .cl-dash-header { padding: 14px 16px; }
+  .cl-btn--new-project { margin: 14px 16px 4px; width: calc(100% - 32px); }
+  .cl-dash-section { padding: 8px 16px 32px; }
+  .cl-breadcrumb { padding: 10px 16px 0; }
+  .cl-dash-user { display: none; }
+}
