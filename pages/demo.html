@@ -9,6 +9,16 @@
 </head>
 <body>
 
+<!-- ── BOOT SEQUENCE OVERLAY ──────────────────────────────────── -->
+<div class="boot-overlay" id="boot-overlay" aria-hidden="true">
+  <div class="boot-inner">
+    <div class="boot-logo">SENTINEL <span>MESH</span></div>
+    <div class="boot-lines" id="boot-lines"></div>
+    <div class="boot-bar-wrap"><div class="boot-bar" id="boot-bar"></div></div>
+    <div class="boot-status" id="boot-status">INITIALISING SYSTEMS…</div>
+  </div>
+</div>
+
 <!-- ── FIXED STATS BAR ─────────────────────────────────────────── -->
 <div class="stats-bar">
   <div class="stats-bar-inner">
@@ -128,6 +138,7 @@
       <!-- CENTRE POLE -->
       <div class="anat-pole-wrap" id="anat-pole-wrap">
 
+        <div class="anat-pole-inner">
         <svg class="anat-pole-svg" viewBox="0 0 220 680" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="apg" x1="0" y1="0" x2="1" y2="0">
@@ -236,12 +247,13 @@
           </circle>
         </svg>
 
-        <!-- Hotspots -->
+        <!-- Hotspots — inside anat-pole-inner so % positions are relative to SVG dimensions -->
         <div class="anat-hotspot s-rf"       style="left:50%;top:5.5%"  data-sensor="rf"       onclick="anatToggleById('rf')"><div class="anat-hr"></div><div class="anat-hr"></div><div class="anat-hd"></div></div>
         <div class="anat-hotspot s-acoustic"  style="left:35%;top:14.5%" data-sensor="acoustic"  onclick="anatToggleById('acoustic')"><div class="anat-hr"></div><div class="anat-hr"></div><div class="anat-hd"></div></div>
         <div class="anat-hotspot s-thermal"   style="left:68%;top:13.5%" data-sensor="thermal"   onclick="anatToggleById('thermal')"><div class="anat-hr"></div><div class="anat-hr"></div><div class="anat-hd"></div></div>
         <div class="anat-hotspot s-optical"   style="left:50%;top:22.5%" data-sensor="optical"   onclick="anatToggleById('optical')"><div class="anat-hr"></div><div class="anat-hr"></div><div class="anat-hd"></div></div>
         <div class="anat-hotspot s-seismic"   style="left:50%;top:25%"   data-sensor="seismic"   onclick="anatToggleById('seismic')"><div class="anat-hr"></div><div class="anat-hr"></div><div class="anat-hd"></div></div>
+        </div><!-- /anat-pole-inner -->
 
         <div class="anat-pole-callout">
           <div class="anat-callout-val">~$802</div>
@@ -1283,6 +1295,112 @@ tlRender(0);
   };
 
   draw(); updateStats();
+})();
+</script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   BOOT SEQUENCE
+   ═══════════════════════════════════════════════════════════════ */
+(function() {
+  var overlay = document.getElementById('boot-overlay');
+  var linesEl = document.getElementById('boot-lines');
+  var barEl   = document.getElementById('boot-bar');
+  var statEl  = document.getElementById('boot-status');
+  if (!overlay) return;
+
+  var LINES = [
+    'LOADING SENSOR MODULES………… OK',
+    'ACOUSTIC ARRAY………………………… ONLINE',
+    'RF / SDR 500kHz-1.75GHz…… ONLINE',
+    'THERMAL IR 256×192……………… ONLINE',
+    'SEISMIC MEMS ADXL355………… ONLINE',
+    'OPTICAL IMX219 8MP…………… ONLINE',
+    'JETSON ORIN NANO 40 TOPS… READY',
+    'CASCADE ENGINE v1.3…………… ARMED',
+  ];
+
+  var i = 0, pct = 0;
+
+  function addLine() {
+    if (i >= LINES.length) {
+      statEl.textContent = 'ALL SYSTEMS OPERATIONAL';
+      statEl.style.color = 'var(--green)';
+      setTimeout(function() {
+        overlay.classList.add('done');
+      }, 500);
+      return;
+    }
+    var line = document.createElement('div');
+    line.textContent = LINES[i];
+    linesEl.appendChild(line);
+    // Scroll latest into view inside container
+    linesEl.scrollTop = linesEl.scrollHeight;
+    i++;
+    pct = Math.round((i / LINES.length) * 100);
+    barEl.style.width = pct + '%';
+    setTimeout(addLine, 160 + Math.random() * 120);
+  }
+
+  setTimeout(addLine, 300);
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATED NUMBER COUNTERS
+   Count up when element scrolls into view.
+   Elements need data-count="<number>" attribute.
+   ═══════════════════════════════════════════════════════════════ */
+(function() {
+  // Define all counter targets: selector + end value + optional prefix/suffix
+  var COUNTERS = [
+    // Anatomy stats bar
+    { sel: '.anat-stat:nth-child(1) .anat-stat-val', end: 5,    prefix: '',   suffix: ''    },
+    { sel: '.anat-stat:nth-child(2) .anat-stat-val', end: 802,  prefix: '~$', suffix: ''    },
+    { sel: '.anat-stat:nth-child(3) .anat-stat-val', end: 40,   prefix: '',   suffix: 'T'   },
+    // Cascade confidence aside
+    { sel: '#cf-aside-0', end: 14400, prefix: '', suffix: '', comma: true },
+    { sel: '#cf-aside-1', end: 5400,  prefix: '', suffix: '', comma: true },
+    { sel: '#cf-aside-2', end: 2600,  prefix: '', suffix: '', comma: true },
+    { sel: '#cf-aside-3', end: 320,   prefix: '', suffix: ''  },
+    // Mesh resilience — these are live-updated by JS so skip
+  ];
+
+  function formatNum(n, comma) {
+    if (comma) return n.toLocaleString('en-US');
+    return Math.round(n).toString();
+  }
+
+  function animateCounter(el, end, prefix, suffix, comma) {
+    var start = 0;
+    var dur   = 1200;
+    var startTs = null;
+    function step(ts) {
+      if (!startTs) startTs = ts;
+      var prog = Math.min((ts - startTs) / dur, 1);
+      // Ease out quad
+      var eased = 1 - (1 - prog) * (1 - prog);
+      var cur = Math.round(eased * end);
+      el.textContent = prefix + formatNum(cur, comma) + suffix;
+      if (prog < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  if (!('IntersectionObserver' in window)) return;
+
+  COUNTERS.forEach(function(c) {
+    var el = document.querySelector(c.sel);
+    if (!el) return;
+    var done = false;
+    var obs = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting && !done) {
+        done = true;
+        obs.disconnect();
+        animateCounter(el, c.end, c.prefix || '', c.suffix || '', c.comma);
+      }
+    }, { threshold: 0.6 });
+    obs.observe(el);
+  });
 })();
 </script>
 </body>
