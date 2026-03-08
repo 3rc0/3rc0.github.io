@@ -64,7 +64,12 @@ function _setBtnStatus(idx, text) {
 // Called by onclick in HTML
 function selectScenario(idx) {
   manualMode = true;
-  _updateAutoIndicator();
+  // Update auto/manual indicator
+  const el    = document.getElementById('sc-auto');
+  const label = document.getElementById('sc-auto-label');
+  if (el)    el.className      = 'sc-auto manual';
+  if (label) label.textContent = 'MANUAL';
+  // Stop current sim and start selected
   if (simIv) clearInterval(simIv);
   _startScenario(idx);
 }
