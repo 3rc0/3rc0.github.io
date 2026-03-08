@@ -216,66 +216,216 @@ function ring(pct) {
 // ── Auth ──────────────────────────────────────────────
 function renderAuth() {
   const isLogin = state.authTab === "login";
-  const wrap = h("div",{"class":"cl-auth fade-up"});
-  const card = h("div",{"class":"cl-auth-card"});
-  const logo  = h("div",{"class":"cl-auth-logo"},"🔐");
-  const title = h("div",{"class":"cl-auth-title"},"Home Security Checklist");
-  const sub   = h("div",{"class":"cl-auth-sub"},"Sign in to access your personal checklist");
-  const tabs  = h("div",{"class":"cl-tabs"},
-    h("button",{"class":"cl-tab"+(isLogin?" active":""),onClick:()=>{state.authTab="login";render();}},"Sign In"),
-    h("button",{"class":"cl-tab"+(!isLogin?" active":""),onClick:()=>{state.authTab="register";render();}},"Create Account"),
+  const wrap = h("div", { class: "cl-auth fade-up" });
+  const card = h("div", { class: "cl-auth-card" });
+
+  // ── Header
+  const logo  = h("div", { class: "cl-auth-logo" }, "🔐");
+  const title = h("div", { class: "cl-auth-title" }, "SecCheck");
+  const sub   = h("div", { class: "cl-auth-sub" },
+    isLogin ? "Sign in to your account" : "Create your free account"
   );
-  const errBox = h("div",{"class":"cl-auth-error","id":"cl-auth-err"});
-  const userField = h("div",{"class":"cl-field"},
-    h("label",{"class":"cl-label"},"Username"),
-    h("input",{"class":"cl-input","id":"cl-user","type":"text","placeholder":"your_username","autocomplete":"username","maxlength":"30"}),
-    !isLogin?h("div",{"class":"cl-input-hint"},"3–30 chars, letters/numbers/dash/underscore"):null,
+
+  // ── Tabs
+  const tabs = h("div", { class: "cl-tabs" },
+    h("button", { class: "cl-tab" + (isLogin ? " active" : ""),
+      onClick: () => { state.authTab = "login"; render(); }
+    }, "Sign In"),
+    h("button", { class: "cl-tab" + (!isLogin ? " active" : ""),
+      onClick: () => { state.authTab = "register"; render(); }
+    }, "Create Account"),
   );
-  const passField = h("div",{"class":"cl-field"},
-    h("label",{"class":"cl-label"},"Password"),
-    h("input",{"class":"cl-input","id":"cl-pass","type":"password","placeholder":"••••••••","autocomplete":isLogin?"current-password":"new-password","maxlength":"100"}),
-    !isLogin?h("div",{"class":"cl-input-hint"},"Minimum 8 characters"):null,
-  );
-  function showAuthErr(msg) {
-    const e=document.getElementById("cl-auth-err");
-    if(e){e.textContent=msg;e.className="cl-auth-error show";}
+
+  // ── Error box
+  const errBox = h("div", { class: "cl-auth-error", id: "cl-auth-err" });
+
+  function showAuthErr(msg, fieldId) {
+    const e = document.getElementById("cl-auth-err");
+    if (e) { e.textContent = msg; e.className = "cl-auth-error show"; }
+    if (fieldId) {
+      const f = document.getElementById(fieldId);
+      if (f) { f.classList.add("error"); f.focus(); }
+    }
   }
-  const submitBtn = h("button",{"class":"cl-btn cl-btn-primary cl-btn-full","id":"cl-auth-btn",
-    onClick: async ()=>{
-      const username=document.getElementById("cl-user").value.trim().toLowerCase();
-      const password=document.getElementById("cl-pass").value;
-      const btn=document.getElementById("cl-auth-btn");
-      document.getElementById("cl-auth-err").className="cl-auth-error";
-      if(!username||!password){showAuthErr("Please enter username and password.");return;}
-      btn.disabled=true; btn.textContent=isLogin?"Signing in…":"Creating account…";
+  function clearAuthErr() {
+    const e = document.getElementById("cl-auth-err");
+    if (e) e.className = "cl-auth-error";
+    document.querySelectorAll(".cl-input.error").forEach(f => f.classList.remove("error"));
+  }
+
+  // ── Username field
+  const userField = h("div", { class: "cl-field" },
+    h("label", { class: "cl-label" }, "Username"),
+    h("input", {
+      class: "cl-input", id: "cl-user", type: "text",
+      placeholder: "your_username", autocomplete: "username",
+      maxlength: "30",
+      onInput: () => clearAuthErr()
+    }),
+    !isLogin ? h("div", { class: "cl-input-hint" }, "3–30 chars · letters, numbers, dash, underscore") : null,
+  );
+
+  // ── Password field with show/hide toggle + caps lock warning
+  const passWrap = h("div", { class: "cl-field cl-pass-field" });
+  const passLabel = h("label", { class: "cl-label" }, "Password");
+  const passRow   = h("div", { class: "cl-pass-row" });
+  const passInput = h("input", {
+    class: "cl-input", id: "cl-pass", type: "password",
+    placeholder: "••••••••",
+    autocomplete: isLogin ? "current-password" : "new-password",
+    maxlength: "100",
+    onInput: (e) => {
+      clearAuthErr();
+      if (!isLogin) updateStrength(e.target.value);
+    },
+    onKeyUp: (e) => {
+      const capsWarn = document.getElementById("cl-caps-warn");
+      if (capsWarn) capsWarn.style.display = e.getModifierState("CapsLock") ? "block" : "none";
+    }
+  });
+
+  const toggleBtn = h("button", {
+    class: "cl-pass-toggle", type: "button", title: "Show/hide password",
+    onClick: () => {
+      const input = document.getElementById("cl-pass");
+      const isHidden = input.type === "password";
+      input.type = isHidden ? "text" : "password";
+      toggleBtn.textContent = isHidden ? "🙈" : "👁";
+    }
+  }, "👁");
+
+  passRow.append(passInput, toggleBtn);
+
+  const capsWarn = h("div", {
+    class: "cl-caps-warn", id: "cl-caps-warn", style: "display:none"
+  }, "⚠ Caps Lock is on");
+
+  passWrap.append(passLabel, passRow, capsWarn);
+
+  // ── Password strength meter (register only)
+  const strengthMeter = h("div", { class: "cl-strength-wrap", id: "cl-strength-wrap",
+    style: isLogin ? "display:none" : "display:block"
+  });
+  strengthMeter.innerHTML = `
+    <div class="cl-strength-bar">
+      <div class="cl-strength-fill" id="cl-strength-fill"></div>
+    </div>
+    <div class="cl-strength-label" id="cl-strength-label"></div>`;
+
+  function updateStrength(pw) {
+    const fill  = document.getElementById("cl-strength-fill");
+    const label = document.getElementById("cl-strength-label");
+    if (!fill || !label) return;
+    let score = 0;
+    if (pw.length >= 8)  score++;
+    if (pw.length >= 12) score++;
+    if (/[A-Z]/.test(pw)) score++;
+    if (/[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+    const levels = [
+      { label: "",          color: "transparent", width: "0%" },
+      { label: "Weak",      color: "#f87171",     width: "25%" },
+      { label: "Fair",      color: "#fb923c",     width: "50%" },
+      { label: "Good",      color: "#facc15",     width: "75%" },
+      { label: "Strong",    color: "#5dbb8a",     width: "90%" },
+      { label: "Excellent", color: "#5dbb8a",     width: "100%" },
+    ];
+    const lvl = levels[Math.min(score, 5)];
+    fill.style.width = lvl.width;
+    fill.style.background = lvl.color;
+    label.textContent = lvl.label;
+    label.style.color = lvl.color;
+  }
+
+  // ── Forgot password (login only)
+  const forgotLink = isLogin ? h("div", { class: "cl-forgot" },
+    h("button", { class: "cl-link-btn",
+      onClick: () => {
+        document.getElementById("cl-auth-err").className = "cl-auth-error";
+        showAuthErr("Password reset via email is coming in the next update. For now, contact support.");
+      }
+    }, "Forgot password?")
+  ) : null;
+
+  // ── Privacy note (register only)
+  const privacyNote = !isLogin ? h("div", { class: "cl-privacy-note" },
+    "🔒 Your data stays on your account. We never sell or share it."
+  ) : null;
+
+  // ── Submit button
+  const submitBtn = h("button", {
+    class: "cl-btn cl-btn-primary cl-btn-full", id: "cl-auth-btn",
+    onClick: async () => {
+      const username = document.getElementById("cl-user").value.trim().toLowerCase();
+      const password = document.getElementById("cl-pass").value;
+      const btn      = document.getElementById("cl-auth-btn");
+      clearAuthErr();
+
+      // ── Specific validation messages
+      if (!username) { showAuthErr("Please enter your username.", "cl-user"); return; }
+      if (!/^[a-z0-9_-]{3,30}$/.test(username) && !isLogin) {
+        showAuthErr("Username must be 3–30 characters: letters, numbers, dash or underscore only.", "cl-user"); return;
+      }
+      if (!password) { showAuthErr("Please enter your password.", "cl-pass"); return; }
+      if (!isLogin && password.length < 8) {
+        showAuthErr("Password must be at least 8 characters.", "cl-pass"); return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = isLogin ? "Signing in…" : "Creating account…";
+
       try {
-        const d=await apiFetch(isLogin?"/api/login":"/api/register",{method:"POST",body:JSON.stringify({username,password})});
-        if(d.locked){showAuthErr("Too many failed attempts. Try again in 15 minutes.");btn.disabled=false;btn.textContent=isLogin?"Sign In":"Create Account";return;}
-        if(!d.ok){showAuthErr(d.error||"Something went wrong.");btn.disabled=false;btn.textContent=isLogin?"Sign In":"Create Account";return;}
-        if(isLogin){
-          state.session={token:d.token,username:d.username};
+        const d = await apiFetch(
+          isLogin ? "/api/login" : "/api/register",
+          { method: "POST", body: JSON.stringify({ username, password }) }
+        );
+
+        if (d.locked) {
+          showAuthErr("Too many failed attempts. Please wait 15 minutes before trying again.");
+          btn.disabled = false; btn.textContent = isLogin ? "Sign In" : "Create Account";
+          return;
+        }
+        if (!d.ok) {
+          // Map server errors to friendly messages
+          const msg = d.error || "Something went wrong.";
+          const friendly = msg.includes("username") ? msg
+            : msg.includes("password") ? msg
+            : msg.includes("already") ? "That username is already taken. Try a different one."
+            : msg.includes("not found") || msg.includes("Invalid") ? "Incorrect username or password. Please try again."
+            : msg;
+          showAuthErr(friendly);
+          btn.disabled = false; btn.textContent = isLogin ? "Sign In" : "Create Account";
+          return;
+        }
+
+        if (isLogin) {
+          state.session = { token: d.token, username: d.username };
           saveSession(state.session);
           saveToken(d.token);
           await loadProjects();
           const onboarded = localStorage.getItem(ONBOARD_KEY);
-          if(state.projects.length===0 && !onboarded){
+          if (state.projects.length === 0 && !onboarded) {
             await loadTemplates();
-            state.view="onboarding";
+            state.view = "onboarding";
           } else {
-            state.view="dashboard";
+            state.view = "dashboard";
           }
           render();
         } else {
-          toast("Account created! Please sign in.");
-          state.authTab="login"; render();
+          toast("✅ Account created! Please sign in.");
+          state.authTab = "login"; render();
         }
-      } catch(e){
-        showAuthErr("Could not connect to server. Try again.");
-        btn.disabled=false; btn.textContent=isLogin?"Sign In":"Create Account";
+      } catch(e) {
+        showAuthErr("Could not connect to the server. Check your connection and try again.");
+        btn.disabled = false; btn.textContent = isLogin ? "Sign In" : "Create Account";
       }
     }
-  },isLogin?"Sign In":"Create Account");
-  card.append(logo,title,sub,tabs,errBox,userField,passField,submitBtn);
+  }, isLogin ? "Sign In" : "Create Account");
+
+  card.append(logo, title, sub, tabs, errBox, userField, passWrap, strengthMeter);
+  if (forgotLink)   card.appendChild(forgotLink);
+  card.appendChild(submitBtn);
+  if (privacyNote)  card.appendChild(privacyNote);
   wrap.appendChild(card);
   return wrap;
 }
