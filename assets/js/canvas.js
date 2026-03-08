@@ -13,12 +13,12 @@
 
 /* ── CANVAS SETUP ─────────────────────────────────────────────── */
 const _canvas = document.getElementById('node-canvas');
-const _ctx    = _canvas.getContext('2d');
+if (!_canvas) { console.error('canvas.js: #node-canvas not found in DOM.'); }
+const _ctx    = _canvas ? _canvas.getContext('2d') : null;
 
 const CW = 420;   // canvas width  px
 const CH = 420;   // canvas height px
-_canvas.width  = CW;
-_canvas.height = CH;
+if (_canvas) { _canvas.width = CW; _canvas.height = CH; }
 
 /* ── GRID LAYOUT ──────────────────────────────────────────────── */
 // 4 rows × 5 cols of street light poles
@@ -246,7 +246,7 @@ function animateNodes() {
 
 /* ── PUBLIC: draw one frame ───────────────────────────────────── */
 function drawFrame(scenarioAccent) {
-  _ctx.clearRect(0, 0, CW, CH);
+  if (!_ctx) return;
 
   // Background
   _ctx.fillStyle = '#060d18';
