@@ -831,6 +831,8 @@ function renderHeader() {
     )
   );
 
+  wrap.appendChild(breadcrumb);
+
   const top=h("div",{"class":"cl-header-top"},
     ring(pct),
     h("div",{"class":"cl-title-block"},
