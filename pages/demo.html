@@ -34,8 +34,40 @@
   </div>
 
   <!-- ── SCENARIO SELECTOR ──────────────────────────────────── -->
-  <div class="scenario-selector" id="scenario-selector">
-    <!-- Buttons injected by viz.js on boot -->
+  <div class="scenario-selector">
+
+    <button class="sc-btn" id="sc-btn-0"
+            style="--btn-accent:#f5a623"
+            onclick="selectScenario(0)">
+      <span class="sc-btn-icon">🚁</span>
+      <span class="sc-btn-label">Drone Detection</span>
+      <span class="sc-btn-status" id="sc-btn-status-0">—</span>
+    </button>
+
+    <button class="sc-btn" id="sc-btn-1"
+            style="--btn-accent:#ff4757"
+            onclick="selectScenario(1)">
+      <span class="sc-btn-icon">💥</span>
+      <span class="sc-btn-label">Gunshot</span>
+      <span class="sc-btn-status" id="sc-btn-status-1">—</span>
+    </button>
+
+    <button class="sc-btn" id="sc-btn-2"
+            style="--btn-accent:#ff4757"
+            onclick="selectScenario(2)">
+      <span class="sc-btn-icon">🔥</span>
+      <span class="sc-btn-label">Explosion / IED</span>
+      <span class="sc-btn-status" id="sc-btn-status-2">—</span>
+    </button>
+
+    <button class="sc-btn" id="sc-btn-3"
+            style="--btn-accent:#00d4f5"
+            onclick="selectScenario(3)">
+      <span class="sc-btn-icon">🚗</span>
+      <span class="sc-btn-label">Susp. Vehicle</span>
+      <span class="sc-btn-status" id="sc-btn-status-3">—</span>
+    </button>
+
   </div>
 
   <!-- ── SCENARIO INFO CARD ─────────────────────────────────── -->
