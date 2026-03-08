@@ -43,6 +43,302 @@
 
 <div class="wrap stats-bar-offset">
 
+  <!-- ══════════════════════════════════════════════════════════
+       NODE ANATOMY — SM-ANAT-1.0
+       Full-width hero section, scroll down for cascade
+       ══════════════════════════════════════════════════════════ -->
+  <section class="anat-section">
+
+    <div class="anat-hdr">
+      <div class="anat-hdr-tag">SM-ANAT-1.0 &nbsp;·&nbsp; Sentinel Mesh</div>
+      <h2 class="anat-title">Node <em>Anatomy</em></h2>
+      <p class="anat-sub">Five sensors. One pole. Every threat type covered simultaneously.</p>
+    </div>
+
+    <div class="anat-diagram">
+
+      <!-- LEFT CARDS -->
+      <div class="anat-left">
+
+        <div class="anat-card s-acoustic" data-sensor="acoustic" onclick="anatToggle(this,'acoustic')">
+          <div class="anat-card-head">
+            <div class="anat-icon-wrap">🎙</div>
+            <div class="anat-title-wrap">
+              <div class="anat-sname">Acoustic Array</div>
+              <div class="anat-ssub">4× MEMS microphones + DSP preamp</div>
+            </div>
+            <div class="anat-badge">STAGE 01</div>
+          </div>
+          <div class="anat-body">
+            <div class="anat-divider"></div>
+            <div class="anat-rows">
+              <div class="anat-row"><span class="anat-lbl">Detection range</span><span class="anat-val">80–120m radius</span></div>
+              <div class="anat-row"><span class="anat-lbl">Frequency band</span><span class="anat-val">20 Hz – 20 kHz</span></div>
+              <div class="anat-row"><span class="anat-lbl">Latency</span><span class="anat-val">&lt; 80ms</span></div>
+              <div class="anat-row"><span class="anat-lbl">Unit cost</span><span class="anat-val">~$48</span></div>
+            </div>
+            <div class="anat-detects">Detects gunshot muzzle blast, ballistic crack, IED detonation, drone rotor signature, vehicle engine harmonics.</div>
+          </div>
+        </div>
+
+        <div class="anat-card s-thermal" data-sensor="thermal" onclick="anatToggle(this,'thermal')">
+          <div class="anat-card-head">
+            <div class="anat-icon-wrap">🌡</div>
+            <div class="anat-title-wrap">
+              <div class="anat-sname">Thermal IR</div>
+              <div class="anat-ssub">InfiRay LWIR 256×192 @ 25fps</div>
+            </div>
+            <div class="anat-badge">STAGE 02</div>
+          </div>
+          <div class="anat-body">
+            <div class="anat-divider"></div>
+            <div class="anat-rows">
+              <div class="anat-row"><span class="anat-lbl">Detection range</span><span class="anat-val">50–80m effective</span></div>
+              <div class="anat-row"><span class="anat-lbl">Sensitivity</span><span class="anat-val">&lt; 50mK NETD</span></div>
+              <div class="anat-row"><span class="anat-lbl">Works in</span><span class="anat-val">Full darkness, smoke</span></div>
+              <div class="anat-row"><span class="anat-lbl">Unit cost</span><span class="anat-val">~$160</span></div>
+            </div>
+            <div class="anat-detects">Detects heat bloom of explosion, engine thermal signature, drone motor heat, human body. Day or night.</div>
+          </div>
+        </div>
+
+        <div class="anat-card s-seismic" data-sensor="seismic" onclick="anatToggle(this,'seismic')">
+          <div class="anat-card-head">
+            <div class="anat-icon-wrap">📳</div>
+            <div class="anat-title-wrap">
+              <div class="anat-sname">Seismic MEMS</div>
+              <div class="anat-ssub">ADXL355 triaxial accelerometer</div>
+            </div>
+            <div class="anat-badge">STAGE 02</div>
+          </div>
+          <div class="anat-body">
+            <div class="anat-divider"></div>
+            <div class="anat-rows">
+              <div class="anat-row"><span class="anat-lbl">Detection range</span><span class="anat-val">30–60m ground wave</span></div>
+              <div class="anat-row"><span class="anat-lbl">Sensitivity</span><span class="anat-val">±2g, 20-bit ADC</span></div>
+              <div class="anat-row"><span class="anat-lbl">Sample rate</span><span class="anat-val">4kSPS</span></div>
+              <div class="anat-row"><span class="anat-lbl">Unit cost</span><span class="anat-val">~$12</span></div>
+            </div>
+            <div class="anat-detects">Detects ground shockwave from IED/explosion. Confirms acoustic event. Hard to spoof — requires physical energy.</div>
+          </div>
+        </div>
+
+      </div><!-- /anat-left -->
+
+      <!-- CENTRE POLE -->
+      <div class="anat-pole-wrap" id="anat-pole-wrap">
+
+        <svg class="anat-pole-svg" viewBox="0 0 220 680" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="apg" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%"   stop-color="#1a2a3a"/>
+              <stop offset="40%"  stop-color="#2a3f55"/>
+              <stop offset="100%" stop-color="#1a2a3a"/>
+            </linearGradient>
+            <linearGradient id="ahg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%"   stop-color="#1e3448"/>
+              <stop offset="100%" stop-color="#0d1f2d"/>
+            </linearGradient>
+            <filter id="aglow">
+              <feGaussianBlur stdDeviation="3" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <linearGradient id="acg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"   stop-color="#00d4f5" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="#00d4f5" stop-opacity="0.1"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Ground -->
+          <ellipse cx="110" cy="665" rx="45" ry="8" fill="rgba(0,212,245,0.08)" stroke="rgba(0,212,245,0.2)" stroke-width="1"/>
+          <rect x="98" y="640" width="24" height="26" rx="2" fill="url(#apg)" stroke="rgba(0,212,245,0.15)" stroke-width="1"/>
+
+          <!-- Shaft -->
+          <rect x="105" y="180" width="10" height="462" fill="url(#apg)" stroke="rgba(0,212,245,0.12)" stroke-width="0.5"/>
+          <path d="M105 180 L103 120 L117 120 L115 180Z" fill="url(#apg)" stroke="rgba(0,212,245,0.12)" stroke-width="0.5"/>
+          <line x1="112" y1="120" x2="112" y2="640" stroke="url(#acg)" stroke-width="0.8" opacity="0.4"/>
+          <rect x="103" y="300" width="14" height="4" rx="1" fill="rgba(0,212,245,0.25)"/>
+          <rect x="103" y="400" width="14" height="4" rx="1" fill="rgba(0,212,245,0.25)"/>
+          <rect x="103" y="500" width="14" height="4" rx="1" fill="rgba(0,212,245,0.25)"/>
+
+          <!-- Sensor head housing -->
+          <rect x="75" y="80" width="70" height="90" rx="4" fill="url(#ahg)" stroke="rgba(0,212,245,0.3)" stroke-width="1.5"/>
+          <line x1="75" y1="115" x2="145" y2="115" stroke="rgba(0,212,245,0.12)" stroke-width="0.5"/>
+          <line x1="75" y1="135" x2="145" y2="135" stroke="rgba(0,212,245,0.08)" stroke-width="0.5"/>
+          <path d="M75 80 L83 80 M75 80 L75 88" stroke="#00d4f5" stroke-width="1.5" opacity="0.6"/>
+          <path d="M145 80 L137 80 M145 80 L145 88" stroke="#00d4f5" stroke-width="1.5" opacity="0.6"/>
+          <path d="M75 170 L83 170 M75 170 L75 162" stroke="#00d4f5" stroke-width="1.5" opacity="0.6"/>
+          <path d="M145 170 L137 170 M145 170 L145 162" stroke="#00d4f5" stroke-width="1.5" opacity="0.6"/>
+
+          <!-- RF antenna -->
+          <line x1="110" y1="80" x2="110" y2="38" stroke="#00d4f5" stroke-width="2" filter="url(#aglow)"/>
+          <circle cx="110" cy="35" r="4" fill="none" stroke="#00d4f5" stroke-width="1.5" filter="url(#aglow)"/>
+          <circle cx="110" cy="35" r="1.5" fill="#00d4f5" filter="url(#aglow)"/>
+          <ellipse cx="110" cy="48" rx="12" ry="5" fill="none" stroke="#00d4f5" stroke-width="0.8" opacity="0.3" stroke-dasharray="2,3"/>
+          <ellipse cx="110" cy="52" rx="20" ry="8" fill="none" stroke="#00d4f5" stroke-width="0.6" opacity="0.2" stroke-dasharray="2,4"/>
+
+          <!-- Acoustic mics -->
+          <circle cx="75" cy="96"  r="5" fill="#1a2a3a" stroke="#f5a623" stroke-width="1.5" filter="url(#aglow)"/>
+          <circle cx="75" cy="96"  r="2" fill="#f5a623" opacity="0.7"/>
+          <circle cx="75" cy="108" r="5" fill="#1a2a3a" stroke="#f5a623" stroke-width="1.5" filter="url(#aglow)"/>
+          <circle cx="75" cy="108" r="2" fill="#f5a623" opacity="0.7"/>
+          <circle cx="75" cy="120" r="5" fill="#1a2a3a" stroke="#f5a623" stroke-width="1.5" filter="url(#aglow)"/>
+          <circle cx="75" cy="120" r="2" fill="#f5a623" opacity="0.7"/>
+          <circle cx="75" cy="132" r="5" fill="#1a2a3a" stroke="#f5a623" stroke-width="1.5" filter="url(#aglow)"/>
+          <circle cx="75" cy="132" r="2" fill="#f5a623" opacity="0.7"/>
+
+          <!-- Thermal module -->
+          <rect x="141" y="88" width="22" height="18" rx="2" fill="#1a2a3a" stroke="#ff4757" stroke-width="1.5" filter="url(#aglow)"/>
+          <rect x="144" y="91" width="16" height="12" rx="1" fill="rgba(255,71,87,0.15)"/>
+          <line x1="148" y1="91" x2="148" y2="103" stroke="#ff4757" stroke-width="0.5" opacity="0.5"/>
+          <line x1="152" y1="91" x2="152" y2="103" stroke="#ff4757" stroke-width="0.5" opacity="0.5"/>
+          <line x1="156" y1="91" x2="156" y2="103" stroke="#ff4757" stroke-width="0.5" opacity="0.5"/>
+          <line x1="144" y1="95" x2="160" y2="95" stroke="#ff4757" stroke-width="0.5" opacity="0.5"/>
+          <line x1="144" y1="99" x2="160" y2="99" stroke="#ff4757" stroke-width="0.5" opacity="0.5"/>
+
+          <!-- Optical camera -->
+          <circle cx="110" cy="152" r="12" fill="#0d1f2d" stroke="#39d353" stroke-width="1.5" filter="url(#aglow)"/>
+          <circle cx="110" cy="152" r="7"  fill="#0a1520" stroke="#39d353" stroke-width="0.8"/>
+          <circle cx="110" cy="152" r="3.5" fill="rgba(57,211,83,0.25)"/>
+          <circle cx="113" cy="149" r="1.5" fill="rgba(255,255,255,0.4)"/>
+
+          <!-- Seismic -->
+          <rect x="95" y="164" width="30" height="8" rx="1" fill="#1a2a3a" stroke="#a855f7" stroke-width="1.2" filter="url(#aglow)"/>
+          <line x1="100" y1="168" x2="120" y2="168" stroke="#a855f7" stroke-width="0.8" opacity="0.6" stroke-dasharray="3,2"/>
+
+          <!-- Compute -->
+          <rect x="88" y="195" width="44" height="30" rx="2" fill="#0d1822" stroke="rgba(0,212,245,0.2)" stroke-width="1"/>
+          <rect x="91" y="198" width="38" height="24" rx="1" fill="rgba(0,212,245,0.04)"/>
+          <line x1="94" y1="202" x2="126" y2="202" stroke="rgba(0,212,245,0.15)" stroke-width="0.5"/>
+          <line x1="94" y1="206" x2="126" y2="206" stroke="rgba(0,212,245,0.15)" stroke-width="0.5"/>
+          <line x1="94" y1="210" x2="126" y2="210" stroke="rgba(0,212,245,0.15)" stroke-width="0.5"/>
+          <line x1="94" y1="214" x2="126" y2="214" stroke="rgba(0,212,245,0.15)" stroke-width="0.5"/>
+          <circle cx="122" cy="199" r="2" fill="#39d353">
+            <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+          </circle>
+
+          <!-- LTE arm -->
+          <line x1="75" y1="160" x2="60" y2="145" stroke="rgba(0,212,245,0.3)" stroke-width="1"/>
+          <rect x="52" y="137" width="10" height="18" rx="1" fill="#0d1f2d" stroke="rgba(0,212,245,0.4)" stroke-width="1"/>
+
+          <!-- Data pulses -->
+          <circle r="2" fill="#00d4f5" opacity="0.8" filter="url(#aglow)">
+            <animateMotion dur="3s" repeatCount="indefinite" path="M110,630 L110,120"/>
+            <animate attributeName="opacity" values="0;0.9;0.9;0" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="2" fill="#00d4f5" opacity="0.8" filter="url(#aglow)">
+            <animateMotion dur="3s" begin="1s" repeatCount="indefinite" path="M110,630 L110,120"/>
+            <animate attributeName="opacity" values="0;0.9;0.9;0" dur="3s" begin="1s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="2" fill="#00d4f5" opacity="0.8" filter="url(#aglow)">
+            <animateMotion dur="3s" begin="2s" repeatCount="indefinite" path="M110,630 L110,120"/>
+            <animate attributeName="opacity" values="0;0.9;0.9;0" dur="3s" begin="2s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+
+        <!-- Hotspots -->
+        <div class="anat-hotspot s-rf"       style="left:50%;top:5.5%"  data-sensor="rf"       onclick="anatToggleById('rf')"><div class="anat-hr"></div><div class="anat-hr"></div><div class="anat-hd"></div></div>
+        <div class="anat-hotspot s-acoustic"  style="left:35%;top:14.5%" data-sensor="acoustic"  onclick="anatToggleById('acoustic')"><div class="anat-hr"></div><div class="anat-hr"></div><div class="anat-hd"></div></div>
+        <div class="anat-hotspot s-thermal"   style="left:68%;top:13.5%" data-sensor="thermal"   onclick="anatToggleById('thermal')"><div class="anat-hr"></div><div class="anat-hr"></div><div class="anat-hd"></div></div>
+        <div class="anat-hotspot s-optical"   style="left:50%;top:22.5%" data-sensor="optical"   onclick="anatToggleById('optical')"><div class="anat-hr"></div><div class="anat-hr"></div><div class="anat-hd"></div></div>
+        <div class="anat-hotspot s-seismic"   style="left:50%;top:25%"   data-sensor="seismic"   onclick="anatToggleById('seismic')"><div class="anat-hr"></div><div class="anat-hr"></div><div class="anat-hd"></div></div>
+
+        <div class="anat-pole-callout">
+          <div class="anat-callout-val">~$802</div>
+          <div class="anat-callout-lbl">per node · BOM</div>
+        </div>
+
+      </div><!-- /anat-pole-wrap -->
+
+      <!-- RIGHT CARDS -->
+      <div class="anat-right">
+
+        <div class="anat-card s-rf" data-sensor="rf" onclick="anatToggle(this,'rf')">
+          <div class="anat-card-head">
+            <div class="anat-icon-wrap">📡</div>
+            <div class="anat-title-wrap">
+              <div class="anat-sname">RF / SDR</div>
+              <div class="anat-ssub">RTL-SDR v4 · 500kHz – 1.75GHz</div>
+            </div>
+            <div class="anat-badge">STAGE 01</div>
+          </div>
+          <div class="anat-body">
+            <div class="anat-divider"></div>
+            <div class="anat-rows">
+              <div class="anat-row"><span class="anat-lbl">Detection range</span><span class="anat-val">100–300m (drone RF)</span></div>
+              <div class="anat-row"><span class="anat-lbl">Frequency</span><span class="anat-val">2.4GHz / 5.8GHz</span></div>
+              <div class="anat-row"><span class="anat-lbl">Latency</span><span class="anat-val">&lt; 200ms</span></div>
+              <div class="anat-row"><span class="anat-lbl">Unit cost</span><span class="anat-val">~$35</span></div>
+            </div>
+            <div class="anat-detects">Detects drone control signals (DJI, Autel, FPV), identifies make and model from RF fingerprint.</div>
+          </div>
+        </div>
+
+        <div class="anat-card s-optical" data-sensor="optical" onclick="anatToggle(this,'optical')">
+          <div class="anat-card-head">
+            <div class="anat-icon-wrap">📷</div>
+            <div class="anat-title-wrap">
+              <div class="anat-sname">Optical Camera</div>
+              <div class="anat-ssub">IMX219 · 8MP · 1080p60 CSI</div>
+            </div>
+            <div class="anat-badge">STAGE 03</div>
+          </div>
+          <div class="anat-body">
+            <div class="anat-divider"></div>
+            <div class="anat-rows">
+              <div class="anat-row"><span class="anat-lbl">Detection range</span><span class="anat-val">40–60m effective</span></div>
+              <div class="anat-row"><span class="anat-lbl">Resolution</span><span class="anat-val">3280×2464 raw</span></div>
+              <div class="anat-row"><span class="anat-lbl">Frame rate</span><span class="anat-val">60fps @ 1080p</span></div>
+              <div class="anat-row"><span class="anat-lbl">Unit cost</span><span class="anat-val">~$28</span></div>
+            </div>
+            <div class="anat-detects">Visual confirmation at Stage 3. On-device object detection via Jetson inference. Evidence capture for human alert.</div>
+          </div>
+        </div>
+
+        <div class="anat-card s-compute" data-sensor="compute" onclick="anatToggle(this,'compute')">
+          <div class="anat-card-head">
+            <div class="anat-icon-wrap">🖥</div>
+            <div class="anat-title-wrap">
+              <div class="anat-sname">Edge Compute</div>
+              <div class="anat-ssub">Jetson Orin Nano 8GB · 40 TOPS</div>
+            </div>
+            <div class="anat-badge">BRAIN</div>
+          </div>
+          <div class="anat-body">
+            <div class="anat-divider"></div>
+            <div class="anat-rows">
+              <div class="anat-row"><span class="anat-lbl">AI performance</span><span class="anat-val">40 TOPS INT8</span></div>
+              <div class="anat-row"><span class="anat-lbl">Inference</span><span class="anat-val">All sensors parallel</span></div>
+              <div class="anat-row"><span class="anat-lbl">Power draw</span><span class="anat-val">7–15W</span></div>
+              <div class="anat-row"><span class="anat-lbl">Unit cost</span><span class="anat-val">~$299</span></div>
+            </div>
+            <div class="anat-detects">Runs the full 5-stage cascade locally. No cloud required. All five sensor streams processed in parallel under 500ms.</div>
+          </div>
+        </div>
+
+      </div><!-- /anat-right -->
+
+    </div><!-- /anat-diagram -->
+
+    <!-- BOTTOM STATS -->
+    <div class="anat-stats-bar">
+      <div class="anat-stat"><div class="anat-stat-val">5</div><div class="anat-stat-lbl">Sensors per node</div></div>
+      <div class="anat-stat"><div class="anat-stat-val">~$802</div><div class="anat-stat-lbl">BOM cost per node</div></div>
+      <div class="anat-stat"><div class="anat-stat-val">40T</div><div class="anat-stat-lbl">AI TOPS on-device</div></div>
+      <div class="anat-stat"><div class="anat-stat-val">≤ 90s</div><div class="anat-stat-lbl">Alert latency Y1</div></div>
+      <div class="anat-stat"><div class="anat-stat-val">±25m</div><div class="anat-stat-lbl">Location accuracy</div></div>
+    </div>
+
+    <!-- SCROLL DOWN CUE -->
+    <div class="anat-scroll-cue">
+      <div class="anat-scroll-label">Detection Cascade →</div>
+      <div class="anat-scroll-arrow">↓</div>
+    </div>
+
+  </section><!-- /anat-section -->
+
+  <div class="anat-section-divider"></div>
+
   <!-- ── HEADER ───────────────────────────────────────────────── -->
   <header class="sys-header">
     <div class="sys-logo">SENTINEL <span>//</span> DETECTION ENGINE</div>
@@ -459,5 +755,21 @@
 })();
 </script>
 
+<script>
+// Anatomy card toggle
+function anatToggle(card, id) {
+  var was = card.classList.contains('active');
+  document.querySelectorAll('.anat-card').forEach(function(c){ c.classList.remove('active'); });
+  document.querySelectorAll('.anat-hotspot').forEach(function(h){ h.classList.remove('active'); });
+  if (!was) {
+    card.classList.add('active');
+    document.querySelectorAll('.anat-hotspot[data-sensor="'+id+'"]').forEach(function(h){ h.classList.add('active'); });
+  }
+}
+function anatToggleById(id) {
+  var card = document.querySelector('.anat-card[data-sensor="'+id+'"]');
+  if (card) anatToggle(card, id);
+}
+</script>
 </body>
 </html>
