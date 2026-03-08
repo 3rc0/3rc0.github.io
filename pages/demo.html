@@ -433,240 +433,6 @@
       </div>
     </div>
 
-    <!-- ── EXPLAINER — THE PROBLEM ─────────────────────────────── -->
-    <div class="explainer-block">
-      <div class="ex-problem">
-        <div class="ex-problem-icon">⚠</div>
-        <div class="ex-problem-text">
-          <div class="ex-problem-title">The Problem</div>
-          <p>
-            Cities, military bases, and critical infrastructure face threats from multiple directions at once —
-            drones overhead, gunshots on the street, explosions, suspicious vehicles.
-            Today, each of these threats requires a <strong>completely separate system</strong> to detect it.
-            Those systems are expensive, single-purpose, and don't talk to each other.
-            By the time a human operator pieces together what happened, it's too late.
-          </p>
-          <p>
-            Sentinel Mesh puts <strong>one unified sensor node on every street light pole</strong> —
-            covering all threat types simultaneously, automatically, and in seconds.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── WHAT EACH SYSTEM DOES ────────────────────────────────── -->
-    <div class="matrix-label" style="margin-bottom:1.2rem">WHAT EACH SYSTEM DOES</div>
-
-    <div class="system-cards">
-
-      <div class="sys-card">
-        <div class="sys-card-head">
-          <span class="sys-icon">🔊</span>
-          <div>
-            <div class="sys-name">ShotSpotter</div>
-            <div class="sys-tagline">Acoustic gunshot detection</div>
-          </div>
-        </div>
-        <div class="sys-body">
-          <p>Microphones placed around a city listen for the distinct crack of a gunshot.
-          When detected, the system triangulates the location and alerts police dispatch.</p>
-          <div class="sys-catches">
-            <div class="sys-label catches">✓ Detects</div>
-            <div class="sys-tags">
-              <span class="sys-tag green">Gunshots</span>
-              <span class="sys-tag green">Explosions (basic)</span>
-            </div>
-          </div>
-          <div class="sys-catches">
-            <div class="sys-label misses">✗ Misses</div>
-            <div class="sys-tags">
-              <span class="sys-tag red">Drones</span>
-              <span class="sys-tag red">Vehicles</span>
-              <span class="sys-tag red">Silent threats</span>
-            </div>
-          </div>
-          <div class="sys-used">Used by: US cities, urban police departments</div>
-        </div>
-      </div>
-
-      <div class="sys-card">
-        <div class="sys-card-head">
-          <span class="sys-icon">📡</span>
-          <div>
-            <div class="sys-name">Dedrone</div>
-            <div class="sys-tagline">RF drone monitoring</div>
-          </div>
-        </div>
-        <div class="sys-body">
-          <p>Scans radio frequencies to detect the control signals transmitted between a drone
-          and its operator. Identifies the drone make and model from its RF signature.</p>
-          <div class="sys-catches">
-            <div class="sys-label catches">✓ Detects</div>
-            <div class="sys-tags">
-              <span class="sys-tag green">Commercial drones (RF)</span>
-            </div>
-          </div>
-          <div class="sys-catches">
-            <div class="sys-label misses">✗ Misses</div>
-            <div class="sys-tags">
-              <span class="sys-tag red">Autonomous drones (no RF)</span>
-              <span class="sys-tag red">Gunshots</span>
-              <span class="sys-tag red">Explosions</span>
-              <span class="sys-tag red">Vehicles</span>
-            </div>
-          </div>
-          <div class="sys-used">Used by: airports, stadiums, government buildings</div>
-        </div>
-      </div>
-
-      <div class="sys-card">
-        <div class="sys-card-head">
-          <span class="sys-icon">🛡</span>
-          <div>
-            <div class="sys-name">DroneShield</div>
-            <div class="sys-tagline">Drone detection + disruption</div>
-          </div>
-        </div>
-        <div class="sys-body">
-          <p>Combines acoustic microphones and RF scanning to detect drones.
-          Some versions include a jammer to disrupt drone control signals.
-          Primarily designed for military and high-security environments.</p>
-          <div class="sys-catches">
-            <div class="sys-label catches">✓ Detects</div>
-            <div class="sys-tags">
-              <span class="sys-tag green">Drones (acoustic + RF)</span>
-              <span class="sys-tag green">Can jam/disrupt</span>
-            </div>
-          </div>
-          <div class="sys-catches">
-            <div class="sys-label misses">✗ Misses</div>
-            <div class="sys-tags">
-              <span class="sys-tag red">Gunshots</span>
-              <span class="sys-tag red">IEDs</span>
-              <span class="sys-tag red">Vehicles</span>
-              <span class="sys-tag red">City-scale deployment</span>
-            </div>
-          </div>
-          <div class="sys-used">Used by: military bases, forward operating bases</div>
-        </div>
-      </div>
-
-      <div class="sys-card">
-        <div class="sys-card-head">
-          <span class="sys-icon">📷</span>
-          <div>
-            <div class="sys-name">CCTV Networks</div>
-            <div class="sys-tagline">Visual surveillance</div>
-          </div>
-        </div>
-        <div class="sys-body">
-          <p>Camera networks record what happens in public spaces. Operators or AI software
-          review footage to identify incidents. Footage is reviewed after an event —
-          not a real-time detection system.</p>
-          <div class="sys-catches">
-            <div class="sys-label catches">✓ Detects</div>
-            <div class="sys-tags">
-              <span class="sys-tag green">Visible activity</span>
-              <span class="sys-tag green">Post-event review</span>
-            </div>
-          </div>
-          <div class="sys-catches">
-            <div class="sys-label misses">✗ Misses</div>
-            <div class="sys-tags">
-              <span class="sys-tag red">Night / low visibility</span>
-              <span class="sys-tag red">Drones above FOV</span>
-              <span class="sys-tag red">Acoustic threats</span>
-              <span class="sys-tag red">Real-time alerting</span>
-            </div>
-          </div>
-          <div class="sys-used">Used by: everywhere — but reactive, not proactive</div>
-        </div>
-      </div>
-
-      <div class="sys-card palantir-card">
-        <div class="sys-card-head">
-          <span class="sys-icon">🧠</span>
-          <div>
-            <div class="sys-name">Palantir</div>
-            <div class="sys-tagline">Intelligence & data analytics platform</div>
-          </div>
-        </div>
-        <div class="sys-body">
-          <p>Palantir is not a sensor system — it has no microphones, cameras, or detectors.
-          It is a powerful analytics platform that ingests data from many sources and helps
-          analysts find patterns, connect events, and make decisions at scale.
-          Used by the US Army, CIA, and large enterprises.</p>
-          <div class="sys-catches">
-            <div class="sys-label catches">✓ Provides</div>
-            <div class="sys-tags">
-              <span class="sys-tag green">Cross-source intelligence</span>
-              <span class="sys-tag green">Pattern-of-life analysis</span>
-              <span class="sys-tag green">Analyst decision support</span>
-            </div>
-          </div>
-          <div class="sys-catches">
-            <div class="sys-label misses">✗ Cannot</div>
-            <div class="sys-tags">
-              <span class="sys-tag red">Detect anything autonomously</span>
-              <span class="sys-tag red">Operate without data feeds</span>
-              <span class="sys-tag red">Deploy at street level</span>
-            </div>
-          </div>
-          <div class="sys-used palantir-integration-tag">
-            ↑ Sentinel Mesh feeds real-time ground events into platforms like Palantir
-          </div>
-        </div>
-      </div>
-
-      <div class="sys-card sentinel-card">
-        <div class="sys-card-head">
-          <span class="sys-icon">⬡</span>
-          <div>
-            <div class="sys-name">Sentinel Mesh</div>
-            <div class="sys-tagline">Unified ground-level detection mesh</div>
-          </div>
-        </div>
-        <div class="sys-body">
-          <p>One node on every street light pole. Each node carries five sensors working
-          together — acoustic, RF, thermal infrared, seismic, and optical.
-          When multiple sensors agree, an alert fires automatically in seconds.
-          No single point of failure. No cloud required. Deployable anywhere.</p>
-          <div class="sys-catches">
-            <div class="sys-label catches">✓ Detects all four</div>
-            <div class="sys-tags">
-              <span class="sys-tag green">🚁 Drones</span>
-              <span class="sys-tag green">💥 Gunshots</span>
-              <span class="sys-tag green">🔥 Explosions</span>
-              <span class="sys-tag green">🚗 Vehicles</span>
-            </div>
-          </div>
-          <div class="sys-catches">
-            <div class="sys-label cost">$ Cost per node</div>
-            <div class="sys-tags">
-              <span class="sys-tag accent">~$802 BOM</span>
-              <span class="sys-tag accent">vs $15–60k for single-purpose systems</span>
-            </div>
-          </div>
-          <div class="sys-used">Designed for: cities, FOBs, critical infrastructure, conflict zones</div>
-        </div>
-      </div>
-
-    </div><!-- /system-cards -->
-
-    <!-- ── THE GAP ──────────────────────────────────────────────── -->
-    <div class="gap-block">
-      <div class="gap-icon">🕳</div>
-      <div class="gap-text">
-        <div class="gap-title">The Gap — No single system covers all threat types</div>
-        <p>
-          A city deploying ShotSpotter, Dedrone, DroneShield, and CCTV separately would spend
-          <strong>$67k–$133k per coverage point</strong>, operate four disconnected systems,
-          and still have blind spots. Sentinel Mesh covers all four threat types
-          from a single node at <strong>~$802</strong> — and every node strengthens the mesh.
-        </p>
-      </div>
-    </div>
-
     <!-- CAPABILITY MATRIX -->
     <div class="matrix-wrap">
       <div class="matrix-label">CAPABILITY MATRIX</div>
@@ -774,15 +540,6 @@
             <td class="palantir-cell"><span class="cap-text red">Hours–Days</span><span class="cap-note">analyst-driven</span></td>
             <td class="sentinel-cell"><span class="cap-text green">≤ 90s Y1 → ≤ 30s Y2</span></td>
           </tr>
-          <tr>
-            <td class="cap-name">💰 Est. Cost / Node</td>
-            <td><span class="cap-text red">$15–25k</span></td>
-            <td><span class="cap-text red">$20–40k</span></td>
-            <td><span class="cap-text red">$30–60k</span></td>
-            <td><span class="cap-text amber">$2–8k</span></td>
-            <td class="palantir-cell"><span class="cap-text red">$M+ contract</span><span class="cap-note">no per-node model</span></td>
-            <td class="sentinel-cell"><span class="cap-text green">~$802</span></td>
-          </tr>
         </tbody>
       </table>
       </div><!-- /matrix-scroll -->
@@ -807,71 +564,6 @@
       </div>
     </div>
 
-    <!-- COST BAR CHART -->
-    <div class="cost-wrap">
-      <div class="matrix-label">COST PER NODE — ESTIMATED</div>
-      <div class="cost-chart">
-
-        <div class="cost-row">
-          <div class="cost-name">Palantir *</div>
-          <div class="cost-bar-wrap">
-            <div class="cost-bar red" style="width:100%">
-              <span class="cost-val">$M+ gov. contract — no per-node model</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="cost-row">
-          <div class="cost-name">DroneShield</div>
-          <div class="cost-bar-wrap">
-            <div class="cost-bar red" style="width:93%">
-              <span class="cost-val">$30–60k</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="cost-row">
-          <div class="cost-name">Dedrone</div>
-          <div class="cost-bar-wrap">
-            <div class="cost-bar red" style="width:72%">
-              <span class="cost-val">$20–40k</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="cost-row">
-          <div class="cost-name">ShotSpotter</div>
-          <div class="cost-bar-wrap">
-            <div class="cost-bar amber" style="width:48%">
-              <span class="cost-val">$15–25k</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="cost-row">
-          <div class="cost-name">CCTV Network</div>
-          <div class="cost-bar-wrap">
-            <div class="cost-bar amber" style="width:18%">
-              <span class="cost-val">$2–8k</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="cost-row sentinel-row">
-          <div class="cost-name sentinel-name">Sentinel Mesh</div>
-          <div class="cost-bar-wrap">
-            <div class="cost-bar green" style="width:3.2%">
-            </div>
-            <span class="cost-val-ext green">~$802 &nbsp;·&nbsp; 4 threat types &nbsp;·&nbsp; mesh distributed</span>
-          </div>
-        </div>
-
-      </div><!-- /cost-chart -->
-      <div class="cost-note">
-        * Competitor costs are publicly reported estimates and analyst ranges. Palantir operates on multi-million dollar government contracts with no per-node pricing model. Sentinel Mesh BOM: $757 components + $45 assembly ±15%. Palantir is not a competitor — see integration note above.
-      </div>
-    </div>
-
   </div><!-- /comp-section -->
 
   <!-- ── BOTTOM LOG ──────────────────────────────────────────── -->
@@ -881,6 +573,38 @@
     </div>
     <div class="log-stream" id="log-stream"></div>
   </div>
+
+  <!-- ── CALL TO ACTION FOOTER ─────────────────────────────────── -->
+  <div class="cta-section">
+
+    <div class="cta-inner">
+      <div class="cta-left">
+        <div class="cta-tag">SENTINEL MESH · PRE-SEED · AUSTRALIA</div>
+        <div class="cta-title">Ready to deploy <em>early detection</em><br>where it matters most?</div>
+        <div class="cta-sub">
+          We are currently in pre-seed. Available for operational briefings,
+          pilot deployment discussions, and strategic partnerships.
+          Built in Australia. Designed for cities, conflict zones, and critical infrastructure worldwide.
+        </div>
+        <a href="https://3rc0.github.io/SentinelMesh" target="_blank" class="cta-site-link">
+          <span class="cta-site-icon">🌐</span>
+          3rc0.github.io/SentinelMesh
+          <span class="cta-site-arr">→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="cta-footer-bar">
+      <div class="cta-footer-left">
+        SM-VIZ-1.3 · SENTINEL MESH DETECTION ENGINE · © 2026
+      </div>
+      <div class="cta-footer-right">
+        Built in Australia &nbsp;·&nbsp; Deployable anywhere &nbsp;·&nbsp;
+        <span class="cta-unclass">DEMO // UNCLASSIFIED</span>
+      </div>
+    </div>
+
+  </div><!-- /cta-section -->
 
 </div><!-- /wrap -->
 
