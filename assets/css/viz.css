@@ -213,6 +213,14 @@
   height: 600px;
 }
 
+/* Inner wrapper pins hotspot coordinates to SVG dimensions regardless of column width */
+.anat-pole-inner {
+  position: relative;
+  width: 200px;
+  height: 600px;
+  flex-shrink: 0;
+}
+
 .anat-pole-svg {
   width: 200px;
   height: 600px;
@@ -294,6 +302,7 @@
   color: var(--accent);
   text-shadow: 0 0 16px rgba(0,212,245,0.35);
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 .anat-stat-lbl {
   font-family: var(--f-mono);
@@ -457,6 +466,7 @@
   color: var(--accent);
   line-height: 1;
   transition: color 0.4s;
+  font-variant-numeric: tabular-nums;
 }
 
 .stat-label {
@@ -1717,6 +1727,7 @@ body::after {
   letter-spacing: 0.06em;
   color: var(--text1);
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 .cov-stat-val.accent { color: var(--accent); }
 .cov-stat-val.green  { color: var(--green);  }
@@ -2692,6 +2703,7 @@ body::after {
   font-weight: 900;
   letter-spacing: 0.06em;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .cf-aside-lbl {
@@ -2757,6 +2769,7 @@ body::after {
   letter-spacing: 0.06em;
   color: var(--accent);
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 .mr-stat-lbl {
   font-family: var(--f-mono);
@@ -2872,3 +2885,71 @@ body::after {
   .mr-wrap  { grid-template-columns: 1fr; }
 }
 /* ══ END INFOGRAPHICS ══════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════
+   BOOT SEQUENCE OVERLAY
+   ═══════════════════════════════════════════════════════════════ */
+.boot-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #020810;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+.boot-overlay.done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.boot-inner {
+  width: min(420px, 90vw);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.boot-logo {
+  font-family: var(--f-head);
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.boot-logo span { color: var(--accent); }
+
+.boot-lines {
+  font-family: var(--f-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  line-height: 2;
+  min-height: 5.5rem;
+  opacity: 0.8;
+}
+
+.boot-bar-wrap {
+  height: 2px;
+  background: rgba(0,212,245,0.12);
+  overflow: hidden;
+}
+.boot-bar {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+  transition: width 0.15s linear;
+}
+
+.boot-status {
+  font-family: var(--f-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text2);
+}
+/* ══ END BOOT SEQUENCE ══════════════════════════════════════════ */
