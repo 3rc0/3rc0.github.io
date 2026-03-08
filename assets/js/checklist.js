@@ -949,6 +949,297 @@ function applyTheme() {
 }
 
 // ── Header ────────────────────────────────────────────
+
+// ════════════════════════════════════════════════════════════
+// PDF EXPORT — jsPDF · Professional handover document
+// ════════════════════════════════════════════════════════════
+async function exportPDF() {
+  // Dynamically load jsPDF from CDN
+  if (!window.jspdf) {
+    await new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+      s.onload = resolve; s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc  = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
+  const W    = 210; // A4 width mm
+  const ML   = 14;  // margin left
+  const MR   = 14;  // margin right
+  const TW   = W - ML - MR; // text width
+  const now  = new Date();
+
+  function fmtDate(ts) {
+    if (!ts) return "—";
+    const d = new Date(Number(ts));
+    return d.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" })
+      + "  " + d.toLocaleTimeString("en-GB", { hour:"2-digit", minute:"2-digit" });
+  }
+
+  function fmtShort(ts) {
+    if (!ts) return "";
+    const d = new Date(Number(ts));
+    return d.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
+  }
+
+  // ── Colours
+  const GOLD   = [201, 169, 110];
+  const GREEN  = [93,  187, 138];
+  const RED    = [248, 113, 113];
+  const DARK   = [26,  22,  20];
+  const MID    = [92,  80,  72];
+  const LIGHT  = [245, 240, 235];
+  const WHITE  = [255, 255, 255];
+  const BORDER = [220, 210, 200];
+
+  let y = 0;
+
+  function newPage() {
+    doc.addPage();
+    y = 16;
+    // Page footer
+    doc.setFontSize(8); doc.setTextColor(...MID);
+    doc.text(`SecCheck Export · ${now.toLocaleDateString("en-GB")} · Page ${doc.getNumberOfPages()}`,
+      W / 2, 290, { align: "center" });
+  }
+
+  function checkY(needed = 10) {
+    if (y + needed > 278) newPage();
+  }
+
+  // ══════════════════════════════════════════════
+  // COVER PAGE
+  // ══════════════════════════════════════════════
+  // Dark header band
+  doc.setFillColor(...DARK);
+  doc.rect(0, 0, W, 60, "F");
+
+  // Gold accent line
+  doc.setFillColor(...GOLD);
+  doc.rect(0, 60, W, 1.5, "F");
+
+  // Logo area
+  doc.setFontSize(28); doc.setTextColor(...GOLD);
+  doc.setFont("helvetica", "bold");
+  doc.text("🔐  SecCheck", ML, 28);
+
+  doc.setFontSize(11); doc.setTextColor(...WHITE);
+  doc.setFont("helvetica", "normal");
+  doc.text("Security Assessment Report", ML, 38);
+
+  // Project name
+  doc.setFontSize(18); doc.setTextColor(...DARK);
+  doc.setFont("helvetica", "bold");
+  y = 78;
+  const projName = state.activeProject?.name || "Checklist";
+  const nameLines = doc.splitTextToSize(projName, TW);
+  doc.text(nameLines, ML, y);
+  y += nameLines.length * 9 + 4;
+
+  // Meta table
+  const { total, done, pct } = calcProgress();
+  const meta = [
+    ["Generated",  now.toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"long", year:"numeric" })
+                   + "  " + now.toLocaleTimeString("en-GB", { hour:"2-digit", minute:"2-digit" })],
+    ["Prepared by", state.session?.username || "—"],
+    ["Template",    state.activeProject?.template || "—"],
+    ["Total tasks", String(total)],
+    ["Completed",   `${done} of ${total} (${pct}%)`],
+    ["Status",      pct === 100 ? "✅ Complete" : pct >= 50 ? "⚠️ In Progress" : "🔴 Needs Attention"],
+  ];
+
+  doc.setFontSize(10);
+  meta.forEach(([label, value]) => {
+    checkY(8);
+    doc.setFont("helvetica", "bold"); doc.setTextColor(...MID);
+    doc.text(label, ML, y);
+    doc.setFont("helvetica", "normal"); doc.setTextColor(...DARK);
+    doc.text(String(value), ML + 36, y);
+    y += 7;
+  });
+
+  // Progress bar
+  y += 4;
+  checkY(14);
+  doc.setFillColor(...BORDER); doc.roundedRect(ML, y, TW, 5, 2, 2, "F");
+  const fillW = Math.max(4, (pct / 100) * TW);
+  const barCol = pct === 100 ? GREEN : pct >= 50 ? GOLD : RED;
+  doc.setFillColor(...barCol); doc.roundedRect(ML, y, fillW, 5, 2, 2, "F");
+  y += 9;
+  doc.setFontSize(9); doc.setTextColor(...MID);
+  doc.text(`${pct}% complete`, ML, y);
+  y += 12;
+
+  // ── Category summary table on cover
+  checkY(12);
+  doc.setFontSize(11); doc.setFont("helvetica", "bold"); doc.setTextColor(...DARK);
+  doc.text("Summary by Section", ML, y); y += 6;
+  doc.setFillColor(...LIGHT); doc.rect(ML, y, TW, 7, "F");
+  doc.setFontSize(8); doc.setFont("helvetica", "bold"); doc.setTextColor(...MID);
+  doc.text("Section", ML + 2, y + 4.5);
+  doc.text("Tasks", ML + TW - 40, y + 4.5);
+  doc.text("Done", ML + TW - 24, y + 4.5);
+  doc.text("Updated", ML + TW - 12, y + 4.5, { align: "right" });
+  y += 7;
+
+  state.sections.forEach((sec, si) => {
+    checkY(7);
+    const secTotal = sec.items.length;
+    const secDone  = sec.items.filter(it => state.checks[it.n]).length;
+    // Most recent update in this section
+    const latestTs = sec.items.reduce((max, it) => {
+      const t = it.checked_at ? Number(it.checked_at) : 0;
+      return t > max ? t : max;
+    }, 0);
+
+    const rowBg = si % 2 === 0 ? WHITE : [250, 247, 244];
+    doc.setFillColor(...rowBg); doc.rect(ML, y, TW, 6.5, "F");
+    doc.setFontSize(8.5); doc.setFont("helvetica", "normal"); doc.setTextColor(...DARK);
+
+    const secLabel = (sec.icon ? sec.icon + "  " : "") + sec.title;
+    const secLines = doc.splitTextToSize(secLabel, TW - 50);
+    doc.text(secLines[0], ML + 2, y + 4.2);
+    doc.text(String(secTotal), ML + TW - 40, y + 4.2);
+    const doneCol = secDone === secTotal ? GREEN : secDone > 0 ? GOLD : RED;
+    doc.setTextColor(...doneCol);
+    doc.text(String(secDone), ML + TW - 24, y + 4.2);
+    doc.setTextColor(...MID);
+    doc.setFontSize(7.5);
+    doc.text(latestTs ? fmtShort(latestTs) : "—", ML + TW - 12, y + 4.2, { align: "right" });
+    y += 6.5;
+  });
+
+  // ══════════════════════════════════════════════
+  // DETAIL PAGES — one section per block
+  // ══════════════════════════════════════════════
+  state.sections.forEach((sec) => {
+    newPage();
+
+    // Section header band
+    doc.setFillColor(...DARK);
+    doc.rect(0, 0, W, 18, "F");
+    doc.setFillColor(...GOLD);
+    doc.rect(0, 18, W, 1, "F");
+
+    doc.setFontSize(13); doc.setFont("helvetica", "bold"); doc.setTextColor(...GOLD);
+    const secHead = (sec.icon ? sec.icon + "  " : "") + sec.title;
+    doc.text(secHead, ML, 12);
+
+    doc.setFontSize(8); doc.setFont("helvetica", "normal"); doc.setTextColor(...WHITE);
+    const secDone  = sec.items.filter(it => state.checks[it.n]).length;
+    doc.text(`${secDone} / ${sec.items.length} tasks completed`, W - MR, 12, { align: "right" });
+    y = 26;
+
+    if (sec.hint) {
+      doc.setFontSize(8.5); doc.setTextColor(...MID); doc.setFont("helvetica", "italic");
+      doc.text(sec.hint, ML, y); y += 7;
+    }
+
+    // Column headers
+    doc.setFillColor(...LIGHT); doc.rect(ML, y, TW, 6.5, "F");
+    doc.setFontSize(7.5); doc.setFont("helvetica", "bold"); doc.setTextColor(...MID);
+    doc.text("#",   ML + 2,         y + 4.2);
+    doc.text("Task",ML + 10,        y + 4.2);
+    doc.text("Status",    W - MR - 54, y + 4.2);
+    doc.text("Completed", W - MR - 36, y + 4.2);
+    doc.text("By",        W - MR - 10, y + 4.2, { align: "right" });
+    y += 7;
+
+    sec.items.forEach((item, idx) => {
+      const isDone   = !!state.checks[item.n];
+      const rowH     = item.detail ? 11 : 7.5;
+      checkY(rowH + 2);
+
+      const rowBg = idx % 2 === 0 ? WHITE : [250, 247, 244];
+      doc.setFillColor(...rowBg); doc.rect(ML, y, TW, rowH, "F");
+
+      // Checkbox indicator
+      doc.setFillColor(...(isDone ? GREEN : BORDER));
+      doc.roundedRect(ML + 1, y + 1.5, 4, 4, 1, 1, "F");
+      if (isDone) {
+        doc.setTextColor(...WHITE); doc.setFontSize(6); doc.setFont("helvetica", "bold");
+        doc.text("✓", ML + 1.8, y + 4.8);
+      }
+
+      // Item number
+      doc.setFontSize(7.5); doc.setFont("helvetica", "normal"); doc.setTextColor(...MID);
+      doc.text(String(item.n), ML + 7, y + 4.2);
+
+      // Item name
+      doc.setTextColor(...DARK); doc.setFont("helvetica", item.warn ? "bolditalic" : "normal");
+      const nameLines = doc.splitTextToSize(item.name, TW - 65);
+      doc.text(nameLines[0], ML + 12, y + 4.2);
+
+      // Warn badge
+      if (item.warn) {
+        doc.setFontSize(6.5); doc.setTextColor(...RED);
+        doc.text("⚠ Critical", ML + 12, y + 8.5);
+      }
+
+      // Detail line
+      if (item.detail) {
+        doc.setFontSize(7); doc.setFont("helvetica", "italic"); doc.setTextColor(...MID);
+        const detLines = doc.splitTextToSize(item.detail, TW - 65);
+        doc.text(detLines[0], ML + 12, y + (item.warn ? 8.5 : 8.2));
+      }
+
+      // Status
+      doc.setFontSize(7.5); doc.setFont("helvetica", "bold");
+      doc.setTextColor(...(isDone ? GREEN : RED));
+      doc.text(isDone ? "Done" : "Pending", W - MR - 54, y + 4.2);
+
+      // Timestamp
+      doc.setFont("helvetica", "normal"); doc.setTextColor(...MID); doc.setFontSize(7);
+      doc.text(isDone && item.checked_at ? fmtDate(item.checked_at) : "—", W - MR - 36, y + 4.2);
+
+      // Checked by
+      doc.setFontSize(7);
+      doc.text(isDone && item.checked_by ? item.checked_by : "—", W - MR - 10, y + 4.2, { align: "right" });
+
+      y += rowH;
+    });
+  });
+
+  // ══════════════════════════════════════════════
+  // FINAL PAGE — Sign-off
+  // ══════════════════════════════════════════════
+  newPage();
+  doc.setFillColor(...DARK); doc.rect(0, 0, W, 18, "F");
+  doc.setFillColor(...GOLD); doc.rect(0, 18, W, 1, "F");
+  doc.setFontSize(13); doc.setFont("helvetica", "bold"); doc.setTextColor(...GOLD);
+  doc.text("Sign-off & Certification", ML, 12);
+  y = 30;
+
+  doc.setFontSize(10); doc.setFont("helvetica", "normal"); doc.setTextColor(...DARK);
+  doc.text("This document certifies the completion status of the above security assessment.", ML, y); y += 8;
+  doc.text(`Project:    ${state.activeProject?.name || "—"}`, ML, y); y += 7;
+  doc.text(`Prepared by: ${state.session?.username || "—"}`, ML, y); y += 7;
+  doc.text(`Date:        ${now.toLocaleDateString("en-GB", { day:"numeric", month:"long", year:"numeric" })}`, ML, y); y += 7;
+  doc.text(`Completion:  ${pct}% (${done} of ${total} tasks)`, ML, y); y += 20;
+
+  // Signature lines
+  const sigY = y + 20;
+  doc.setDrawColor(...BORDER); doc.setLineWidth(0.4);
+  doc.line(ML,      sigY, ML + 70, sigY);
+  doc.line(ML + 90, sigY, ML + 160, sigY);
+  doc.setFontSize(8); doc.setTextColor(...MID);
+  doc.text("Signature", ML, sigY + 5);
+  doc.text("Date", ML + 90, sigY + 5);
+
+  // Footer on all pages — already added via newPage(), add for page 1
+  doc.setPage(1);
+  doc.setFontSize(8); doc.setTextColor(...MID);
+  doc.text(`SecCheck Export · ${now.toLocaleDateString("en-GB")} · Page 1`, W / 2, 290, { align: "center" });
+
+  // Save
+  const safeName = (state.activeProject?.name || "checklist").replace(/[^a-z0-9]/gi, "_").toLowerCase();
+  doc.save(`seccheck_${safeName}_${now.toISOString().slice(0,10)}.pdf`);
+  toast("📄 PDF exported!");
+}
+
 function renderHeader() {
   const {total,done,pct}=calcProgress();
   const wrap=h("div",{"class":"cl-header fade-up"});
@@ -992,8 +1283,8 @@ function renderHeader() {
     }},state.showLog?"✕ Close Log":"📋 Activity Log");
 
   const printBtn=h("button",{"class":"cl-btn cl-btn-success",
-    onClick:()=>{state.collapsed={};setTimeout(()=>window.print(),300);}},
-    "🖨️ Print PDF");
+    onClick: () => exportPDF()},
+    "📄 Export PDF");
 
   const themeBtn=h("button",{"class":"cl-theme-toggle",
     onClick:()=>{
