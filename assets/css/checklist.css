@@ -1224,3 +1224,47 @@
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.6; }
 }
+
+/* ════════════════════════════════════════════════════
+   Due Date Modal
+   ════════════════════════════════════════════════════ */
+
+#cl-app .cl-duedate-modal {
+  max-width: 360px; width: 100%;
+}
+#cl-app .cl-duedate-picker-wrap {
+  margin-bottom: 10px;
+}
+#cl-app .cl-duedate-cal {
+  width: 100%; cursor: pointer;
+  color-scheme: dark;
+}
+#cl-app[data-theme="light"] .cl-duedate-cal {
+  color-scheme: light;
+}
+#cl-app .cl-duedate-or {
+  text-align: center; font-size: 11px;
+  color: var(--text-dim); margin: 12px 0;
+  letter-spacing: 0.05em;
+}
+#cl-app .cl-duedate-shortcuts {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+#cl-app .cl-shortcut-btn {
+  flex: 1; min-width: 70px;
+  padding: 7px 10px; border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--glass2);
+  color: var(--text); font-size: 12px;
+  cursor: pointer; transition: all 0.15s;
+  text-align: center;
+}
+#cl-app .cl-shortcut-btn:hover {
+  border-color: var(--gold); color: var(--gold);
+  background: var(--gold-glow);
+}
+#cl-app .cl-duedate-btns {
+  display: flex; gap: 10px; justify-content: flex-end;
+  margin-top: 8px;
+}
