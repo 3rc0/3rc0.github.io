@@ -670,6 +670,204 @@
     </div>
   </div><!-- /cov-section -->
 
+  <!-- ═══════════════════════════════════════════════════════════
+       INFOGRAPHIC 1 — TIMELINE OF A THREAT
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="ig-section" id="ig-timeline">
+    <div class="ig-header">
+      <div class="ig-tag">SM-IG-1.0</div>
+      <h2 class="ig-title">Timeline of a <em>Threat</em></h2>
+      <p class="ig-sub">From first sensor trigger to human alert — every second mapped</p>
+    </div>
+
+    <div class="tl-scenario-pick">
+      <button class="tl-btn active" onclick="tlSelectScenario(0,this)">🚁 Drone</button>
+      <button class="tl-btn" onclick="tlSelectScenario(1,this)">💥 Gunshot</button>
+      <button class="tl-btn" onclick="tlSelectScenario(2,this)">🔥 Explosion</button>
+      <button class="tl-btn" onclick="tlSelectScenario(3,this)">🚗 Vehicle</button>
+    </div>
+
+    <div class="tl-wrap">
+      <div class="tl-axis">
+        <div class="tl-axis-label">T+0s</div>
+        <div class="tl-axis-label">T+15s</div>
+        <div class="tl-axis-label">T+30s</div>
+        <div class="tl-axis-label">T+45s</div>
+        <div class="tl-axis-label">T+60s</div>
+        <div class="tl-axis-label">T+90s</div>
+      </div>
+      <div class="tl-track-area" id="tl-tracks"></div>
+      <div class="tl-playhead" id="tl-playhead"></div>
+    </div>
+
+    <div class="tl-legend">
+      <div class="tl-leg-item"><div class="tl-leg-dot" style="background:var(--amber)"></div>Suspicion</div>
+      <div class="tl-leg-item"><div class="tl-leg-dot" style="background:var(--cyan)"></div>Confirmation</div>
+      <div class="tl-leg-item"><div class="tl-leg-dot" style="background:var(--green)"></div>Location fix</div>
+      <div class="tl-leg-item"><div class="tl-leg-dot" style="background:#a855f7"></div>Trail</div>
+      <div class="tl-leg-item"><div class="tl-leg-dot" style="background:var(--red)"></div>Human alert</div>
+    </div>
+
+    <button class="tl-play-btn" id="tl-play-btn" onclick="tlPlay()">▶ PLAY TIMELINE</button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       INFOGRAPHIC 2 — CASCADE CONFIDENCE FLOW
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="ig-section" id="ig-confidence">
+    <div class="ig-header">
+      <div class="ig-tag">SM-IG-2.0</div>
+      <h2 class="ig-title">Cascade <em>Confidence</em> Flow</h2>
+      <p class="ig-sub">How raw sensor noise becomes a verified, actionable human alert</p>
+    </div>
+
+    <div class="cf-wrap">
+      <div class="cf-funnel">
+
+        <div class="cf-stage-block" style="--clr:var(--amber);--w:100%">
+          <div class="cf-stage-label">
+            <span class="cf-stage-num">01</span>
+            <span class="cf-stage-name">Raw Sensor Events</span>
+          </div>
+          <div class="cf-bar-row">
+            <div class="cf-bar" id="cf-bar-0"></div>
+            <div class="cf-bar-stat" id="cf-stat-0">—</div>
+          </div>
+          <div class="cf-stage-desc">All acoustic, RF, thermal, seismic and optical triggers — including noise, wind, vehicles, birds</div>
+        </div>
+
+        <div class="cf-arrow">↓ AI filters by signature</div>
+
+        <div class="cf-stage-block" style="--clr:var(--cyan);--w:38%">
+          <div class="cf-stage-label">
+            <span class="cf-stage-num">02</span>
+            <span class="cf-stage-name">Suspicion Events</span>
+          </div>
+          <div class="cf-bar-row">
+            <div class="cf-bar" id="cf-bar-1"></div>
+            <div class="cf-bar-stat" id="cf-stat-1">—</div>
+          </div>
+          <div class="cf-stage-desc">Events that match a known threat signature on at least one sensor. False positives still present.</div>
+        </div>
+
+        <div class="cf-arrow">↓ Cross-sensor agreement required</div>
+
+        <div class="cf-stage-block" style="--clr:var(--green);--w:18%">
+          <div class="cf-stage-label">
+            <span class="cf-stage-num">03</span>
+            <span class="cf-stage-name">Confirmed Detections</span>
+          </div>
+          <div class="cf-bar-row">
+            <div class="cf-bar" id="cf-bar-2"></div>
+            <div class="cf-bar-stat" id="cf-stat-2">—</div>
+          </div>
+          <div class="cf-stage-desc">2+ sensors agree. Location fix computed via TDOA. Threat classified and tracked.</div>
+        </div>
+
+        <div class="cf-arrow">↓ Evidence packaged + operator notified</div>
+
+        <div class="cf-stage-block" style="--clr:var(--red);--w:8%">
+          <div class="cf-stage-label">
+            <span class="cf-stage-num">05</span>
+            <span class="cf-stage-name">Human Alerts Sent</span>
+          </div>
+          <div class="cf-bar-row">
+            <div class="cf-bar" id="cf-bar-3"></div>
+            <div class="cf-bar-stat" id="cf-stat-3">—</div>
+          </div>
+          <div class="cf-stage-desc">Actionable alert with GPS coords, sensor evidence, threat type and confidence score. Human decides.</div>
+        </div>
+
+      </div>
+
+      <div class="cf-aside">
+        <div class="cf-aside-title">Per 24-hour period<br><span>100-node deployment</span></div>
+        <div class="cf-aside-stats">
+          <div class="cf-aside-row">
+            <div class="cf-aside-val" style="color:var(--amber)" id="cf-aside-0">—</div>
+            <div class="cf-aside-lbl">raw triggers</div>
+          </div>
+          <div class="cf-aside-row">
+            <div class="cf-aside-val" style="color:var(--cyan)" id="cf-aside-1">—</div>
+            <div class="cf-aside-lbl">suspicion events</div>
+          </div>
+          <div class="cf-aside-row">
+            <div class="cf-aside-val" style="color:var(--green)" id="cf-aside-2">—</div>
+            <div class="cf-aside-lbl">confirmed detections</div>
+          </div>
+          <div class="cf-aside-row">
+            <div class="cf-aside-val" style="color:var(--red)" id="cf-aside-3">—</div>
+            <div class="cf-aside-lbl">human alerts</div>
+          </div>
+        </div>
+        <div class="cf-aside-note">
+          ≤ 15 false alerts<br>per node per day<br>(Y1 target)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       INFOGRAPHIC 3 — MESH RESILIENCE
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="ig-section" id="ig-resilience">
+    <div class="ig-header">
+      <div class="ig-tag">SM-IG-3.0</div>
+      <h2 class="ig-title">Mesh <em>Resilience</em></h2>
+      <p class="ig-sub">Click nodes to take them offline — watch how the mesh adapts</p>
+    </div>
+
+    <div class="mr-wrap">
+      <div class="mr-canvas-wrap">
+        <canvas id="mr-canvas" width="560" height="380"></canvas>
+        <div class="mr-canvas-label">CLICK ANY NODE TO TOGGLE OFFLINE</div>
+      </div>
+
+      <div class="mr-stats-panel">
+        <div class="mr-stat-big">
+          <div class="mr-stat-val" id="mr-online-count">20</div>
+          <div class="mr-stat-lbl">Nodes online</div>
+        </div>
+        <div class="mr-stat-big">
+          <div class="mr-stat-val" id="mr-offline-count" style="color:var(--red)">0</div>
+          <div class="mr-stat-lbl">Nodes offline</div>
+        </div>
+        <div class="mr-divider"></div>
+        <div class="mr-coverage-row">
+          <div class="mr-cov-label">Coverage retained</div>
+          <div class="mr-cov-val" id="mr-coverage-pct">100%</div>
+        </div>
+        <div class="mr-cov-bar-wrap">
+          <div class="mr-cov-bar" id="mr-cov-bar" style="width:100%"></div>
+        </div>
+        <div class="mr-status-msg" id="mr-status-msg">System fully operational</div>
+        <div class="mr-divider"></div>
+        <div class="mr-compare">
+          <div class="mr-compare-title">vs Single-Point Systems</div>
+          <div class="mr-compare-row">
+            <span class="mr-compare-name">ShotSpotter</span>
+            <span class="mr-compare-status fail" id="mr-cmp-1">—</span>
+          </div>
+          <div class="mr-compare-row">
+            <span class="mr-compare-name">Dedrone</span>
+            <span class="mr-compare-status fail" id="mr-cmp-2">—</span>
+          </div>
+          <div class="mr-compare-row">
+            <span class="mr-compare-name">DroneShield</span>
+            <span class="mr-compare-status fail" id="mr-cmp-3">—</span>
+          </div>
+        </div>
+        <button class="mr-reset-btn" onclick="mrReset()">↺ Reset all nodes</button>
+      </div>
+    </div>
+
+    <div class="mr-legend">
+      <div class="mr-leg-item"><div class="mr-leg-dot" style="background:var(--green)"></div>Online — active coverage</div>
+      <div class="mr-leg-item"><div class="mr-leg-dot" style="background:var(--red)"></div>Offline — failed / removed</div>
+      <div class="mr-leg-item"><div class="mr-leg-dot" style="background:var(--amber)"></div>Overlap — redundant coverage</div>
+    </div>
+  </div>
+
 </div><!-- /wrap -->
 
 <div class="version-badge">SM-VIZ-1.3 · SENTINEL DETECTION CASCADE</div>
@@ -756,20 +954,336 @@
 </script>
 
 <script>
-// Anatomy card toggle
-function anatToggle(card, id) {
-  var was = card.classList.contains('active');
-  document.querySelectorAll('.anat-card').forEach(function(c){ c.classList.remove('active'); });
-  document.querySelectorAll('.anat-hotspot').forEach(function(h){ h.classList.remove('active'); });
-  if (!was) {
-    card.classList.add('active');
-    document.querySelectorAll('.anat-hotspot[data-sensor="'+id+'"]').forEach(function(h){ h.classList.add('active'); });
+/* ═══════════════════════════════════════════════════════════════
+   INFOGRAPHIC 1 — TIMELINE OF A THREAT
+   ═══════════════════════════════════════════════════════════════ */
+var TL_SCENARIOS = [
+  {
+    name: 'Drone',
+    tracks: [
+      { label: 'RF / SDR',       color: '#00d4f5', events: [{t:0,dur:3,note:'DJI signal detected'},{t:8,dur:14,note:'Signal tracked'}] },
+      { label: 'Acoustic',       color: '#f5a623', events: [{t:4,dur:2,note:'Rotor harmonic'},{t:10,dur:12,note:'Continuous track'}] },
+      { label: 'Thermal IR',     color: '#ff4757', events: [{t:6,dur:16,note:'Motor heat signature'}] },
+      { label: 'AI Cascade',     color: '#a855f7', events: [{t:3,dur:1,note:'Stage 1: Suspicion'},{t:6,dur:2,note:'Stage 2: Confirm'},{t:9,dur:2,note:'Stage 3: Locate'},{t:13,dur:4,note:'Stage 4: Trail'}] },
+      { label: 'Human Alert',    color: '#39d353', events: [{t:18,dur:2,note:'Alert dispatched ✓'}] },
+    ]
+  },
+  {
+    name: 'Gunshot',
+    tracks: [
+      { label: 'Acoustic',       color: '#f5a623', events: [{t:0,dur:1,note:'Muzzle blast'},{t:0.3,dur:0.5,note:'Ballistic crack'}] },
+      { label: 'Seismic',        color: '#a855f7', events: [{t:0.1,dur:0.8,note:'Ground wave'}] },
+      { label: 'Optical',        color: '#39d353', events: [{t:1,dur:3,note:'Area scan'}] },
+      { label: 'AI Cascade',     color: '#00d4f5', events: [{t:0.5,dur:1,note:'Stage 1–2: Confirm'},{t:2,dur:2,note:'Stage 3: TDOA locate'},{t:5,dur:2,note:'Stage 4: Trail'}] },
+      { label: 'Human Alert',    color: '#ff4757', events: [{t:8,dur:2,note:'Alert dispatched ✓'}] },
+    ]
+  },
+  {
+    name: 'Explosion',
+    tracks: [
+      { label: 'Acoustic',       color: '#f5a623', events: [{t:0,dur:1,note:'Blast wave'},{t:1,dur:5,note:'Echo decay'}] },
+      { label: 'Seismic',        color: '#a855f7', events: [{t:0,dur:2,note:'Ground shockwave'}] },
+      { label: 'Thermal IR',     color: '#ff4757', events: [{t:0.2,dur:18,note:'Heat bloom expanding'}] },
+      { label: 'AI Cascade',     color: '#00d4f5', events: [{t:1,dur:1,note:'Stage 1–2: Confirm'},{t:3,dur:2,note:'Stage 3: Locate'},{t:6,dur:3,note:'Stage 4: Trail'}] },
+      { label: 'Human Alert',    color: '#39d353', events: [{t:10,dur:2,note:'Alert dispatched ✓'}] },
+    ]
+  },
+  {
+    name: 'Vehicle',
+    tracks: [
+      { label: 'Acoustic',       color: '#f5a623', events: [{t:0,dur:20,note:'Engine harmonics'}] },
+      { label: 'Thermal IR',     color: '#ff4757', events: [{t:2,dur:18,note:'Engine heat trail'}] },
+      { label: 'Optical',        color: '#39d353', events: [{t:5,dur:15,note:'Visual track'}] },
+      { label: 'AI Cascade',     color: '#00d4f5', events: [{t:3,dur:2,note:'Stage 1–2'},{t:7,dur:2,note:'Stage 3: Locate'},{t:12,dur:5,note:'Stage 4: Trail'}] },
+      { label: 'Human Alert',    color: '#a855f7', events: [{t:22,dur:2,note:'Alert dispatched ✓'}] },
+    ]
   }
+];
+
+var tlCurrentScenario = 0;
+var tlPlaying = false;
+var tlAnimId  = null;
+var TL_DURATION = 90; // seconds represented
+
+function tlSelectScenario(idx, btn) {
+  tlCurrentScenario = idx;
+  tlStop();
+  document.querySelectorAll('.tl-btn').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  tlRender(0);
 }
-function anatToggleById(id) {
-  var card = document.querySelector('.anat-card[data-sensor="'+id+'"]');
-  if (card) anatToggle(card, id);
+
+function tlRender(progress) {
+  var sc     = TL_SCENARIOS[tlCurrentScenario];
+  var tracks = document.getElementById('tl-tracks');
+  if (!tracks) return;
+  tracks.innerHTML = '';
+
+  sc.tracks.forEach(function(tr) {
+    var row = document.createElement('div');
+    row.className = 'tl-row';
+
+    var lbl = document.createElement('div');
+    lbl.className = 'tl-row-label';
+    lbl.textContent = tr.label;
+    row.appendChild(lbl);
+
+    var lane = document.createElement('div');
+    lane.className = 'tl-lane';
+
+    tr.events.forEach(function(ev) {
+      var pct = progress * TL_DURATION;
+      if (ev.t > pct) return;
+      var block = document.createElement('div');
+      block.className = 'tl-event';
+      var left  = (ev.t / TL_DURATION) * 100;
+      var width = Math.min((Math.min(ev.dur, pct - ev.t) / TL_DURATION) * 100, (ev.dur / TL_DURATION) * 100);
+      block.style.left      = left + '%';
+      block.style.width     = width + '%';
+      block.style.background = tr.color;
+      block.style.boxShadow  = '0 0 8px ' + tr.color;
+      block.title = ev.note;
+
+      if (pct >= ev.t + ev.dur * 0.3) {
+        var note = document.createElement('span');
+        note.className = 'tl-event-note';
+        note.textContent = ev.note;
+        block.appendChild(note);
+      }
+      lane.appendChild(block);
+    });
+    row.appendChild(lane);
+    tracks.appendChild(row);
+  });
+
+  // Playhead
+  var ph = document.getElementById('tl-playhead');
+  if (ph) ph.style.left = (progress * 100) + '%';
 }
+
+function tlPlay() {
+  if (tlPlaying) { tlStop(); return; }
+  tlPlaying = true;
+  var btn = document.getElementById('tl-play-btn');
+  if (btn) btn.textContent = '◼ STOP';
+  var start = null;
+  var dur   = 6000; // 6 seconds animation
+
+  function step(ts) {
+    if (!start) start = ts;
+    var prog = Math.min((ts - start) / dur, 1);
+    tlRender(prog);
+    if (prog < 1 && tlPlaying) {
+      tlAnimId = requestAnimationFrame(step);
+    } else {
+      tlStop();
+      tlRender(1);
+    }
+  }
+  tlRender(0);
+  tlAnimId = requestAnimationFrame(step);
+}
+
+function tlStop() {
+  tlPlaying = false;
+  if (tlAnimId) cancelAnimationFrame(tlAnimId);
+  var btn = document.getElementById('tl-play-btn');
+  if (btn) btn.textContent = '▶ PLAY TIMELINE';
+}
+
+// Init timeline
+tlRender(0);
+
+/* ═══════════════════════════════════════════════════════════════
+   INFOGRAPHIC 2 — CASCADE CONFIDENCE FLOW
+   ═══════════════════════════════════════════════════════════════ */
+(function() {
+  var vals = [14400, 5400, 2600, 320];
+  var labels = ['14,400', '5,400', '2,600', '320'];
+  var ids = ['cf-bar-0','cf-bar-1','cf-bar-2','cf-bar-3'];
+  var widths = ['100%','38%','18%','2.2%'];
+  var colors = ['var(--amber)','var(--cyan)','var(--green)','var(--red)'];
+  var asideIds = ['cf-aside-0','cf-aside-1','cf-aside-2','cf-aside-3'];
+  var statIds = ['cf-stat-0','cf-stat-1','cf-stat-2','cf-stat-3'];
+
+  // Animate bars on scroll into view
+  var animated = false;
+  function animateBars() {
+    if (animated) return;
+    animated = true;
+    ids.forEach(function(id, i) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.style.background = colors[i];
+      el.style.boxShadow  = '0 0 12px ' + colors[i];
+      setTimeout(function() {
+        el.style.width = widths[i];
+        var st = document.getElementById(statIds[i]);
+        var as = document.getElementById(asideIds[i]);
+        if (st) st.textContent = labels[i];
+        if (as) as.textContent = labels[i];
+      }, i * 300);
+    });
+  }
+
+  var section = document.getElementById('ig-confidence');
+  if (section && 'IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) animateBars();
+    }, { threshold: 0.3 });
+    obs.observe(section);
+  } else {
+    setTimeout(animateBars, 800);
+  }
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   INFOGRAPHIC 3 — MESH RESILIENCE
+   ═══════════════════════════════════════════════════════════════ */
+(function() {
+  var mc = document.getElementById('mr-canvas');
+  if (!mc) return;
+  var ctx = mc.getContext('2d');
+  var W = 560, H = 380;
+  var ROWS = 4, COLS = 5;
+  var NR = 16; // node radius
+  var DR = 70; // detection radius
+
+  // Build node grid
+  var nodes = [];
+  var padX = 60, padY = 55, gapX = (W - padX*2) / (COLS-1), gapY = (H - padY*2) / (ROWS-1);
+  for (var r = 0; r < ROWS; r++) {
+    for (var c = 0; c < COLS; c++) {
+      nodes.push({ x: padX + c*gapX, y: padY + r*gapY, offline: false, id: r*COLS+c });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#060d18';
+    ctx.fillRect(0,0,W,H);
+
+    var online = nodes.filter(function(n){ return !n.offline; });
+
+    // Coverage zones — green for normal, amber for overlap
+    online.forEach(function(n) {
+      // Count how many online nodes cover this zone
+      var g = ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,DR);
+      g.addColorStop(0,   'rgba(57,211,83,0.12)');
+      g.addColorStop(0.6, 'rgba(57,211,83,0.06)');
+      g.addColorStop(1,   'rgba(57,211,83,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(n.x,n.y,DR,0,Math.PI*2); ctx.fill();
+    });
+
+    // Overlap zones (amber) — where 2+ nodes cover same area
+    for (var i = 0; i < online.length; i++) {
+      for (var j = i+1; j < online.length; j++) {
+        var a = online[i], b = online[j];
+        var d = Math.hypot(a.x-b.x, a.y-b.y);
+        if (d < DR * 1.8) {
+          var mx = (a.x+b.x)/2, my = (a.y+b.y)/2;
+          var og = ctx.createRadialGradient(mx,my,0,mx,my,d*0.4);
+          og.addColorStop(0,'rgba(245,166,35,0.12)');
+          og.addColorStop(1,'rgba(245,166,35,0)');
+          ctx.fillStyle = og;
+          ctx.beginPath(); ctx.arc(mx,my,d*0.4,0,Math.PI*2); ctx.fill();
+        }
+      }
+    }
+
+    // Mesh lines between online nodes
+    online.forEach(function(a,i) {
+      online.forEach(function(b,j) {
+        if (j<=i) return;
+        var d = Math.hypot(a.x-b.x,a.y-b.y);
+        if (d > gapX*1.6) return;
+        ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle = 'rgba(0,212,245,0.12)'; ctx.lineWidth = 0.8; ctx.stroke();
+      });
+    });
+
+    // Nodes
+    nodes.forEach(function(n) {
+      if (n.offline) {
+        // Offline — red X
+        ctx.beginPath(); ctx.arc(n.x,n.y,NR,0,Math.PI*2);
+        ctx.fillStyle = 'rgba(255,71,87,0.15)';
+        ctx.strokeStyle = '#ff4757'; ctx.lineWidth = 1.5;
+        ctx.fill(); ctx.stroke();
+        ctx.strokeStyle = '#ff4757'; ctx.lineWidth = 2;
+        var s = NR*0.4;
+        ctx.beginPath(); ctx.moveTo(n.x-s,n.y-s); ctx.lineTo(n.x+s,n.y+s); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(n.x+s,n.y-s); ctx.lineTo(n.x-s,n.y+s); ctx.stroke();
+      } else {
+        // Online — glowing green dot
+        ctx.shadowColor = '#00d4f5'; ctx.shadowBlur = 10;
+        ctx.beginPath(); ctx.arc(n.x,n.y,NR,0,Math.PI*2);
+        ctx.fillStyle = '#0d2235'; ctx.strokeStyle = '#00d4f5'; ctx.lineWidth = 1.5;
+        ctx.fill(); ctx.stroke();
+        ctx.shadowBlur = 0;
+        ctx.beginPath(); ctx.arc(n.x,n.y,4,0,Math.PI*2);
+        ctx.fillStyle = '#39d353'; ctx.fill();
+      }
+    });
+  }
+
+  function updateStats() {
+    var total   = nodes.length;
+    var offline = nodes.filter(function(n){ return n.offline; }).length;
+    var online  = total - offline;
+    var pct     = Math.round((online / total) * 100);
+
+    document.getElementById('mr-online-count').textContent  = online;
+    document.getElementById('mr-offline-count').textContent = offline;
+    document.getElementById('mr-coverage-pct').textContent  = pct + '%';
+
+    var bar = document.getElementById('mr-cov-bar');
+    if (bar) {
+      bar.style.width = pct + '%';
+      bar.style.background = pct > 70 ? 'var(--green)' : pct > 40 ? 'var(--amber)' : 'var(--red)';
+    }
+
+    var msg = document.getElementById('mr-status-msg');
+    if (msg) {
+      if (offline === 0)       msg.textContent = 'System fully operational';
+      else if (pct >= 85)      msg.textContent = offline + ' node(s) offline — mesh compensating';
+      else if (pct >= 60)      msg.textContent = 'Coverage degraded — ' + (100-pct) + '% gap';
+      else                     msg.textContent = '⚠ Critical — major coverage loss';
+      msg.style.color = pct > 70 ? 'var(--green)' : pct > 40 ? 'var(--amber)' : 'var(--red)';
+    }
+
+    // Competitor comparison — they fail if ANY node offline
+    ['mr-cmp-1','mr-cmp-2','mr-cmp-3'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      if (offline === 0) { el.textContent = 'OPERATIONAL'; el.style.color = 'var(--green)'; }
+      else               { el.textContent = 'FAILED'; el.style.color = 'var(--red)'; }
+    });
+  }
+
+  // Click detection
+  mc.addEventListener('click', function(e) {
+    var rect = mc.getBoundingClientRect();
+    var scaleX = W / rect.width;
+    var scaleY = H / rect.height;
+    var mx = (e.clientX - rect.left) * scaleX;
+    var my = (e.clientY - rect.top)  * scaleY;
+    nodes.forEach(function(n) {
+      if (Math.hypot(mx-n.x, my-n.y) < NR + 6) {
+        n.offline = !n.offline;
+        draw(); updateStats();
+      }
+    });
+  });
+
+  window.mrReset = function() {
+    nodes.forEach(function(n){ n.offline = false; });
+    draw(); updateStats();
+  };
+
+  draw(); updateStats();
+})();
 </script>
 </body>
 </html>
