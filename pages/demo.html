@@ -33,27 +33,23 @@
     <p class="sub">One platform &nbsp;·&nbsp; Every threat type &nbsp;·&nbsp; All stages complete in seconds</p>
   </div>
 
-  <!-- ── SCENARIO CARD ──────────────────────────────────────── -->
+  <!-- ── SCENARIO SELECTOR ──────────────────────────────────── -->
+  <div class="scenario-selector" id="scenario-selector">
+    <!-- Buttons injected by viz.js on boot -->
+  </div>
+
+  <!-- ── SCENARIO INFO CARD ─────────────────────────────────── -->
   <div class="scenario-card">
     <div class="sc-icon" id="sc-icon">—</div>
     <div class="sc-left">
-      <div class="sc-label">
-        SCENARIO <span id="sc-num-label">1</span> OF 4 &nbsp;·&nbsp; ACTIVE DETECTION
-      </div>
+      <div class="sc-label">ACTIVE DETECTION SCENARIO</div>
       <div class="sc-name" id="sc-name">—</div>
       <div class="sc-desc" id="sc-desc">—</div>
       <div class="sc-sensors" id="sc-sensors"></div>
     </div>
-    <div class="sc-right">
-      <div class="sc-cycle-lbl">SCENARIO</div>
-      <div class="sc-num" id="sc-cycle-num">1</div>
-      <div class="sc-of">of 4</div>
-      <div class="sc-dots">
-        <div class="sc-dot" id="dot-0"></div>
-        <div class="sc-dot" id="dot-1"></div>
-        <div class="sc-dot" id="dot-2"></div>
-        <div class="sc-dot" id="dot-3"></div>
-      </div>
+    <div class="sc-auto running" id="sc-auto">
+      <div class="auto-dot"></div>
+      <span id="sc-auto-label">AUTO</span>
     </div>
   </div>
 
@@ -368,24 +364,7 @@
 
 </div><!-- /wrap -->
 
-<!-- ── TITLE OVERLAY — 6 seconds ──────────────────────────────── -->
-<div class="title-overlay" id="title-overlay">
-  <div class="title-inner">
-    <div class="to-label">SENTINEL DETECTION ENGINE</div>
-    <span class="to-icon" id="to-icon">—</span>
-    <div class="to-scenario-num" id="to-scenario-num">SCENARIO 1 OF 4</div>
-    <div class="to-name" id="to-name">—</div>
-    <div class="to-desc" id="to-desc">—</div>
-    <div class="to-sensors" id="to-sensors"></div>
-    <div class="to-countdown-wrap">
-      STARTING IN
-      <span class="countdown-num" id="to-count">6</span>
-    </div>
-    <div class="to-progress">
-      <div class="to-progress-fill" id="to-progress-fill"></div>
-    </div>
-  </div>
-</div>
+<!-- Title overlay removed — scenario selector used instead -->
 
 <!-- ── VERSION BADGE ───────────────────────────────────────────── -->
 <div class="version-badge">SM-VIZ-1.3 · SENTINEL DETECTION CASCADE</div>
