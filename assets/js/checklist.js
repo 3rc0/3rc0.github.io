@@ -267,6 +267,19 @@ function renderAuth() {
     !isLogin ? h("div", { class: "cl-input-hint" }, "3–30 chars · letters, numbers, dash, underscore") : null,
   ));
 
+  // Email (register only — optional)
+  if (!isLogin) {
+    card.appendChild(h("div", { class: "cl-field" },
+      h("label", { class: "cl-label" }, "Email (optional)"),
+      h("input", {
+        class: "cl-input", id: "cl-email", type: "email",
+        placeholder: "you@example.com", autocomplete: "email", maxlength: "100",
+        onInput: () => clearAuthErr()
+      }),
+      h("div", { class: "cl-input-hint" }, "For project alerts and due date reminders"),
+    ));
+  }
+
   // Password + show/hide + caps lock
   const passWrap = h("div", { class: "cl-field cl-pass-field" });
   const passRow  = h("div", { class: "cl-pass-row" });
@@ -346,6 +359,7 @@ function renderAuth() {
     onClick: async () => {
       const username = (document.getElementById("cl-user")?.value || "").trim().toLowerCase();
       const password = (document.getElementById("cl-pass")?.value || "");
+      const email    = (document.getElementById("cl-email")?.value || "").trim().toLowerCase();
       const btn = document.getElementById("cl-auth-btn");
       clearAuthErr();
 
@@ -357,13 +371,17 @@ function renderAuth() {
       if (!isLogin && password.length < 8) {
         showAuthErr("Password must be at least 8 characters.", "cl-pass"); return;
       }
+      if (!isLogin && email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showAuthErr("Please enter a valid email address.", "cl-email"); return;
+      }
 
       btn.disabled = true; btn.textContent = isLogin ? "Signing in…" : "Creating account…";
 
       try {
+        const payload = isLogin ? { username, password } : { username, password, email: email || undefined };
         const d = await apiFetch(
           isLogin ? "/api/login" : "/api/register",
-          { method: "POST", body: JSON.stringify({ username, password }) }
+          { method: "POST", body: JSON.stringify(payload) }
         );
         if (d.locked) {
           showAuthErr("Too many failed attempts. Please wait 15 minutes.");
@@ -540,7 +558,7 @@ function renderProjectCard(p, isArchived) {
 
   // Card body
   const icon  = p.icon || "📋";
-  const daysLeft = isArchived ? daysUntilDelete(p.archivedAt) : null;
+  const daysLeft = isArchived ? daysUntilDelete(p.archived) : null;
 
   card.innerHTML = `
     <div class="cl-card-top">
@@ -550,7 +568,7 @@ function renderProjectCard(p, isArchived) {
     <div class="cl-card-name">${escHtml(p.name)}</div>
     <div class="cl-card-meta">
       <span class="cl-card-progress">${p.checked || 0} of ${p.total || 0} done</span>
-      <span class="cl-card-time">${timeAgo(p.updatedAt)}</span>
+      <span class="cl-card-time">${timeAgo(p.updated)}</span>
     </div>
     ${isArchived ? `<div class="cl-card-countdown ${daysLeft <= 7 ? "urgent" : ""}">Deletes in ${daysLeft}d</div>` : ""}
     ${!isArchived && p.due_date ? (() => {
@@ -735,7 +753,7 @@ function toggleCardMenu(p, card) {
   const archiveBtn = h("button", { class: "cl-dropdown-item cl-dropdown-item--danger",
     onClick: () => {
       menu.remove();
-      confirm(
+      showConfirm(
         `Archive <strong>${escHtml(p.name)}</strong>?<br><small>It will be deleted after 30 days unless restored.</small>`,
         async () => {
           const d = await apiFetch(`/api/projects/${p.id}/archive`, { method: "POST" });
@@ -2271,7 +2289,7 @@ function renderConfirmDialog() {
 }
 
 // ── Confirm helper ────────────────────────────────────
-function confirm(message, onConfirm, opts = {}) {
+function showConfirm(message, onConfirm, opts = {}) {
   state.confirmDialog = { message, onConfirm, ...opts };
   render();
 }
@@ -2308,17 +2326,19 @@ async function boot() {
   if (token) {
     state.session = { token };
     try {
-      // Verify session is valid by loading projects
-      const d = await apiFetch("/api/projects");
-      if (d.ok === false) {
+      // Recover username via /api/me
+      const me = await apiFetch("/api/me");
+      if (me.ok === false) {
         // Session expired or invalid
         clearToken();
         state.session = null;
         state.view    = "auth";
       } else {
-        state.session.username = d.projects.length > 0
-          ? null  // will be set on login response
-          : null;
+        state.session.username = me.username;
+        state.session.email    = me.email || null;
+
+        // Load projects
+        const d = await apiFetch("/api/projects");
         state.projects      = d.projects || [];
         state.projectsLoaded = true;
 
