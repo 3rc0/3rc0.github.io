@@ -601,9 +601,9 @@ function renderProjectCard(p, isArchived) {
       const due    = new Date(p.due_date + "T23:59:59Z");
       const diffMs = due - Date.now();
       const diffD  = Math.ceil(diffMs / 86400000);
-      if (diffD < 0)  return `<div class="cl-card-due overdue">🔴 Overdue · ${p.due_date}</div>`;
-      if (diffD <= 7) return `<div class="cl-card-due soon">⚠️ Due in ${diffD}d · ${p.due_date}</div>`;
-      return `<div class="cl-card-due">📅 Due ${p.due_date}</div>`;
+      if (diffD < 0)  return `<div class="cl-card-due overdue">🔴 Overdue · ${escHtml(p.due_date)}</div>`;
+      if (diffD <= 7) return `<div class="cl-card-due soon">⚠️ Due in ${diffD}d · ${escHtml(p.due_date)}</div>`;
+      return `<div class="cl-card-due">📅 Due ${escHtml(p.due_date)}</div>`;
     })() : ""}
     <div class="cl-card-actions"></div>`;
 
@@ -2341,8 +2341,8 @@ function registerSW() {
 }
 
 // ── Offline tracking ──────────────────────────────────
-window.addEventListener("online",  () => { state.online=true;  if(state.view==="app") render(); });
-window.addEventListener("offline", () => { state.online=false; if(state.view==="app") render(); });
+window.addEventListener("online",  () => { state.online=true;  render(); });
+window.addEventListener("offline", () => { state.online=false; render(); });
 
 // ── Boot ──────────────────────────────────────────────
 async function boot() {
