@@ -218,6 +218,38 @@ function ring(pct) {
   return wrap;
 }
 
+// ── Turnstile ────────────────────────────────────────
+const TURNSTILE_SITE_KEY = "0x4AAAAAACn8RUl9iGKKPPgd";
+let turnstileLoaded = false;
+
+function loadTurnstile() {
+  if (turnstileLoaded || document.getElementById("cf-turnstile-script")) return;
+  const s = document.createElement("script");
+  s.id  = "cf-turnstile-script";
+  s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+  s.async = true;
+  s.onload = () => { turnstileLoaded = true; renderTurnstileWidget(); };
+  document.head.appendChild(s);
+}
+
+function renderTurnstileWidget() {
+  const container = document.getElementById("cl-turnstile");
+  if (!container || !window.turnstile) return;
+  if (container.dataset.rendered === "1") return;
+  container.dataset.rendered = "1";
+  window.turnstile.render(container, {
+    sitekey: TURNSTILE_SITE_KEY,
+    size: "compact",
+    theme: state.theme === "dark" ? "dark" : "light",
+    callback: (token) => { container.dataset.token = token; },
+  });
+}
+
+function getTurnstileToken() {
+  const container = document.getElementById("cl-turnstile");
+  return container?.dataset?.token || "";
+}
+
 // ── Auth ──────────────────────────────────────────────
 function renderAuth() {
   const isLogin = state.authTab === "login";
@@ -353,6 +385,9 @@ function renderAuth() {
     ));
   }
 
+  // Turnstile bot protection
+  card.appendChild(h("div", { id: "cl-turnstile", style: "margin:12px 0;min-height:65px" }));
+
   // Submit
   const submitBtn = h("button", {
     class: "cl-btn cl-btn-primary cl-btn-full", id: "cl-auth-btn",
@@ -360,6 +395,7 @@ function renderAuth() {
       const username = (document.getElementById("cl-user")?.value || "").trim().toLowerCase();
       const password = (document.getElementById("cl-pass")?.value || "");
       const email    = (document.getElementById("cl-email")?.value || "").trim().toLowerCase();
+      const turnstileToken = getTurnstileToken();
       const btn = document.getElementById("cl-auth-btn");
       clearAuthErr();
 
@@ -378,7 +414,9 @@ function renderAuth() {
       btn.disabled = true; btn.textContent = isLogin ? "Signing in…" : "Creating account…";
 
       try {
-        const payload = isLogin ? { username, password } : { username, password, email: email || undefined };
+        const payload = isLogin
+          ? { username, password, turnstileToken }
+          : { username, password, email: email || undefined, turnstileToken };
         const d = await apiFetch(
           isLogin ? "/api/login" : "/api/register",
           { method: "POST", body: JSON.stringify(payload) }
@@ -1009,15 +1047,6 @@ function renderOnboarding() {
 }
 
 // ── Load / Save ───────────────────────────────────────
-async function loadUserData() {
-  try {
-    const d=await apiFetch("/api/data");
-    if(d.ok!==false){
-      state.sections = ensureUIDs(d.sections||DEFAULT_SECTIONS);
-      state.checks   = d.checks||{};
-    }
-  } catch(e){}
-}
 async function saveData(key,value,logEntry) {
   state.saving=true; renderSaving();
   try {
@@ -1869,22 +1898,30 @@ function renderChecklist() {
   const frag = document.createDocumentFragment();
   frag.appendChild(renderHeader());
 
-  // Cost strip
-  const costs = h("div",{"class":"cl-costs"},
-    ...[ ["💰","~$4,298","Total incl. tax"], ["📅","$0 / yr","No subscriptions"], ["⚡","~$138 / yr","Electricity"] ]
-      .map(([icon,val,lbl]) => h("div",{"class":"cl-cost-card"},
-        h("div",{"class":"cl-cost-icon"},icon),
-        h("div",{"class":"cl-cost-val"},val),
-        h("div",{"class":"cl-cost-lbl"},lbl)
-      ))
-  );
-  frag.appendChild(costs);
+  // Cost strip — only for original UniFi home security template
+  if (state.activeProject?.template === "unifi-udm-se") {
+    const costs = h("div",{"class":"cl-costs"},
+      ...[ ["💰","~$4,298","Total incl. tax"], ["📅","$0 / yr","No subscriptions"], ["⚡","~$138 / yr","Electricity"] ]
+        .map(([icon,val,lbl]) => h("div",{"class":"cl-cost-card"},
+          h("div",{"class":"cl-cost-icon"},icon),
+          h("div",{"class":"cl-cost-val"},val),
+          h("div",{"class":"cl-cost-lbl"},lbl)
+        ))
+    );
+    frag.appendChild(costs);
+  }
 
   if (state.showLog) frag.appendChild(renderLog());
 
   // Sections
   state.sections.forEach((sec, si) => {
-    const meta = SEC_META[sec.id]||{icon:"📌",color:"#8ba3bf",hint:""};
+    const metaDefault = {icon:"📌",color:"#8ba3bf",hint:""};
+    const metaLookup  = SEC_META[sec.id] || {};
+    const meta = {
+      icon:  sec.icon  || metaLookup.icon  || metaDefault.icon,
+      color: sec.color || metaLookup.color || metaDefault.color,
+      hint:  sec.hint  || metaLookup.hint  || metaDefault.hint,
+    };
     const {t,d,pct:sp} = secProg(sec);
     const isComplete = d===t && t>0;
     const isOpen     = !state.collapsed[sec.id];
@@ -2052,7 +2089,7 @@ function renderChecklist() {
 
                 const dlBtn = h("a", {
                   class: "cl-file-btn",
-                  href: "https://checklist-api.3rc0.workers.dev/api/files/" + f.id,
+                  href: API + "/api/files/" + f.id,
                   download: f.name,
                   title: "Download",
                   onClick: e => e.stopPropagation()
@@ -2230,7 +2267,7 @@ function render() {
   }
 
   if (state.view === "loading")          { root.appendChild(renderLoading()); return; }
-  if (state.view === "auth")             { root.appendChild(renderAuth()); return; }
+  if (state.view === "auth")             { root.appendChild(renderAuth()); loadTurnstile(); setTimeout(renderTurnstileWidget, 100); return; }
   if (state.view === "onboarding")       { root.appendChild(renderOnboarding()); return; }
   if (state.view === "dashboard")        { root.appendChild(renderDashboard()); return; }
   if (state.view === "checklist")        { root.appendChild(renderChecklist()); dndAttach(); return; }
