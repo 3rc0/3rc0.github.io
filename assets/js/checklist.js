@@ -373,18 +373,6 @@ function renderAuth() {
     label.textContent = lvl.label; label.style.color = lvl.color;
   }
 
-  // Forgot password (login only)
-  if (isLogin) {
-    card.appendChild(h("div", { class: "cl-forgot" },
-      h("button", { class: "cl-link-btn",
-        onClick: () => {
-          const e = document.getElementById("cl-auth-err");
-          if (e) { e.textContent = "Password reset coming soon. Contact support if urgent."; e.className = "cl-auth-error show"; }
-        }
-      }, "Forgot password?")
-    ));
-  }
-
   // Turnstile bot protection
   card.appendChild(h("div", { id: "cl-turnstile", style: "margin:12px 0;min-height:65px" }));
 
@@ -1491,7 +1479,7 @@ function renderHeader() {
       state.session=null;state.checks={};state.sections=DEFAULT_SECTIONS;
       state.editMode=false;state.showLog=false;state.view="auth";
       render();
-    }},"Sign Out");
+    }},"Sign out");
 
   const actions=h("div",{"class":"cl-header-actions"},editBtn,logBtn,printBtn,themeBtn,logoutBtn);
   const saving =h("div",{"class":"cl-saving","id":"cl-saving","style":"display:none"},"● syncing…");
@@ -1996,14 +1984,16 @@ function renderChecklist() {
           onClick: async e=>{ e.stopPropagation();
             const val=!state.checks[item.n];
             state.checks[item.n]=val;
+            render();
             const action=val?"check":"uncheck";
             const logEntry={action,detail:`${val?"Checked":"Unchecked"}: #${item.n} ${item.name}`};
-            if (item.uid && state.activeProject) {
-              await checkItem(item.uid, val, logEntry);
-            } else {
-              await saveData("checks",state.checks,logEntry);
-            }
-            render();
+            try {
+              if (item.uid && state.activeProject) {
+                await checkItem(item.uid, val, logEntry);
+              } else {
+                await saveData("checks",state.checks,logEntry);
+              }
+            } catch(e) { state.checks[item.n]=!val; render(); }
           }
         });
         if (isDone) cb.innerHTML=`<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1" stroke="#065f46" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -2028,19 +2018,19 @@ function renderChecklist() {
           const cancelBtn=h("button",{"class":"cl-btn cl-btn-ghost cl-btn-sm",onClick:()=>{state.editItem=null;render();}},"Cancel");
           const form=h("div",{"class":"cl-edit-form"},nameI,modelI,detI,
             h("div",{"class":"cl-form-row"},priceI,
-              h("label",{"style":"font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px;cursor:pointer"},warnI,"⚠ Pending"),
+              h("label",{"style":"font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px;cursor:pointer"},warnI,"⚠ Critical"),
               saveBtn,cancelBtn)
           );
           row.appendChild(form);
         } else {
           const nameRow = h("div",{"class":"cl-item-name"},item.name,
-            item.warn?h("span",{"class":"cl-tag tag-warn"},"⚠ Pending"):null,
+            item.warn?h("span",{"class":"cl-tag tag-warn"},"⚠ Critical"):null,
             item.price==="FREE"&&!isDone?h("span",{"class":"cl-tag tag-free"},"FREE"):null,
           );
           const body = h("div",{"class":"cl-item-body"},nameRow);
           if (item.model) body.appendChild(h("div",{"class":"cl-item-model"},item.model));
           if (item.detail) {
-            const expBtn=h("button",{"class":"cl-expand-btn",onClick:e=>{e.stopPropagation();state.expanded[expKey]=!isExp;render();}},isExp?"▾ Hide":"▸ What is this?");
+            const expBtn=h("button",{"class":"cl-expand-btn",onClick:e=>{e.stopPropagation();state.expanded[expKey]=!isExp;render();}},isExp?"▾ Hide":"▸ Details");
             const detail=h("div",{"class":"cl-item-detail"+(isExp?" open":"")},item.detail);
             body.append(expBtn,detail);
           }
@@ -2173,14 +2163,16 @@ function renderChecklist() {
             if (state.editMode || isEditing) return;
             const val=!state.checks[item.n];
             state.checks[item.n]=val;
+            render();
             const action=val?"check":"uncheck";
             const logEntry2={action,detail:`${val?"Checked":"Unchecked"}: #${item.n} ${item.name}`};
-            if (item.uid && state.activeProject) {
-              await checkItem(item.uid, val, logEntry2);
-            } else {
-              await saveData("checks",state.checks,logEntry2);
-            }
-            render();
+            try {
+              if (item.uid && state.activeProject) {
+                await checkItem(item.uid, val, logEntry2);
+              } else {
+                await saveData("checks",state.checks,logEntry2);
+              }
+            } catch(e) { state.checks[item.n]=!val; render(); }
           });
           row.appendChild(right);
         }
