@@ -57,6 +57,8 @@
   --done-bg:   rgba(93,187,138,0.06);
   --shadow:    0 24px 60px rgba(0,0,0,0.6);
   --shadow-sm: 0 4px 16px rgba(0,0,0,0.4);
+  --surface:   #1a1820;
+  --text-dim:  #6b6278;
   --r:         14px;
   --mono:      "SF Mono","Fira Code","Consolas",monospace;
   --serif:     Georgia,"Palatino Linotype","Times New Roman",serif;
@@ -91,6 +93,8 @@
   --done-bg:   rgba(26,122,74,0.05);
   --shadow:    0 8px 32px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.07);
+  --surface:   #ffffff;
+  --text-dim:  #8a7e72;
   color: var(--text);
 }
 
@@ -428,14 +432,6 @@
 /* Section header grip — slightly larger hit area */
 #cl-app .cl-sec-header .cl-grip { min-height: 48px; margin-right: 4px; }
 
-/* Keyboard grabbed state */
-#cl-app .cl-kb-grabbed {
-  background: var(--gold-glow) !important;
-  outline: 2px solid var(--gold) !important;
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
 /* Ghost card — positioned via JS (no CSS needed beyond override) */
 #cl-drag-ghost { cursor: grabbing !important; }
 
@@ -460,85 +456,15 @@
   #cl-app .cl-grip { width: 16px; }
 }
 
-/* ─── 21. OFFLINE BANNER ─────────────────────────────── */
-#cl-app .cl-offline-banner {
-  background: var(--red2); border: 1px solid var(--red-rim);
-  border-radius: 10px; padding: 10px 16px; font-size: 13px;
-  color: var(--red); margin-bottom: 10px;
-  display: flex; align-items: center; gap: 8px;
-  font-family: var(--mono); font-weight: 600;
-  animation: cl-up 0.3s ease;
-}
-
-/* ─── 22. VIEW TRANSITIONS ───────────────────────────── */
-@media (prefers-reduced-motion: no-preference) {
-  /* Suppress default root cross-dissolve so named elements animate */
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
-    mix-blend-mode: normal;
-  }
-
-  /* Individual element transitions — spring-like motion */
-  ::view-transition-group(*) {
-    animation-duration: 0.32s;
-    animation-timing-function: cubic-bezier(0.34, 1.4, 0.64, 1);
-  }
-
-  ::view-transition-image-pair(*) {
-    isolation: isolate;
-  }
-
-  ::view-transition-old(*) {
-    animation: cl-vt-out 0.18s ease forwards;
-  }
-  ::view-transition-new(*) {
-    animation: cl-vt-in 0.32s cubic-bezier(0.34,1.4,0.64,1) forwards;
-  }
-}
-
-@keyframes cl-vt-out {
-  from { opacity: 1; }
-  to   { opacity: 0; }
-}
-@keyframes cl-vt-in {
-  from { opacity: 0; transform: scale(0.97); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*) { animation-duration: 0s !important; }
-}
-
-/* ─── 23. @starting-style — new items fade in ────────── */
-@supports selector(@starting-style) {
-  @starting-style {
-    #cl-app .cl-item {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    #cl-app .cl-section {
-      opacity: 0;
-      transform: translateY(4px);
-    }
-  }
-}
-
-/* ─── 24. content-visibility — perf on long lists ───── */
-#cl-app .cl-section {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 180px;
-}
-
-/* ─── 25. PRINT — hide drag UI ───────────────────────── */
+/* ─── 22. PRINT — hide drag UI ───────────────────────── */
 @media print {
   #cl-app .cl-grip,
   #cl-app .cl-reorder-btns,
+  #cl-app .cl-move-btns,
   #cl-app .cl-offline-banner { display: none !important; }
 }
 
-/* ─── 19. DRAG HANDLES ───────────────────────────────── */
+/* ─── 23. DRAG HANDLES ───────────────────────────────── */
 #cl-app .cl-drag-handle {
   display: flex;
   align-items: center;
@@ -574,7 +500,8 @@
 
 /* Keyboard grab highlight */
 #cl-app .cl-kb-grabbed {
-  outline: 2px solid var(--gold);
+  background: var(--gold-glow) !important;
+  outline: 2px solid var(--gold) !important;
   outline-offset: 2px;
   border-radius: 10px;
 }
@@ -982,6 +909,9 @@
 [data-theme="light"] .cl-confirm-dialog { background: #fff; }
 [data-theme="light"] .cl-template-card { background: #f8f6f0; }
 [data-theme="light"] .cl-onboard-cat-btn { background: #f8f6f0; }
+[data-theme="light"] .cl-ai-textarea { background: #f3f1ec; }
+[data-theme="light"] .cl-ai-banner { background: linear-gradient(135deg, rgba(138,109,59,0.08) 0%, rgba(138,109,59,0.03) 100%); }
+[data-theme="light"] .cl-toast { background: #fff; border-color: rgba(138,109,59,0.3); color: #8a6d3b; box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
 
 /* ── Responsive ─────────────────────────────────── */
 @media (max-width: 640px) {
@@ -991,6 +921,7 @@
   .cl-dash-header { padding: 14px 16px; }
   .cl-btn--new-project { margin: 14px 16px 4px; width: calc(100% - 32px); }
   .cl-dash-section { padding: 8px 16px 32px; }
+  .cl-ai-modal { max-width: 100%; margin: 0 8px; }
   .cl-breadcrumb { padding: 10px 16px 0; }
   .cl-dash-user { display: none; }
 }
@@ -1038,19 +969,6 @@
   letter-spacing: 0.05em; min-height: 16px;
 }
 
-/* ── Forgot password link ───────────────────────────── */
-.cl-forgot {
-  text-align: right; margin-top: -6px; margin-bottom: 10px;
-}
-.cl-link-btn {
-  background: none; border: none;
-  color: var(--gold); font-size: 13px;
-  cursor: pointer; padding: 0;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-.cl-link-btn:hover { opacity: 0.8; }
-
 /* ── Privacy note ───────────────────────────────────── */
 .cl-privacy-note {
   font-size: 12px; color: var(--text-dim);
@@ -1059,73 +977,6 @@
   background: rgba(93,187,138,0.06);
   border: 1px solid rgba(93,187,138,0.15);
   border-radius: 8px; line-height: 1.4;
-}
-
-/* ════════════════════════════════════════════════════
-   Phase B.1 — OTP Login
-   ════════════════════════════════════════════════════ */
-
-/* ── Auth error info variant ───────────────────────── */
-#cl-app .cl-auth-error.info {
-  background: rgba(93,187,138,0.08);
-  border-color: rgba(93,187,138,0.25);
-  color: var(--green);
-}
-
-/* ── Method toggle row ─────────────────────────────── */
-#cl-app .cl-method-toggle {
-  text-align: center;
-  margin: 2px 0 10px;
-}
-
-/* ── 6-digit OTP boxes ─────────────────────────────── */
-#cl-app .cl-otp-digits {
-  display: flex; gap: 8px; justify-content: center;
-  margin: 8px 0 16px;
-}
-#cl-app .cl-otp-box {
-  width: 46px; height: 58px;
-  text-align: center;
-  font-size: 26px; font-weight: 800; font-family: monospace;
-  border: 2px solid var(--border);
-  border-radius: 10px;
-  background: var(--bg2);
-  color: var(--text);
-  caret-color: var(--gold);
-  transition: border-color 0.15s, box-shadow 0.15s;
-  outline: none;
-}
-#cl-app .cl-otp-box:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px var(--gold-glow);
-}
-#cl-app .cl-otp-box.error {
-  border-color: var(--red);
-  animation: cl-shake 0.35s ease;
-}
-#cl-app[data-theme="light"] .cl-otp-box {
-  background: #fff; border-color: #d0c8c0;
-}
-
-/* ── Timer ─────────────────────────────────────────── */
-#cl-app .cl-otp-timer {
-  text-align: center;
-  font-size: 12px;
-  color: var(--text-dim);
-  margin-bottom: 14px;
-}
-
-/* ── Resend + back links row ───────────────────────── */
-#cl-app .cl-otp-links {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 14px;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-#cl-app .cl-link-btn.disabled {
-  opacity: 0.4; cursor: not-allowed; text-decoration: none;
 }
 
 /* ════════════════════════════════════════════════════
