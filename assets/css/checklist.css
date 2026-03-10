@@ -1268,3 +1268,34 @@
   display: flex; gap: 10px; justify-content: flex-end;
   margin-top: 8px;
 }
+
+/* ─── AI GENERATE ─────────────────────────────────── */
+#cl-app .cl-ai-banner {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px; margin: 12px 0 16px;
+  background: linear-gradient(135deg, rgba(201,169,110,0.1) 0%, rgba(201,169,110,0.04) 100%);
+  border: 1px solid var(--gold-rim);
+  border-radius: var(--r); cursor: pointer;
+  transition: all 0.2s;
+}
+#cl-app .cl-ai-banner:hover {
+  border-color: var(--gold); background: rgba(201,169,110,0.14);
+  transform: translateY(-1px); box-shadow: 0 4px 16px rgba(201,169,110,0.12);
+}
+#cl-app .cl-ai-banner-icon { font-size: 28px; flex-shrink: 0; }
+#cl-app .cl-ai-banner-text { flex: 1; }
+#cl-app .cl-ai-banner-text strong { display: block; color: var(--gold); font-size: 15px; margin-bottom: 2px; }
+#cl-app .cl-ai-banner-text span { font-size: 13px; color: var(--text2); }
+#cl-app .cl-ai-banner-arrow { font-size: 18px; color: var(--gold); font-weight: 700; }
+#cl-app .cl-ai-modal { max-width: 520px; }
+#cl-app .cl-ai-textarea {
+  width: 100%; min-height: 120px; resize: vertical;
+  font-family: inherit; font-size: 14px; line-height: 1.5;
+  padding: 12px; border-radius: 8px;
+  background: var(--bg2); border: 1px solid var(--border2);
+  color: var(--text); transition: border-color 0.15s;
+}
+#cl-app .cl-ai-textarea:focus { outline: none; border-color: var(--gold); }
+#cl-app .cl-ai-textarea::placeholder { color: var(--text3); }
+#cl-app .cl-ai-counter { font-size: 11px; color: var(--text3); text-align: right; margin-top: 4px; font-family: var(--mono); }
+#cl-app .cl-ai-hint { font-size: 12px; color: var(--text3); text-align: center; margin-top: 12px; }
