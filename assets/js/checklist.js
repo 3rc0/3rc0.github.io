@@ -650,13 +650,15 @@ function showDueDateModal(p) {
   const current  = p.due_date || "";
 
   const overlay = h("div", { class: "cl-modal-overlay", id: "cl-duedate-modal",
-    onClick: (e) => { if (e.target === overlay) overlay.remove(); }
+    onClick: (e) => { if (e.target === overlay) { overlay.remove(); document.removeEventListener("keydown", ddEsc); } }
   });
+  const ddEsc = (e) => { if (e.key === "Escape") { overlay.remove(); document.removeEventListener("keydown", ddEsc); } };
+  document.addEventListener("keydown", ddEsc);
 
   const modal = h("div", { class: "cl-modal cl-duedate-modal" });
 
   const closeBtn = h("button", { class: "cl-modal-close",
-    onClick: () => overlay.remove()
+    onClick: () => { overlay.remove(); document.removeEventListener("keydown", ddEsc); }
   }, "✕");
 
   modal.appendChild(closeBtn);
@@ -724,7 +726,7 @@ function showDueDateModal(p) {
       const d = await apiFetch(`/api/projects/${p.id}/due-date`, {
         method: "PATCH", body: JSON.stringify({ due_date: null })
       });
-      if (d.ok) { await loadProjects(); render(); overlay.remove(); toast("Due date cleared"); }
+      if (d.ok) { await loadProjects(); render(); overlay.remove(); document.removeEventListener("keydown", ddEsc); toast("Due date cleared"); }
       else toast("Failed to clear due date", "var(--red)");
     }
   }, "✕ Clear");
@@ -741,7 +743,7 @@ function showDueDateModal(p) {
       const d = await apiFetch(`/api/projects/${p.id}/due-date`, {
         method: "PATCH", body: JSON.stringify({ due_date: due })
       });
-      if (d.ok) { await loadProjects(); render(); overlay.remove(); toast(`📅 Due date set: ${due}`); }
+      if (d.ok) { await loadProjects(); render(); overlay.remove(); document.removeEventListener("keydown", ddEsc); toast(`📅 Due date set: ${due}`); }
       else toast("Failed to set due date", "var(--red)");
     }
   }, "Save");
@@ -749,7 +751,7 @@ function showDueDateModal(p) {
   btnRow.append(clearBtn, saveBtn);
   modal.appendChild(btnRow);
   overlay.appendChild(modal);
-  document.body.appendChild(overlay);
+  (document.getElementById("cl-app") || document.body).appendChild(overlay);
 
   // Focus calendar
   setTimeout(() => { document.getElementById("cl-duedate-cal")?.focus(); }, 80);
@@ -941,13 +943,17 @@ function showAIGenerateModal() {
   if (existing) existing.remove();
 
   const overlay = h("div", { class: "cl-modal-overlay", id: "cl-ai-modal",
-    onClick: (e) => { if (e.target === overlay) { overlay.remove(); state.view = "template-picker"; render(); } }
+    onClick: (e) => { if (e.target === overlay) { overlay.remove(); state.view = "template-picker"; render(); document.removeEventListener("keydown", escHandler); } }
   });
+
+  // Escape key to close
+  const escHandler = (e) => { if (e.key === "Escape") { overlay.remove(); state.view = "template-picker"; render(); document.removeEventListener("keydown", escHandler); } };
+  document.addEventListener("keydown", escHandler);
 
   const modal = h("div", { class: "cl-modal cl-ai-modal" });
 
   const closeBtn = h("button", { class: "cl-modal-close",
-    onClick: () => { overlay.remove(); state.view = "template-picker"; render(); }
+    onClick: () => { overlay.remove(); state.view = "template-picker"; render(); document.removeEventListener("keydown", escHandler); }
   }, "✕");
 
   modal.appendChild(closeBtn);
@@ -963,7 +969,7 @@ function showAIGenerateModal() {
     rows: "5",
   });
   modal.appendChild(h("div", { class: "cl-field", style: "margin-top:16px" },
-    h("label", { class: "cl-label" }, "Describe your project"),
+    h("label", { class: "cl-label", for: "cl-ai-desc" }, "Describe your project"),
     textarea
   ));
 
@@ -977,7 +983,7 @@ function showAIGenerateModal() {
   modal.appendChild(counter);
 
   // Error display
-  const errEl = h("div", { class: "cl-auth-error", id: "cl-ai-err" });
+  const errEl = h("div", { class: "cl-auth-error", id: "cl-ai-err", role: "alert", "aria-live": "polite" });
   modal.appendChild(errEl);
 
   // Generate button
@@ -1048,6 +1054,7 @@ function showAIGenerateModal() {
         });
 
         overlay.remove();
+        document.removeEventListener("keydown", escHandler);
         localStorage.setItem(ONBOARD_KEY, "1");
         toast("✨ AI checklist created!");
         await openProject(projRes.project.id);
@@ -1068,7 +1075,7 @@ function showAIGenerateModal() {
   ));
 
   overlay.appendChild(modal);
-  document.body.appendChild(overlay);
+  (document.getElementById("cl-app") || document.body).appendChild(overlay);
   setTimeout(() => textarea.focus(), 80);
 }
 
