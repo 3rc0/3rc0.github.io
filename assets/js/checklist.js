@@ -831,6 +831,12 @@ function renderTemplatePicker() {
 
   const title = h("div", { class: "cl-modal-title" }, "Choose a Template");
 
+  // AI Generate banner
+  const aiBanner = h("div", { class: "cl-ai-banner",
+    onClick: () => showAIGenerateModal()
+  });
+  aiBanner.innerHTML = `<div class="cl-ai-banner-icon">✨</div><div class="cl-ai-banner-text"><strong>AI Generate</strong><span>Describe your project and AI builds a custom checklist</span></div><div class="cl-ai-banner-arrow">→</div>`;
+
   // Search
   const search = h("input", { class: "cl-input cl-template-search",
     type: "text", placeholder: "Search templates…",
@@ -854,7 +860,7 @@ function renderTemplatePicker() {
   const grid = h("div", { class: "cl-template-grid" });
   renderTemplateGrid(grid);
 
-  modal.append(closeBtn, title, search, tabs, grid);
+  modal.append(closeBtn, title, aiBanner, search, tabs, grid);
   overlay.appendChild(modal);
   return overlay;
 }
@@ -923,6 +929,147 @@ function promptProjectName(template) {
 
   modal.append(back, title, sub, label, input, createBtn);
   setTimeout(() => { input.select(); input.focus(); }, 50);
+}
+
+// ════════════════════════════════════════════════════
+// AI CHECKLIST GENERATOR
+// ════════════════════════════════════════════════════
+
+function showAIGenerateModal() {
+  // Remove template picker overlay if present
+  const existing = document.querySelector(".cl-modal-overlay");
+  if (existing) existing.remove();
+
+  const overlay = h("div", { class: "cl-modal-overlay", id: "cl-ai-modal",
+    onClick: (e) => { if (e.target === overlay) { overlay.remove(); state.view = "template-picker"; render(); } }
+  });
+
+  const modal = h("div", { class: "cl-modal cl-ai-modal" });
+
+  const closeBtn = h("button", { class: "cl-modal-close",
+    onClick: () => { overlay.remove(); state.view = "template-picker"; render(); }
+  }, "✕");
+
+  modal.appendChild(closeBtn);
+  modal.appendChild(h("div", { class: "cl-modal-title" }, "✨ AI Checklist Generator"));
+  modal.appendChild(h("div", { class: "cl-modal-sub" },
+    "Describe your project and AI will build a custom checklist with sections and tasks."
+  ));
+
+  const textarea = h("textarea", {
+    class: "cl-input cl-ai-textarea", id: "cl-ai-desc",
+    placeholder: "Example: Installing 6 Hikvision cameras in a 2-story office building with a server room, 4 access control doors, and a Ubiquiti network backbone.",
+    maxlength: "1000",
+    rows: "5",
+  });
+  modal.appendChild(h("div", { class: "cl-field", style: "margin-top:16px" },
+    h("label", { class: "cl-label" }, "Describe your project"),
+    textarea
+  ));
+
+  // Character counter
+  const counter = h("div", { class: "cl-ai-counter", id: "cl-ai-counter" }, "0 / 1000");
+  textarea.addEventListener("input", () => {
+    const len = textarea.value.length;
+    counter.textContent = `${len} / 1000`;
+    counter.style.color = len > 900 ? "var(--red)" : "var(--text3)";
+  });
+  modal.appendChild(counter);
+
+  // Error display
+  const errEl = h("div", { class: "cl-auth-error", id: "cl-ai-err" });
+  modal.appendChild(errEl);
+
+  // Generate button
+  const genBtn = h("button", {
+    class: "cl-btn cl-btn--gold cl-btn--full", id: "cl-ai-gen-btn",
+    style: "margin-top:16px",
+    onClick: async () => {
+      const desc = textarea.value.trim();
+      const errBox = document.getElementById("cl-ai-err");
+
+      if (!desc || desc.length < 10) {
+        if (errBox) { errBox.textContent = "Please describe your project in at least 10 characters."; errBox.className = "cl-auth-error show"; }
+        return;
+      }
+      if (errBox) errBox.className = "cl-auth-error";
+
+      genBtn.disabled = true;
+      genBtn.textContent = "✨ AI is building your checklist…";
+
+      try {
+        const d = await apiFetch("/api/ai/generate", {
+          method: "POST",
+          body: JSON.stringify({ description: desc })
+        });
+
+        if (d.limited) {
+          if (errBox) { errBox.textContent = d.error || "AI limit reached. Try again tomorrow."; errBox.className = "cl-auth-error show"; }
+          genBtn.disabled = false; genBtn.textContent = "✨ Generate Checklist";
+          return;
+        }
+
+        if (!d.ok) {
+          if (errBox) { errBox.textContent = d.error || "AI generation failed. Try again."; errBox.className = "cl-auth-error show"; }
+          genBtn.disabled = false; genBtn.textContent = "✨ Generate Checklist";
+          return;
+        }
+
+        // Success — create project from AI response
+        const checklist = d.checklist;
+        genBtn.textContent = "Creating project…";
+
+        // Create empty project
+        const projRes = await apiFetch("/api/projects", {
+          method: "POST",
+          body: JSON.stringify({ name: checklist.name || "AI Generated Project", template: "ai-generated" })
+        });
+
+        if (!projRes.ok) {
+          if (errBox) { errBox.textContent = "Failed to create project."; errBox.className = "cl-auth-error show"; }
+          genBtn.disabled = false; genBtn.textContent = "✨ Generate Checklist";
+          return;
+        }
+
+        // Save AI-generated sections to the project
+        const sections = (checklist.sections || []).map(sec => ({
+          title: sec.title || "Section",
+          icon: sec.icon || "📋",
+          items: (sec.items || []).map(item => ({
+            name: item.name || "Task",
+            detail: item.detail || "",
+            warn: !!item.warn,
+          }))
+        }));
+
+        await apiFetch("/api/projects/" + projRes.project.id + "/save", {
+          method: "POST",
+          body: JSON.stringify({ sections, entry: { action: "ai-generate", detail: "AI generated checklist" } })
+        });
+
+        overlay.remove();
+        localStorage.setItem(ONBOARD_KEY, "1");
+        toast("✨ AI checklist created!");
+        await openProject(projRes.project.id);
+
+      } catch (e) {
+        console.error("AI generate error:", e);
+        if (errBox) { errBox.textContent = "Network error. Please try again."; errBox.className = "cl-auth-error show"; }
+        genBtn.disabled = false; genBtn.textContent = "✨ Generate Checklist";
+      }
+    }
+  }, "✨ Generate Checklist");
+
+  modal.appendChild(genBtn);
+
+  // Hint
+  modal.appendChild(h("div", { class: "cl-ai-hint" },
+    "AI uses your description to create a professional checklist. You can edit everything after generation."
+  ));
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+  setTimeout(() => textarea.focus(), 80);
 }
 
 // ════════════════════════════════════════════════════
