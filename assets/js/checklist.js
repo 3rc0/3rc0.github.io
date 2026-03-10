@@ -138,7 +138,7 @@ let state = {
   saving:        false,
   logs:          [],
   showLog:       false,
-  theme:         localStorage.getItem(THEME_KEY) || "dark",
+  theme:         localStorage.getItem(THEME_KEY) || "light",
   online:        navigator.onLine,
 
   // Confirm dialog
@@ -206,11 +206,11 @@ function h(tag, attrs, ...children) {
 // ── Ring ──────────────────────────────────────────────
 function ring(pct) {
   const size=64,stroke=5,r=(size-stroke*2)/2,circ=2*Math.PI*r;
-  const color = pct===100?"#5dbb8a":"#c9a96e";
+  const color = pct===100?"#10b981":"#7c3aed";
   const offset = circ*(1-pct/100);
   const wrap = h("div",{"class":"cl-ring"});
   wrap.innerHTML=`<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="transform:rotate(-90deg)">
-    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="rgba(201,169,110,0.12)" stroke-width="${stroke}"/>
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="rgba(124,58,237,0.1)" stroke-width="${stroke}"/>
     <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${stroke}"
       stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"
       style="transition:stroke-dashoffset 0.6s ease"/>
@@ -570,12 +570,12 @@ function renderProjectCard(p, isArchived) {
   // Progress ring
   const ringSize = 56, stroke = 4, r = (ringSize - stroke * 2) / 2;
   const circ = 2 * Math.PI * r;
-  const color = pct === 100 ? "#5dbb8a" : isArchived ? "#666" : "#c9a96e";
+  const color = pct === 100 ? "#10b981" : isArchived ? "#a1a1aa" : "#7c3aed";
   const offset = circ * (1 - pct / 100);
   const ringHtml = `
     <div class="cl-card-ring" aria-label="${pct}% complete">
       <svg width="${ringSize}" height="${ringSize}" viewBox="0 0 ${ringSize} ${ringSize}" style="transform:rotate(-90deg)">
-        <circle cx="${ringSize/2}" cy="${ringSize/2}" r="${r}" fill="none" stroke="rgba(201,169,110,0.12)" stroke-width="${stroke}"/>
+        <circle cx="${ringSize/2}" cy="${ringSize/2}" r="${r}" fill="none" stroke="rgba(124,58,237,0.1)" stroke-width="${stroke}"/>
         <circle cx="${ringSize/2}" cy="${ringSize/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${stroke}"
           stroke-linecap="round" stroke-dasharray="${circ.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}"/>
       </svg>
@@ -1303,15 +1303,15 @@ async function exportPDF() {
     return d.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
   }
 
-  // ── Colours
-  const GOLD   = [201, 169, 110];
-  const GREEN  = [93,  187, 138];
-  const RED    = [248, 113, 113];
-  const DARK   = [26,  22,  20];
-  const MID    = [92,  80,  72];
-  const LIGHT  = [245, 240, 235];
+  // ── Colours (matches modern purple theme)
+  const ACCENT = [124, 58,  237];
+  const GREEN  = [16,  185, 129];
+  const RED    = [239, 68,  68];
+  const DARK   = [24,  24,  27];
+  const MID    = [82,  82,  91];
+  const LIGHT  = [244, 244, 245];
   const WHITE  = [255, 255, 255];
-  const BORDER = [220, 210, 200];
+  const BORDER = [228, 228, 231];
 
   let y = 0;
 
@@ -1336,11 +1336,11 @@ async function exportPDF() {
   doc.rect(0, 0, W, 60, "F");
 
   // Gold accent line
-  doc.setFillColor(...GOLD);
+  doc.setFillColor(...ACCENT);
   doc.rect(0, 60, W, 1.5, "F");
 
   // Logo area
-  doc.setFontSize(28); doc.setTextColor(...GOLD);
+  doc.setFontSize(28); doc.setTextColor(...ACCENT);
   doc.setFont("helvetica", "bold");
   doc.text("🔐  SecCheck", ML, 28);
 
@@ -1384,7 +1384,7 @@ async function exportPDF() {
   checkY(14);
   doc.setFillColor(...BORDER); doc.roundedRect(ML, y, TW, 5, 2, 2, "F");
   const fillW = Math.max(4, (pct / 100) * TW);
-  const barCol = pct === 100 ? GREEN : pct >= 50 ? GOLD : RED;
+  const barCol = pct === 100 ? GREEN : pct >= 50 ? ACCENT : RED;
   doc.setFillColor(...barCol); doc.roundedRect(ML, y, fillW, 5, 2, 2, "F");
   y += 9;
   doc.setFontSize(9); doc.setTextColor(...MID);
@@ -1421,7 +1421,7 @@ async function exportPDF() {
     const secLines = doc.splitTextToSize(secLabel, TW - 50);
     doc.text(secLines[0], ML + 2, y + 4.2);
     doc.text(String(secTotal), ML + TW - 40, y + 4.2);
-    const doneCol = secDone === secTotal ? GREEN : secDone > 0 ? GOLD : RED;
+    const doneCol = secDone === secTotal ? GREEN : secDone > 0 ? ACCENT : RED;
     doc.setTextColor(...doneCol);
     doc.text(String(secDone), ML + TW - 24, y + 4.2);
     doc.setTextColor(...MID);
@@ -1439,10 +1439,10 @@ async function exportPDF() {
     // Section header band
     doc.setFillColor(...DARK);
     doc.rect(0, 0, W, 18, "F");
-    doc.setFillColor(...GOLD);
+    doc.setFillColor(...ACCENT);
     doc.rect(0, 18, W, 1, "F");
 
-    doc.setFontSize(13); doc.setFont("helvetica", "bold"); doc.setTextColor(...GOLD);
+    doc.setFontSize(13); doc.setFont("helvetica", "bold"); doc.setTextColor(...ACCENT);
     const secHead = (sec.icon ? sec.icon + "  " : "") + sec.title;
     doc.text(secHead, ML, 12);
 
@@ -1526,8 +1526,8 @@ async function exportPDF() {
   // ══════════════════════════════════════════════
   newPage();
   doc.setFillColor(...DARK); doc.rect(0, 0, W, 18, "F");
-  doc.setFillColor(...GOLD); doc.rect(0, 18, W, 1, "F");
-  doc.setFontSize(13); doc.setFont("helvetica", "bold"); doc.setTextColor(...GOLD);
+  doc.setFillColor(...ACCENT); doc.rect(0, 18, W, 1, "F");
+  doc.setFontSize(13); doc.setFont("helvetica", "bold"); doc.setTextColor(...ACCENT);
   doc.text("Sign-off & Certification", ML, 12);
   y = 30;
 
@@ -1870,7 +1870,7 @@ function dndStart(e, type, si, ii, handle) {
     pointerEvents:"none", zIndex:"9999",
     opacity:"0.95",
     transform:"scale(1.02) rotate(0.3deg)",
-    boxShadow:"0 24px 60px rgba(0,0,0,0.55), 0 0 0 2px #c9a96e, 0 0 24px rgba(201,169,110,0.18)",
+    boxShadow:"0 24px 60px rgba(0,0,0,0.55), 0 0 0 2px #7c3aed, 0 0 24px rgba(124,58,237,0.18)",
     borderRadius:"12px",
     transition:"transform 0.12s ease, box-shadow 0.12s ease",
     cursor:"grabbing",
@@ -2050,7 +2050,7 @@ function renderChecklist() {
 
   // Sections
   state.sections.forEach((sec, si) => {
-    const metaDefault = {icon:"📌",color:"#8ba3bf",hint:""};
+    const metaDefault = {icon:"📌",color:"#7c3aed",hint:""};
     const metaLookup  = SEC_META[sec.id] || {};
     const meta = {
       icon:  sec.icon  || metaLookup.icon  || metaDefault.icon,
