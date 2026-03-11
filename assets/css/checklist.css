@@ -78,6 +78,12 @@
 #cl-app .cl-input-hint { font-size:11px; color:var(--text3); margin-top:3px; }
 #cl-app .cl-auth-error { display:none; background:var(--red2); border:1px solid var(--red-border); border-radius:var(--r); padding:9px 12px; font-size:13px; color:var(--red); margin-bottom:12px; }
 #cl-app .cl-auth-error.show { display:block; }
+#cl-app .cl-auth-success { display:none; background:#ecfdf5; border:1px solid #6ee7b7; border-radius:var(--r); padding:9px 12px; font-size:13px; color:#047857; margin-bottom:12px; }
+#cl-app .cl-auth-success.show { display:block; }
+[data-theme="dark"] #cl-app .cl-auth-success { background:#022c22; border-color:#065f46; color:#6ee7b7; }
+#cl-app .cl-auth-link { text-align:center; margin-top:12px; }
+#cl-app .cl-link-btn { background:none; border:none; color:var(--accent); font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; padding:4px 0; }
+#cl-app .cl-link-btn:hover { text-decoration:underline; }
 
 /* ─── 8. BUTTONS ─────────────────────────────────────── */
 #cl-app .cl-btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:7px 14px; border:none; border-radius:var(--r); font-size:13px; font-weight:600; line-height:1; cursor:pointer; transition:all 0.15s; text-decoration:none; white-space:nowrap; font-family:inherit; }
