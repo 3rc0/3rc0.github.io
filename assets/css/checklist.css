@@ -84,6 +84,9 @@
 #cl-app .cl-auth-link { text-align:center; margin-top:12px; }
 #cl-app .cl-link-btn { background:none; border:none; color:var(--accent); font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; padding:4px 0; }
 #cl-app .cl-link-btn:hover { text-decoration:underline; }
+#cl-app .cl-link-btn--danger { color:var(--text3); font-size:12px; }
+#cl-app .cl-link-btn--danger:hover { color:var(--red); }
+#cl-app .cl-danger-zone { text-align:center; margin-top:40px; padding-top:20px; border-top:1px solid var(--border); }
 
 /* ─── 8. BUTTONS ─────────────────────────────────────── */
 #cl-app .cl-btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:7px 14px; border:none; border-radius:var(--r); font-size:13px; font-weight:600; line-height:1; cursor:pointer; transition:all 0.15s; text-decoration:none; white-space:nowrap; font-family:inherit; }
@@ -320,6 +323,10 @@
 .cl-modal-close:hover { background:var(--bg3); color:var(--text); }
 .cl-modal-title { font-size:17px; font-weight:700; color:var(--text); margin-bottom:4px; letter-spacing:-0.01em; }
 .cl-modal-sub { font-size:13px; color:var(--text-dim); margin-bottom:14px; }
+.cl-modal-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.cl-modal-icon { font-size:24px; line-height:1; }
+.cl-modal-desc { font-size:13px; line-height:1.5; color:var(--text2); margin-bottom:8px; }
+.cl-modal-actions { display:flex; gap:8px; justify-content:flex-end; }
 
 .cl-template-search { width:100%; margin-bottom:12px; }
 .cl-template-tabs { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:14px; }
