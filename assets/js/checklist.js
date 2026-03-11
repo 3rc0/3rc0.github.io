@@ -753,6 +753,16 @@ function renderDashboard() {
   }
 
   wrap.append(hdr, newBtn, section);
+
+  // ── Danger zone — account deletion ──────────────────
+  const dangerZone = h("div", { class: "cl-danger-zone" },
+    h("button", {
+      class: "cl-link-btn cl-link-btn--danger", type: "button",
+      onClick: () => showDeleteAccountModal()
+    }, "Delete account")
+  );
+  wrap.appendChild(dangerZone);
+
   return wrap;
 }
 
@@ -832,6 +842,90 @@ function escHtml(s) {
   return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
+
+// ── Delete Account Modal ──────────────────────────────────────
+function showDeleteAccountModal() {
+  const existing = document.getElementById("cl-delete-account-modal");
+  if (existing) existing.remove();
+
+  const overlay = h("div", { class: "cl-modal-overlay", id: "cl-delete-account-modal",
+    onClick: (e) => { if (e.target === overlay) overlay.remove(); }
+  });
+
+  const modal = h("div", { class: "cl-modal" });
+  modal.innerHTML = `
+    <div class="cl-modal-header">
+      <span class="cl-modal-icon">⚠️</span>
+      <h2 class="cl-modal-title">Delete account</h2>
+    </div>
+    <p class="cl-modal-desc" style="color:var(--red)">This action is permanent and cannot be undone. All your projects, files, and data will be permanently deleted.</p>
+    <div class="cl-field" style="margin-top:12px">
+      <label class="cl-label">Enter your password to confirm</label>
+      <input class="cl-input" id="cl-delete-pass" type="password" placeholder="••••••••" autocomplete="current-password" maxlength="100" />
+    </div>
+    <div class="cl-auth-error" id="cl-delete-err"></div>
+    <div class="cl-modal-actions" style="margin-top:16px">
+      <button class="cl-btn cl-btn--ghost" id="cl-delete-cancel">Cancel</button>
+      <button class="cl-btn cl-btn--danger" id="cl-delete-confirm">Delete my account</button>
+    </div>
+  `;
+
+  overlay.appendChild(modal);
+  (document.getElementById("cl-app") || document.body).appendChild(overlay);
+
+  // Focus password input
+  setTimeout(() => document.getElementById("cl-delete-pass")?.focus(), 50);
+
+  // Escape key closes
+  const onKey = (e) => {
+    if (e.key === "Escape") { overlay.remove(); document.removeEventListener("keydown", onKey); }
+  };
+  document.addEventListener("keydown", onKey);
+
+  document.getElementById("cl-delete-cancel").onclick = () => {
+    overlay.remove(); document.removeEventListener("keydown", onKey);
+  };
+
+  document.getElementById("cl-delete-confirm").onclick = async () => {
+    const password = (document.getElementById("cl-delete-pass")?.value || "");
+    const errEl = document.getElementById("cl-delete-err");
+    const btn = document.getElementById("cl-delete-confirm");
+
+    if (!password) {
+      errEl.textContent = "Please enter your password.";
+      errEl.className = "cl-auth-error show";
+      return;
+    }
+
+    btn.disabled = true; btn.textContent = "Deleting…";
+    errEl.className = "cl-auth-error";
+
+    try {
+      const d = await apiFetch("/api/account", {
+        method: "DELETE",
+        body: JSON.stringify({ password })
+      });
+      if (!d.ok) {
+        errEl.textContent = d.error || "Failed to delete account.";
+        errEl.className = "cl-auth-error show";
+        btn.disabled = false; btn.textContent = "Delete my account";
+        return;
+      }
+      // Account deleted — clear local state and go to auth
+      overlay.remove();
+      document.removeEventListener("keydown", onKey);
+      clearToken(); clearSession();
+      state.session = null; state.projects = []; state.projectsLoaded = false;
+      state.view = "auth"; state.authTab = "login";
+      render();
+      toast("Account deleted. All your data has been permanently removed.");
+    } catch(e) {
+      errEl.textContent = "Could not connect to the server.";
+      errEl.className = "cl-auth-error show";
+      btn.disabled = false; btn.textContent = "Delete my account";
+    }
+  };
+}
 
 // ── Due Date Modal ────────────────────────────────────────────
 function showDueDateModal(p) {
