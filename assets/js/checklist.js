@@ -100,8 +100,9 @@ let state = {
   view:          "loading",   // loading|auth|onboarding|dashboard|checklist|template-picker
 
   // Auth
-  authTab:       "login",
+  authTab:       "login",     // login|register|forgot|reset
   session:       null,        // { token, username }
+  resetToken:    null,        // password reset token from URL hash
 
   // Dashboard
   projects:      [],          // list of project summaries from /api/projects
@@ -252,41 +253,223 @@ function getTurnstileToken() {
 
 // ── Auth ──────────────────────────────────────────────
 function renderAuth() {
-  const isLogin = state.authTab === "login";
+  const tab = state.authTab; // login|register|forgot|reset
+  const isLogin = tab === "login";
+  const isRegister = tab === "register";
+  const isForgot = tab === "forgot";
+  const isReset = tab === "reset";
   const wrap = h("div", { class: "cl-auth fade-up" });
   const card = h("div", { class: "cl-auth-card" });
 
-  card.appendChild(h("div", { class: "cl-auth-logo" }, "🔐"));
+  card.appendChild(h("div", { class: "cl-auth-logo" }, isReset ? "🔑" : isForgot ? "🔑" : "🔐"));
   card.appendChild(h("div", { class: "cl-auth-title" }, "SecCheck"));
   card.appendChild(h("div", { class: "cl-auth-sub" },
-    isLogin ? "Sign in to your account" : "Create your free account"
+    isLogin ? "Sign in to your account"
+    : isRegister ? "Create your free account"
+    : isForgot ? "Reset your password"
+    : "Choose a new password"
   ));
 
-  card.appendChild(h("div", { class: "cl-tabs" },
-    h("button", { class: "cl-tab" + (isLogin  ? " active" : ""),
-      onClick: () => { state.authTab = "login"; render(); }
-    }, "Sign In"),
-    h("button", { class: "cl-tab" + (!isLogin ? " active" : ""),
-      onClick: () => { state.authTab = "register"; render(); }
-    }, "Create Account"),
-  ));
+  // Tabs — only show for login/register
+  if (isLogin || isRegister) {
+    card.appendChild(h("div", { class: "cl-tabs" },
+      h("button", { class: "cl-tab" + (isLogin  ? " active" : ""),
+        onClick: () => { state.authTab = "login"; render(); }
+      }, "Sign In"),
+      h("button", { class: "cl-tab" + (isRegister ? " active" : ""),
+        onClick: () => { state.authTab = "register"; render(); }
+      }, "Create Account"),
+    ));
+  }
 
   const errBox = h("div", { class: "cl-auth-error", id: "cl-auth-err" });
   card.appendChild(errBox);
 
+  // Success message box (for forgot/reset confirmation)
+  const successBox = h("div", { class: "cl-auth-success", id: "cl-auth-success" });
+  card.appendChild(successBox);
+
   function showAuthErr(msg, fieldId) {
     const e = document.getElementById("cl-auth-err");
     if (e) { e.textContent = msg; e.className = "cl-auth-error show"; }
+    const s = document.getElementById("cl-auth-success");
+    if (s) s.className = "cl-auth-success";
     if (fieldId) {
       const f = document.getElementById(fieldId);
       if (f) { f.classList.add("error"); f.focus(); }
     }
   }
+  function showAuthSuccess(msg) {
+    const s = document.getElementById("cl-auth-success");
+    if (s) { s.textContent = msg; s.className = "cl-auth-success show"; }
+    const e = document.getElementById("cl-auth-err");
+    if (e) e.className = "cl-auth-error";
+  }
   function clearAuthErr() {
     const e = document.getElementById("cl-auth-err");
     if (e) e.className = "cl-auth-error";
+    const s = document.getElementById("cl-auth-success");
+    if (s) s.className = "cl-auth-success";
     document.querySelectorAll(".cl-input.error").forEach(f => f.classList.remove("error"));
   }
+
+  // ── FORGOT PASSWORD FORM ──────────────────────────────
+  if (isForgot) {
+    card.appendChild(h("div", { class: "cl-field" },
+      h("label", { class: "cl-label" }, "Email address"),
+      h("input", {
+        class: "cl-input", id: "cl-forgot-email", type: "email",
+        placeholder: "you@example.com", autocomplete: "email", maxlength: "100",
+        onInput: () => clearAuthErr()
+      }),
+      h("div", { class: "cl-input-hint" }, "Enter the email linked to your account"),
+    ));
+
+    // Turnstile
+    card.appendChild(h("div", { id: "cl-turnstile", style: "margin:12px 0;min-height:65px" }));
+
+    card.appendChild(h("button", {
+      class: "cl-btn cl-btn-primary cl-btn-full", id: "cl-auth-btn",
+      onClick: async () => {
+        const email = (document.getElementById("cl-forgot-email")?.value || "").trim().toLowerCase();
+        const btn = document.getElementById("cl-auth-btn");
+        const turnstileToken = getTurnstileToken();
+        clearAuthErr();
+
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          showAuthErr("Please enter a valid email address.", "cl-forgot-email"); return;
+        }
+
+        btn.disabled = true; btn.textContent = "Sending…";
+        try {
+          const d = await apiFetch("/api/forgot-password", {
+            method: "POST",
+            body: JSON.stringify({ email, turnstileToken })
+          });
+          if (!d.ok && d.error) {
+            showAuthErr(d.error);
+            btn.disabled = false; btn.textContent = "Send reset link"; return;
+          }
+          showAuthSuccess("If an account with that email exists, a reset link has been sent. Check your inbox.");
+          btn.disabled = true; btn.textContent = "Email sent";
+        } catch(e) {
+          showAuthErr("Could not connect to the server. Check your connection and try again.");
+          btn.disabled = false; btn.textContent = "Send reset link";
+        }
+      }
+    }, "Send reset link"));
+
+    card.appendChild(h("div", { class: "cl-auth-link" },
+      h("button", {
+        class: "cl-link-btn", type: "button",
+        onClick: () => { state.authTab = "login"; render(); }
+      }, "← Back to sign in")
+    ));
+
+    wrap.appendChild(card);
+    return wrap;
+  }
+
+  // ── RESET PASSWORD FORM ───────────────────────────────
+  if (isReset) {
+    // New password field with show/hide + strength meter
+    const passWrap = h("div", { class: "cl-field cl-pass-field" });
+    const passRow  = h("div", { class: "cl-pass-row" });
+    const passInput = h("input", {
+      class: "cl-input", id: "cl-reset-pass", type: "password",
+      placeholder: "New password (8+ characters)",
+      autocomplete: "new-password", maxlength: "100",
+      onInput: (e) => { clearAuthErr(); updateStrength(e.target.value); },
+      onKeyUp: (e) => {
+        const w = document.getElementById("cl-caps-warn");
+        if (w) w.style.display = e.getModifierState("CapsLock") ? "block" : "none";
+      }
+    });
+    const toggleBtn = h("button", {
+      class: "cl-pass-toggle", type: "button",
+      onClick: () => {
+        const input = document.getElementById("cl-reset-pass");
+        const hide = input.type === "password";
+        input.type = hide ? "text" : "password";
+        toggleBtn.textContent = hide ? "🙈" : "👁";
+      }
+    }, "👁");
+    passRow.append(passInput, toggleBtn);
+    passWrap.append(
+      h("label", { class: "cl-label" }, "New password"),
+      passRow,
+      h("div", { class: "cl-caps-warn", id: "cl-caps-warn", style: "display:none" }, "⚠ Caps Lock is on")
+    );
+    card.appendChild(passWrap);
+
+    // Strength meter
+    const sm = h("div", { class: "cl-strength-wrap" });
+    sm.innerHTML = `<div class="cl-strength-bar"><div class="cl-strength-fill" id="cl-strength-fill"></div></div><div class="cl-strength-label" id="cl-strength-label"></div>`;
+    card.appendChild(sm);
+
+    // Confirm password
+    card.appendChild(h("div", { class: "cl-field" },
+      h("label", { class: "cl-label" }, "Confirm password"),
+      h("input", {
+        class: "cl-input", id: "cl-reset-confirm", type: "password",
+        placeholder: "Re-enter new password",
+        autocomplete: "new-password", maxlength: "100",
+        onInput: () => clearAuthErr()
+      }),
+    ));
+
+    card.appendChild(h("button", {
+      class: "cl-btn cl-btn-primary cl-btn-full", id: "cl-auth-btn",
+      onClick: async () => {
+        const password = (document.getElementById("cl-reset-pass")?.value || "");
+        const confirm  = (document.getElementById("cl-reset-confirm")?.value || "");
+        const btn = document.getElementById("cl-auth-btn");
+        clearAuthErr();
+
+        if (!password || password.length < 8) {
+          showAuthErr("Password must be at least 8 characters.", "cl-reset-pass"); return;
+        }
+        if (password !== confirm) {
+          showAuthErr("Passwords do not match.", "cl-reset-confirm"); return;
+        }
+        if (!state.resetToken) {
+          showAuthErr("Invalid reset link. Please request a new one."); return;
+        }
+
+        btn.disabled = true; btn.textContent = "Resetting…";
+        try {
+          const d = await apiFetch("/api/reset-password", {
+            method: "POST",
+            body: JSON.stringify({ token: state.resetToken, password })
+          });
+          if (!d.ok) {
+            showAuthErr(d.error || "Reset failed. Please request a new link.");
+            btn.disabled = false; btn.textContent = "Reset password"; return;
+          }
+          // Clear token from state
+          state.resetToken = null;
+          showAuthSuccess("Password updated! Redirecting to sign in…");
+          btn.disabled = true; btn.textContent = "Done";
+          setTimeout(() => { state.authTab = "login"; render(); }, 2000);
+        } catch(e) {
+          showAuthErr("Could not connect to the server. Check your connection and try again.");
+          btn.disabled = false; btn.textContent = "Reset password";
+        }
+      }
+    }, "Reset password"));
+
+    card.appendChild(h("div", { class: "cl-auth-link" },
+      h("button", {
+        class: "cl-link-btn", type: "button",
+        onClick: () => { state.resetToken = null; state.authTab = "login"; render(); }
+      }, "← Back to sign in")
+    ));
+
+    wrap.appendChild(card);
+    return wrap;
+  }
+
+  // ── LOGIN / REGISTER FORM ─────────────────────────────
 
   // Username
   card.appendChild(h("div", { class: "cl-field" },
@@ -441,6 +624,16 @@ function renderAuth() {
     }
   }, isLogin ? "Sign In" : "Create Account");
   card.appendChild(submitBtn);
+
+  // Forgot password link (login only)
+  if (isLogin) {
+    card.appendChild(h("div", { class: "cl-auth-link" },
+      h("button", {
+        class: "cl-link-btn", type: "button",
+        onClick: () => { state.authTab = "forgot"; render(); }
+      }, "Forgot password?")
+    ));
+  }
 
   if (!isLogin) {
     card.appendChild(h("div", { class: "cl-privacy-note" },
@@ -2503,6 +2696,21 @@ async function boot() {
   applyTheme();
   state.view = "loading";
   render();
+
+  // Check for password reset token in URL hash: #reset?token=xxx
+  const hash = window.location.hash;
+  if (hash.startsWith("#reset?token=")) {
+    const resetToken = hash.replace("#reset?token=", "");
+    if (resetToken && /^[0-9a-f]{64}$/.test(resetToken)) {
+      state.resetToken = resetToken;
+      state.authTab    = "reset";
+      state.view       = "auth";
+      // Clear the hash so token isn't visible in URL / history
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+      render();
+      return;
+    }
+  }
 
   const token = loadToken();
 
