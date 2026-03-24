@@ -119,46 +119,60 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
   position:fixed;top:0;left:0;right:0;z-index:1000;
   background:var(--bg-a);backdrop-filter:blur(10px);
   border-bottom:1px solid var(--border);
-  padding:10px 16px;
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  padding:0;
+}
+.hdr-row1{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 16px;
 }
 .hdr h1{
   font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;
-  font-size:1.15rem; /* 18.4px */
-  font-weight:600;color:var(--gold);
-  letter-spacing:1px;
+  font-size:1.15rem;font-weight:600;color:var(--gold);
+  letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.hdr-sub{
-  font-family:'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
-  font-size:.75rem; /* 12px — minimum accessible */
-  color:var(--fg4);letter-spacing:.2px;
-  line-height:1.4;
+.hdr-sub-inline{font-weight:300;color:var(--fg4);font-size:.9em}
+.hdr-row2{
+  display:flex;align-items:center;gap:12px;flex-wrap:nowrap;
+  padding:0 16px 8px;overflow-x:auto;-webkit-overflow-scrolling:touch;
 }
 
-/* ========== TOGGLES — 44px min touch target ========== */
-.toggles{display:flex;gap:16px;flex-shrink:0;align-items:center;flex-wrap:wrap}
-.tg{display:flex;align-items:center;gap:6px}
+/* ========== ACTION BUTTONS ========== */
+.hdr-actions{display:flex;gap:4px;flex-shrink:0}
+.abtn{
+  width:36px;height:36px;border-radius:6px;
+  border:1px solid var(--border);
+  background:rgba(180,155,80,.04);
+  color:var(--fg5);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;transition:all .2s ease;flex-shrink:0;
+}
+.abtn:hover{color:var(--gold);border-color:rgba(180,155,80,.4);background:rgba(180,155,80,.08)}
+.abtn.copied{color:#16a34a!important;border-color:rgba(22,163,74,.3)!important}
+.abtn.copied{color:#16a34a!important;border-color:rgba(22,163,74,.3)!important}
+
+/* ========== TOGGLES ========== */
+.tg{display:flex;align-items:center;gap:5px;flex-shrink:0}
 .tg label{
   font-family:'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
-  font-size:.8125rem; /* 13px */
+  font-size:.8125rem;
   color:var(--fg3);cursor:pointer;white-space:nowrap;user-select:none;
-  /* ensure 44px touch height */
-  min-height:44px;display:flex;align-items:center;
+  min-height:36px;display:flex;align-items:center;
 }
+.tg-short{display:none}
 .tg input{display:none}
 .sw{
-  width:44px;height:24px;
+  width:40px;height:22px;
   background:rgba(180,155,80,.12);
   border:1.5px solid var(--border3);
-  border-radius:12px;position:relative;cursor:pointer;transition:.3s;flex-shrink:0;
+  border-radius:11px;position:relative;cursor:pointer;transition:.3s;flex-shrink:0;
 }
 .sw::after{
-  content:'';position:absolute;top:3px;left:3px;
-  width:16px;height:16px;
+  content:'';position:absolute;top:2.5px;left:3px;
+  width:15px;height:15px;
   background:#7a7568;border-radius:50%;transition:.3s;
 }
 .tg input:checked+.sw{background:rgba(180,155,80,.3);border-color:rgba(180,155,80,.6)}
-.tg input:checked+.sw::after{left:23px;background:#d4af37}
+.tg input:checked+.sw::after{left:20px;background:#d4af37}
 
 /* ========== FONT SIZE SELECTOR ========== */
 .fs-btns{
@@ -182,28 +196,28 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
 }
 .fs-btn:hover{color:var(--gold);border-color:rgba(180,155,80,.4);background:rgba(180,155,80,.1)}
 .fs-btn.active{color:var(--gold);border-color:rgba(180,155,80,.6);background:rgba(180,155,80,.15)}
-.fs-btn.copied{color:#16a34a!important;border-color:rgba(22,163,74,.3)!important}
 
 /* ========== SEARCH ========== */
 .search-box{
-  position:fixed;top:auto;bottom:auto;left:50%;transform:translateX(-50%);
-  z-index:1000;
-  /* position below header — calculate with JS or use top */
-  top:72px;
+  position:fixed;left:50%;transform:translateX(-50%);
+  z-index:999;top:0;/* set by JS based on actual header height */
+  transition:top .2s ease;
 }
 .search-box input{
   background:var(--bg-b);
   border:1.5px solid var(--border2);
-  padding:10px 16px;border-radius:4px;
+  padding:8px 50px 8px 14px;border-radius:6px;
   color:var(--fg);
   font-family:'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
-  font-size:.875rem; /* 14px */
-  width:300px;max-width:80vw;
+  font-size:.875rem;
+  width:320px;max-width:calc(100vw - 24px);
   outline:none;
-  min-height:44px; /* touch target */
+  min-height:40px;
 }
 .search-box input::placeholder{color:var(--fg6)}
 .search-box input:focus{border-color:rgba(180,155,80,.6);box-shadow:0 0 0 2px rgba(180,155,80,.15)}
+.search-count{font-family:'SF Mono',Menlo,Consolas,monospace;font-size:.75rem;color:var(--fg6);
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);pointer-events:none}
 
 /* ========== LEGEND ========== */
 .legend{
@@ -235,12 +249,14 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
 
 /* ========== INFO PANEL ========== */
 .info{
-  position:fixed;top:72px;right:12px;z-index:1000;
+  position:fixed;top:auto;right:12px;z-index:1001;
   background:var(--popup-bg);backdrop-filter:blur(12px);
   border:1px solid var(--border2);
-  padding:16px 20px;border-radius:4px;
+  padding:16px 20px;border-radius:8px;
   max-width:380px;width:calc(100vw - 24px);
-  display:none;max-height:calc(100vh - 90px);overflow-y:auto;
+  display:none;max-height:calc(100vh - 120px);overflow-y:auto;
+  /* Desktop: top-right, positioned by JS */
+  top:0;/* set by JS */
 }
 .info.active{display:block}
 .info h2{
@@ -329,10 +345,6 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
   color:var(--gold);letter-spacing:1px;opacity:0;transition:opacity .4s ease;pointer-events:none}
 .toast.show{opacity:1}
 
-/* ========== SEARCH COUNTER ========== */
-.search-count{font-family:'SF Mono',Menlo,Consolas,monospace;font-size:.75rem;color:var(--fg6);
-  position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none}
-
 /* ========== PRINT ========== */
 @media print{
   .hdr,.legend,.stats,.actions,.search-box,.info,.loader,.toast{display:none!important}
@@ -342,24 +354,45 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
 }
 
 /* ========== RESPONSIVE ========== */
+/* Tablet */
 @media(max-width:768px){
-  .hdr{padding:8px 12px;gap:6px}
+  .hdr-row1{padding:6px 12px}
   .hdr h1{font-size:1rem}
-  .hdr-sub{font-size:.75rem;display:none}
-  .toggles{gap:8px}
-  .tg label{font-size:.75rem}
-  .search-box{top:56px}
-  .search-box input{width:calc(100vw - 24px);max-width:none}
-  .legend{max-width:180px;font-size:.75rem;padding:10px 12px}
-  .info{max-width:calc(100vw - 24px);top:56px}
-  .stats{font-size:.75rem}
+  .hdr-sub-inline{display:none}
+  .hdr-row2{padding:0 12px 6px;gap:8px}
   .fs-btns{margin-left:4px;padding-left:8px}
-  .fs-btn{min-width:38px;min-height:38px;font-size:12px}
+  .fs-btn{min-width:36px;min-height:36px;font-size:12px}
+  .abtn{width:34px;height:34px;font-size:14px}
+  .legend{max-width:180px;font-size:.75rem;padding:10px 12px}
+  .stats{font-size:.6875rem}
 }
-@media(max-width:480px){
-  .toggles{flex-direction:row;flex-wrap:wrap;gap:4px}
+/* Phone */
+@media(max-width:520px){
+  .hdr-sub-inline{display:none}
+  .hdr-row2{gap:6px;padding:0 8px 6px}
+  .tg-full{display:none}
+  .tg-short{display:inline}
+  .tg label{font-size:.75rem;min-height:32px}
+  .sw{width:36px;height:20px}
+  .sw::after{width:14px;height:14px;top:2px;left:2px}
+  .tg input:checked+.sw::after{left:18px}
+  .fs-btns{display:none}
+  .abtn{width:32px;height:32px;font-size:13px}
   .legend{display:none}
-  .fs-btns{border-left:none;padding-left:0;margin-left:0}
+  .stats{left:8px;right:8px;bottom:8px;text-align:center;border-radius:6px}
+  .search-box input{width:calc(100vw - 16px)}
+  /* Info panel as bottom sheet */
+  .info{top:auto!important;bottom:0!important;left:0!important;right:0!important;
+    max-width:100%!important;width:100%!important;
+    max-height:55vh;border-radius:12px 12px 0 0;
+    border-bottom:none;padding:16px 16px 24px}
+}
+/* Very small */
+@media(max-width:360px){
+  .hdr-row1{padding:4px 8px}
+  .hdr h1{font-size:.875rem;letter-spacing:0}
+  .hdr-row2{gap:4px;padding:0 8px 4px}
+  .abtn{width:30px;height:30px;font-size:12px}
 }
 </style>
 </head>
@@ -377,27 +410,29 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
 <!-- Toast notification -->
 <div class="toast" id="toast"></div>
 
-<div class="hdr">
-  <div>
-    <h1>UNDRAWN <span style="color:var(--fg5);font-weight:400">—</span> The Native Earth Map</h1>
+<div class="hdr" id="hdr">
+  <div class="hdr-row1">
+    <h1>UNDRAWN <span style="color:var(--fg5);font-weight:400">—</span> <span class="hdr-sub-inline">The Native Earth Map</span></h1>
+    <div class="hdr-actions">
+      <button class="abtn" id="themeBtn" aria-label="Toggle light and dark mode" title="Toggle theme">&#9790;</button>
+      <button class="abtn" id="shareBtn" aria-label="Share link" title="Copy link">&#8599;</button>
+      <button class="abtn" id="resetBtn" aria-label="Reset view" title="Reset view">&#8634;</button>
+      <button class="abtn" id="fsBtn" aria-label="Toggle fullscreen" title="Fullscreen">&#9723;</button>
+    </div>
   </div>
-  <div class="toggles">
-    <div class="tg"><label for="tN"><input type="checkbox" id="tN" checked><span class="sw"></span></label><label for="tN">① Names</label></div>
-    <div class="tg"><label for="tH"><input type="checkbox" id="tH" checked><span class="sw"></span></label><label for="tH">② Sites</label></div>
-    <div class="tg"><label for="tB"><input type="checkbox" id="tB"><span class="sw"></span></label><label for="tB">③ Borders</label></div>
+  <div class="hdr-row2">
+    <div class="tg"><label for="tN"><input type="checkbox" id="tN" checked><span class="sw"></span></label><label for="tN"><span class="tg-full">① Names</span><span class="tg-short">N</span></label></div>
+    <div class="tg"><label for="tH"><input type="checkbox" id="tH" checked><span class="sw"></span></label><label for="tH"><span class="tg-full">② Sites</span><span class="tg-short">S</span></label></div>
+    <div class="tg"><label for="tB"><input type="checkbox" id="tB"><span class="sw"></span></label><label for="tB"><span class="tg-full">③ Borders</span><span class="tg-short">B</span></label></div>
     <div class="fs-btns" role="group" aria-label="Text size">
       <button class="fs-btn active" data-fs="normal" aria-label="Normal text size">A</button>
       <button class="fs-btn" data-fs="big" aria-label="Large text size">A+</button>
       <button class="fs-btn" data-fs="xl" aria-label="Extra large text size">A++</button>
     </div>
-    <button class="fs-btn" id="themeBtn" aria-label="Toggle light and dark mode" title="Toggle theme" style="margin-left:6px;font-size:15px">&#9790;</button>
-    <button class="fs-btn" id="shareBtn" aria-label="Share link" title="Copy link" style="margin-left:2px;font-size:15px">&#8599;</button>
-    <button class="fs-btn" id="resetBtn" aria-label="Reset view" title="Reset view" style="font-size:14px">&#8634;</button>
-    <button class="fs-btn" id="fsBtn" aria-label="Toggle fullscreen" title="Fullscreen" style="font-size:13px">&#9723;</button>
   </div>
 </div>
 
-<div class="search-box" style="position:relative"><input type="text" id="sI" placeholder="Search name or region..." aria-label="Search territories and sites"/><span class="search-count" id="sCnt"></span></div>
+<div class="search-box" id="searchBox"><input type="text" id="sI" placeholder="Search name or region..." aria-label="Search territories and sites"/><span class="search-count" id="sCnt"></span></div>
 <div id="map" role="application" aria-label="UNDRAWN interactive native earth map"></div>
 
 <div class="legend" id="leg">
@@ -785,6 +820,19 @@ map.whenReady(function(){
   setTimeout(()=>document.getElementById('loader').classList.add('done'),600);
   setTimeout(()=>document.getElementById('loader').style.display='none',1500);
 });
+
+// ========== DYNAMIC LAYOUT — position search + info below header ==========
+function syncLayout(){
+  const hdr=document.getElementById('hdr');
+  const h=hdr.offsetHeight;
+  document.getElementById('searchBox').style.top=(h+6)+'px';
+  const info=document.getElementById('info');
+  // On wide screens, position info below header; on mobile, CSS handles bottom sheet
+  if(window.innerWidth>520) info.style.top=(h+6)+'px';
+}
+syncLayout();
+window.addEventListener('resize',syncLayout);
+new ResizeObserver(syncLayout).observe(document.getElementById('hdr'));
 </script>
 </body>
 </html>
