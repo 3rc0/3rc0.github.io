@@ -238,13 +238,7 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
   margin:12px 16px!important;
   line-height:1.5!important;
 }
-.leaflet-control-attribution{
-  background:rgba(8,9,12,.85)!important;
-  color:#6a6560!important;
-  font-size:.6875rem!important; /* 11px — minimum */
-  padding:2px 6px!important;
-}
-.leaflet-control-attribution a{color:#8a8478!important}
+/* Leaflet attribution control disabled — credit in stats bar */
 
 /* ========== RESPONSIVE ========== */
 @media(max-width:768px){
@@ -309,12 +303,12 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
   <div class="dt" id="iD"></div>
 </div>
 
-<div class="stats">Named: <span id="nCt">0</span> · Sites: <span id="sCt">0</span> · Zoom: <span id="zL">3</span> · <a href="https://sentinelmesh.io" style="color:#8a8478;text-decoration:none;border-bottom:1px dotted #6a6560" target="_blank" rel="noopener noreferrer">sentinelmesh.io</a></div>
+<div class="stats">Named: <span id="nCt">0</span> · Sites: <span id="sCt">0</span> · Zoom: <span id="zL">3</span> · <a href="https://sentinelmesh.io" style="color:#8a8478;text-decoration:none;border-bottom:1px dotted #6a6560" target="_blank" rel="noopener noreferrer">sentinelmesh.io</a> · Tiles: <a href="https://www.openstreetmap.org/copyright" style="color:#6a6560;text-decoration:none" target="_blank" rel="noopener noreferrer">OSM</a>/<a href="https://carto.com/attributions" style="color:#6a6560;text-decoration:none" target="_blank" rel="noopener noreferrer">CARTO</a></div>
 
 <script>
-const map=L.map('map',{center:[20,30],zoom:3,minZoom:2,maxZoom:12,zoomControl:false,attributionControl:true});
+const map=L.map('map',{center:[20,30],zoom:3,minZoom:2,maxZoom:12,zoomControl:false,attributionControl:false});
 L.control.zoom({position:'bottomleft'}).addTo(map);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}).addTo(map);
 const modernLyr=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,opacity:.7});
 map.on('zoomend',()=>{document.getElementById('zL').textContent=map.getZoom()});
 
