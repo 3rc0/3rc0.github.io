@@ -1,11 +1,22 @@
 <!DOCTYPE html>
+<!--
+  UNDRAWN — The Native Earth Map
+  Version: 1.0.0
+  Built: 2026-03-24
+  Author: sentinelmesh.io
+  License: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
+  Source audit: MAP-AUDIT.md
+  Repository: https://github.com/3rc0/3rc0.github.io/tree/main/nativearth
+-->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://3rc0.github.io/nativearth/">
 <meta name="description" content="UNDRAWN — The Native Earth Map. An interactive map showing only artifact-verified indigenous territory names and archaeological habitation evidence. No modern labels. No guessing. Every entry backed by physical inscriptions, cuneiform tablets, hieroglyphs, steles, and codices.">
 <meta name="keywords" content="indigenous map, native earth, artifact evidence, ancient territories, cuneiform, hieroglyphic, archaeology, pre-colonial, endonyms, ancient civilizations">
-<meta name="author" content="ICT Clinical Center — 3rc0.github.io">
+<meta name="author" content="sentinelmesh.io">
 <meta property="og:title" content="UNDRAWN — The Native Earth Map">
 <meta property="og:description" content="The world map that was never drawn. Only artifact-verified native names and archaeological evidence. No modern labels. No guessing.">
 <meta property="og:type" content="website">
@@ -14,17 +25,20 @@
 <meta name="twitter:title" content="UNDRAWN — The Native Earth Map">
 <meta name="twitter:description" content="The world map that was never drawn. Artifact-verified native names only.">
 <title>UNDRAWN — The Native Earth Map | Artifact-Verified Evidence Only</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link rel="stylesheet" href="leaflet.min.css"/>
+<script src="leaflet.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
+
+/* ========== FONTS: System stack — zero external requests ========== */
+/* EB Garamond replaced with Garamond system stack */
+/* IBM Plex Mono replaced with monospace system stack */
 
 /* ========== ACCESSIBILITY: base font scalable, nothing below 12px at normal ========== */
 html{font-size:16px;transition:font-size .2s ease}
 html.fs-big{font-size:20px}
 html.fs-xl{font-size:24px}
-body{font-family:'EB Garamond',serif;background:#08090c;color:#e0d8cc;overflow:hidden;height:100vh}
+body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;background:#08090c;color:#e0d8cc;overflow:hidden;height:100vh}
 #map{width:100%;height:100vh;background:#08090c}
 .leaflet-container{background:#08090c!important}
 
@@ -37,13 +51,13 @@ body{font-family:'EB Garamond',serif;background:#08090c;color:#e0d8cc;overflow:h
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
 }
 .hdr h1{
-  font-family:'EB Garamond',serif;
+  font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;
   font-size:1.15rem; /* 18.4px */
   font-weight:600;color:#d4af37;
   letter-spacing:1px;
 }
 .hdr-sub{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
   font-size:.75rem; /* 12px — minimum accessible */
   color:#9a9488;letter-spacing:.2px;
   line-height:1.4;
@@ -53,7 +67,7 @@ body{font-family:'EB Garamond',serif;background:#08090c;color:#e0d8cc;overflow:h
 .toggles{display:flex;gap:16px;flex-shrink:0;align-items:center;flex-wrap:wrap}
 .tg{display:flex;align-items:center;gap:6px}
 .tg label{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
   font-size:.8125rem; /* 13px */
   color:#b0a898;cursor:pointer;white-space:nowrap;user-select:none;
   /* ensure 44px touch height */
@@ -82,7 +96,7 @@ body{font-family:'EB Garamond',serif;background:#08090c;color:#e0d8cc;overflow:h
   border-left:1px solid rgba(180,155,80,.15);
 }
 .fs-btn{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
   font-size:13px;font-weight:500;
   color:#8a8478;
   background:rgba(180,155,80,.06);
@@ -109,7 +123,7 @@ body{font-family:'EB Garamond',serif;background:#08090c;color:#e0d8cc;overflow:h
   border:1.5px solid rgba(180,155,80,.25);
   padding:10px 16px;border-radius:4px;
   color:#e0d8cc;
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
   font-size:.875rem; /* 14px */
   width:300px;max-width:80vw;
   outline:none;
@@ -127,7 +141,7 @@ body{font-family:'EB Garamond',serif;background:#08090c;color:#e0d8cc;overflow:h
   max-width:240px;max-height:45vh;overflow-y:auto;
 }
 .legend h3{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
   font-size:.75rem; /* 12px */
   color:#d4af37;letter-spacing:1px;text-transform:uppercase;
   margin-bottom:8px;
@@ -135,13 +149,13 @@ body{font-family:'EB Garamond',serif;background:#08090c;color:#e0d8cc;overflow:h
 .li{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;font-size:.8125rem; /* 13px */ color:#b0a898;line-height:1.4}
 .ls{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:3px}
 .li small{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
   font-size:.75rem; /* 12px — minimum */
   color:#8a8478;display:block;margin-top:1px;
 }
 .sep{border-top:1px solid rgba(180,155,80,.1);margin:8px 0;padding-top:8px}
 .legend-note{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
   font-size:.75rem; /* 12px */
   color:#8a8478;line-height:1.4;
 }
@@ -157,13 +171,13 @@ body{font-family:'EB Garamond',serif;background:#08090c;color:#e0d8cc;overflow:h
 }
 .info.active{display:block}
 .info h2{
-  font-family:'EB Garamond',serif;
+  font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;
   font-size:1.375rem; /* 22px */
   color:#d4af37;margin-bottom:4px;
   padding-right:40px; /* room for close btn */
 }
 .info .src{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
   font-size:.8125rem; /* 13px */
   color:#8a8478;margin-bottom:10px;line-height:1.5;
 }
@@ -173,7 +187,7 @@ body{font-family:'EB Garamond',serif;background:#08090c;color:#e0d8cc;overflow:h
 }
 .info .dt strong{color:#d4af37;font-weight:600}
 .info .warn{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
   font-size:.8125rem; /* 13px */
   color:#e05555;
   background:rgba(224,85,85,.08);
@@ -199,7 +213,7 @@ body{font-family:'EB Garamond',serif;background:#08090c;color:#e0d8cc;overflow:h
   background:rgba(8,9,12,.94);
   border:1px solid rgba(180,155,80,.12);
   padding:8px 14px;border-radius:4px;
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
   font-size:.75rem; /* 12px */
   color:#8a8478;
 }
@@ -216,7 +230,7 @@ body{font-family:'EB Garamond',serif;background:#08090c;color:#e0d8cc;overflow:h
   color:#e0d8cc!important;
   border:1px solid rgba(180,155,80,.25)!important;
   border-radius:4px!important;
-  font-family:'EB Garamond',serif!important;
+  font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif!important;
 }
 .leaflet-popup-tip{background:rgba(8,9,12,.97)!important}
 .leaflet-popup-content{
@@ -224,6 +238,13 @@ body{font-family:'EB Garamond',serif;background:#08090c;color:#e0d8cc;overflow:h
   margin:12px 16px!important;
   line-height:1.5!important;
 }
+.leaflet-control-attribution{
+  background:rgba(8,9,12,.85)!important;
+  color:#6a6560!important;
+  font-size:.6875rem!important; /* 11px — minimum */
+  padding:2px 6px!important;
+}
+.leaflet-control-attribution a{color:#8a8478!important}
 
 /* ========== RESPONSIVE ========== */
 @media(max-width:768px){
@@ -252,7 +273,7 @@ body{font-family:'EB Garamond',serif;background:#08090c;color:#e0d8cc;overflow:h
 <div class="hdr">
   <div>
     <h1>UNDRAWN <span style="color:#8a8478;font-weight:400">—</span> The Native Earth Map</h1>
-    <div class="hdr-sub">Artifact-verified evidence only. No modern labels. No guessing. See MAP-AUDIT.md for full sources.</div>
+    <div class="hdr-sub">Artifact-verified evidence only.</div>
   </div>
   <div class="toggles">
     <div class="tg"><label for="tN"><input type="checkbox" id="tN" checked><span class="sw"></span></label><label for="tN">① Names</label></div>
@@ -288,12 +309,12 @@ body{font-family:'EB Garamond',serif;background:#08090c;color:#e0d8cc;overflow:h
   <div class="dt" id="iD"></div>
 </div>
 
-<div class="stats">Named: <span id="nCt">0</span> · Sites: <span id="sCt">0</span> · Zoom: <span id="zL">3</span> · <a href="https://3rc0.github.io" style="color:#8a8478;text-decoration:none;border-bottom:1px dotted #6a6560" target="_blank">ICT Clinical Center</a></div>
+<div class="stats">Named: <span id="nCt">0</span> · Sites: <span id="sCt">0</span> · Zoom: <span id="zL">3</span> · <a href="https://sentinelmesh.io" style="color:#8a8478;text-decoration:none;border-bottom:1px dotted #6a6560" target="_blank" rel="noopener noreferrer">sentinelmesh.io</a></div>
 
 <script>
-const map=L.map('map',{center:[20,30],zoom:3,minZoom:2,maxZoom:12,zoomControl:false,attributionControl:false});
+const map=L.map('map',{center:[20,30],zoom:3,minZoom:2,maxZoom:12,zoomControl:false,attributionControl:true});
 L.control.zoom({position:'bottomleft'}).addTo(map);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'}).addTo(map);
 const modernLyr=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,opacity:.7});
 map.on('zoomend',()=>{document.getElementById('zL').textContent=map.getZoom()});
 
@@ -388,7 +409,7 @@ terr.forEach((t,i)=>{
   const p=L.polygon(ll,{color:t.c,fillColor:t.c,fillOpacity:.14,weight:1.5,opacity:.6,dashArray:t.dp?'5,5':null}).addTo(map);
   const ctr=p.getBounds().getCenter();
   // Map labels — 13px minimum, bold
-  L.marker(ctr,{icon:L.divIcon({className:'tl',html:`<div style="font-family:'EB Garamond',serif;font-size:.8125rem;font-weight:700;color:${t.c};text-shadow:0 0 8px rgba(0,0,0,1),0 0 16px rgba(0,0,0,.9),0 1px 3px rgba(0,0,0,1);white-space:nowrap;pointer-events:none;text-align:center;transform:translate(-50%,-50%)">${t.n}${t.dp?'<span style="color:#e05555;font-size:.6875rem"> ⚠</span>':''}</div>`,iconSize:[0,0]})}).addTo(map);
+  L.marker(ctr,{icon:L.divIcon({className:'tl',html:`<div style="font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:.8125rem;font-weight:700;color:${t.c};text-shadow:0 0 8px rgba(0,0,0,1),0 0 16px rgba(0,0,0,.9),0 1px 3px rgba(0,0,0,1);white-space:nowrap;pointer-events:none;text-align:center;transform:translate(-50%,-50%)">${t.n}${t.dp?'<span style="color:#e05555;font-size:.6875rem"> ⚠</span>':''}</div>`,iconSize:[0,0]})}).addTo(map);
   p.on('click',()=>{
     document.getElementById('iN').innerHTML=t.n;
     document.getElementById('iS').innerHTML=
@@ -423,10 +444,10 @@ habSites.forEach(h=>{
   });
   // Popup with accessible font sizes — minimum 14px
   m.bindPopup(`
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:.875rem;color:#d4af37;font-weight:500;margin-bottom:4px">${h.site}</div>
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:.8125rem;color:#e05555;margin-bottom:6px">${h.date}</div>
-    <div style="font-family:'EB Garamond',serif;font-size:.9375rem;color:#c0b8a8;line-height:1.5">${h.evidence}</div>
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:#8a8478;margin-top:6px">Region: ${h.region}</div>
+    <div style="font-family:'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;font-size:.875rem;color:#d4af37;font-weight:500;margin-bottom:4px">${h.site}</div>
+    <div style="font-family:'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;font-size:.8125rem;color:#e05555;margin-bottom:6px">${h.date}</div>
+    <div style="font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:.9375rem;color:#c0b8a8;line-height:1.5">${h.evidence}</div>
+    <div style="font-family:'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;font-size:.75rem;color:#8a8478;margin-top:6px">Region: ${h.region}</div>
   `,{maxWidth:320});
   habLayer.addLayer(m);
   habMarkers.push({m,d:h});
