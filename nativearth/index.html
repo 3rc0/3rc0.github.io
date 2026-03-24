@@ -13,7 +13,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="index, follow">
+<meta name="theme-color" content="#08090c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="canonical" href="https://3rc0.github.io/nativearth/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%2308090c' width='100' height='100' rx='16'/><text x='50' y='72' font-size='68' font-family='serif' font-weight='700' fill='%23d4af37' text-anchor='middle'>U</text></svg>">
 <meta name="description" content="UNDRAWN — The Native Earth Map. An interactive map of indigenous territory names drawn from physical inscriptions, cuneiform tablets, hieroglyphs, steles, and codices. 28 territories, 38 archaeological sites, 8 DOI-cited sources.">
 <meta name="keywords" content="indigenous map, native earth, artifact evidence, ancient territories, cuneiform, hieroglyphic, archaeology, pre-colonial, endonyms, ancient civilizations">
 <meta name="author" content="sentinelmesh.io">
@@ -21,10 +25,13 @@
 <meta property="og:description" content="An interactive world map of indigenous territory names drawn from ancient inscriptions, cuneiform, hieroglyphs, and codices. 66 data points. 8 DOIs.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://3rc0.github.io/nativearth/">
+<meta property="og:image" content="https://3rc0.github.io/nativearth/og-preview.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="UNDRAWN — The Native Earth Map">
 <meta name="twitter:description" content="The world map drawn from ancient inscriptions, cuneiform, hieroglyphs, and codices.">
+<meta name="twitter:image" content="https://3rc0.github.io/nativearth/og-preview.png">
 <title>UNDRAWN — The Native Earth Map | Ancient Names from Ancient Inscriptions</title>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"UNDRAWN — The Native Earth Map","description":"Interactive map of 28 artifact-verified indigenous territory names and 38 archaeological habitation sites, drawn from cuneiform, hieroglyphs, steles, and codices.","url":"https://3rc0.github.io/nativearth/","applicationCategory":"Education","operatingSystem":"Web","author":{"@type":"Organization","name":"sentinelmesh.io","url":"https://sentinelmesh.io"},"license":"https://creativecommons.org/licenses/by-sa/4.0/","datePublished":"2026-03-24","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
 <link rel="stylesheet" href="leaflet.min.css"/>
 <script src="leaflet.min.js"></script>
 <style>
@@ -240,6 +247,30 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
 }
 /* Leaflet attribution control disabled — credit in stats bar */
 
+/* ========== LOADING SPINNER ========== */
+.loader{position:fixed;inset:0;z-index:9000;background:#08090c;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:16px;transition:opacity .8s ease}
+.loader.done{opacity:0;pointer-events:none}
+.loader .spin{width:36px;height:36px;border:2px solid rgba(212,175,55,.15);border-top:2px solid #d4af37;
+  border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader .ltxt{font-family:'SF Mono',Menlo,Consolas,monospace;font-size:.75rem;color:#555;letter-spacing:2px}
+
+/* ========== ACTION BUTTONS (share + fullscreen) ========== */
+.actions{position:fixed;top:72px;right:12px;z-index:1000;display:flex;gap:6px}
+.abtn{width:40px;height:40px;border-radius:6px;border:1px solid rgba(180,155,80,.15);
+  background:rgba(8,9,12,.9);backdrop-filter:blur(8px);color:#8a8478;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .2s ease}
+.abtn:hover{color:#d4af37;border-color:rgba(180,155,80,.4);background:rgba(180,155,80,.08)}
+.abtn.copied{color:#4ade80;border-color:rgba(74,222,128,.3)}
+
+/* ========== TOAST ========== */
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;
+  background:rgba(8,9,12,.95);border:1px solid rgba(212,175,55,.3);border-radius:8px;
+  padding:12px 24px;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:.8125rem;
+  color:#d4af37;letter-spacing:1px;opacity:0;transition:opacity .4s ease;pointer-events:none}
+.toast.show{opacity:1}
+
 /* ========== RESPONSIVE ========== */
 @media(max-width:768px){
   .hdr{padding:8px 12px;gap:6px}
@@ -254,6 +285,8 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
   .stats{font-size:.75rem}
   .fs-btns{margin-left:4px;padding-left:8px}
   .fs-btn{min-width:38px;min-height:38px;font-size:12px}
+  .actions{top:56px;right:8px}
+  .abtn{width:36px;height:36px;font-size:14px}
 }
 @media(max-width:480px){
   .toggles{flex-direction:row;flex-wrap:wrap;gap:4px}
@@ -263,6 +296,18 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
 </style>
 </head>
 <body>
+
+<!-- Loading spinner -->
+<div class="loader" id="loader"><div class="spin"></div><div class="ltxt">loading map</div></div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<!-- Action buttons -->
+<div class="actions">
+  <button class="abtn" id="shareBtn" aria-label="Share link" title="Copy link">&#128279;</button>
+  <button class="abtn" id="fsBtn" aria-label="Fullscreen" title="Fullscreen">&#9974;</button>
+</div>
 
 <div class="hdr">
   <div>
@@ -505,6 +550,78 @@ document.querySelectorAll('.fs-btn').forEach(btn=>{
     map.closePopup();
     map.invalidateSize();
   });
+});
+
+// ========== TOAST ==========
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+// ========== SHARE BUTTON ==========
+document.getElementById('shareBtn').addEventListener('click',function(){
+  // Build deep link: if info panel is open, include territory name
+  let url=window.location.origin+window.location.pathname;
+  const active=document.getElementById('info').classList.contains('active');
+  if(active){
+    const name=document.getElementById('iN').textContent;
+    const slug=name.toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+    url+='?t='+encodeURIComponent(slug);
+  }
+  navigator.clipboard.writeText(url).then(()=>{
+    toast('Link copied');
+    this.classList.add('copied');
+    setTimeout(()=>this.classList.remove('copied'),1500);
+  }).catch(()=>{toast('Copy failed')});
+});
+
+// ========== FULLSCREEN ==========
+document.getElementById('fsBtn').addEventListener('click',function(){
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen().catch(()=>{});
+  } else {
+    document.exitFullscreen();
+  }
+});
+
+// ========== DEEP LINK ==========
+(function(){
+  const params=new URLSearchParams(window.location.search);
+  const t=params.get('t');
+  if(!t) return;
+  const slug=t.toLowerCase();
+  const match=layers.find(l=>{
+    const n=l.d.n.toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+    return n===slug || l.d.n.toLowerCase().includes(slug.replace(/-/g,' '));
+  });
+  if(match){
+    setTimeout(()=>{
+      map.flyToBounds(match.p.getBounds(),{padding:[50,50],maxZoom:6});
+      match.p.fire('click');
+    },1500);
+  }
+})();
+
+// ========== SPOTLIGHT (first visit) ==========
+(function(){
+  if(window.location.search) return; // skip if deep-linked
+  const picks=[0,1,2,3,4]; // Kemet, Ki-en-gi, Akkade, mat Assur, Haltamti
+  const idx=picks[Math.floor(Math.random()*picks.length)];
+  setTimeout(()=>{
+    const l=layers[idx];
+    if(l){
+      map.flyToBounds(l.p.getBounds(),{padding:[80,80],maxZoom:5,duration:2});
+      setTimeout(()=>l.p.fire('click'),2200);
+    }
+  },2000);
+})();
+
+// ========== LOADER HIDE ==========
+map.whenReady(function(){
+  setTimeout(()=>document.getElementById('loader').classList.add('done'),600);
+  setTimeout(()=>document.getElementById('loader').style.display='none',1500);
 });
 </script>
 </body>
