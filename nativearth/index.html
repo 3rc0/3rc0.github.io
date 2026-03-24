@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="UNDRAWN — The Native Earth Map. An interactive map showing only artifact-verified indigenous territory names and archaeological habitation evidence. No modern labels. No guessing. Every entry backed by physical inscriptions, cuneiform tablets, hieroglyphs, steles, and codices.">
+<meta name="keywords" content="indigenous map, native earth, artifact evidence, ancient territories, cuneiform, hieroglyphic, archaeology, pre-colonial, endonyms, ancient civilizations">
+<meta name="author" content="ICT Clinical Center — 3rc0.github.io">
+<meta property="og:title" content="UNDRAWN — The Native Earth Map">
+<meta property="og:description" content="The world map that was never drawn. Only artifact-verified native names and archaeological evidence. No modern labels. No guessing.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://3rc0.github.io/nativearth/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="UNDRAWN — The Native Earth Map">
+<meta name="twitter:description" content="The world map that was never drawn. Artifact-verified native names only.">
+<title>UNDRAWN — The Native Earth Map | Artifact-Verified Evidence Only</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+
+/* ========== ACCESSIBILITY: base font scalable, nothing below 12px at normal ========== */
+html{font-size:16px;transition:font-size .2s ease}
+html.fs-big{font-size:20px}
+html.fs-xl{font-size:24px}
+body{font-family:'EB Garamond',serif;background:#08090c;color:#e0d8cc;overflow:hidden;height:100vh}
+#map{width:100%;height:100vh;background:#08090c}
+.leaflet-container{background:#08090c!important}
+
+/* ========== HEADER ========== */
+.hdr{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(8,9,12,.96);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(180,155,80,.15);
+  padding:10px 16px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+}
+.hdr h1{
+  font-family:'EB Garamond',serif;
+  font-size:1.15rem; /* 18.4px */
+  font-weight:600;color:#d4af37;
+  letter-spacing:1px;
+}
+.hdr-sub{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.75rem; /* 12px — minimum accessible */
+  color:#9a9488;letter-spacing:.2px;
+  line-height:1.4;
+}
+
+/* ========== TOGGLES — 44px min touch target ========== */
+.toggles{display:flex;gap:16px;flex-shrink:0;align-items:center;flex-wrap:wrap}
+.tg{display:flex;align-items:center;gap:6px}
+.tg label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.8125rem; /* 13px */
+  color:#b0a898;cursor:pointer;white-space:nowrap;user-select:none;
+  /* ensure 44px touch height */
+  min-height:44px;display:flex;align-items:center;
+}
+.tg input{display:none}
+.sw{
+  width:44px;height:24px;
+  background:rgba(180,155,80,.12);
+  border:1.5px solid rgba(180,155,80,.3);
+  border-radius:12px;position:relative;cursor:pointer;transition:.3s;flex-shrink:0;
+}
+.sw::after{
+  content:'';position:absolute;top:3px;left:3px;
+  width:16px;height:16px;
+  background:#7a7568;border-radius:50%;transition:.3s;
+}
+.tg input:checked+.sw{background:rgba(180,155,80,.3);border-color:rgba(180,155,80,.6)}
+.tg input:checked+.sw::after{left:23px;background:#d4af37}
+
+/* ========== FONT SIZE SELECTOR ========== */
+.fs-btns{
+  display:flex;gap:4px;align-items:center;
+  margin-left:8px;
+  padding-left:12px;
+  border-left:1px solid rgba(180,155,80,.15);
+}
+.fs-btn{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:13px;font-weight:500;
+  color:#8a8478;
+  background:rgba(180,155,80,.06);
+  border:1.5px solid rgba(180,155,80,.2);
+  border-radius:4px;
+  padding:0;
+  min-width:44px;min-height:44px;
+  cursor:pointer;
+  transition:.2s;
+  display:flex;align-items:center;justify-content:center;
+}
+.fs-btn:hover{color:#d4af37;border-color:rgba(180,155,80,.4);background:rgba(180,155,80,.1)}
+.fs-btn.active{color:#d4af37;border-color:rgba(180,155,80,.6);background:rgba(180,155,80,.15)}
+
+/* ========== SEARCH ========== */
+.search-box{
+  position:fixed;top:auto;bottom:auto;left:50%;transform:translateX(-50%);
+  z-index:1000;
+  /* position below header — calculate with JS or use top */
+  top:72px;
+}
+.search-box input{
+  background:rgba(8,9,12,.94);
+  border:1.5px solid rgba(180,155,80,.25);
+  padding:10px 16px;border-radius:4px;
+  color:#e0d8cc;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.875rem; /* 14px */
+  width:300px;max-width:80vw;
+  outline:none;
+  min-height:44px; /* touch target */
+}
+.search-box input::placeholder{color:#6a6560}
+.search-box input:focus{border-color:rgba(180,155,80,.6);box-shadow:0 0 0 2px rgba(180,155,80,.15)}
+
+/* ========== LEGEND ========== */
+.legend{
+  position:fixed;bottom:16px;left:12px;z-index:1000;
+  background:rgba(8,9,12,.96);backdrop-filter:blur(10px);
+  border:1px solid rgba(180,155,80,.15);
+  padding:14px 16px;border-radius:4px;
+  max-width:240px;max-height:45vh;overflow-y:auto;
+}
+.legend h3{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.75rem; /* 12px */
+  color:#d4af37;letter-spacing:1px;text-transform:uppercase;
+  margin-bottom:8px;
+}
+.li{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;font-size:.8125rem; /* 13px */ color:#b0a898;line-height:1.4}
+.ls{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.li small{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.75rem; /* 12px — minimum */
+  color:#8a8478;display:block;margin-top:1px;
+}
+.sep{border-top:1px solid rgba(180,155,80,.1);margin:8px 0;padding-top:8px}
+.legend-note{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.75rem; /* 12px */
+  color:#8a8478;line-height:1.4;
+}
+
+/* ========== INFO PANEL ========== */
+.info{
+  position:fixed;top:72px;right:12px;z-index:1000;
+  background:rgba(8,9,12,.97);backdrop-filter:blur(12px);
+  border:1px solid rgba(180,155,80,.25);
+  padding:16px 20px;border-radius:4px;
+  max-width:380px;width:calc(100vw - 24px);
+  display:none;max-height:calc(100vh - 90px);overflow-y:auto;
+}
+.info.active{display:block}
+.info h2{
+  font-family:'EB Garamond',serif;
+  font-size:1.375rem; /* 22px */
+  color:#d4af37;margin-bottom:4px;
+  padding-right:40px; /* room for close btn */
+}
+.info .src{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.8125rem; /* 13px */
+  color:#8a8478;margin-bottom:10px;line-height:1.5;
+}
+.info .dt{
+  font-size:1rem; /* 16px */
+  color:#c0b8a8;line-height:1.6;margin-bottom:6px;
+}
+.info .dt strong{color:#d4af37;font-weight:600}
+.info .warn{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.8125rem; /* 13px */
+  color:#e05555;
+  background:rgba(224,85,85,.08);
+  padding:6px 10px;border-radius:3px;
+  margin-top:8px;display:inline-block;line-height:1.4;
+}
+/* Close button — 44x44 touch target */
+.info .cbtn{
+  position:absolute;top:8px;right:8px;
+  background:none;border:none;
+  color:#8a8478;
+  font-size:1.5rem; /* 24px */
+  cursor:pointer;
+  width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:4px;
+}
+.info .cbtn:hover{color:#d4af37;background:rgba(180,155,80,.1)}
+
+/* ========== STATS BAR ========== */
+.stats{
+  position:fixed;bottom:16px;right:12px;z-index:1000;
+  background:rgba(8,9,12,.94);
+  border:1px solid rgba(180,155,80,.12);
+  padding:8px 14px;border-radius:4px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.75rem; /* 12px */
+  color:#8a8478;
+}
+.stats span{color:#d4af37}
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(180,155,80,.2);border-radius:3px}
+
+/* ========== LEAFLET POPUP ========== */
+.leaflet-popup-content-wrapper{
+  background:rgba(8,9,12,.97)!important;
+  color:#e0d8cc!important;
+  border:1px solid rgba(180,155,80,.25)!important;
+  border-radius:4px!important;
+  font-family:'EB Garamond',serif!important;
+}
+.leaflet-popup-tip{background:rgba(8,9,12,.97)!important}
+.leaflet-popup-content{
+  font-size:1rem!important; /* 16px */
+  margin:12px 16px!important;
+  line-height:1.5!important;
+}
+
+/* ========== RESPONSIVE ========== */
+@media(max-width:768px){
+  .hdr{padding:8px 12px;gap:6px}
+  .hdr h1{font-size:1rem}
+  .hdr-sub{font-size:.75rem;display:none}
+  .toggles{gap:8px}
+  .tg label{font-size:.75rem}
+  .search-box{top:56px}
+  .search-box input{width:calc(100vw - 24px);max-width:none}
+  .legend{max-width:180px;font-size:.75rem;padding:10px 12px}
+  .info{max-width:calc(100vw - 24px);top:56px}
+  .stats{font-size:.75rem}
+  .fs-btns{margin-left:4px;padding-left:8px}
+  .fs-btn{min-width:38px;min-height:38px;font-size:12px}
+}
+@media(max-width:480px){
+  .toggles{flex-direction:row;flex-wrap:wrap;gap:4px}
+  .legend{display:none}
+  .fs-btns{border-left:none;padding-left:0;margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <h1>UNDRAWN <span style="color:#8a8478;font-weight:400">—</span> The Native Earth Map</h1>
+    <div class="hdr-sub">Artifact-verified evidence only. No modern labels. No guessing. See MAP-AUDIT.md for full sources.</div>
+  </div>
+  <div class="toggles">
+    <div class="tg"><label for="tN"><input type="checkbox" id="tN" checked><span class="sw"></span></label><label for="tN">① Names</label></div>
+    <div class="tg"><label for="tH"><input type="checkbox" id="tH" checked><span class="sw"></span></label><label for="tH">② Sites</label></div>
+    <div class="tg"><label for="tB"><input type="checkbox" id="tB"><span class="sw"></span></label><label for="tB">③ Borders</label></div>
+    <div class="fs-btns" role="group" aria-label="Text size">
+      <button class="fs-btn active" data-fs="normal" aria-label="Normal text size">A</button>
+      <button class="fs-btn" data-fs="big" aria-label="Large text size">A+</button>
+      <button class="fs-btn" data-fs="xl" aria-label="Extra large text size">A++</button>
+    </div>
+  </div>
+</div>
+
+<div class="search-box"><input type="text" id="sI" placeholder="Search name or region..." aria-label="Search territories and sites"/></div>
+<div id="map" role="application" aria-label="UNDRAWN interactive native earth map"></div>
+
+<div class="legend" id="leg">
+  <h3>Named Territories</h3>
+  <div class="li"><div class="ls" style="background:#d4af37"></div><div>Tier 1 — Self-attested<small>Own writing/inscriptions</small></div></div>
+  <div class="li"><div class="ls" style="background:#7a9ec2"></div><div>Tier 2 — Foreign contemporary<small>Named by neighbor's text</small></div></div>
+  <div class="li"><div class="ls" style="background:#a09080"></div><div>Tier 3 — Recorded oral<small>Pre-modern chronicler</small></div></div>
+  <div class="sep"></div>
+  <h3>Habitation Evidence</h3>
+  <div class="li"><div class="ls" style="background:#e05555"></div><div>Archaeological site<small>People lived here — name unknown</small></div></div>
+  <div class="sep"></div>
+  <div class="legend-note">Blank areas = no evidence examined, NOT "no people lived there."</div>
+</div>
+
+<div class="info" id="info">
+  <button class="cbtn" onclick="document.getElementById('info').classList.remove('active')" aria-label="Close panel">&times;</button>
+  <h2 id="iN"></h2>
+  <div class="src" id="iS"></div>
+  <div class="dt" id="iD"></div>
+</div>
+
+<div class="stats">Named: <span id="nCt">0</span> · Sites: <span id="sCt">0</span> · Zoom: <span id="zL">3</span> · <a href="https://3rc0.github.io" style="color:#8a8478;text-decoration:none;border-bottom:1px dotted #6a6560" target="_blank">ICT Clinical Center</a></div>
+
+<script>
+const map=L.map('map',{center:[20,30],zoom:3,minZoom:2,maxZoom:12,zoomControl:false,attributionControl:false});
+L.control.zoom({position:'bottomleft'}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}).addTo(map);
+const modernLyr=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,opacity:.7});
+map.on('zoomend',()=>{document.getElementById('zL').textContent=map.getZoom()});
+
+const T1='#d4af37',T2='#7a9ec2',T3='#a09080';
+
+// ========== NAMED TERRITORIES ==========
+const terr=[
+{n:"Kemet (kmt)",s:"Egyptian Hieroglyphic",a:"Pyramid Texts, temple inscriptions",d:"~3100 BCE+",t:1,c:T1,m:"Egypt — Nile Valley",dt:"<strong>Self-name:</strong> kmt ('Black Land'). People: rmṯ n kmt. Thousands of inscriptions over 3,000 years. Coptic is direct descendant language.<br><strong>Genetics:</strong> Schuenemann et al. 2017 (Nature Communications, doi:10.1038/ncomms15694) found ancient Egyptians most closely related to Near Eastern populations. Modern Egyptians retain this ancestry but show ~8% additional sub-Saharan admixture post-Roman period.",co:[[31.5,25],[31.5,34.5],[22,34.5],[22,25]],dp:null},
+{n:"Ki-en-gi / Kengir",s:"Sumerian Cuneiform",a:"Tablets from Ur, Uruk, Lagash, Nippur",d:"~2600 BCE+",t:1,c:T1,m:"Southern Iraq",dt:"<strong>Self-name:</strong> Ki-en-gi. People: ùĝ saĝ gíg-ga ('black-headed people'). Hundreds of thousands of tablets. First writing (~3400 BCE). Cities: Urim, Unug, Eridug, Nibru.",co:[[33,44],[33,47.5],[30,47.5],[30,44]],dp:null},
+{n:"Akkade",s:"Akkadian Cuneiform",a:"Sargon & Naram-Sin inscriptions",d:"~2334 BCE+",t:1,c:T1,m:"Central Iraq",dt:"<strong>Self-name:</strong> māt Akkadî. Exact city location never found — one of archaeology's great mysteries.",co:[[34.5,43.5],[34.5,45.5],[33,45.5],[33,43.5]],dp:"City location unknown"},
+{n:"māt Aššur",s:"Akkadian Cuneiform",a:"Royal annals, Ashurbanipal's library (30,000+ tablets)",d:"~2500 BCE+",t:1,c:T1,m:"Northern Iraq",dt:"<strong>Self-name:</strong> māt Aššur ('Land of Ashur'). Modern Assyrians (Āthōrāyē/Sūrāyē) recognized as genetic and cultural descendants. Neo-Aramaic still spoken.",co:[[37.5,41.5],[37.5,45],[35,45],[35,41.5]],dp:null},
+{n:"Haltamti",s:"Linear Elamite + Akkadian",a:"Susa inscriptions, Chogha Zanbil",d:"~2700 BCE+",t:1,c:T1,m:"SW Iran",dt:"<strong>Self-name:</strong> Haltamti (meaning debated — possibly 'God's Land' or 'Highland'). Language isolate — no known relatives. Linear Elamite partially deciphered (Desset, 2020, Zeitschrift für Assyriologie).",co:[[34,47],[34,53],[29.5,53],[29.5,47]],dp:"Script partially deciphered. Name meaning debated."},
+{n:"Ḫatti",s:"Hittite Cuneiform + Luwian Hieroglyphic",a:"Hattusa archive (30,000+ tablets)",d:"~1650–1180 BCE",t:1,c:T1,m:"Central Turkey",dt:"<strong>Self-name:</strong> KUR Ḫatti. Language: Nesili. Includes earliest known peace treaty (Treaty of Kadesh, ~1259 BCE with Kemet).",co:[[41,32],[41,37],[38,37],[38,32]],dp:null},
+{n:"Biainili",s:"Urartian Cuneiform",a:"Van Fortress, Erebuni rock inscriptions (~500 known)",d:"~860–590 BCE",t:1,c:T1,m:"E. Turkey / Armenia",dt:"<strong>Self-name:</strong> Biainili. Assyrians called it 'Urartu'. ~500 inscriptions survive. Language: Hurro-Urartian (NOT Indo-European). Sites: Tušpa (Van), Erebuni (Yerevan).",co:[[41,42],[41,46],[38.5,46],[38.5,42]],dp:"Relationship to modern Armenians debated — language is unrelated to Armenian"},
+{n:"Mittani",s:"Akkadian Cuneiform (Hurrian language)",a:"Amarna Letters (EA 24 = Tushratta to Amenhotep III)",d:"~1500–1300 BCE",t:1,c:T1,m:"NE Syria / SE Turkey / N Iraq",dt:"<strong>Names:</strong> Mittani (Egyptian correspondence), Ḫanigalbat (Assyrian texts). People: Hurrians. EA 24 = longest known Hurrian text.<br><strong>Note:</strong> Self-authored by Mittani king, but written in Akkadian cuneiform (diplomatic lingua franca), not indigenous Hurrian script. Language: Hurrian (NOT Indo-European, NOT Semitic).",co:[[37.5,38],[37.5,43],[36,43],[36,38]],dp:"Self-authored but in Akkadian script. Boundary extent approximate."},
+{n:"Pārsa",s:"Old Persian Cuneiform",a:"Behistun Inscription (Darius I, ~520 BCE), Persepolis tablets",d:"~520 BCE+",t:1,c:T1,m:"Fars Province, Iran",dt:"<strong>Self-name:</strong> Pārsa (Behistun Inscription line 1: 'I am Darius, king of Pārsa'). 'Persia' = Greek exonym. Behistun = trilingual key to cuneiform decipherment. UNESCO World Heritage.",co:[[32,50],[32,55],[28,55],[28,50]],dp:null},
+{n:"Māda",s:"Old Persian + Assyrian Cuneiform",a:"Behistun Inscription; Shalmaneser III annals (~835 BCE = earliest mention)",d:"~835 BCE+",t:2,c:T2,m:"NW Iran (Hamadan area)",dt:"<strong>Attestation:</strong> 'Madai' in Assyrian annals (Shalmaneser III, 835 BCE). 'Māda' in Behistun Inscription.<br><strong>Critical:</strong> NO Median-language inscriptions survive — zero texts in the Median language. Kurdish-Median ancestry link rejected by Bruinessen (1992), Asatrian (2009).",co:[[37,46],[37,51],[33,51],[33,46]],dp:"Zero Median texts survive. Kurdish-Median link disputed by most scholars."},
+{n:"Gutium",s:"Sumerian / Akkadian Cuneiform",a:"Sumerian King List (Weld-Blundell Prism, Ashmolean Museum)",d:"~2200 BCE",t:2,c:T2,m:"Central Zagros, Iraq",dt:"<strong>Attestation:</strong> KUR Gu-ti-umKI in Sumerian texts. Gutian language is unknown — classified as isolate. Connection to any modern peoples is speculative.",co:[[36,44.5],[36,46.5],[34.5,46.5],[34.5,44.5]],dp:"Language unknown. Modern connections speculative."},
+{n:"Lullubi",s:"Akkadian Cuneiform + Rock relief",a:"Anubanini stele (~2300 BCE) at Sar-i Pol-e Zahab, Iran",d:"~2300 BCE+",t:2,c:T2,m:"Zagros — Kermanshah / Shahrizor",dt:"<strong>Attestation:</strong> Anubanini rock relief — oldest known rock relief in Iran. Written in Akkadian. Language of Lullubi people is unclassified. These are the documented ancient Zagros mountain inhabitants in this specific area.",co:[[35.5,45],[35.5,47],[34,47],[34,45]],dp:"Language unclassified. Written in Akkadian, not Lullubian."},
+{n:"Kinaḫḫu",s:"Akkadian Cuneiform",a:"Amarna Letters (EA 9, 30, 109, etc.)",d:"~1500–1200 BCE",t:2,c:T2,m:"Lebanon / Israel-Palestine / W. Syria",dt:"<strong>Attestation:</strong> KUR Ki-na-aḫ-ḫi in Amarna Letters. Phoenicians at Carthage called themselves Chanani (Augustine confirms, 5th c. CE). Modern Lebanese derive ~93% ancestry from Bronze Age Canaanites (Haber et al. 2017, AJHG).",co:[[34.5,34],[34.5,36.5],[31,36.5],[31,34]],dp:null},
+{n:"Qart-Ḥadašt",s:"Punic (Phoenician) alphabet",a:"Thousands of Punic inscriptions, coins, steles",d:"~814–146 BCE",t:1,c:T1,m:"Tunisia (Tunis area)",dt:"<strong>Self-name:</strong> Qart-Ḥadašt ('New City' in Punic). People called themselves Chanani — Augustine of Hippo confirms rural North Africans still used this in 5th century CE.",co:[[37.5,9],[37.5,11],[36,11],[36,9]],dp:null},
+{n:"Aram",s:"Aramaic alphabet",a:"Tel Dan Stele (~840 BCE), Sefire steles, Zakkur stele",d:"~1100–732 BCE",t:1,c:T1,m:"Syria (Damascus, Aleppo region)",dt:"<strong>Self-name:</strong> Aram. Tel Dan Stele (~840 BCE) at Israel Museum mentions 'king of Aram'. Aramaic became lingua franca of entire Near East. Still spoken by Assyrian communities and in Maaloula, Syria.",co:[[37,36],[37,40.5],[33,40.5],[33,36]],dp:null},
+{n:"Kush / KꜢŠ",s:"Egyptian Hieroglyphic + Meroitic script",a:"Egyptian texts; Meroitic royal steles at Meroë, Sudan",d:"~2000 BCE (Egyptian refs), ~300 BCE+ (Meroitic)",t:2,c:T2,m:"Northern Sudan / southernmost Egypt",dt:"<strong>Attestation:</strong> KꜢŠ in Egyptian hieroglyphic. Kushites later developed their own Meroitic script (~300 BCE) — partially undeciphered. 25th Dynasty of Egypt was Kushite. Major sites: Kerma, Napata, Meroë.",co:[[22,30],[22,36],[16,36],[16,30]],dp:"Meroitic language partially undeciphered — Kushite self-name uncertain"},
+{n:"Aksum",s:"Ge'ez script (South Semitic)",a:"Ezana's stele (~330 CE), Aksumite coins",d:"~100 CE+",t:1,c:T1,m:"Northern Ethiopia / Eritrea",dt:"<strong>Self-name:</strong> ʾAksum in Ge'ez inscriptions. Own script, own coinage. One of the few sub-Saharan African civilizations with indigenous writing. Ge'ez is ancestor of modern Amharic and Tigrinya.",co:[[16,37],[16,41],[13,41],[13,37]],dp:null},
+{n:"Mēxihco-Tenōchtitlan",s:"Nahuatl Pictographic Codices",a:"Codex Mendoza (~1541, Bodleian Library Oxford), Codex Borbonicus",d:"~1325–1521 CE",t:1,c:T1,m:"Central Mexico (Mexico City basin)",dt:"<strong>Self-name:</strong> Mēxihcah. City: Tenōchtitlan. NEVER called themselves 'Aztec' — that term derives from 'Aztlan' (mythical homeland) and was popularized by European scholars (Clavijero 1780, Humboldt 1810, Prescott 1843). Nahuatl language has ~1.7 million speakers today.",co:[[21.5,-100],[21.5,-96.5],[18,-96.5],[18,-100]],dp:null},
+{n:"Maya city-states",s:"Maya Hieroglyphic (logosyllabic, ~80% deciphered)",a:"Steles at Tikal, Palenque, Copán, Calakmul, etc.",d:"~300 BCE–1500 CE",t:1,c:T1,m:"Yucatán / Guatemala / Belize / Honduras",dt:"<strong>Deciphered self-names from glyphs:</strong> Mutal (Tikal), Oxwitik (Copán), Lakamha' (Palenque), Uxte'tuun (Calakmul). Not one empire — independent city-states, like Greek poleis. 30+ related languages. Most advanced pre-Columbian writing system.",co:[[21,-92],[21,-87],[14,-87],[14,-92]],dp:null},
+{n:"Ñuu Dzaui",s:"Mixtec Pictographic Codices",a:"Codex Vindobonensis (Austrian National Library), Codex Nuttall, Codex Bodley — pre-contact manuscripts",d:"~1000–1521 CE",t:1,c:T1,m:"Oaxaca (western), Mexico",dt:"<strong>Codices:</strong> Pre-contact pictographic manuscripts. Among the very few surviving pre-Columbian books in the Americas.<br><strong>⚠ Name note:</strong> 'Ñuu Dzaui' ('Nation of the Rain') is the modern Mixtec phonetic self-name. Codices are pictographic (images, not phonetic text) — they don't spell out 'Ñuu Dzaui'. 'Mixtec' = Nahuatl exonym. ~500,000 speakers today.",co:[[18,-98.5],[18,-96.5],[16,-96.5],[16,-98.5]],dp:"Codices are pictographic — 'Ñuu Dzaui' is modern Mixtec reading, not directly from codex text."},
+{n:"Bën'zaa / Danni Baa",s:"Zapotec script (earliest Mesoamerican writing)",a:"Monte Albán danzante stones (~500 BCE)",d:"~500 BCE–800 CE",t:1,c:T1,m:"Oaxaca (central valleys), Mexico",dt:"<strong>Script:</strong> Zapotec writing — earliest in Mesoamerica (~500 BCE). Only partially deciphered. ~450,000 speakers today.<br><strong>⚠ Name note:</strong> 'Bën'zaa' ('Cloud People') is the modern Zapotec self-name from living speakers. The ancient script has NOT been deciphered enough to confirm this was the ancient name.",co:[[17.5,-97.5],[17.5,-96],[16,-96],[16,-97.5]],dp:"Script partially deciphered. 'Bën'zaa' is modern speaker name, not read from ancient inscriptions."},
+{n:"Tawantinsuyu",s:"None (Quipu knot-records)",a:"Garcilaso de la Vega (1609), Guaman Poma (~1615, Royal Danish Library), Cieza de León (1553)",d:"~1438–1533 CE",t:3,c:T3,m:"Andes — Peru to Chile/Argentina",dt:"<strong>Oral tradition from multiple independent sources:</strong> Garcilaso de la Vega (half-Inca nobleman), Guaman Poma de Ayala (indigenous chronicler — manuscript is physical artifact at Royal Danish Library). 'Land of the Four Quarters.' Qosqo = 'Navel of the World'. Quechua language has ~8–10 million speakers today.",co:[[2,-80],[2,-70],[-5,-70],[-12,-68],[-20,-65],[-27,-68],[-35,-72],[-35,-77],[-25,-77],[-15,-78],[-5,-80],[2,-80]],dp:"No writing system. All names from post-contact oral records. But multiple independent indigenous and Spanish sources agree."},
+{n:"Hellas / Ἑλλάς",s:"Greek alphabet; Linear B (~1400 BCE)",a:"Massive inscription corpus, Linear B tablets (Knossos, Pylos)",d:"~1400 BCE (Linear B), ~800 BCE (alphabetic)",t:1,c:T1,m:"Greece",dt:"<strong>Self-name:</strong> Hellenes (Ἕλληνες); land: Hellas. 'Greece' = Latin exonym (Graecia). Continuous written tradition from Mycenaean era.",co:[[42,19],[42,30],[35,30],[35,19]],dp:null},
+{n:"Rasenna",s:"Etruscan alphabet",a:"Pyrgi Tablets, ~13,000 surviving inscriptions",d:"~700–100 BCE",t:1,c:T1,m:"Central Italy (Tuscany, Umbria, Lazio)",dt:"<strong>Self-name:</strong> Rasenna / Rasna (recorded by Dionysius of Halicarnassus). 'Etruscan' (Etrusci/Tusci) = Latin exonym. Language partially understood — pre-Indo-European isolate. Etruscans genetically local, not immigrants (Posth et al. 2021, Science Advances).",co:[[44,10],[44,13],[42,13],[42,10]],dp:"Language only partially understood"},
+{n:"Roma",s:"Latin alphabet",a:"Thousands of inscriptions, legal texts, coins",d:"~600 BCE+",t:1,c:T1,m:"Rome / Italy",dt:"<strong>Self-name:</strong> Roma, populus Romanus. Enormous epigraphic and literary corpus.",co:[[43,11],[43,14],[41,14],[41,11]],dp:null},
+{n:"中國 (Zhōngguó)",s:"Oracle bone script / Bronze inscriptions",a:"Shang oracle bones (~1200 BCE), He Zun bronze vessel (~1038 BCE, Baoji Museum)",d:"~1200 BCE+",t:1,c:T1,m:"Yellow River valley, China (core only)",dt:"<strong>Self-name:</strong> 中國 ('Central States') on He Zun bronze (~1038 BCE) — earliest known occurrence. 華夏 (Huáxià). 150,000+ oracle bone fragments found.<br><strong>Note:</strong> Zhōngguó originally meant the narrow central political area around the Zhou capital, NOT the modern nation-state of China.",co:[[40,107],[40,120],[32,120],[32,107]],dp:"Originally meant central polity area, not the modern country"},
+{n:"Numidae",s:"Tifinagh (Libyco-Berber) + Punic",a:"Dougga bilingual inscription (Punic + Libyc), coins",d:"~200 BCE+",t:1,c:T1,m:"Algeria / Tunisia",dt:"<strong>Evidence:</strong> Indigenous Tifinagh script — one of Africa's oldest, still used by Tuareg and Amazigh today. Dougga bilingual aids interpretation.<br><strong>Note:</strong> Modern 'Amazigh/Imazighen' self-designation is from medieval Arabic sources, NOT directly from these ancient inscriptions.",co:[[37,3],[37,9],[34,9],[34,3]],dp:"Ancient Tifinagh readings debated. 'Amazigh' name not from these inscriptions."},
+{n:"Punt / Pwnt",s:"Egyptian Hieroglyphic",a:"Hatshepsut's mortuary temple at Deir el-Bahari; Sahure reliefs",d:"~2500–1150 BCE",t:2,c:T2,m:"LOCATION DEBATED — Horn of Africa / S. Arabia / Sudan coast",dt:"<strong>Egyptian name:</strong> Pwnt ('God's Land'). We have ZERO idea what the people of Punt called themselves.<br><strong>Location:</strong> Never conclusively identified. Baboon mummy isotope analysis (eLife, 2020) points to Eritrea/eastern Sudan area, but this remains debated. One of archaeology's great unresolved questions.",co:[[15,39],[15,46],[9,46],[9,39]],dp:"LOCATION UNCERTAIN. Self-name unknown. One of archaeology's great debates."},
+];
+
+// ========== HABITATION EVIDENCE ==========
+const habSites=[
+// AUSTRALIA
+{lat:-12.4,lng:132.9,site:"Madjedbebe rock shelter",date:"~65,000 yrs (DISPUTED)",evidence:"Stone tools, ochre, grindstones. Clarkson et al. 2017, Nature (doi:10.1038/nature22968). 65ka date challenged by 2020 termite study. Minimum ~50,000 yrs widely accepted.",region:"Australia"},
+{lat:-14.4,lng:132.4,site:"Kakadu (Gabarnmung)",date:"~28,000–35,000 yrs",evidence:"Rock art, ground-edge axe (35,500 yrs — oldest in world). Ochre use from 53,000–59,000 years ago. Jawoyn people's country.",region:"Australia"},
+{lat:-15.6,lng:128.2,site:"Kimberley rock art",date:"~17,300 yrs (oldest dated painting)",evidence:"17,300-year-old kangaroo painting. Finch et al. 2021, Nature Human Behaviour (doi:10.1038/s41562-020-00950-0). Gwion Gwion figures ~12,000 yrs. Balanggarra country.",region:"Australia"},
+{lat:-33.72,lng:143.05,site:"Lake Mungo",date:"~42,000 yrs",evidence:"Mungo Man & Mungo Lady — oldest known cremation and ritual burial on Earth. Bowler et al. 2003, Nature (doi:10.1038/nature01383). UNESCO World Heritage (Willandra Lakes).",region:"Australia"},
+{lat:-31.3,lng:139.5,site:"Warratyi rock shelter",date:"~49,000 yrs",evidence:"Earliest evidence of bone tool use and hafted tools in Australia. Hamm et al. 2016, Nature (doi:10.1038/nature20125).",region:"Australia"},
+{lat:-20.7,lng:116.7,site:"Murujuga (Burrup Peninsula)",date:"~40,000+ yrs",evidence:"1+ million petroglyphs — world's largest collection. Images of extinct megafauna. UNESCO World Heritage (2023).",region:"Australia"},
+{lat:-31.38,lng:132.05,site:"Koonalda Cave",date:"~22,000 yrs",evidence:"Finger markings on cave ceiling in total darkness. National Heritage listed. Mirning people's sacred site. Nullarbor Plain. Vandalized 2022.",region:"Australia"},
+{lat:-25.3,lng:131.0,site:"Uluru area",date:"~10,000+ yrs",evidence:"Continuous occupation evidence. Rock art, stone tools, water management. Anangu people's sacred site.",region:"Australia"},
+// NEW ZEALAND
+{lat:-41.75,lng:174.05,site:"Wairau Bar",date:"~1280–1300 CE",evidence:"Earliest known burial site in New Zealand. Polynesian adzes, moa bone tools, fishhooks. Kinaston et al. 2013, Journal of Archaeological Science.",region:"New Zealand"},
+{lat:-44.7,lng:168.3,site:"Early moa-hunting sites (Otago)",date:"~1300–1500 CE",evidence:"Moa bones with butchery marks. Demonstrates rapid spread across South Island. Wilmshurst et al. 2008 (doi:10.1073/pnas.0801507105).",region:"New Zealand"},
+// NORTH AMERICA
+{lat:32.78,lng:-106.17,site:"White Sands footprints (New Mexico)",date:"~21,000–23,000 yrs (DEBATED)",evidence:"Human footprints in lake bed. Bennett et al. 2021, Science (doi:10.1126/science.abg7586). Pre-Clovis evidence. Dates debated in subsequent studies.",region:"North America"},
+{lat:64.2,lng:-146.1,site:"Swan Point (Alaska)",date:"~14,000 yrs",evidence:"Oldest site in Alaska. Hearths, tools, mammoth tusk fragments. Evidence of mammoth hunting.",region:"North America"},
+{lat:40.1,lng:-80.0,site:"Meadowcroft Rockshelter (Pennsylvania)",date:"~16,000 yrs (DEBATED)",evidence:"Earliest stratified site in eastern North America. Stone tools, firepits below Clovis layers. Pre-Clovis dates debated.",region:"North America"},
+{lat:34.2,lng:-103.3,site:"Clovis / Blackwater Draw (New Mexico)",date:"~13,000 yrs",evidence:"Distinctive 'Clovis points' + mammoth bones with butchery marks. Defined the Clovis culture. Discovered 1929.",region:"North America"},
+{lat:38.66,lng:-90.06,site:"Cahokia Mounds (Illinois)",date:"~1050–1350 CE",evidence:"Largest pre-Columbian city north of Mexico. 120 earthen mounds. Population 10,000–20,000. UNESCO World Heritage. Original name UNKNOWN.",region:"North America"},
+{lat:32.62,lng:-91.41,site:"Poverty Point (Louisiana)",date:"~1700–1100 BCE",evidence:"UNESCO World Heritage. 6 concentric ridges, 72-ft mound. Estimated 5+ million hours of labor. Builder identity unknown. Pre-agricultural society.",region:"North America"},
+{lat:37.18,lng:-108.49,site:"Mesa Verde (Colorado)",date:"~600–1300 CE",evidence:"Ancestral Puebloan cliff dwellings. Cliff Palace = largest cliff dwelling in North America. UNESCO World Heritage. Self-name unknown — 'Puebloan' = Spanish exonym.",region:"North America"},
+{lat:36.06,lng:-107.97,site:"Chaco Canyon (New Mexico)",date:"~850–1150 CE",evidence:"Pueblo Bonito great house. Astronomical alignments. Network of 400+ miles of roads. 2025 Nature study confirmed genetic continuity with modern Picuris Pueblo.",region:"North America"},
+{lat:39.03,lng:-83.43,site:"Serpent Mound (Ohio)",date:"~1000 BCE–1070 CE",evidence:"1,300-foot earthwork. Fort Ancient culture (current consensus). Possible astronomical alignment. Builder identity debated.",region:"North America"},
+{lat:33.0,lng:-87.6,site:"Moundville (Alabama)",date:"~1000–1450 CE",evidence:"2nd largest Mississippian site. 29 mounds. Political and ceremonial center. Builder identity unknown by name.",region:"North America"},
+{lat:45.8,lng:-89.7,site:"Aztalan (Wisconsin)",date:"~1000–1300 CE",evidence:"Northernmost Mississippian outpost. Palisaded village with platform mounds. Cultural connection to Cahokia.",region:"North America"},
+// SOUTH AMERICA
+{lat:-3.1,lng:-60.0,site:"Amazon earthworks (Amazonia)",date:"~500 BCE–1500 CE",evidence:"LIDAR surveys (Prümers et al. 2022, Nature) revealed thousands of pre-Columbian earthworks. Far larger populations than previously assumed.",region:"South America"},
+{lat:-19.5,lng:-43.9,site:"Lapa do Santo (Brazil)",date:"~11,500 yrs",evidence:"Oldest known decapitation in Americas. Cave burials, rock art. Lagoa Santa region, Minas Gerais. Strauss et al. 2015, PLOS ONE.",region:"South America"},
+{lat:-1.0,lng:-80.0,site:"Real Alto (Ecuador)",date:"~3500 BCE",evidence:"One of oldest villages in Americas. Valdivia culture. Ceramics among earliest in New World.",region:"South America"},
+// PACIFIC
+{lat:-17.7,lng:-149.4,site:"Marae sites (Tahiti)",date:"~1000–1200 CE",evidence:"Stone temple platforms. Central to Polynesian voyaging and expansion to Hawaiʻi and New Zealand.",region:"Pacific"},
+{lat:21.5,lng:-158.0,site:"Kūkaniloko (Hawaiʻi)",date:"~1000–1200 CE",evidence:"Royal birthing stones. Polynesian settlement evidence. Oral tradition recorded by missionaries ~1820s.",region:"Pacific"},
+{lat:-13.8,lng:-171.8,site:"Pulemelei Mound (Samoa)",date:"~1100–1400 CE",evidence:"Largest ancient structure in Polynesia. Stone pyramid. Function debated.",region:"Pacific"},
+// AFRICA
+{lat:6.4,lng:3.4,site:"Igbo-Ukwu (Nigeria)",date:"~9th century CE",evidence:"Sophisticated bronze castings. Earliest known bronze work in West Africa. Elite burial. Shaw 1970.",region:"Africa"},
+{lat:12.0,lng:-8.0,site:"Djenné-Djenno (Mali)",date:"~250 BCE–1400 CE",evidence:"Oldest known city in sub-Saharan Africa. Mudbrick urbanism. No centralized authority. No writing found. McIntosh & McIntosh 1981.",region:"Africa"},
+{lat:-27.22,lng:31.98,site:"Border Cave (KwaZulu-Natal, S. Africa)",date:"~170,000 yrs",evidence:"Early Homo sapiens remains. Oldest known use of poison, bedding, and personal ornaments. Lebombo Mountains, near Eswatini border.",region:"Africa"},
+{lat:14.67,lng:-17.4,site:"Senegambia stone circles",date:"~3rd c. BCE – 16th c. CE",evidence:"UNESCO World Heritage. Over 1,000 stone circles across 100+ sites. No inscriptions. Builder identity unknown from artifacts.",region:"Africa"},
+{lat:-20.3,lng:30.9,site:"Great Zimbabwe",date:"~1000–1450 CE",evidence:"Massive stone enclosures. 20,000+ inhabitants at peak. UNESCO World Heritage. Built by ancestors of Shona people — but NO inscriptions. Self-name unknown from artifacts.",region:"Africa"},
+{lat:-0.16,lng:29.56,site:"Ishango Bone site (DR Congo)",date:"~20,000 yrs",evidence:"Bone with tally marks — possibly earliest mathematical notation. Found at Ishango, Lake Edward. Now at Royal Belgian Institute of Natural Sciences, Brussels.",region:"Africa"},
+// SIBERIA / ARCTIC
+{lat:52.8,lng:103.1,site:"Mal'ta (Siberia)",date:"~24,000 yrs",evidence:"MA-1 genome — ancient Siberian DNA foundational to understanding peopling of Americas. Raghavan et al. 2014, Nature (doi:10.1038/nature12736).",region:"Siberia"},
+{lat:71.0,lng:-156.8,site:"Ipiutak (Point Hope, Alaska)",date:"~100 BCE–500 CE",evidence:"600+ house ruins. Elaborate ivory carvings. Pre-Thule Arctic culture. One of largest Arctic archaeological sites.",region:"Arctic"},
+// EUROPE (pre-literate)
+{lat:51.18,lng:-1.83,site:"Stonehenge (England)",date:"~3000–2000 BCE",evidence:"Megalithic monument. Builder identity unknown — predates Celtic and Germanic peoples by millennia. No inscriptions. UNESCO World Heritage.",region:"Europe"},
+{lat:43.37,lng:-1.2,site:"Isturitz Cave (Basque region)",date:"~40,000+ yrs",evidence:"Upper Paleolithic occupation. Some of Europe's oldest bone flutes. In Basque Country — Basques may be descendants but NO written evidence before ~10th century CE.",region:"Europe"},
+{lat:36.12,lng:-5.35,site:"Gorham's Cave (Gibraltar)",date:"~40,000 yrs (Neanderthal)",evidence:"Last known Neanderthal site in Europe. Abstract engravings on rock. Then occupied by Homo sapiens ~28,000 years ago. UNESCO World Heritage.",region:"Europe"},
+];
+
+// ========== RENDER NAMED TERRITORIES ==========
+const layers=[],sIdx=[];
+terr.forEach((t,i)=>{
+  const ll=t.co.map(c=>[c[0],c[1]]);
+  const p=L.polygon(ll,{color:t.c,fillColor:t.c,fillOpacity:.14,weight:1.5,opacity:.6,dashArray:t.dp?'5,5':null}).addTo(map);
+  const ctr=p.getBounds().getCenter();
+  // Map labels — 13px minimum, bold
+  L.marker(ctr,{icon:L.divIcon({className:'tl',html:`<div style="font-family:'EB Garamond',serif;font-size:.8125rem;font-weight:700;color:${t.c};text-shadow:0 0 8px rgba(0,0,0,1),0 0 16px rgba(0,0,0,.9),0 1px 3px rgba(0,0,0,1);white-space:nowrap;pointer-events:none;text-align:center;transform:translate(-50%,-50%)">${t.n}${t.dp?'<span style="color:#e05555;font-size:.6875rem"> ⚠</span>':''}</div>`,iconSize:[0,0]})}).addTo(map);
+  p.on('click',()=>{
+    document.getElementById('iN').innerHTML=t.n;
+    document.getElementById('iS').innerHTML=
+      `<strong>Script:</strong> ${t.s}<br>`+
+      `<strong>Artifact:</strong> ${t.a}<br>`+
+      `<strong>Date:</strong> ${t.d}<br>`+
+      `<strong>Tier:</strong> ${t.t===1?'1 — Self-attested (own writing)':t.t===2?'2 — Contemporary foreign text':'3 — Recorded oral tradition'}<br>`+
+      `<strong>Modern location:</strong> ${t.m}`;
+    let h=t.dt;
+    if(t.dp) h+=`<div class="warn">⚠ DISPUTED: ${t.dp}</div>`;
+    document.getElementById('iD').innerHTML=h;
+    document.getElementById('info').classList.add('active');
+  });
+  p.on('mouseover',function(){this.setStyle({fillOpacity:.32,weight:2.5})});
+  p.on('mouseout',function(){this.setStyle({fillOpacity:.14,weight:1.5})});
+  layers.push({p,d:t});
+  sIdx.push({n:t.n.toLowerCase(),m:t.m.toLowerCase(),i});
+});
+document.getElementById('nCt').textContent=terr.length;
+
+// ========== RENDER HABITATION DOTS ==========
+const habLayer=L.layerGroup();
+const habMarkers=[];
+habSites.forEach(h=>{
+  const m=L.circleMarker([h.lat,h.lng],{
+    radius:6,
+    color:'#e05555',
+    fillColor:'#e05555',
+    fillOpacity:.75,
+    weight:2,
+    opacity:.9
+  });
+  // Popup with accessible font sizes — minimum 14px
+  m.bindPopup(`
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.875rem;color:#d4af37;font-weight:500;margin-bottom:4px">${h.site}</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.8125rem;color:#e05555;margin-bottom:6px">${h.date}</div>
+    <div style="font-family:'EB Garamond',serif;font-size:.9375rem;color:#c0b8a8;line-height:1.5">${h.evidence}</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:#8a8478;margin-top:6px">Region: ${h.region}</div>
+  `,{maxWidth:320});
+  habLayer.addLayer(m);
+  habMarkers.push({m,d:h});
+});
+habLayer.addTo(map);
+document.getElementById('sCt').textContent=habSites.length;
+
+// ========== TOGGLE HANDLERS ==========
+// ① Named territories (style-based toggle)
+document.getElementById('tN').addEventListener('change',function(){
+  if(this.checked){
+    layers.forEach(l=>{l.p.setStyle({opacity:.6,fillOpacity:.14,weight:1.5,dashArray:l.d.dp?'5,5':null})});
+    document.querySelectorAll('.tl').forEach(el=>{el.style.display=''});
+  } else {
+    layers.forEach(l=>{l.p.setStyle({opacity:0,fillOpacity:0,weight:0})});
+    document.querySelectorAll('.tl').forEach(el=>{el.style.display='none'});
+  }
+});
+// ② Habitation dots
+document.getElementById('tH').addEventListener('change',function(){
+  this.checked?habLayer.addTo(map):map.removeLayer(habLayer);
+});
+// ③ Modern borders
+document.getElementById('tB').addEventListener('change',function(){
+  this.checked?modernLyr.addTo(map):map.removeLayer(modernLyr);
+});
+
+// ========== SEARCH ==========
+document.getElementById('sI').addEventListener('input',function(e){
+  const q=e.target.value.toLowerCase().trim();
+  if(!q){
+    layers.forEach(l=>l.p.setStyle({opacity:.6,fillOpacity:.14,weight:1.5,dashArray:l.d.dp?'5,5':null}));
+    return;
+  }
+  layers.forEach((l,i)=>{
+    const s=sIdx[i];
+    const mt=s.n.includes(q)||s.m.includes(q);
+    l.p.setStyle(mt?{opacity:1,fillOpacity:.35,weight:3}:{opacity:.05,fillOpacity:.01,weight:.2});
+  });
+  const hm=habMarkers.find(h=>h.d.site.toLowerCase().includes(q)||h.d.region.toLowerCase().includes(q));
+  const fm=sIdx.find(s=>s.n.includes(q)||s.m.includes(q));
+  if(fm) map.flyToBounds(layers[fm.i].p.getBounds(),{padding:[50,50],maxZoom:6});
+  else if(hm) map.flyTo([hm.d.lat,hm.d.lng],6);
+});
+
+// ========== KEYBOARD ==========
+document.addEventListener('keydown',function(e){
+  if(e.key==='/'&&document.activeElement!==document.getElementById('sI')){e.preventDefault();document.getElementById('sI').focus()}
+  if(e.key==='Escape'){document.getElementById('info').classList.remove('active');document.getElementById('sI').blur()}
+});
+
+// ========== FONT SIZE SELECTOR ==========
+document.querySelectorAll('.fs-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    const fs=this.dataset.fs;
+    const html=document.documentElement;
+    html.classList.remove('fs-big','fs-xl');
+    if(fs==='big') html.classList.add('fs-big');
+    if(fs==='xl') html.classList.add('fs-xl');
+    document.querySelectorAll('.fs-btn').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    map.closePopup();
+    map.invalidateSize();
+  });
+});
+</script>
+</body>
+</html>
