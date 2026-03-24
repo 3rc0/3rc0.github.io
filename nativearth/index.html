@@ -8,14 +8,19 @@
   Source audit: MAP-AUDIT.md
   Repository: https://github.com/3rc0/3rc0.github.io/tree/main/nativearth
 -->
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="index, follow">
-<meta name="theme-color" content="#08090c">
+<meta http-equiv="Content-Language" content="en">
+<meta name="theme-color" content="#f4f1ec">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="dns-prefetch" href="https://a.basemaps.cartocdn.com">
+<link rel="dns-prefetch" href="https://b.basemaps.cartocdn.com">
+<link rel="preconnect" href="https://a.basemaps.cartocdn.com" crossorigin>
+<link rel="preconnect" href="https://b.basemaps.cartocdn.com" crossorigin>
 <link rel="canonical" href="https://3rc0.github.io/nativearth/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%2308090c' width='100' height='100' rx='16'/><text x='50' y='72' font-size='68' font-family='serif' font-weight='700' fill='%23d4af37' text-anchor='middle'>U</text></svg>">
 <meta name="description" content="UNDRAWN — The Native Earth Map. An interactive map of indigenous territory names drawn from physical inscriptions, cuneiform tablets, hieroglyphs, steles, and codices. 28 territories, 38 archaeological sites, 8 DOI-cited sources.">
@@ -24,6 +29,8 @@
 <meta property="og:title" content="UNDRAWN — The Native Earth Map">
 <meta property="og:description" content="An interactive world map of indigenous territory names drawn from ancient inscriptions, cuneiform, hieroglyphs, and codices. 66 data points. 8 DOIs.">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="UNDRAWN">
 <meta property="og:url" content="https://3rc0.github.io/nativearth/">
 <meta property="og:image" content="https://3rc0.github.io/nativearth/og-preview.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -37,19 +44,8 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 
-/* ========== THEME: CSS Custom Properties ========== */
+/* ========== THEME: CSS Custom Properties — LIGHT DEFAULT ========== */
 :root{
-  --bg:#08090c;--bg-a:rgba(8,9,12,.96);--bg-b:rgba(8,9,12,.92);--bg-c:rgba(8,9,12,.85);
-  --fg:#e0d8cc;--fg2:#c0b8a8;--fg3:#b0a898;--fg4:#9a9488;--fg5:#8a8478;--fg6:#6a6560;--fg7:#555;
-  --gold:#d4af37;--gold-a:rgba(212,175,55,.3);--gold-b:rgba(212,175,55,.15);--gold-c:rgba(212,175,55,.12);--gold-d:rgba(212,175,55,.06);
-  --border:rgba(180,155,80,.15);--border2:rgba(180,155,80,.25);--border3:rgba(180,155,80,.3);
-  --red:#e05555;--blue:#7a9ec2;--brown:#a09080;
-  --shadow:rgba(0,0,0,1);--shadow2:rgba(0,0,0,.9);
-  --map-filter:brightness(.95) contrast(1.05);
-  --popup-bg:rgba(8,9,12,.97);
-  color-scheme:dark;
-}
-html.light{
   --bg:#f4f1ec;--bg-a:rgba(244,241,236,.97);--bg-b:rgba(244,241,236,.94);--bg-c:rgba(244,241,236,.9);
   --fg:#1a1a1a;--fg2:#2a2a2a;--fg3:#444;--fg4:#555;--fg5:#666;--fg6:#888;--fg7:#aaa;
   --gold:#8b6914;--gold-a:rgba(139,105,20,.3);--gold-b:rgba(139,105,20,.15);--gold-c:rgba(139,105,20,.1);--gold-d:rgba(139,105,20,.05);
@@ -58,22 +54,55 @@ html.light{
   --shadow:rgba(0,0,0,.3);--shadow2:rgba(0,0,0,.15);
   --map-filter:brightness(1) contrast(1) saturate(.95);
   --popup-bg:rgba(244,241,236,.97);
+  --label-shadow:0 0 8px rgba(255,255,255,.9),0 0 16px rgba(255,255,255,.7),0 1px 2px rgba(255,255,255,.8);
   color-scheme:light;
 }
-/* Auto-detect system preference */
-@media(prefers-color-scheme:light){
-  :root:not(.dark){
-    --bg:#f4f1ec;--bg-a:rgba(244,241,236,.97);--bg-b:rgba(244,241,236,.94);--bg-c:rgba(244,241,236,.9);
-    --fg:#1a1a1a;--fg2:#2a2a2a;--fg3:#444;--fg4:#555;--fg5:#666;--fg6:#888;--fg7:#aaa;
-    --gold:#8b6914;--gold-a:rgba(139,105,20,.3);--gold-b:rgba(139,105,20,.15);--gold-c:rgba(139,105,20,.1);--gold-d:rgba(139,105,20,.05);
-    --border:rgba(100,80,30,.12);--border2:rgba(100,80,30,.2);--border3:rgba(100,80,30,.25);
-    --red:#c0392b;--blue:#2c5f8a;--brown:#7a6b5d;
-    --shadow:rgba(0,0,0,.3);--shadow2:rgba(0,0,0,.15);
-    --map-filter:brightness(1) contrast(1) saturate(.95);
-    --popup-bg:rgba(244,241,236,.97);
-    color-scheme:light;
+html.dark{
+  --bg:#08090c;--bg-a:rgba(8,9,12,.96);--bg-b:rgba(8,9,12,.92);--bg-c:rgba(8,9,12,.85);
+  --fg:#e0d8cc;--fg2:#c0b8a8;--fg3:#b0a898;--fg4:#9a9488;--fg5:#8a8478;--fg6:#6a6560;--fg7:#555;
+  --gold:#d4af37;--gold-a:rgba(212,175,55,.3);--gold-b:rgba(212,175,55,.15);--gold-c:rgba(212,175,55,.12);--gold-d:rgba(212,175,55,.06);
+  --border:rgba(180,155,80,.15);--border2:rgba(180,155,80,.25);--border3:rgba(180,155,80,.3);
+  --red:#e05555;--blue:#7a9ec2;--brown:#a09080;
+  --shadow:rgba(0,0,0,1);--shadow2:rgba(0,0,0,.9);
+  --map-filter:brightness(.95) contrast(1.05);
+  --popup-bg:rgba(8,9,12,.97);
+  --label-shadow:0 0 12px rgba(0,0,0,1),0 0 24px rgba(0,0,0,.9),0 0 48px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+/* Auto-detect: dark system users get dark */
+@media(prefers-color-scheme:dark){
+  :root:not(.light){
+    --bg:#08090c;--bg-a:rgba(8,9,12,.96);--bg-b:rgba(8,9,12,.92);--bg-c:rgba(8,9,12,.85);
+    --fg:#e0d8cc;--fg2:#c0b8a8;--fg3:#b0a898;--fg4:#9a9488;--fg5:#8a8478;--fg6:#6a6560;--fg7:#555;
+    --gold:#d4af37;--gold-a:rgba(212,175,55,.3);--gold-b:rgba(212,175,55,.15);--gold-c:rgba(212,175,55,.12);--gold-d:rgba(212,175,55,.06);
+    --border:rgba(180,155,80,.15);--border2:rgba(180,155,80,.25);--border3:rgba(180,155,80,.3);
+    --red:#e05555;--blue:#7a9ec2;--brown:#a09080;
+    --shadow:rgba(0,0,0,1);--shadow2:rgba(0,0,0,.9);
+    --map-filter:brightness(.95) contrast(1.05);
+    --popup-bg:rgba(8,9,12,.97);
+    --label-shadow:0 0 12px rgba(0,0,0,1),0 0 24px rgba(0,0,0,.9),0 0 48px rgba(0,0,0,.7);
+    color-scheme:dark;
   }
 }
+
+/* ========== ACCESSIBILITY: reduced motion ========== */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;
+    transition-duration:0.01ms!important;scroll-behavior:auto!important}
+}
+
+/* ========== ACCESSIBILITY: Windows high contrast ========== */
+@media(forced-colors:active){
+  .sw,.sw::after,.ls{forced-color-adjust:none}
+  .fs-btn,.info,.legend,.stats,.toast,.loader{border:2px solid ButtonText!important}
+}
+
+/* ========== SKIP LINK ========== */
+.skip-link{position:absolute;top:-100px;left:16px;z-index:9999;
+  background:var(--gold);color:#fff;padding:8px 16px;border-radius:4px;
+  font-family:'SF Mono',Menlo,Consolas,monospace;font-size:14px;font-weight:600;
+  text-decoration:none;transition:top .2s ease}
+.skip-link:focus{top:8px}
 
 /* ========== FONTS ========== */
 
@@ -82,7 +111,7 @@ html{font-size:16px;transition:font-size .2s ease}
 html.fs-big{font-size:20px}
 html.fs-xl{font-size:24px}
 body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;background:var(--bg);color:var(--fg);overflow:hidden;height:100vh}
-#map{width:100%;height:100vh;background:var(--bg);filter:var(--map-filter);transition:filter .5s ease}
+#map{width:100%;height:100vh;background:var(--bg);filter:var(--map-filter);transition:filter .5s ease;will-change:filter}
 .leaflet-container{background:var(--bg)!important}
 
 /* ========== HEADER ========== */
@@ -153,6 +182,7 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
 }
 .fs-btn:hover{color:var(--gold);border-color:rgba(180,155,80,.4);background:rgba(180,155,80,.1)}
 .fs-btn.active{color:var(--gold);border-color:rgba(180,155,80,.6);background:rgba(180,155,80,.15)}
+.fs-btn.copied{color:#16a34a!important;border-color:rgba(22,163,74,.3)!important}
 
 /* ========== SEARCH ========== */
 .search-box{
@@ -292,20 +322,24 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
 @keyframes spin{to{transform:rotate(360deg)}}
 .loader .ltxt{font-family:'SF Mono',Menlo,Consolas,monospace;font-size:.75rem;color:var(--fg7);letter-spacing:2px}
 
-/* ========== ACTION BUTTONS (share + fullscreen) ========== */
-.actions{position:fixed;top:72px;right:12px;z-index:1000;display:flex;gap:6px}
-.abtn{width:40px;height:40px;border-radius:6px;border:1px solid var(--border);
-  background:var(--bg-a);backdrop-filter:blur(8px);color:var(--fg5);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .2s ease}
-.abtn:hover{color:var(--gold);border-color:rgba(180,155,80,.4);background:rgba(180,155,80,.08)}
-.abtn.copied{color:#4ade80;border-color:rgba(74,222,128,.3)}
-
 /* ========== TOAST ========== */
 .toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;
-  background:var(--bg-a);border:1px solid rgba(212,175,55,.3);border-radius:8px;
+  background:var(--bg-a);border:1px solid var(--gold-a);border-radius:8px;
   padding:12px 24px;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:.8125rem;
   color:var(--gold);letter-spacing:1px;opacity:0;transition:opacity .4s ease;pointer-events:none}
 .toast.show{opacity:1}
+
+/* ========== SEARCH COUNTER ========== */
+.search-count{font-family:'SF Mono',Menlo,Consolas,monospace;font-size:.75rem;color:var(--fg6);
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none}
+
+/* ========== PRINT ========== */
+@media print{
+  .hdr,.legend,.stats,.actions,.search-box,.info,.loader,.toast{display:none!important}
+  #map{position:relative!important;height:100vh!important;filter:none!important}
+  .leaflet-control-zoom{display:none!important}
+  body{background:#fff!important;overflow:visible!important}
+}
 
 /* ========== RESPONSIVE ========== */
 @media(max-width:768px){
@@ -321,8 +355,6 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
   .stats{font-size:.75rem}
   .fs-btns{margin-left:4px;padding-left:8px}
   .fs-btn{min-width:38px;min-height:38px;font-size:12px}
-  .actions{top:56px;right:8px}
-  .abtn{width:36px;height:36px;font-size:14px}
 }
 @media(max-width:480px){
   .toggles{flex-direction:row;flex-wrap:wrap;gap:4px}
@@ -333,17 +365,17 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
 </head>
 <body>
 
+<!-- Skip link for keyboard/screen reader users -->
+<a href="#map" class="skip-link">Skip to map</a>
+
+<!-- Screen reader live region for search feedback -->
+<div id="srLive" aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)"></div>
+
 <!-- Loading spinner -->
 <div class="loader" id="loader"><div class="spin"></div><div class="ltxt">loading map</div></div>
 
 <!-- Toast notification -->
 <div class="toast" id="toast"></div>
-
-<!-- Action buttons -->
-<div class="actions">
-  <button class="abtn" id="shareBtn" aria-label="Share link" title="Copy link">&#128279;</button>
-  <button class="abtn" id="fsBtn" aria-label="Fullscreen" title="Fullscreen">&#9974;</button>
-</div>
 
 <div class="hdr">
   <div>
@@ -358,11 +390,14 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
       <button class="fs-btn" data-fs="big" aria-label="Large text size">A+</button>
       <button class="fs-btn" data-fs="xl" aria-label="Extra large text size">A++</button>
     </div>
-    <button class="fs-btn" id="themeBtn" aria-label="Toggle light and dark mode" title="Toggle theme" style="margin-left:6px;font-size:16px">☀</button>
+    <button class="fs-btn" id="themeBtn" aria-label="Toggle light and dark mode" title="Toggle theme" style="margin-left:6px;font-size:15px">&#9790;</button>
+    <button class="fs-btn" id="shareBtn" aria-label="Share link" title="Copy link" style="margin-left:2px;font-size:15px">&#8599;</button>
+    <button class="fs-btn" id="resetBtn" aria-label="Reset view" title="Reset view" style="font-size:14px">&#8634;</button>
+    <button class="fs-btn" id="fsBtn" aria-label="Toggle fullscreen" title="Fullscreen" style="font-size:13px">&#9723;</button>
   </div>
 </div>
 
-<div class="search-box"><input type="text" id="sI" placeholder="Search name or region..." aria-label="Search territories and sites"/></div>
+<div class="search-box" style="position:relative"><input type="text" id="sI" placeholder="Search name or region..." aria-label="Search territories and sites"/><span class="search-count" id="sCnt"></span></div>
 <div id="map" role="application" aria-label="UNDRAWN interactive native earth map"></div>
 
 <div class="legend" id="leg">
@@ -375,6 +410,9 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
   <div class="li"><div class="ls" style="background:#e05555"></div><div>Archaeological site<small>People lived here — name unknown</small></div></div>
   <div class="sep"></div>
   <div class="legend-note">Blank areas = research ongoing. Every civilization matters.</div>
+  <div class="sep"></div>
+  <div class="legend-note"><strong style="color:var(--gold)">Privacy:</strong> This site collects zero data. Zero cookies, zero analytics, zero tracking. Your visit is yours alone.</div>
+  <div class="legend-note" style="margin-top:4px"><strong style="color:var(--gold)">Accessibility:</strong> WCAG 2.1 AA. Keyboard: / search, Esc close, ← → cycle territories. Font size: A / A+ / A++. Theme: ☽ / ☀.</div>
 </div>
 
 <div class="info" id="info">
@@ -389,17 +427,19 @@ body{font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;back
 <script>
 const map=L.map('map',{center:[20,30],zoom:3,minZoom:2,maxZoom:12,zoomControl:false,attributionControl:false});
 L.control.zoom({position:'bottomleft'}).addTo(map);
-// Tile layers (dark/light)
+// Tile layers (light default / dark option)
 const darkTiles=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19});
 const lightTiles=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19});
-let baseTiles=darkTiles;
-// Detect system preference
-if(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches&&!document.documentElement.classList.contains('dark')){
-  baseTiles=lightTiles;
-  document.documentElement.classList.add('light');
-  document.getElementById('themeBtn').textContent='\u263E';
+let baseTiles=lightTiles; // LIGHT DEFAULT
+const isDarkSys=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;
+if(isDarkSys&&!document.documentElement.classList.contains('light')){
+  baseTiles=darkTiles;
+  document.documentElement.classList.add('dark');
+  document.getElementById('themeBtn').textContent='\u2600'; // ☀ (click to go light)
 }
 baseTiles.addTo(map);
+// Tile error fallback
+baseTiles.on('tileerror',function(e){console.warn('Tile load failed:',e.tile.src)});
 const modernLyr=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,opacity:.7});
 map.on('zoomend',()=>{document.getElementById('zL').textContent=map.getZoom()});
 
@@ -494,7 +534,7 @@ terr.forEach((t,i)=>{
   const p=L.polygon(ll,{color:t.c,fillColor:t.c,fillOpacity:.14,weight:1.5,opacity:.6,dashArray:t.dp?'5,5':null}).addTo(map);
   const ctr=p.getBounds().getCenter();
   // Map labels — 13px minimum, bold
-  L.marker(ctr,{icon:L.divIcon({className:'tl',html:`<div style="font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:.8125rem;font-weight:700;color:${t.c};text-shadow:0 0 8px rgba(0,0,0,1),0 0 16px rgba(0,0,0,.9),0 1px 3px rgba(0,0,0,1);white-space:nowrap;pointer-events:none;text-align:center;transform:translate(-50%,-50%)">${t.n}${t.dp?'<span style="color:var(--red);font-size:.6875rem"> ⚠</span>':''}</div>`,iconSize:[0,0]})}).addTo(map);
+  L.marker(ctr,{icon:L.divIcon({className:'tl',html:`<div style="font-family:Garamond,'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:.8125rem;font-weight:700;color:${t.c};text-shadow:var(--label-shadow);white-space:nowrap;pointer-events:none;text-align:center;transform:translate(-50%,-50%)">${t.n}${t.dp?'<span style="color:var(--red);font-size:.6875rem"> ⚠</span>':''}</div>`,iconSize:[0,0]})}).addTo(map);
   p.on('click',()=>{
     document.getElementById('iN').innerHTML=t.n;
     document.getElementById('iS').innerHTML=
@@ -563,15 +603,22 @@ document.getElementById('tB').addEventListener('change',function(){
 // ========== SEARCH ==========
 document.getElementById('sI').addEventListener('input',function(e){
   const q=e.target.value.toLowerCase().trim();
+  const cnt=document.getElementById('sCnt');
   if(!q){
     layers.forEach(l=>l.p.setStyle({opacity:.6,fillOpacity:.14,weight:1.5,dashArray:l.d.dp?'5,5':null}));
+    cnt.textContent='';
+    document.getElementById('srLive').textContent='';
     return;
   }
+  let matched=0;
   layers.forEach((l,i)=>{
     const s=sIdx[i];
     const mt=s.n.includes(q)||s.m.includes(q);
+    if(mt) matched++;
     l.p.setStyle(mt?{opacity:1,fillOpacity:.35,weight:3}:{opacity:.05,fillOpacity:.01,weight:.2});
   });
+  cnt.textContent=matched+' of '+layers.length;
+  document.getElementById('srLive').textContent=matched+' of '+layers.length+' territories match';
   const hm=habMarkers.find(h=>h.d.site.toLowerCase().includes(q)||h.d.region.toLowerCase().includes(q));
   const fm=sIdx.find(s=>s.n.includes(q)||s.m.includes(q));
   if(fm) map.flyToBounds(layers[fm.i].p.getBounds(),{padding:[50,50],maxZoom:6});
@@ -579,9 +626,29 @@ document.getElementById('sI').addEventListener('input',function(e){
 });
 
 // ========== KEYBOARD ==========
+let activeTerrIdx=-1;
 document.addEventListener('keydown',function(e){
   if(e.key==='/'&&document.activeElement!==document.getElementById('sI')){e.preventDefault();document.getElementById('sI').focus()}
-  if(e.key==='Escape'){document.getElementById('info').classList.remove('active');document.getElementById('sI').blur()}
+  if(e.key==='Escape'){document.getElementById('info').classList.remove('active');document.getElementById('sI').blur();activeTerrIdx=-1}
+  // Arrow keys cycle territories
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'){
+    if(document.activeElement===document.getElementById('sI')) return;
+    e.preventDefault();
+    activeTerrIdx=(activeTerrIdx+1)%layers.length;
+    const l=layers[activeTerrIdx];
+    map.flyToBounds(l.p.getBounds(),{padding:[60,60],maxZoom:6,duration:1});
+    setTimeout(()=>l.p.fire('click'),1100);
+    document.getElementById('srLive').textContent='Territory '+(activeTerrIdx+1)+' of '+layers.length+': '+l.d.n;
+  }
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){
+    if(document.activeElement===document.getElementById('sI')) return;
+    e.preventDefault();
+    activeTerrIdx=(activeTerrIdx-1+layers.length)%layers.length;
+    const l=layers[activeTerrIdx];
+    map.flyToBounds(l.p.getBounds(),{padding:[60,60],maxZoom:6,duration:1});
+    setTimeout(()=>l.p.fire('click'),1100);
+    document.getElementById('srLive').textContent='Territory '+(activeTerrIdx+1)+' of '+layers.length+': '+l.d.n;
+  }
 });
 
 // ========== FONT SIZE SELECTOR ==========
@@ -599,33 +666,33 @@ document.querySelectorAll('.fs-btn').forEach(btn=>{
   });
 });
 
-// ========== THEME TOGGLE (dark/light) ==========
+// ========== THEME TOGGLE (light default, dark optional) ==========
 document.getElementById('themeBtn').addEventListener('click',function(){
   const html=document.documentElement;
-  const isLight=html.classList.contains('light');
-  if(isLight){
+  const isDark=html.classList.contains('dark');
+  if(isDark){
+    // Switch to light
+    html.classList.remove('dark');
+    html.classList.add('light');
+    map.removeLayer(darkTiles);
+    lightTiles.addTo(map);
+    baseTiles=lightTiles;
+    this.textContent='\u263D'; // ☽
+    this.title='Switch to dark mode';
+  } else {
+    // Switch to dark
     html.classList.remove('light');
     html.classList.add('dark');
     map.removeLayer(lightTiles);
     darkTiles.addTo(map);
     baseTiles=darkTiles;
     this.textContent='\u2600'; // ☀
-    // Update label shadows for dark bg
-    document.querySelectorAll('.tl div').forEach(el=>{
-      el.style.textShadow='0 0 12px rgba(0,0,0,1),0 0 24px rgba(0,0,0,.9),0 0 48px rgba(0,0,0,.7)';
-    });
-  } else {
-    html.classList.remove('dark');
-    html.classList.add('light');
-    map.removeLayer(darkTiles);
-    lightTiles.addTo(map);
-    baseTiles=lightTiles;
-    this.textContent='\u263E'; // ☾
-    // Update label shadows for light bg
-    document.querySelectorAll('.tl div').forEach(el=>{
-      el.style.textShadow='0 0 8px rgba(255,255,255,.9),0 0 16px rgba(255,255,255,.7),0 1px 2px rgba(255,255,255,.8)';
-    });
+    this.title='Switch to light mode';
   }
+  // Update label shadows
+  document.querySelectorAll('.tl div').forEach(el=>{
+    el.style.textShadow=getComputedStyle(html).getPropertyValue('--label-shadow');
+  });
 });
 function toast(msg){
   const t=document.getElementById('toast');
@@ -651,13 +718,34 @@ document.getElementById('shareBtn').addEventListener('click',function(){
   }).catch(()=>{toast('Copy failed')});
 });
 
+// ========== RESET VIEW ==========
+document.getElementById('resetBtn').addEventListener('click',function(){
+  map.flyTo([20,30],3,{duration:1.5});
+  document.getElementById('info').classList.remove('active');
+  document.getElementById('sI').value='';
+  document.getElementById('sCnt').textContent='';
+  layers.forEach(l=>l.p.setStyle({opacity:.6,fillOpacity:.14,weight:1.5,dashArray:l.d.dp?'5,5':null}));
+  activeTerrIdx=-1;
+});
+
 // ========== FULLSCREEN ==========
 document.getElementById('fsBtn').addEventListener('click',function(){
+  const btn=this;
   if(!document.fullscreenElement){
-    document.documentElement.requestFullscreen().catch(()=>{});
+    document.documentElement.requestFullscreen().then(()=>{
+      btn.textContent='\u2716'; // ✖ exit
+      btn.title='Exit fullscreen';
+    }).catch(()=>{});
   } else {
-    document.exitFullscreen();
+    document.exitFullscreen().then(()=>{
+      btn.textContent='\u25FB'; // ◻
+      btn.title='Fullscreen';
+    }).catch(()=>{});
   }
+});
+document.addEventListener('fullscreenchange',function(){
+  const btn=document.getElementById('fsBtn');
+  if(!document.fullscreenElement){btn.textContent='\u25FB';btn.title='Fullscreen'}
 });
 
 // ========== DEEP LINK ==========
