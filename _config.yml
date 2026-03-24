@@ -21,8 +21,8 @@ author: Diyar Hussein
 
 navbar-links:
   Projects: 
-    - Home Security Checklist: "checklist"
-    
+    - "UNDRAWN — The Native Earth Map": "nativearth"
+    - Sentinel Planner: "checklist"
     - JobsIn: "https://jobsiniraq.github.io/"
     - Password Generator: "password-generator"
     - Privacy Settings & Controls: "privacy-settings-controls"
