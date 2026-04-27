@@ -29,7 +29,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
    Color refs: actual device photos pages 2,3 both PDFs
    ═══════════════════════════════════════════════ */
 .dev-wrap{perspective:1600px;cursor:pointer;flex-shrink:0;position:relative}
-.dev-3d{width:640px;height:400px;transform:rotateX(6deg) rotateY(-12deg) rotateZ(-0.5deg);transform-style:preserve-3d;transition:transform .9s cubic-bezier(.25,.8,.25,1);position:relative}
+.dev-3d{width:640px;height:400px;transform:rotateX(6deg) rotateY(-12deg) rotateZ(-0.5deg);transition:transform .9s cubic-bezier(.25,.8,.25,1);position:relative}
 .dev-wrap:hover .dev-3d{transform:rotateX(2deg) rotateY(-4deg) rotateZ(0deg)}
 
 /* Main chassis — real device: dark teal-blue, matte rubber coating
@@ -160,10 +160,11 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
 /* ── BOTTOM BAR ──────────────────────────────────
    Datasheet bottom diagram: EXFO logo (left) | ⑩ Home | ⑪ Power | ⑫ LED
    Real device: the bottom strip is same teal color, slightly darker */
+/* Bottom bar — visual only, buttons handled by overlay */
 .dev-bottom{
   position:absolute;bottom:0;left:0;right:0;height:40px;
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 14px 0 16px;z-index:20;
+  padding:0 14px 0 16px;
   background:linear-gradient(180deg,transparent,rgba(0,0,0,.2));
   pointer-events:none;
 }
@@ -171,36 +172,52 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
   font-size:17px;font-weight:800;letter-spacing:2.5px;
   color:rgba(255,255,255,.85);
   text-shadow:0 1px 4px rgba(0,0,0,.6);
-  pointer-events:none;
 }
-.dev-btns{display:flex;align-items:center;gap:7px;pointer-events:all;position:relative;z-index:21}
-
-/* ⑩ Home/switch button — datasheet: rectangular, like a tablet home key */
-.dev-home{
-  width:36px;height:20px;
-  background:rgba(0,0,0,.45);
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:4px;
+.dev-btns-visual{display:flex;align-items:center;gap:7px}
+.dev-home-vis{
+  width:36px;height:20px;background:rgba(0,0,0,.45);
+  border:1px solid rgba(255,255,255,.18);border-radius:4px;
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:rgba(255,255,255,.6);font-size:13px;
-  transition:all .15s;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 1px 3px rgba(0,0,0,.5);
-  pointer-events:all;position:relative;z-index:21;user-select:none;
+  font-size:13px;color:rgba(255,255,255,.35);
 }
-.dev-home:hover{background:rgba(255,255,255,.14);color:#fff}
-
-/* ⑪ Power button — datasheet: circular, classic power symbol */
-.dev-pwr{
+.dev-pwr-vis{
   width:28px;height:28px;border-radius:50%;
   background:radial-gradient(circle at 40% 35%,#1a3040,#0a1820);
   border:1.5px solid rgba(255,255,255,.2);
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:rgba(255,255,255,.55);font-size:12px;
-  transition:all .15s;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 2px 5px rgba(0,0,0,.6);
-  pointer-events:all;position:relative;z-index:21;user-select:none;
+  font-size:12px;color:rgba(255,255,255,.25);
 }
-.dev-pwr:hover{border-color:rgba(255,255,255,.4);color:#fff;box-shadow:0 0 8px rgba(255,255,255,.2)}
+
+/* Functional button overlays — siblings to .dev-3d, outside overflow:hidden chain
+   Positioned to align visually with the device bottom buttons */
+.dev-btn-overlay{
+  position:absolute;
+  bottom:8px;right:18px;
+  display:flex;align-items:center;gap:7px;
+  z-index:100;
+}
+.dev-home-btn{
+  width:38px;height:22px;
+  background:rgba(0,0,0,.5);
+  border:1px solid rgba(255,255,255,.25);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:rgba(255,255,255,.7);font-size:14px;
+  transition:all .15s;user-select:none;
+  box-shadow:0 1px 4px rgba(0,0,0,.6);
+}
+.dev-home-btn:hover{background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.5)}
+.dev-home-btn:active{transform:scale(.93)}
+.dev-pwr-btn{
+  width:30px;height:30px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,#1e3848,#0a1820);
+  border:1.5px solid rgba(255,255,255,.25);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:rgba(255,255,255,.7);font-size:13px;
+  transition:all .15s;user-select:none;
+  box-shadow:0 2px 6px rgba(0,0,0,.7);
+}
+.dev-pwr-btn:hover{border-color:rgba(255,255,255,.55);color:#fff;box-shadow:0 0 10px rgba(255,255,255,.25)}
+.dev-pwr-btn:active{transform:scale(.93)}
 
 /* ⑫ Battery LED — datasheet: small green indicator dot */
 .dev-battled{
@@ -551,18 +568,23 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
           <div class="screen-off"><div class="off-logo">EXFO</div></div>
         </div>
       </div>
-      <!-- Bottom: EXFO | ⑩ Home | ⑪ Power | ⑫ Battery LED -->
+      <!-- Bottom: EXFO | ⑩ Home | ⑪ Power | ⑫ Battery LED — visual only, buttons overlaid below -->
       <div class="dev-bottom">
         <div class="dev-exfo">EXFO</div>
-        <div class="dev-btns">
-          <div class="dev-home" onclick="showState('launcher');event.stopPropagation()" title="⑩ Home / Switch Application">⌂</div>
-          <div class="dev-pwr" onclick="poweron();event.stopPropagation()" title="⑪ Power On/Off">⏻</div>
-          <div class="dev-battled" title="⑫ Battery LED"></div>
+        <div class="dev-btns-visual">
+          <div class="dev-home-vis">⌂</div>
+          <div class="dev-pwr-vis">⏻</div>
+          <div class="dev-battled"></div>
         </div>
       </div>
       <!-- ⑭ Stand support — right edge -->
       <div class="dev-stand"></div>
     </div></div>
+    <!-- Functional button overlays — outside 3D/overflow chain, guaranteed clickable -->
+    <div class="dev-btn-overlay">
+      <div class="dev-home-btn" id="btn-home-overlay" title="⑩ Home">⌂</div>
+      <div class="dev-pwr-btn" id="btn-pwr-overlay" title="⑪ Power">⏻</div>
+    </div>
   </div>
   <div class="landing-info">
     <div><div class="li-brand">EXFO</div><div class="li-model">MaxTester 730B — PON/Metro OTDR</div></div>
@@ -1215,9 +1237,9 @@ document.addEventListener('DOMContentLoaded',function(){
   scaleLanding();
   window.addEventListener('resize',scaleLanding);
 
-  // Robust button bindings — fallback for inline onclick in 3D-transformed context
-  var btnHome=document.querySelector('.dev-home');
-  var btnPwr=document.querySelector('.dev-pwr');
+  // Button overlays — outside 3D transform / overflow:hidden chain, guaranteed to fire
+  var btnHome=document.getElementById('btn-home-overlay');
+  var btnPwr=document.getElementById('btn-pwr-overlay');
   if(btnHome){
     btnHome.addEventListener('click',function(e){
       e.stopPropagation();
