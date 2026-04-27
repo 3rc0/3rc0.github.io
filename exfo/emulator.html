@@ -2,12 +2,23 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="EXFO OTDR">
+<meta name="theme-color" content="#1e6070">
+<meta name="msapplication-navbutton-color" content="#1e6070">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%231e6070' width='100' height='100' rx='22'/%3E%3Ctext y='.9em' font-size='80' text-anchor='middle' x='50'%3E%E2%8A%BF%3C/text%3E%3C/svg%3E">
 <meta name="robots" content="noindex,nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none';">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Referrer-Policy" content="no-referrer">
+<meta name="googlebot" content="noindex,nofollow,noarchive">
 <meta name="googlebot" content="noindex,nofollow">
 <title>EXFO MaxTester 730B — OTDR Training Emulator v6.2</title>
 <style>
-/* EXFO MaxTester 730B v6 — Author: Diyar Hussein · linkedin.com/in/diyar */
+/* EXFO MaxTester 730B v6 — Author: Diyar Hussein · linkedin.com/in/diyar · github.com/3rc0/3rc0.github.io */
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:14px;background:#141824;color:#1a2a3a;line-height:1.4}
 /* Scale landing page to fit any iframe width */
@@ -329,54 +340,94 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
 .pvec-desc{font-size:12px;color:#2a4060;line-height:1.7;margin-top:6px;padding-top:6px;border-top:1px solid #e8f2f8}
 .pv-quality{display:inline-block;padding:1px 7px;border-radius:3px;font-size:11px;font-weight:700;margin-left:4px}
 .pq-excel{background:#d4f0d8;color:#1a5a28}.pq-good{background:#e4f8e8;color:#1a6428}.pq-accept{background:#fff0d0;color:#7a4800}.pq-poor{background:#f8d8d8;color:#7a1818}
-.otdr-sidebar{width:194px;flex-shrink:0;background:linear-gradient(180deg,#b8c8dc,#a8b8cc);border-left:1px solid #5878a0;display:flex;flex-direction:column;overflow-y:auto}
-.sid-pf{height:36px;background:linear-gradient(180deg,#a4b4c8,#94a4b8);border-bottom:1px solid #5878a0;display:flex;align-items:center;justify-content:space-between;padding:0 10px;flex-shrink:0}
-.pf-pass{background:#22aa44;color:#fff;border:1.5px solid #18882a;border-radius:4px;display:flex;align-items:center;gap:5px;padding:4px 12px;font-size:13px;font-weight:700}
-.pf-fail{background:#cc2200;color:#fff;border:1.5px solid #aa1800;border-radius:4px;display:flex;align-items:center;gap:5px;padding:4px 12px;font-size:13px;font-weight:700}
-.pf-na{background:#d4e4f0;color:#3a5878;border:1px solid #6888a0;border-radius:4px;padding:4px 12px;font-size:13px;font-weight:600}
-.pf-wl{font-size:11px;color:#2a4060;font-weight:600}
-.sid-start{margin:8px 8px 4px;height:56px;font-size:16px;font-weight:700;background:linear-gradient(180deg,#4acc44,#22aa22);border:2px solid #1a8018;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;gap:8px;box-shadow:0 3px 8px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.3);transition:all .12s}
-.sid-start:hover{background:linear-gradient(180deg,#5add55,#33bb33);transform:translateY(-1px)}
-.sid-start:active{transform:translateY(1px)}
-.sid-scen{margin:4px 8px 6px;height:40px;font-size:13px;font-weight:600;background:linear-gradient(180deg,#e8a020,#cc8800);border:1.5px solid #a06800;border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;gap:6px;box-shadow:0 2px 5px rgba(0,0,0,.22);transition:all .1s}
+/* ── SIDEBAR — PDF-accurate (User Guide p.52,71,100,107) ── */
+.otdr-sidebar{width:142px;flex-shrink:0;background:linear-gradient(180deg,#b8c8dc,#a8b8cc);border-left:1px solid #5878a0;display:flex;flex-direction:column;overflow:hidden}
+.sid-pf{height:28px;background:linear-gradient(180deg,#a4b4c8,#94a4b8);border-bottom:1px solid #5878a0;display:flex;align-items:center;justify-content:space-between;padding:0 6px;flex-shrink:0}
+.pf-pass{background:#22aa44;color:#fff;border:1.5px solid #18882a;border-radius:3px;display:flex;align-items:center;gap:3px;padding:2px 6px;font-size:11px;font-weight:700}
+.pf-fail{background:#cc2200;color:#fff;border:1.5px solid #aa1800;border-radius:3px;display:flex;align-items:center;gap:3px;padding:2px 6px;font-size:11px;font-weight:700}
+.pf-na{background:#d4e4f0;color:#3a5878;border:1px solid #6888a0;border-radius:3px;padding:2px 6px;font-size:11px;font-weight:600}
+.pf-wl{font-size:10px;color:#2a4060;font-weight:600}
+/* Start / Start Averaged / Start RT row — p.71,100 */
+.sid-start-row{display:flex;gap:2px;padding:4px 3px 2px;flex-shrink:0}
+.sid-start{flex:2;height:40px;font-size:12px;font-weight:700;background:linear-gradient(180deg,#4acc44,#22aa22);border:1.5px solid #1a8018;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 2px 5px rgba(0,0,0,.3);transition:all .1s}
+.sid-start:hover{background:linear-gradient(180deg,#5add55,#33bb33)}.sid-start:active{transform:scale(.96)}
+.sid-start-avg{flex:1;height:40px;font-size:8px;font-weight:700;line-height:1.3;text-align:center;background:linear-gradient(180deg,#3aaa3a,#1a8a1a);border:1.5px solid #1a7018;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;padding:0 1px}
+.sid-start-avg:hover{background:linear-gradient(180deg,#4abb4a,#2a9a2a)}
+.sid-start-rt{flex:1;height:40px;font-size:8px;font-weight:700;line-height:1.3;text-align:center;background:linear-gradient(180deg,#2a6aaa,#1a4a8a);border:1.5px solid #1a4080;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;padding:0 1px}
+.sid-start-rt.rt-on{background:linear-gradient(180deg,#cc8800,#aa6800);border-color:#886400}
+/* Open / Save / Report row — p.71,100 */
+.sid-icon-row{display:flex;gap:2px;padding:2px 3px;flex-shrink:0}
+.sid-icon-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;height:36px;background:linear-gradient(180deg,#ccdde8,#b8ccd8);border:1px solid #6888a0;border-radius:3px;cursor:pointer;transition:all .08s;min-width:0}
+.sid-icon-btn:hover{background:linear-gradient(180deg,#dcedfc,#c8dced)}.sid-icon-btn:active{transform:scale(.94)}
+.sib-icon{font-size:14px;line-height:1}.sib-lbl{font-size:8px;font-weight:600;color:#1a3050;white-space:nowrap;overflow:hidden}
+/* Load Scenario */
+.sid-scen{margin:2px 3px;height:26px;font-size:10px;font-weight:600;background:linear-gradient(180deg,#e8a020,#cc8800);border:1px solid #a06800;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;gap:3px;transition:all .08s;flex-shrink:0}
 .sid-scen:hover{background:linear-gradient(180deg,#f0b030,#e09800)}
-.sid-sect{border-bottom:1px solid #7090a8;padding:7px 8px}
-.sid-sect-t{font-size:11px;font-weight:700;color:#2a4870;letter-spacing:.5px;margin-bottom:6px;text-transform:uppercase}
-.wl-btns{display:flex;gap:3px;flex-wrap:wrap}
-.wl-btn{flex:1;height:34px;min-width:42px;border-radius:4px;border:1px solid #6080a0;font-size:12px;font-weight:500;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#1a3050;display:flex;align-items:center;justify-content:center;transition:all .08s}
+/* Main Menu */
+.sid-menu{flex:1;overflow-y:auto;background:linear-gradient(180deg,#b4c4d8,#a4b4c8)}
+.sid-mhdr{padding:4px 8px;font-size:11px;font-weight:700;color:#1a3050;background:linear-gradient(180deg,#9cb0c4,#8ca0b4);border-top:1px solid #6080a0;border-bottom:1px solid #6080a0;letter-spacing:.3px}
+.sid-mi{padding:7px 8px;font-size:11px;color:#1a3050;cursor:pointer;border-bottom:1px solid rgba(90,118,160,.3);display:flex;justify-content:space-between;align-items:center;transition:background .08s;line-height:1.3}
+.sid-mi:hover{background:rgba(70,110,170,.18)}.sid-mi-arr{color:#4a6888;font-size:10px;flex-shrink:0}
+.sid-params{padding:5px 6px;border-top:1px solid #7090a8}
+.sid-p{font-size:10px;color:#1a3060;margin-bottom:3px;font-family:monospace;display:flex;justify-content:space-between;align-items:center}
+.sid-p-v{color:#0a2858;font-weight:700;font-size:11px}
+/* Bottom info icons */
+.sid-bottom-icons{display:flex;gap:3px;padding:4px 3px;background:#9ab0c4;border-top:1px solid #6080a0;flex-shrink:0;justify-content:center}
+.sbi{width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.2);border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:13px;color:rgba(255,255,255,.7);cursor:pointer;transition:all .08s;font-weight:700}
+.sbi:hover{background:rgba(255,255,255,.2);color:#fff}.sbi-laser{border-color:rgba(0,200,80,.5);color:rgba(0,200,80,.8)}
+/* Retained compat classes */
+.wl-btn{flex:1;height:30px;border-radius:3px;border:1px solid #6080a0;font-size:11px;font-weight:500;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#1a3050;display:flex;align-items:center;justify-content:center;transition:all .08s}
 .wl-btn:hover{background:linear-gradient(180deg,#e0f4ff,#ccdef4)}.wl-btn.on{background:linear-gradient(180deg,#1a7acc,#1460aa);border-color:#1050a8;color:#fff;font-weight:600}
-.param-row{display:flex;flex-direction:column;gap:3px;margin-bottom:7px}
-.param-lbl{font-size:12px;color:#2a4870;font-weight:600}
-.param-ctrl{display:flex;align-items:center;gap:3px}
-.param-val{height:34px;padding:0 8px;border:1px solid #6080a0;border-radius:4px;background:#ddeeff;color:#1a3a6a;font-family:monospace;font-size:13px;font-weight:700;display:flex;align-items:center;flex:1;min-width:0}
-.param-pm{width:30px;height:34px;background:linear-gradient(180deg,#ccdde8,#b4c8dc);border:1px solid #6080a0;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:300;color:#1a4060;flex-shrink:0;transition:all .08s;user-select:none}
-.param-pm:hover{background:linear-gradient(180deg,#ddeeff,#c4d8ec)}.param-pm:active{transform:scale(.95)}
-.mode-btns{display:flex;gap:3px}
-.mode-btn{flex:1;height:32px;border-radius:4px;border:1px solid #6080a0;font-size:12px;font-weight:500;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#2a4060;display:flex;align-items:center;justify-content:center;transition:all .08s}
+.mode-btn{flex:1;height:28px;border-radius:3px;border:1px solid #6080a0;font-size:11px;font-weight:500;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#2a4060;display:flex;align-items:center;justify-content:center;transition:all .08s}
 .mode-btn:hover{background:linear-gradient(180deg,#e0f4ff,#ccddf4)}.mode-btn.on{background:linear-gradient(180deg,#cc8800,#aa6800);border-color:#886400;color:#fff}.mode-btn.rt-on{background:linear-gradient(180deg,#1a7acc,#1460aa);border-color:#1050a8;color:#fff}.mode-btn.pv-on{background:linear-gradient(180deg,#1e5080,#144070);border-color:#103060;color:#a0d0ff}
-.sid-action-row{display:flex;gap:3px;padding:6px 8px}
-.sid-act{flex:1;height:44px;border-radius:4px;border:1px solid #6080a0;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#1a3050;transition:all .08s}
-.sid-act:hover{background:linear-gradient(180deg,#e0f4ff,#ccdef4)}
-.sid-act-icon{font-size:18px;line-height:1}.sid-act-lbl{font-size:11px;font-weight:500}
-.sid-nav{display:flex;gap:3px;padding:4px 8px}
-.sid-nav-btn{flex:1;height:30px;border-radius:4px;border:1px solid #6080a0;font-size:12px;font-weight:500;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#1a3050;display:flex;align-items:center;justify-content:center;transition:all .08s}
-.sid-nav-btn:hover{background:linear-gradient(180deg,#e0f4ff,#ccddf4)}
-.sid-menu{flex:1;background:linear-gradient(180deg,#b4c4d8,#a4b4c8);overflow-y:auto}
-.sid-mhdr{padding:5px 10px;font-size:12px;font-weight:700;color:#1a3050;background:linear-gradient(180deg,#9cb0c4,#8ca0b4);border-top:1px solid #6080a0;border-bottom:1px solid #6080a0}
-.sid-mi{padding:9px 12px;font-size:13px;color:#1a3050;cursor:pointer;border-bottom:1px solid rgba(90,118,160,.3);display:flex;justify-content:space-between;align-items:center;transition:background .08s}
-.sid-mi:hover{background:rgba(70,110,170,.18)}.sid-mi-arr{color:#4a6888;font-size:12px}
-.sid-params{padding:8px 10px;border-top:1px solid #7090a8}
-.sid-p{font-size:12px;color:#1a3060;margin-bottom:5px;font-family:monospace;display:flex;justify-content:space-between;align-items:center}
-.sid-p-v{color:#0a2858;font-weight:700;font-size:13px}
-.trace-wrap{flex:1;position:relative;background:#fff;border-bottom:1px solid #6080a0;overflow:hidden;min-height:0}
-#cv-trace{position:absolute;top:0;left:0;display:block;cursor:crosshair}
-.trace-wl-tag{position:absolute;top:8px;left:58px;font-size:12px;color:#1a3050;background:rgba(240,248,255,.92);padding:3px 8px;border-radius:3px;border:1px solid #c0d4e8;pointer-events:none;font-weight:600}
-.cursor-bar{position:absolute;bottom:6px;left:58px;display:flex;gap:8px;pointer-events:none}
-.cur-badge{padding:3px 9px;border-radius:3px;font-size:12px;font-family:monospace;font-weight:700;display:flex;align-items:center;gap:4px}
-.cur-a{background:rgba(180,20,0,.88);color:#fff}.cur-b{background:rgba(0,50,180,.88);color:#fff}.cur-diff{background:rgba(10,70,10,.88);color:#b0ffb0}
-.zoom-row{position:absolute;bottom:6px;right:8px;display:flex;gap:3px}
-.zbtn{width:28px;height:28px;background:rgba(200,220,240,.9);border:1px solid #6080a0;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:#1a3050;font-weight:500}
-.zbtn:hover{background:rgba(220,238,255,.95)}
+/* Zoom controls — vertical column right side (p.113) */
+.zoom-col{position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:2px}
+.zbtn{width:26px;height:26px;background:rgba(200,220,240,.92);border:1px solid #6080a0;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:#1a3050;font-weight:600;user-select:none}
+.zbtn:hover{background:rgba(220,238,255,.97)}.zbtn.on{background:#2266cc;color:#fff;border-color:#1a5aaa}
+
+/* OTDR acquisition bar — bottom of trace (p.52,60) */
+.otdr-acq-bar{position:absolute;bottom:0;left:0;right:0;height:52px;background:linear-gradient(180deg,#b0c4d8,#a0b4c8);border-top:1px solid #6080a0;display:flex;align-items:center;gap:8px;padding:0 8px;z-index:5}
+.oab-group{display:flex;align-items:center;gap:3px;flex-shrink:0}
+.oab-lbl{font-size:9px;font-weight:700;color:#1a3050;white-space:nowrap}
+.oab-sel{height:22px;background:#e8f0fa;border:1px solid #88b0cc;border-radius:2px;font-size:10px;color:#1a3a6a;padding:0 3px;cursor:pointer;max-width:80px}
+.oab-wl-checks{display:flex;flex-direction:column;gap:2px}
+.oab-wl-chk{display:flex;align-items:center;gap:3px;font-size:10px;color:#1a3050;cursor:pointer;white-space:nowrap}
+.oab-wl-chk input{width:12px;height:12px;accent-color:#cc2200;cursor:pointer}
+.oab-dial{width:18px;height:22px;background:linear-gradient(180deg,#ccdde8,#b4c8dc);border:1px solid #6080a0;border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#1a3050;user-select:none}
+.oab-dial:hover{background:linear-gradient(180deg,#dcedfc,#c4d8ec)}.oab-dial:active{transform:scale(.9)}
+.oab-val{min-width:44px;text-align:center;font-family:monospace;font-size:11px;font-weight:700;color:#1a3a6a;background:#ddeeff;border:1px solid #88b0cc;border-radius:2px;padding:2px 4px}
+.oab-chk{display:flex;align-items:center;gap:3px;font-size:10px;color:#1a3050;cursor:pointer;white-space:nowrap}
+.oab-chk input{width:12px;height:12px;accent-color:#1a7acc;cursor:pointer}
+.oab-mode-btn{height:22px;padding:0 6px;border-radius:2px;border:1px solid #6080a0;font-size:9px;font-weight:700;cursor:pointer;background:linear-gradient(180deg,#cc8800,#aa6800);color:#fff;display:flex;align-items:center}
+.oab-mode-btn:hover{background:linear-gradient(180deg,#e09800,#c07800)}
+.pv-btn{background:linear-gradient(180deg,#2266cc,#1450aa)!important}
+
+/* Measure tab improvements — Event/Section/ORL buttons (p.89) */
+.meas-type-bar{display:flex;gap:3px;padding:6px 8px;background:#c8d8e8;border-bottom:1px solid #6080a0;flex-shrink:0}
+.mtb{flex:1;height:28px;border-radius:3px;border:1px solid #6080a0;font-size:12px;font-weight:600;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#1a3050;display:flex;align-items:center;justify-content:center;transition:all .08s}
+.mtb:hover{background:linear-gradient(180deg,#e0f4ff,#ccdef4)}
+.mtb.on{background:linear-gradient(180deg,#cc8800,#aa6800);border-color:#886400;color:#fff}
+/* Marker display bar (p.87,89) */
+.meas-marker-bar{display:flex;align-items:center;gap:4px;padding:5px 8px;background:#d4e4f0;border-bottom:1px solid #6080a0;flex-shrink:0}
+.meas-marker-nav{width:22px;height:22px;border-radius:2px;border:1px solid #6080a0;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:#1a3050}
+.meas-mk{width:26px;height:22px;border-radius:2px;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer;transition:all .1s}
+.meas-mk.mk-a{border-color:#cc2200;background:#ffe8e8;color:#8a0000}
+.meas-mk.mk-A{border-color:#cc2200;background:#cc2200;color:#fff}
+.meas-mk.mk-B{border-color:#0033cc;background:#0033cc;color:#fff}
+.meas-mk.mk-b{border-color:#0033cc;background:#dde8ff;color:#00008a}
+.meas-mk.sel{box-shadow:0 0 0 2px rgba(200,150,0,.7);transform:scale(1.1)}
+/* Measure values area (p.89) */
+.meas-vals{flex:1;overflow-y:auto;padding:10px 8px;font-size:12px}
+.mv-pair{display:flex;gap:10px;margin-bottom:8px}
+.mv-col{flex:1}
+.mv-lbl{font-size:10px;color:#5a7080;font-weight:600;margin-bottom:2px}
+.mv-val{font-family:monospace;font-weight:700;font-size:16px;color:#1a3050}
+.mv-unit{font-size:11px;color:#5a7080;font-weight:400}
+.mv-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #e4f0f8;font-size:12px}
+.mv-row:last-child{border-bottom:none}
+.mv-rl{color:#3a5870;font-weight:600}.mv-rv{font-family:monospace;font-weight:700;color:#1a3050}
+.meas-avg-row{background:#e8f4fc;border-radius:3px;padding:6px 8px;margin-top:6px;font-size:12px;display:flex;justify-content:space-between}
+.mar-lbl{color:#3a5870;font-weight:700}.mar-val{font-family:monospace;font-weight:700;color:#1a3050;font-size:14px}
 #sc-overlay{position:absolute;inset:0;background:rgba(248,252,255,.97);overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:9px;z-index:10}
 .sc-hdr{font-size:17px;font-weight:700;color:#1a3a5a}
 .sc-sub{font-size:12px;color:#5a7888;margin-top:-5px}
@@ -533,11 +584,731 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
 .toast-err{background:#8a1a00;border:1.5px solid #cc2200}
 .toast-info{background:#1a4a7a;border:1.5px solid #2a7acc}
 .toast-warn{background:#8a5200;border:1.5px solid #cc8800}
+/* ═══════════════════════════════════════════════════
+   NEW FEATURES — from User_Guide_OTDR_English_1068770
+   ═══════════════════════════════════════════════════ */
+
+/* Graph overview mini-window */
+.gfx-overview{position:absolute;top:8px;right:44px;width:120px;height:56px;border:1px solid #5878a0;background:rgba(240,246,252,.92);border-radius:3px;overflow:hidden;cursor:crosshair}
+.gfx-ov-canvas{width:100%;height:100%;display:block}
+.gfx-ov-box{position:absolute;border:2px solid #cc4400;pointer-events:none;box-sizing:border-box}
+
+/* Full screen graph toggle */
+.zbtn-fs{width:28px;height:28px;background:rgba(200,220,240,.9);border:1px solid #6080a0;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:#1a3050}
+.zbtn-fs:hover{background:rgba(220,238,255,.95)}
+#pg-otdr.fullscreen .trace-wrap{position:fixed;inset:0;z-index:500;height:100vh!important}
+#pg-otdr.fullscreen .evt-section{display:none!important}
+
+/* Port selector */
+.port-btns{display:flex;gap:3px;margin-top:4px}
+.port-btn{flex:1;height:28px;border-radius:3px;border:1px solid #6080a0;font-size:11px;font-weight:600;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#1a3050;display:flex;align-items:center;justify-content:center;transition:all .08s;white-space:nowrap}
+.port-btn:hover{background:linear-gradient(180deg,#e0f4ff,#ccdef4)}
+.port-btn.on{background:linear-gradient(180deg,#1a7acc,#1460aa);border-color:#1050a8;color:#fff;font-weight:700}
+
+/* Measure tab — 4 result type buttons + markers a,A,B,b */
+.meas-result-btns{display:flex;gap:3px;padding:8px 10px 4px;flex-shrink:0;background:#c8d8e8;border-bottom:1px solid #6080a0}
+.mrb{flex:1;height:32px;border-radius:4px;border:1px solid #6080a0;font-size:12px;font-weight:600;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#1a3050;display:flex;align-items:center;justify-content:center;transition:all .08s}
+.mrb:hover{background:linear-gradient(180deg,#e0f4ff,#ccdef4)}
+.mrb.on{background:linear-gradient(180deg,#cc8800,#aa6800);border-color:#886400;color:#fff}
+.meas-markers-bar{display:flex;gap:6px;padding:5px 10px;background:#d8e8f4;border-bottom:1px solid #6080a0;flex-shrink:0;font-size:12px;font-family:monospace}
+.mm-lbl{padding:3px 8px;border-radius:3px;font-weight:700;font-size:11px}
+.mm-a{background:#f0d0d0;color:#8a0000}.mm-A{background:#cc2200;color:#fff}
+.mm-B{background:#0033cc;color:#fff}.mm-b{background:#d0d0f0;color:#00008a}
+.meas-results-area{flex:1;overflow-y:auto;padding:12px}
+.meas-result-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #e4f0f8;font-size:13px}
+.meas-result-row:last-child{border-bottom:none}
+.mrr-l{color:#3a5870;font-weight:600}.mrr-v{font-family:monospace;font-weight:700;color:#1a3050}
+
+/* Linear View */
+.lv-wrap{flex:1;display:flex;flex-direction:column;overflow-y:auto;background:#f0f5fa;padding:10px}
+.lv-toolbar{display:flex;gap:4px;padding:4px 0 8px;flex-shrink:0}
+.lv-btn{height:28px;padding:0 10px;border-radius:3px;border:1px solid #6080a0;font-size:12px;font-weight:600;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#1a3050;transition:all .08s}
+.lv-btn:hover{background:linear-gradient(180deg,#e0f4ff,#ccdef4)}
+.lv-btn.on{background:linear-gradient(180deg,#1a7acc,#1460aa);color:#fff;border-color:#1050a8}
+.lv-scroll{overflow-x:auto;padding-bottom:8px;flex-shrink:0}
+.lv-row{display:flex;align-items:center;gap:0;min-width:max-content}
+.lv-evt{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0}
+.lv-sq{width:52px;height:40px;border-radius:8px;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer;position:relative;transition:all .12s}
+.lv-sq.pass{background:#d4f0d8;border-color:#22aa44;color:#1a5028}
+.lv-sq.fail{background:#f0d0d0;border-color:#cc2200;color:#7a1818}
+.lv-sq.warn{background:#f0e8d0;border-color:#cc8800;color:#7a4800}
+.lv-sq.info{background:#d4e8f8;border-color:#2266cc;color:#1a3a6a}
+.lv-sq.sel{box-shadow:0 0 0 3px rgba(50,120,220,.5);transform:scale(1.08)}
+.lv-sq-lbl{font-size:9px;color:#5a7080;text-align:center;max-width:56px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lv-line{height:6px;width:36px;border-radius:3px;flex-shrink:0;align-self:center;margin-bottom:16px}
+.lv-line.pass{background:#22aa44}.lv-line.fail{background:#cc2200}.lv-line.info{background:#9ab0c8}
+.lv-info-panel{background:#fff;border:1px solid #b0c4d8;border-radius:5px;padding:12px;margin-top:10px;font-size:12px}
+.lv-info-title{font-weight:700;color:#1a3050;font-size:13px;margin-bottom:8px;border-bottom:1px solid #e4f0f8;padding-bottom:5px}
+.lv-info-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f4f8fc;color:#3a5870}
+.lv-info-row:last-child{border-bottom:none}
+.lv-info-v{font-family:monospace;font-weight:600;color:#1a3050}
+
+/* Test Configuration Modal */
+#pg-testcfg{position:fixed;inset:0;z-index:250;background:rgba(20,40,60,.65);display:none;align-items:center;justify-content:center}
+#pg-testcfg.show{display:flex}
+.tcfg-panel{background:#e0eaf4;border:2px solid #6080a0;border-radius:7px;width:700px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 16px 50px rgba(0,0,0,.5);overflow:hidden}
+.tcfg-bar{background:linear-gradient(180deg,#3a6080,#2e5070);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.tcfg-bar-t{font-size:14px;font-weight:700;color:#a0c8e8}
+.tcfg-applyto{display:flex;align-items:center;gap:8px;font-size:12px;color:#88b0cc}
+.tcfg-applyto select{height:26px;background:#1a3050;border:1px solid #3a6080;color:#88c8e8;border-radius:3px;font-size:12px;padding:0 6px}
+.tcfg-close{width:26px;height:26px;background:rgba(180,30,30,.4);border:1px solid rgba(255,100,100,.4);border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#ff8888;font-size:14px;font-weight:700}
+.tcfg-close:hover{background:rgba(200,50,50,.7)}
+.tcfg-tabs{display:flex;gap:2px;padding:8px 10px 0;background:#c4d4e4;flex-shrink:0}
+.tcfg-tab{padding:6px 16px;border-radius:5px 5px 0 0;border:1px solid #6080a0;border-bottom:none;font-size:12px;font-weight:600;cursor:pointer;background:linear-gradient(180deg,#c8d8e8,#b4c8dc);color:#1a3050}
+.tcfg-tab.active{background:linear-gradient(180deg,#e0eaf4,#d4e4f4);color:#1a2e48;border-color:#5070a0;font-weight:700}
+.tcfg-body{flex:1;overflow-y:auto;padding:14px;background:#e0eaf4}
+.tcfg-section{background:#fff;border:1px solid #b0c4d8;border-radius:5px;padding:12px;margin-bottom:10px}
+.tcfg-sh{font-size:12px;font-weight:700;color:#1a3050;border-bottom:1px solid #d4e4f4;padding-bottom:5px;margin-bottom:9px;letter-spacing:.3px;text-transform:uppercase}
+.tcfg-r{display:flex;align-items:center;margin-bottom:8px;gap:8px;font-size:12px}
+.tcfg-lbl{color:#3a5870;font-weight:600;min-width:180px;flex-shrink:0}
+.tcfg-inp{flex:1;height:30px;background:#e8f0fa;border:1px solid #88b0cc;border-radius:3px;color:#1a3a6a;font-family:monospace;font-size:12px;font-weight:700;padding:0 8px}
+.tcfg-sel{flex:1;height:30px;background:#e8f0fa;border:1px solid #88b0cc;border-radius:3px;color:#1a3a6a;font-size:12px;font-weight:600;padding:0 6px;cursor:pointer}
+.tcfg-chk{display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:#1a3050}
+.tcfg-chk input{width:14px;height:14px;cursor:pointer;accent-color:#1a7acc}
+.tcfg-wl-row{display:flex;gap:3px;margin-bottom:8px}
+.tcfg-wl-btn{flex:1;height:28px;border-radius:3px;border:1px solid #6080a0;font-size:11px;font-weight:600;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#1a3050;transition:all .08s}
+.tcfg-wl-btn.on{background:linear-gradient(180deg,#1a7acc,#1460aa);color:#fff;border-color:#1050a8}
+.tcfg-footer{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#ccdde8;border-top:1px solid #8090a8;flex-shrink:0}
+.tcfg-revert{padding:6px 14px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #8090a8;background:linear-gradient(180deg,#d8e8f4,#c4d4e4);color:#2a4060}
+.tcfg-ok{padding:7px 20px;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;border:1.5px solid #1a8018;background:linear-gradient(180deg,#44cc44,#22aa22);color:#fff}
+.pf-wl-tabs{display:flex;gap:3px;margin-bottom:10px}
+.pf-wl-tab{flex:1;height:26px;border-radius:3px;border:1px solid #6080a0;font-size:11px;font-weight:600;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#1a3050;display:flex;align-items:center;justify-content:center}
+.pf-wl-tab.on{background:linear-gradient(180deg,#1a7acc,#1460aa);color:#fff;border-color:#1050a8}
+.pf-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px}
+.pf-row-chk{display:flex;align-items:center;gap:4px;min-width:20px;flex-shrink:0}
+.pf-row-chk input{width:13px;height:13px;accent-color:#1a7acc;cursor:pointer}
+.pf-lbl{color:#3a5870;font-weight:600;flex:1}
+.pf-inp{width:80px;height:28px;background:#e8f0fa;border:1px solid #88b0cc;border-radius:3px;color:#1a3a6a;font-family:monospace;font-size:12px;font-weight:700;padding:0 6px}
+.pf-unit{color:#6080a0;font-size:11px;min-width:40px}
+
+/* User Preferences Modal */
+#pg-userprefs{position:fixed;inset:0;z-index:250;background:rgba(20,40,60,.65);display:none;align-items:center;justify-content:center}
+#pg-userprefs.show{display:flex}
+.uprefs-panel{background:#e0eaf4;border:2px solid #6080a0;border-radius:7px;width:520px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 16px 50px rgba(0,0,0,.5);overflow:hidden}
+.uprefs-section{background:#fff;border:1px solid #b0c4d8;border-radius:5px;padding:12px;margin-bottom:10px}
+.uprefs-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:12px;color:#3a5870}
+.uprefs-chk{display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:#1a3050}
+.uprefs-chk input{width:14px;height:14px;cursor:pointer;accent-color:#1a7acc}
+.uprefs-sel{height:28px;background:#e8f0fa;border:1px solid #88b0cc;border-radius:3px;color:#1a3a6a;font-size:12px;padding:0 6px;cursor:pointer}
+
+/* Events tab Linear View toggle button */
+.lv-toggle-btn{height:28px;padding:0 10px;border-radius:3px;border:1px solid #6080a0;font-size:11px;font-weight:600;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#1a3050;flex-shrink:0}
+.lv-toggle-btn:hover{background:linear-gradient(180deg,#e0f4ff,#ccdef4)}
+.lv-toggle-btn.on{background:linear-gradient(180deg,#2a7acc,#1460aa);color:#fff;border-color:#1050a8}
+.evt-toolbar{display:flex;align-items:center;gap:5px;padding:4px 8px;background:#b8ccd8;border-bottom:1px solid #6080a0;flex-shrink:0}
+.evt-toolbar-title{font-size:11px;font-weight:700;color:#1a3050;flex:1}
+
+/* Span start/end visual in events table */
+.erow-span-start td{background:rgba(0,80,160,.08)!important;font-style:italic;color:#1a3a6a}
+.erow-span-end td{background:rgba(0,80,160,.08)!important;font-style:italic;color:#1a3a6a}
+.erow-outside td{opacity:.45;font-style:italic}
+
+/* High-resolution mode indicator */
+.hires-badge{display:inline-block;padding:1px 5px;background:#2266cc;color:#fff;font-size:9px;font-weight:700;border-radius:2px;margin-left:4px;vertical-align:middle}
+
+/* Graph background toggle */
+.trace-wrap.dark-bg{background:#1a2030}
+.trace-wrap.dark-bg .trace-wl-tag{background:rgba(10,20,40,.85);color:#88c8e8}
+
+/* Apply to bar at top of modals */
+.applyto-bar{display:flex;align-items:center;gap:8px;padding:6px 14px;background:#c4d4e4;border-bottom:1px solid #8090a8;font-size:12px;color:#2a4060;flex-shrink:0}
+.applyto-sel{height:26px;background:#e8f0fa;border:1px solid #88b0cc;border-radius:3px;color:#1a3a6a;font-size:12px;padding:0 6px;cursor:pointer}
+
+/* Prev/All/Next wavelength nav buttons */
+.wl-nav{display:flex;gap:2px;margin-top:4px}
+.wl-nav-btn{flex:1;height:24px;border-radius:3px;border:1px solid #6080a0;font-size:11px;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#1a3050;display:flex;align-items:center;justify-content:center}
+.wl-nav-btn:hover{background:linear-gradient(180deg,#e0f4ff,#ccdef4)}
+
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:#c0d4e8}
 ::-webkit-scrollbar-thumb{background:#6888a8;border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:#4868a0}
 #local-file-input{display:none}
+
+/* ── RESPONSIVE ADAPTIVE SYSTEM ── */
+/* ════════════════════════════════════════════════════════════
+   ADAPTIVE RESPONSIVE SYSTEM — Android & iOS
+   Breakpoints:
+     xs  : ≤ 480px  — small phones (iPhone SE, Android compact)
+     sm  : ≤ 768px  — phones portrait (iPhone 14, Galaxy S)
+     md  : ≤ 1024px — tablets portrait / phones landscape
+     lg  : > 1024px — desktop / tablets landscape
+   Also handles:
+     landscape phones (height ≤ 450px)
+     iOS safe areas  (env(safe-area-inset-*))
+     Android gesture nav bars
+     notch/dynamic island
+════════════════════════════════════════════════════════════ */
+
+/* ── CSS CUSTOM PROPERTIES (dynamic per breakpoint) ── */
+:root {
+  --touch-min: 44px;           /* iOS HIG minimum */
+  --touch-min-android: 48px;   /* Material 3 minimum */
+  --sidebar-w: 142px;
+  --tab-h: 38px;
+  --tab-fs: 13px;
+  --fname-h: 22px;
+  --title-h: 28px;
+  --modal-radius: 8px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+}
+
+/* ── VIEWPORT + html/body SAFE AREA ── */
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  -webkit-text-size-adjust: 100%;  /* iOS font-size inflation fix */
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent; /* remove blue flash on tap */
+  touch-action: manipulation;  /* faster tap response */
+}
+
+/* ══════════════════════════════════════════════
+   ① LANDING PAGE — Adaptive
+══════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  #pg-off {
+    gap: 24px;
+    padding: 16px;
+  }
+  .dev-3d { width: 480px !important; height: 300px !important; }
+  .landing-info { max-width: 200px !important; }
+  .li-brand { font-size: 20px !important; }
+}
+
+@media (max-width: 768px) {
+  #pg-off {
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding: 24px 20px;
+    padding-top: calc(20px + var(--safe-top));
+    padding-bottom: calc(20px + var(--safe-bot));
+  }
+  .dev-wrap { display: none; } /* hide 3D device on phones — too complex */
+  .landing-info {
+    max-width: 100% !important;
+    align-items: center;
+    text-align: center;
+  }
+  .li-brand { font-size: 32px !important; letter-spacing: 4px; }
+  .li-model { text-align: center; font-size: 11px !important; }
+  .li-specs { display: none; } /* collapse specs on phones */
+  .li-spec-mobile { display: flex !important; } /* show simplified specs */
+  .pwr-ring { width: 80px !important; height: 80px !important; }
+  .pwr-label { font-size: 12px; letter-spacing: 1px; }
+  .li-caution { font-size: 10px; }
+}
+
+@media (max-width: 480px) {
+  #pg-off { padding: 16px 12px; gap: 16px; }
+  .li-brand { font-size: 28px !important; }
+  .pwr-ring { width: 72px !important; height: 72px !important; }
+}
+
+/* Landscape phone — compact landing */
+@media (max-height: 450px) and (orientation: landscape) {
+  #pg-off {
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 16px;
+    gap: 16px;
+  }
+  .dev-wrap { display: none; }
+  .landing-info { gap: 8px !important; }
+  .li-brand { font-size: 22px !important; }
+  .pwr-group { flex-direction: row; align-items: center; gap: 12px; }
+  .pwr-ring { width: 56px !important; height: 56px !important; }
+  .li-caution { display: none; }
+}
+
+/* ══════════════════════════════════════════════
+   ② BOOT SCREEN — Adaptive
+══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .boot-logo { font-size: 40px; letter-spacing: 5px; }
+  .boot-bar { width: 220px; }
+}
+
+/* ══════════════════════════════════════════════
+   ③ LAUNCHER / HOME SCREEN — Adaptive
+══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .lnch-desktop {
+    grid-template-columns: repeat(4, 1fr);
+    padding: 12px 10px;
+    gap: 8px;
+    align-content: start;
+  }
+  .da-icon { width: 52px; height: 52px; font-size: 22px; }
+  .da-lbl { font-size: 11px; }
+  .desk-app { padding: 8px 4px; }
+}
+
+@media (max-width: 480px) {
+  .lnch-desktop { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ══════════════════════════════════════════════
+   ④ OTDR MAIN INTERFACE — Adaptive
+   The big one — full adaptive layout
+══════════════════════════════════════════════ */
+
+/* ── TITLE BAR ── */
+@media (max-width: 768px) {
+  .otdr-titlebar {
+    height: 36px;
+    padding: 0 10px;
+    padding-top: var(--safe-top);
+  }
+  .tb-l { font-size: 11px; }
+  .tb-r { font-size: 11px; gap: 8px; }
+}
+
+/* ── TAB BAR ── */
+@media (max-width: 768px) {
+  .otdr-tabbar {
+    height: 42px;
+    padding-left: 2px;
+    gap: 1px;
+    /* Horizontally scrollable — all 5 tabs visible with scroll */
+    -webkit-overflow-scrolling: touch;
+  }
+  .otab {
+    height: 36px;
+    padding: 0 10px;
+    font-size: 12px;
+    min-width: 64px;
+    flex-shrink: 0; /* don't compress, scroll instead */
+  }
+}
+
+@media (max-width: 480px) {
+  .otab { padding: 0 8px; font-size: 11px; min-width: 56px; }
+}
+
+/* ── MAIN LAYOUT: sidebar becomes BOTTOM SHEET on mobile ── */
+@media (max-width: 768px) {
+  .otdr-main {
+    flex-direction: column; /* stack vertically */
+    position: relative;
+  }
+
+  /* Port View panel — hidden on mobile by default */
+  .pv-panel { display: none !important; }
+  .pv-panel.mobile-show { display: flex !important; width: 100% !important; max-height: 40vh; border-left: none; border-top: 2px solid #5878a0; }
+
+  /* Left column fills full width */
+  .otdr-col-left { flex: 1; min-height: 0; }
+
+  /* Sidebar becomes FIXED BOTTOM SHEET */
+  .otdr-sidebar {
+    width: 100% !important;
+    height: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow: visible;
+    order: 10; /* put at bottom */
+    border-left: none;
+    border-top: 2px solid #5878a0;
+    flex-shrink: 0;
+    padding-bottom: var(--safe-bot);
+  }
+
+  /* Start row fills width */
+  .sid-start-row {
+    width: 100%;
+    padding: 4px 6px 2px;
+    gap: 4px;
+  }
+  .sid-start { height: 44px; font-size: 13px; }
+  .sid-start-avg { height: 44px; font-size: 9px; }
+  .sid-start-rt { height: 44px; font-size: 9px; }
+
+  /* Icon rows go side by side */
+  .sid-icon-row {
+    flex: 1;
+    min-width: 100px;
+    padding: 2px 4px;
+  }
+  .sid-icon-btn { height: 40px; }
+  .sib-icon { font-size: 15px; }
+  .sib-lbl { font-size: 8px; }
+
+  /* Scenario button */
+  .sid-scen { margin: 2px 4px; height: 32px; font-size: 11px; }
+
+  /* Main Menu collapses to hamburger */
+  .sid-menu { display: none; }
+  .sid-menu.mobile-open { display: flex; flex-direction: column; width: 100%; max-height: 50vh; overflow-y: auto; }
+
+  /* Bottom icons row */
+  .sid-bottom-icons {
+    width: 100%;
+    justify-content: flex-end;
+    padding: 4px 8px;
+    gap: 8px;
+  }
+  .sbi { width: 32px; height: 32px; font-size: 14px; }
+
+  /* Hamburger toggle button */
+  .sid-mobile-menu-toggle {
+    display: flex !important;
+  }
+
+  /* Status params hidden on mobile */
+  .sid-params { display: none; }
+}
+
+/* ── TRACE / GRAPH AREA ── */
+@media (max-width: 768px) {
+  .trace-wrap {
+    /* Reduce bottom padding for acq bar */
+    min-height: 180px;
+  }
+  .trace-wl-tag { font-size: 10px; padding: 2px 6px; top: 5px; left: 5px; }
+  .zoom-col { right: 4px; top: 5px; gap: 2px; }
+  .zbtn { width: 28px; height: 28px; font-size: 11px; }
+  .gfx-overview { width: 90px; height: 44px; right: 36px; top: 5px; }
+  .cursor-bar { bottom: 3px; left: 4px; gap: 4px; }
+  .cur-badge { padding: 2px 6px; font-size: 10px; }
+}
+
+/* ── OTDR ACQUISITION BAR (bottom of trace) ── */
+@media (max-width: 768px) {
+  .otdr-acq-bar {
+    height: auto;
+    min-height: 48px;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px 6px;
+  }
+  .oab-group { gap: 2px; }
+  .oab-lbl { font-size: 8px; }
+  .oab-val { font-size: 10px; min-width: 36px; }
+  .oab-sel { font-size: 9px; max-width: 72px; }
+  .oab-dial { width: 22px; height: 24px; font-size: 15px; }
+}
+
+@media (max-width: 480px) {
+  .otdr-acq-bar { padding: 3px 4px; }
+  .oab-lbl { display: none; } /* hide labels, keep controls */
+}
+
+/* ── EVENT TABLE ── */
+@media (max-width: 768px) {
+  .evt-section { flex-shrink: 0; }
+  .evt-scroll { max-height: 140px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .evt-tbl th, .evt-tbl td {
+    padding: 5px 6px;
+    font-size: 11px;
+  }
+  .evt-tbl { min-width: 520px; } /* force scroll for full columns */
+}
+
+@media (max-width: 480px) {
+  .evt-scroll { max-height: 120px; }
+  .evt-tbl th, .evt-tbl td { padding: 4px 5px; font-size: 10px; }
+}
+
+/* ── FILENAME BAR ── */
+@media (max-width: 768px) {
+  .fname-bar {
+    height: 20px;
+    font-size: 10px;
+    padding: 0 8px;
+    padding-bottom: 0;
+  }
+}
+
+/* ── MEASURE TAB ── */
+@media (max-width: 768px) {
+  .meas-marker-bar { padding: 4px 6px; gap: 3px; }
+  .meas-mk { width: 28px; height: 26px; font-size: 12px; }
+  .meas-marker-nav { width: 24px; height: 26px; font-size: 14px; }
+  .meas-type-bar { padding: 4px 6px; gap: 2px; }
+  .mtb { height: 32px; font-size: 12px; }
+  .meas-vals { padding: 8px 6px; }
+  .mv-val { font-size: 14px; }
+  .mar-val { font-size: 13px; }
+}
+
+/* ── SUMMARY TAB ── */
+@media (max-width: 768px) {
+  #sum-wrap table { font-size: 11px; }
+  #sum-wrap td, #sum-wrap th { padding: 4px 6px; }
+}
+
+/* ══════════════════════════════════════════════
+   ⑤ MODALS — Full-screen sheets on mobile
+══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* All modals become bottom sheets */
+  #pg-testcfg, #pg-userprefs, #pg-ident, #pg-extacq {
+    align-items: flex-end; /* bottom-sheet style */
+    padding: 0;
+  }
+
+  .tcfg-panel, .uprefs-panel {
+    width: 100% !important;
+    max-height: 90vh;
+    border-radius: 16px 16px 0 0 !important;
+    border: none;
+    border-top: 2px solid #6080a0;
+    padding-bottom: var(--safe-bot);
+  }
+
+  /* Drag handle on modal top */
+  .tcfg-bar::before, .tcfg-bar::after { display: none; }
+  .modal-drag-handle {
+    display: block !important;
+    width: 36px;
+    height: 4px;
+    background: rgba(255,255,255,.35);
+    border-radius: 2px;
+    margin: 0 auto 4px;
+  }
+
+  /* Test Config modal tabs */
+  .tcfg-tab { padding: 5px 12px; font-size: 11px; }
+  .tcfg-r { flex-wrap: wrap; }
+  .tcfg-lbl { min-width: unset; width: 100%; margin-bottom: 2px; font-size: 11px; }
+  .tcfg-inp { height: 36px; font-size: 13px; } /* larger for touch */
+  .tcfg-chk input { width: 18px; height: 18px; }
+  .tcfg-sel { height: 36px; font-size: 12px; }
+
+  /* Identification modal */
+  .ident-panel {
+    width: 100% !important;
+    max-height: 90vh;
+    border-radius: 16px 16px 0 0 !important;
+    border: none;
+    padding-bottom: var(--safe-bot);
+  }
+  .ip-inp { height: 40px; font-size: 14px; }
+  #ident-tbody td { padding: 5px 6px; font-size: 11px; }
+
+  /* Report modal */
+  .rep-modal {
+    width: 100% !important;
+    max-height: 95vh;
+    border-radius: 0;
+    margin: 0;
+    position: fixed;
+    bottom: 0;
+  }
+
+  /* File Explorer modal */
+  .fe-window {
+    width: 100% !important;
+    max-height: 92vh;
+    border-radius: 16px 16px 0 0 !important;
+    position: fixed;
+    bottom: 0;
+  }
+  .fe-sidebar { width: 100px; }
+  .fe-row div { font-size: 11px; }
+}
+
+@media (max-width: 480px) {
+  .tcfg-panel, .uprefs-panel { max-height: 92vh; }
+  .tcfg-section { padding: 8px; margin-bottom: 6px; }
+}
+
+/* ══════════════════════════════════════════════
+   ⑥ LANDSCAPE PHONE — Compact mode
+══════════════════════════════════════════════ */
+@media (max-height: 450px) and (orientation: landscape) {
+  /* OTDR interface in landscape phone: side-by-side but compact */
+  #pg-otdr { --tab-h: 30px; }
+
+  .otdr-titlebar { height: 24px; }
+  .tb-l { font-size: 10px; }
+
+  .otdr-tabbar { height: 32px; }
+  .otab { height: 28px; font-size: 11px; min-width: 52px; padding: 0 7px; }
+
+  /* Sidebar goes back to right side but narrower */
+  .otdr-main { flex-direction: row; }
+  .otdr-sidebar {
+    width: 110px !important;
+    height: auto !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    overflow-y: auto !important;
+    border-top: none !important;
+    border-left: 1px solid #5878a0 !important;
+    order: 0 !important;
+  }
+  .sid-start { height: 32px; font-size: 11px; }
+  .sid-start-avg, .sid-start-rt { height: 32px; font-size: 8px; }
+  .sid-icon-btn { height: 28px; }
+  .sib-icon { font-size: 12px; }
+  .sid-menu { display: flex !important; flex: 1; }
+  .sid-mi { padding: 5px 6px; font-size: 10px; }
+  .sid-mhdr { padding: 3px 6px; font-size: 10px; }
+
+  .fname-bar { height: 18px; font-size: 9px; }
+  .otdr-acq-bar { height: 38px; }
+  .evt-scroll { max-height: 80px; }
+  .zbtn { width: 22px; height: 22px; font-size: 10px; }
+}
+
+/* ══════════════════════════════════════════════
+   ⑦ TABLET (md) — 769-1024px
+   Enhanced touch targets, adapted layout
+══════════════════════════════════════════════ */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .otdr-sidebar { width: 148px; }
+  .sid-start { height: 44px; font-size: 13px; }
+  .otab { height: 36px; font-size: 13px; padding: 0 14px; }
+  .zbtn { width: 30px; height: 30px; }
+  .evt-tbl th, .evt-tbl td { padding: 7px 9px; font-size: 12px; }
+  .tcfg-chk input { width: 16px; height: 16px; }
+  .pv-panel { width: 480px; }
+}
+
+/* ══════════════════════════════════════════════
+   ⑧ iOS SPECIFIC FIXES
+══════════════════════════════════════════════ */
+
+/* iOS Safari momentum scroll */
+.evt-scroll, .tcfg-body, .uprefs-section, .meas-vals, .fe-list, .pvp-body {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+}
+
+/* iOS input zoom prevention (font-size ≥ 16px) */
+@media (max-width: 768px) {
+  input[type="text"], input[type="number"], select, textarea {
+    font-size: 16px !important; /* prevents iOS auto-zoom */
+  }
+  .tcfg-inp, .ip-inp, .spr-inp, .fe-fn-inp, .fe-ft-sel, .uprefs-sel {
+    font-size: 16px !important;
+    height: 42px;
+  }
+}
+
+/* iOS notch / Dynamic Island */
+@supports (padding: env(safe-area-inset-top)) {
+  .otdr-titlebar { padding-top: calc(4px + var(--safe-top)); height: calc(28px + var(--safe-top)); }
+  .sid-bottom-icons { padding-bottom: calc(4px + var(--safe-bot)); }
+  #pg-boot, #pg-launcher, #pg-off { padding-top: var(--safe-top); }
+  .lnch-taskbar { padding-bottom: var(--safe-bot); }
+}
+
+/* iOS rubber-band scroll prevention on modal scroll */
+@media (max-width: 768px) {
+  .tcfg-body, .up-body-gen, .up-body-rpt { overscroll-behavior: contain; }
+}
+
+/* ══════════════════════════════════════════════
+   ⑨ ANDROID SPECIFIC FIXES
+══════════════════════════════════════════════ */
+
+/* Android gesture navigation bar */
+@media (max-width: 768px) {
+  .fname-bar, .sid-bottom-icons, .lnch-taskbar {
+    padding-bottom: max(var(--safe-bot), 4px);
+  }
+}
+
+/* Android overscroll glow (suppress on tables) */
+.evt-scroll, .otdr-tabbar { overscroll-behavior-x: contain; }
+
+/* ══════════════════════════════════════════════
+   ⑩ TOUCH INTERACTION ENHANCEMENTS
+══════════════════════════════════════════════ */
+@media (hover: none) and (pointer: coarse) {
+  /* Touch device: larger tap targets */
+  .sid-mi { min-height: 44px; display: flex; align-items: center; }
+  .sid-icon-btn { min-height: 44px; }
+  .zbtn { min-width: 36px; min-height: 36px; }
+  .mtb { min-height: 40px; }
+  .wl-btn, .mode-btn { min-height: 40px; }
+  .oab-dial { min-width: 32px; min-height: 36px; }
+  .ip-btn { min-height: 44px; padding: 8px 16px; font-size: 14px; }
+  .tcfg-ok, .tcfg-revert { min-height: 40px; font-size: 13px; }
+  .pf-wl-tab { min-height: 36px; }
+  .oab-wl-chk input { width: 18px; height: 18px; }
+
+  /* Remove hover states (no hover on touch) */
+  .sid-mi:hover, .zbtn:hover, .mtb:hover { background: unset; }
+  /* Replace with active states */
+  .sid-mi:active { background: rgba(70,110,170,.28) !important; }
+  .zbtn:active { transform: scale(0.9) !important; background: rgba(50,100,180,.3) !important; }
+  .mtb:active { opacity: 0.8; }
+  .sid-icon-btn:active { transform: scale(0.94); }
+}
+
+/* ══════════════════════════════════════════════
+   ⑪ MOBILE-ONLY UTILITY ELEMENTS
+══════════════════════════════════════════════ */
+
+/* Mobile sidebar hamburger toggle */
+.sid-mobile-menu-toggle {
+  display: none; /* shown only on mobile via JS class */
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background: rgba(0,0,0,.2);
+  border: 1px solid rgba(255,255,255,.2);
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: rgba(255,255,255,.8);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Simplified mobile spec row */
+.li-spec-mobile {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  font-family: monospace;
+  color: #1a3a5a;
+}
+.li-spec-mobile span::before { content: '› '; color: #008040; font-weight: 700; }
+
+/* Mobile bottom sheet drag handle */
+.modal-drag-handle { display: none; }
+
+/* Mobile back swipe indicator */
+.mobile-swipe-hint {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 60px;
+  background: rgba(100,150,200,.4);
+  border-radius: 0 4px 4px 0;
+  z-index: 9;
+}
+
+@media (max-width: 768px) {
+  .mobile-swipe-hint { display: block; }
+}
+
+/* ══════════════════════════════════════════════
+   ⑫ PRINT (bonus — reports print-ready)
+══════════════════════════════════════════════ */
+@media print {
+  #pg-off, #pg-boot, #pg-launcher { display: none !important; }
+  #pg-otdr { display: flex !important; width: 100%; height: auto; }
+  .otdr-sidebar { display: none !important; }
+  .otdr-acq-bar { display: none !important; }
+  .trace-wrap { height: 300px; }
+  .fname-bar { display: none; }
+}
+
+
 </style>
 </head>
 <body>
@@ -595,7 +1366,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
       <div class="li-spec">Pulse 5–20 000 ns · Up to 256 K sampling points</div>
       <div class="li-spec">iOLM · VFL · OPM · Wi-Fi · Bluetooth</div>
       <div class="li-spec">Part of the MAX-700B series · Discontinued 2015</div>
-      <div class="li-spec">12 h battery · 200×155×68 mm · 1.29 kg</div>
+      <div class="li-spec">12 h battery — Telcordia TR-NWT-001138 · 200×155×68 mm · 1.29 kg</div>
     </div>
     <div class="pwr-group">
       <div class="pwr-ring" onclick="poweron()"><svg viewBox="0 0 28 28" fill="none" stroke="#00b04f" stroke-width="2.4" stroke-linecap="round" width="28" height="28"><path d="M14 3.5v10"/><path d="M8 7.8A10 10 0 1 0 20 7.8"/></svg></div>
@@ -604,7 +1375,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
     </div>
     <div class="li-caution">⚠ CLASS 1M LASER PRODUCT — IEC 60825-1:2007 · 21 CFR 1040.10 · Training simulation only</div>
     <div class="li-caution" style="border-color:#6080a0;color:#2a4060;background:rgba(200,220,240,.2)">
-      📋 Unofficial educational training simulator. EXFO® and MaxTester® are registered trademarks of EXFO Inc. No affiliation with EXFO Inc. All specifications from public documentation. NOT for commercial use.<br>Author: Diyar Hussein · linkedin.com/in/diyar
+      📋 Unofficial educational training simulator. EXFO® and MaxTester® are registered trademarks of EXFO Inc. No affiliation with EXFO Inc. All specifications from public documentation. NOT for commercial use.<br>Author: Diyar Hussein · linkedin.com/in/diyar · github.com/3rc0/3rc0.github.io
     </div>
   </div>
 </div>
@@ -631,37 +1402,128 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
 <div id="pg-otdr">
   <div class="otdr-titlebar"><div class="tb-l" id="otdr-title">EXFO MaxTester 730B · OTDR Module</div><div class="tb-r"><span id="otdr-clock">--:--:--</span><span>▪</span></div></div>
   <div class="otdr-tabbar">
+    <div class="otab" id="tab-source" onclick="selTab('source')">Source</div>
     <div class="otab active" id="tab-otdr" onclick="selTab('otdr')">OTDR</div>
     <div class="otab" id="tab-events" onclick="selTab('events')">Events</div>
     <div class="otab" id="tab-measure" onclick="selTab('measure')">Measure</div>
     <div class="otab" id="tab-summary" onclick="selTab('summary')">Summary</div>
-    <div class="otab" id="tab-source" onclick="selTab('source')">Source</div>
-    <div class="otab" id="tab-bidir" onclick="selTab('bidir')" style="background:linear-gradient(180deg,#7aa8d0,#5888b8);color:#fff;border-color:#3868a0">↔ Bidir</div>
-    <div class="otab" id="tab-budget" onclick="selTab('budget')">Link Budget</div>
-    <div class="otab" id="tab-qc" onclick="selTab('qc')" style="background:linear-gradient(180deg,#60aa60,#3a8838);color:#fff;border-color:#286028">✔ QC Verify</div>
-    <div class="otab" id="tab-setup" onclick="selTab('setup')">⚙ Setup</div>
   </div>
   <div class="otdr-main">
     <div class="otdr-col-left">
-      <div id="tc-source" style="display:none;flex:1;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:#f0f5fa">
-        <div style="font-size:40px">💡</div>
-        <div style="font-size:14px;color:#4a6880;text-align:center;line-height:1.9;max-width:340px"><strong>Source Module (CW / 1 kHz / 2 kHz)</strong><br>Output: 1310 / 1550 / 1625 nm · -2.5 dBm typical<br>Auto-Lambda auto-switching compatible</div>
+      <div id="tc-source" style="display:none;flex:1;flex-direction:column;min-height:0;background:#e8f0f8">
+        <!-- Source tab exact UI from user guide p.159-162 -->
+        <!-- Note: Source (SRC) is an optional software package for MAX-700B -->
+        <div style="display:flex;flex:1;min-height:0">
+          <!-- Left panel: controls -->
+          <div style="width:200px;flex-shrink:0;border-right:1px solid #6080a0;background:#d8e4f0;padding:10px;display:flex;flex-direction:column;gap:8px">
+            <!-- p.159: optional SRC note -->
+            <div style="font-size:9px;color:#5a7070;border:1px solid #8090a0;border-radius:2px;padding:4px 6px;background:rgba(255,255,200,.3);line-height:1.5">
+              📌 Source (SRC) optional software package required
+            </div>
+            <div id="src-turn-btn" onclick="toggleSource()" style="height:36px;border-radius:4px;border:1.5px solid #1a8018;background:linear-gradient(180deg,#44cc44,#22aa22);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer">Turn On</div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#1a3050;margin-bottom:4px">Wavelength:</div>
+              <select id="src-wl" style="width:100%;height:26px;font-size:11px;background:#e8f0fa;border:1px solid #88b0cc;border-radius:2px;color:#1a3050;padding:0 4px">
+                <option value="1310sm">1310 nm (SM)</option>
+                <option value="1550sm">1550 nm (SM)</option>
+                <option value="1625live">1625 nm (SM Live)</option>
+              </select>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#1a3050;margin-bottom:4px">Modulation:</div>
+              <select id="src-mod" style="width:100%;height:26px;font-size:11px;background:#e8f0fa;border:1px solid #88b0cc;border-radius:2px;color:#1a3050;padding:0 4px">
+                <option value="cw">Continuous</option>
+                <option value="1k">1 kHz</option>
+                <option value="2k">2 kHz</option>
+                <option value="1kblink">1 kHz+Blink</option>
+                <option value="2kblink">2 kHz+Blink</option>
+              </select>
+            </div>
+            <!-- p.161 caution note -->
+            <div style="font-size:9px;color:#7a2000;border:1px solid #cc4400;border-radius:2px;padding:4px 6px;background:rgba(255,200,150,.2);line-height:1.5">
+              ⚠ CAUTION: Never connect a live fiber to the OTDR port without proper setup. Incoming power ≥10 dBm could damage OTDR permanently.
+            </div>
+          </div>
+          <!-- Right panel: large arrow symbol (exact as in p.160 screenshot) -->
+          <div style="flex:1;display:flex;align-items:center;justify-content:center;background:#e0ebf5">
+            <svg viewBox="0 0 200 220" width="220" height="240">
+              <polygon points="40,0 160,0 160,110 200,110 100,220 0,110 40,110" fill="#9ab0c8" stroke="#6888a0" stroke-width="3"/>
+              <rect x="85" y="185" width="30" height="8" fill="#6888a0" rx="2"/>
+              <rect x="97" y="173" width="6" height="32" fill="#6888a0" rx="2"/>
+            </svg>
+          </div>
+        </div>
+        <!-- Status bar -->
+        <div style="height:22px;background:#b0c4d8;border-top:1px solid #6080a0;display:flex;align-items:center;padding:0 10px;font-size:11px;color:#1a3050;font-family:monospace">
+          <span id="src-status">Source: OFF</span>
+        </div>
       </div>
       <div id="tc-otdr" style="display:flex;flex:1;flex-direction:column;min-height:0">
         <div class="trace-wrap" id="trace-wrap">
           <canvas id="cv-trace"></canvas>
+          <!-- Graph overview mini-window (top-right) -->
+          <div class="gfx-overview" id="gfx-overview" style="display:none">
+            <canvas class="gfx-ov-canvas" id="cv-overview"></canvas>
+            <div class="gfx-ov-box" id="gfx-ov-box"></div>
+          </div>
           <div class="trace-wl-tag" id="trace-wl">1310 nm (9 µm)</div>
           <div class="cursor-bar" id="cursor-bar" style="display:none">
             <div class="cur-badge cur-a" id="cur-a-lbl">A: — km</div>
             <div class="cur-badge cur-b" id="cur-b-lbl">B: — km</div>
             <div class="cur-badge cur-diff" id="cur-diff-lbl">ΔL: — km | ΔdB: — dB</div>
           </div>
-          <div class="zoom-row">
-            <div class="zbtn" onclick="doZoom(.6)" title="Zoom Out">−</div>
-            <div class="zbtn" onclick="doZoom(1.6)" title="Zoom In">+</div>
-            <div class="zbtn" onclick="resetZoom()" title="Fit">⤢</div>
-            <div class="zbtn" onclick="selCurMode('A')" title="Marker A" style="color:#cc2200;font-weight:700;font-size:12px">A</div>
-            <div class="zbtn" onclick="selCurMode('B')" title="Marker B" style="color:#0044cc;font-weight:700;font-size:12px">B</div>
+          <!-- Zoom controls — 7 buttons matching p.113 of user guide -->
+          <div class="zoom-col" id="zoom-col">
+            <div class="zbtn" id="zbtn-sel" onclick="setZoomMode('sel')" title="Selection mode">↖</div>
+            <div class="zbtn" id="zbtn-pan" onclick="setZoomMode('pan')" title="Move view area">✥</div>
+            <div class="zbtn" id="zbtn-zsel" onclick="setZoomMode('zsel')" title="Zoom selector">⇔</div>
+            <div class="zbtn" id="zbtn-fit" onclick="resetZoom()" title="Full view (1:1)">1:1</div>
+            <div class="zbtn" id="zbtn-in" onclick="doZoom(1.6)" title="Zoom in">+</div>
+            <div class="zbtn" id="zbtn-out" onclick="doZoom(.6)" title="Zoom out">−</div>
+            <div class="zbtn" id="zbtn-evt" onclick="zoomOnEvent()" title="Zoom on event">⊹A</div>
+          </div>
+          <!-- Port/Fiber + Wavelength checkboxes — OTDR tab bottom bar (p.52,60) -->
+          <div class="otdr-acq-bar" id="otdr-acq-bar" style="display:none">
+            <div class="oab-group">
+              <div class="oab-lbl">Port/Fiber:</div>
+              <select class="oab-sel" id="sel-port" onchange="portChange()">
+                <option value="sm9">SM/9 µm</option>
+                <option value="smlive">SM Live</option>
+                <option value="mm50">MM/50 µm</option>
+                <option value="mm625">MM/62.5 µm</option>
+              </select>
+            </div>
+            <div class="oab-group">
+              <div class="oab-wl-checks">
+                <label class="oab-wl-chk"><input type="checkbox" id="wlck-1310" checked onchange="wlCheckChange()"><span>1310 nm</span></label>
+                <label class="oab-wl-chk"><input type="checkbox" id="wlck-1550" onchange="wlCheckChange()"><span>1550 nm</span></label>
+                <label class="oab-wl-chk" id="wlck-1625-wrap"><input type="checkbox" id="wlck-1625" onchange="wlCheckChange()"><span>1625 nm</span></label>
+              </div>
+            </div>
+            <div class="oab-group">
+              <div class="oab-lbl">Range (km)</div>
+              <div class="oab-dial" onclick="adjP('rng',-1)">−</div>
+              <div class="oab-val" id="pr-rng">10 km</div>
+              <div class="oab-dial" onclick="adjP('rng',1)">+</div>
+            </div>
+            <div class="oab-group">
+              <div class="oab-lbl">Pulse</div>
+              <div class="oab-dial" onclick="adjP('pls',-1)">−</div>
+              <div class="oab-val" id="pr-pls">100 ns</div>
+              <div class="oab-dial" onclick="adjP('pls',1)">+</div>
+            </div>
+            <div class="oab-group">
+              <div class="oab-lbl">Duration (s)</div>
+              <div class="oab-dial" onclick="adjP('dur',-1)">−</div>
+              <div class="oab-val" id="pr-dur">15 s</div>
+              <div class="oab-dial" onclick="adjP('dur',1)">+</div>
+            </div>
+            <div class="oab-group">
+              <label class="oab-chk"><input type="checkbox" id="hires-chk" onchange="hiresChange()"> <span>High Res</span></label>
+              <div class="oab-mode-btn" id="btn-auto" onclick="toggleAuto()">AUTO</div>
+              <div class="oab-mode-btn pv-btn" id="btn-pv" onclick="togglePV()">Port View</div>
+              <div class="oab-mode-btn" onclick="openExtAcq()" title="Advanced Parameters" style="background:linear-gradient(180deg,#5a7898,#3a5878);padding:0 8px;font-size:11px">...</div>
+            </div>
           </div>
           <div id="sc-overlay">
             <div class="sc-hdr">📡 SELECT FIBER SCENARIO</div>
@@ -689,7 +1551,24 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
         </div>
       </div>
       <div id="tc-summary" style="display:none;flex:1;overflow-y:auto"><div class="sum-grid" id="sum-wrap"></div></div>
-      <div id="tc-measure" style="display:none;flex:1;overflow-y:auto"><div class="sum-grid" id="meas-wrap"></div></div>
+      <div id="tc-measure" style="display:none;flex:1;flex-direction:column;min-height:0">
+        <!-- Marker nav row -->
+        <div class="meas-marker-bar">
+          <div class="meas-marker-nav" onclick="selCurMode('a')">◄◄</div>
+          <div class="meas-mk mk-a" id="mk-a" onclick="selCurMode('a')">a</div>
+          <div class="meas-mk mk-A" id="mk-A" onclick="selCurMode('A')">A</div>
+          <div class="meas-mk mk-B" id="mk-B" onclick="selCurMode('B')">B</div>
+          <div class="meas-mk mk-b" id="mk-b" onclick="selCurMode('b')">b</div>
+          <div class="meas-marker-nav" onclick="selCurMode('b')">►►</div>
+        </div>
+        <!-- Event / Section / ORL buttons -->
+        <div class="meas-type-bar">
+          <div class="mtb on" id="mtb-event" onclick="setMeasType('event')">Event</div>
+          <div class="mtb" id="mtb-section" onclick="setMeasType('section')">Section</div>
+          <div class="mtb" id="mtb-orl" onclick="setMeasType('orl')">ORL</div>
+        </div>
+        <div class="meas-vals" id="meas-vals-wrap"></div>
+      </div>
       <div id="tc-bidir" style="display:none;flex:1;overflow-y:auto"><div class="bidir-wrap" id="bidir-wrap"></div></div>
       <div id="tc-budget" style="display:none;flex:1;overflow-y:auto"><div class="budget-wrap" id="budget-wrap"></div></div>
       <div id="tc-qc" style="display:none;flex:1;overflow-y:auto"><div class="qc-wrap" id="qc-wrap"></div></div>
@@ -729,13 +1608,15 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
             <div class="sp-r"><div class="spr-l">ADZ</div><div class="spr-v" style="background:none;border:none;color:#5a7888">3.5 m (at 5 ns pulse)</div></div>
           </div>
           <div class="sp-box"><div class="spb-t">INSTRUMENT INFORMATION</div>
-            <div class="sp-r"><div class="spr-l">Module</div><div class="spr-v" style="background:none;border:none">MAX-730B</div></div>
+            <div class="sp-r"><div class="spr-l">Interfaces</div><div class="spr-v" style="background:none;border:none">Two USB 2.0 · RJ-45 LAN 10/100 Mbit/s</div></div>
+            <div class="sp-r"><div class="spr-l">Power Supply</div><div class="spr-v" style="background:none;border:none">100–240 VAC, 50–60 Hz, 9–16 V DC</div></div>
             <div class="sp-r"><div class="spr-l">Serial Number</div><div class="spr-v" style="background:none;border:none">839640</div></div>
             <div class="sp-r"><div class="spr-l">Calibration Date</div><div class="spr-v" style="background:none;border:none">2025-10-15</div></div>
             <div class="sp-r"><div class="spr-l">Firmware</div><div class="spr-v" style="background:none;border:none">7.0.1.1</div></div>
             <div class="sp-r"><div class="spr-l">Storage</div><div class="spr-v" style="background:none;border:none">2 GB internal (~20 000 traces)</div></div>
             <div class="sp-r"><div class="spr-l">Dynamic Range</div><div class="spr-v" style="background:none;border:none" id="sv-dynrange">39 / 37 / 37 dB</div></div>
             <div class="sp-r"><div class="spr-l">Max Distance</div><div class="spr-v" style="background:none;border:none">400 km</div></div>
+            <div class="sp-r"><div class="spr-l">Real-Time Refresh</div><div class="spr-v" style="background:none;border:none">3 Hz typical</div></div>
             <div class="sp-r"><div class="spr-l">Distance Accuracy</div><div class="spr-v" style="background:none;border:none">±(0.75 + 0.0025%×d) m</div></div>
             <div class="sp-r"><div class="spr-l">Linearity</div><div class="spr-v" style="background:none;border:none">±0.03 dB/dB</div></div>
             <div class="sp-r"><div class="spr-l">Loss Threshold</div><div class="spr-v" style="background:none;border:none">0.01 dB</div></div>
@@ -779,38 +1660,55 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
       </div>
     </div>
     <div class="otdr-sidebar">
+      <!-- Pass/Fail badge row -->
       <div class="sid-pf"><span class="pf-na" id="pf-badge">N/A</span><span class="pf-wl" id="pf-wl">OTDR</span></div>
-      <div class="sid-start" id="start-btn" onclick="startAcq()">▶  Start</div>
-      <div class="sid-scen" onclick="openScOverlay()">📡  Load Scenario</div>
-      <div class="sid-sect"><div class="sid-sect-t">Wavelength</div>
-        <div class="wl-btns"><div class="wl-btn on" id="wb2-1310" onclick="setWL(1310)">1310</div><div class="wl-btn" id="wb2-1550" onclick="setWL(1550)">1550</div><div class="wl-btn" id="wb2-1625" onclick="setWL(1625)">1625</div><div class="wl-btn" id="wb2-dual" onclick="setWL('dual')">DUAL</div></div>
+
+      <!-- START buttons row — exactly as in user guide p.71,100 -->
+      <div class="sid-start-row">
+        <div class="sid-start" id="start-btn" onclick="startAcq()">▶ Start</div>
+        <div class="sid-start-avg" onclick="startAcq()">Start<br>Averaged</div>
+        <div class="sid-start-rt" id="btn-rt" onclick="toggleRT()">Start<br>RT</div>
       </div>
-      <div class="sid-sect"><div class="sid-sect-t">Acquisition</div>
-        <div class="param-row"><div class="param-lbl">Range</div><div class="param-ctrl"><div class="param-pm" onclick="adjP('rng',-1)">−</div><div class="param-val" id="pr-rng">10 km</div><div class="param-pm" onclick="adjP('rng',1)">+</div></div></div>
-        <div class="param-row"><div class="param-lbl">Pulse Width</div><div class="param-ctrl"><div class="param-pm" onclick="adjP('pls',-1)">−</div><div class="param-val" id="pr-pls">100 ns</div><div class="param-pm" onclick="adjP('pls',1)">+</div></div></div>
-        <div class="param-row"><div class="param-lbl">Duration</div><div class="param-ctrl"><div class="param-pm" onclick="adjP('dur',-1)">−</div><div class="param-val" id="pr-dur">15 s</div><div class="param-pm" onclick="adjP('dur',1)">+</div></div></div>
-      </div>
-      <div class="sid-sect"><div class="sid-sect-t">Mode &amp; View</div>
-        <div class="mode-btns" style="margin-bottom:4px"><div class="mode-btn" id="btn-auto" onclick="toggleAuto()">Auto</div><div class="mode-btn" id="btn-rt" onclick="toggleRT()">⟳ RT</div></div>
-        <div class="mode-btns"><div class="mode-btn pv-on" id="btn-pv" onclick="togglePV()">📡 Port View</div></div>
-      </div>
-      <div class="sid-sect"><div class="sid-sect-t">Actions</div>
-        <div class="sid-action-row">
-          <div class="sid-act" onclick="launchApp('files')"><div class="sid-act-icon">📂</div><div class="sid-act-lbl">Open</div></div>
-          <div class="sid-act" onclick="saveFile()"><div class="sid-act-icon">💾</div><div class="sid-act-lbl">Save</div></div>
-          <div class="sid-act" onclick="genReport()"><div class="sid-act-icon">📄</div><div class="sid-act-lbl">Report</div></div>
+
+      <!-- Open / Save / Report icon row -->
+      <div class="sid-icon-row">
+        <div class="sid-icon-btn" onclick="launchApp('files')" title="Open">
+          <div class="sib-icon">📂</div><div class="sib-lbl">Open</div>
         </div>
-        <div class="sid-nav"><div class="sid-nav-btn">◄ Prev</div><div class="sid-nav-btn">All</div><div class="sid-nav-btn">Next ►</div></div>
+        <div class="sid-icon-btn" onclick="saveFile()" title="Save">
+          <div class="sib-icon">💾</div><div class="sib-lbl">Save</div>
+        </div>
+        <div class="sid-icon-btn" onclick="genReport()" title="Report">
+          <div class="sib-icon">📄</div><div class="sib-lbl">Report</div>
+        </div>
       </div>
+
+      <!-- Prev / All / Next wavelength navigation -->
+      <div class="sid-icon-row">
+        <div class="sid-icon-btn" onclick="adjWL(-1)" title="Previous wavelength">
+          <div class="sib-icon">◄</div><div class="sib-lbl">Prev.</div>
+        </div>
+        <div class="sid-icon-btn" onclick="setWL('all')" title="All wavelengths">
+          <div class="sib-icon">≡</div><div class="sib-lbl">All</div>
+        </div>
+        <div class="sid-icon-btn" onclick="adjWL(1)" title="Next wavelength">
+          <div class="sib-icon">►</div><div class="sib-lbl">Next</div>
+        </div>
+      </div>
+
+      <!-- Load Scenario shortcut -->
+      <div class="sid-scen" onclick="openScOverlay()">📡  Load Scenario</div>
+
+      <!-- Main Menu section -->
       <div class="sid-menu">
         <div class="sid-mhdr">Main Menu</div>
-        <div class="sid-mi" onclick="showIdent()">Identification...<span class="sid-mi-arr">▸</span></div>
-        <div class="sid-mi" onclick="selTab('setup')">Test Configuration...<span class="sid-mi-arr">▸</span></div>
-        <div class="sid-mi">User Preferences...<span class="sid-mi-arr">▸</span></div>
-        <div class="sid-mi" onclick="selTab('bidir')">Bidirectional...<span class="sid-mi-arr">▸</span></div>
-        <div class="sid-mi" onclick="selTab('budget')">Link Budget...<span class="sid-mi-arr">▸</span></div>
-        <div class="sid-mi" onclick="selTab('qc')">QC Verification...<span class="sid-mi-arr">▸</span></div>
-        <div class="sid-mi" onclick="showState('launcher')" style="color:#2a5878">← Main Menu</div>
+        <div class="sid-mi" onclick="openFileMenu()">File<span class="sid-mi-arr">▶</span></div>
+        <div class="sid-mi" onclick="showIdent()">Identification...<span class="sid-mi-arr"></span></div>
+        <div class="sid-mi" onclick="openTestConfig()">Test Configuration...<span class="sid-mi-arr"></span></div>
+        <div class="sid-mi" onclick="openUserPrefs()">User Preferences...<span class="sid-mi-arr"></span></div>
+        <div class="sid-mi" onclick="openReference()">Reference<span class="sid-mi-arr">▶</span></div>
+        <div class="sid-mi" onclick="showState('launcher')" style="color:#2a5878;margin-top:4px">← Main Menu</div>
+        <!-- Status params -->
         <div class="sid-params">
           <div class="sid-p">Range<span class="sid-p-v" id="rp-rng">10 km</span></div>
           <div class="sid-p">Pulse<span class="sid-p-v" id="rp-pls">100 ns</span></div>
@@ -818,6 +1716,13 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
           <div class="sid-p">WL<span class="sid-p-v" id="rp-wl">1310 nm</span></div>
           <div class="sid-p">Avg<span class="sid-p-v" id="rp-avg">--</span></div>
         </div>
+      </div>
+
+      <!-- Bottom info icons -->
+      <div class="sid-bottom-icons">
+        <div class="sbi" title="About" onclick="showAbout()">ℹ</div>
+        <div class="sbi" title="Help">?</div>
+        <div class="sbi sbi-laser" title="Laser active indicator">⊙</div>
       </div>
     </div>
   </div>
@@ -838,20 +1743,61 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
   </div>
 </div>
 <div id="pg-ident">
-  <div class="ident-panel">
-    <div class="ip-title">Identification</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <div class="ip-r"><div class="ip-l">Customer</div><input class="ip-inp" id="ip-customer" placeholder="Customer name"></div>
-      <div class="ip-r"><div class="ip-l">Company</div><input class="ip-inp" id="ip-company" placeholder="Company / Contractor"></div>
-      <div class="ip-r"><div class="ip-l">Cable ID</div><input class="ip-inp" id="ip-cbl" placeholder="e.g. FIB-001-A"></div>
-      <div class="ip-r"><div class="ip-l">Fiber ID</div><input class="ip-inp" id="ip-fib" placeholder="e.g. Fiber-61"></div>
-      <div class="ip-r"><div class="ip-l">Job ID</div><input class="ip-inp" id="ip-job" placeholder="Job number"></div>
-      <div class="ip-r"><div class="ip-l">Operator A</div><input class="ip-inp" id="ip-op" placeholder="Technician name"></div>
-      <div class="ip-r"><div class="ip-l">Location A</div><input class="ip-inp" id="ip-loca" placeholder="Near-end site name"></div>
-      <div class="ip-r"><div class="ip-l">Location B</div><input class="ip-inp" id="ip-locb" placeholder="Far-end site name"></div>
+  <div class="ident-panel" style="width:560px">
+    <div class="ip-title">Identification
+      <span style="float:right;margin-top:-2px">
+        <select id="ip-applyto" style="height:24px;font-size:11px;background:#e8f0fa;border:1px solid #88b0cc;border-radius:2px;color:#1a3050;padding:0 4px">
+          <option value="next">Apply to: Next acquisition</option>
+          <option value="current">Apply to: Current acquisition</option>
+        </select>
+      </span>
     </div>
-    <div class="ip-r"><div class="ip-l">Comments</div><input class="ip-inp" id="ip-notes" placeholder="Optional comments"></div>
-    <div class="ip-btns"><div class="ip-btn" onclick="closeIdent()">Cancel</div><div class="ip-btn ip-ok" onclick="saveIdent()">✓ OK</div></div>
+    <!-- Exact field grid from user guide p.25,152: Identifier | Value | Increment | Filename -->
+    <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px">
+      <thead>
+        <tr style="background:#9ab0c4">
+          <th style="padding:4px 8px;border:1px solid #6888a0;text-align:left;width:100px">Identifier</th>
+          <th style="padding:4px 8px;border:1px solid #6888a0;text-align:left">Value</th>
+          <th style="padding:4px 8px;border:1px solid #6888a0;text-align:center;width:80px">Increment</th>
+          <th style="padding:4px 8px;border:1px solid #6888a0;text-align:center;width:60px">Filename</th>
+        </tr>
+      </thead>
+      <tbody id="ident-tbody">
+        <tr style="background:#c8d8e8"><td style="padding:3px 8px;border:1px solid #8090a8;font-weight:700;color:#1a2a3a">Job ID</td><td style="border:1px solid #8090a8;padding:2px"><input class="ip-inp" id="ip-job" placeholder=""></td><td style="border:1px solid #8090a8;text-align:center"></td><td style="border:1px solid #8090a8;text-align:center"><input type="checkbox" id="ip-fn-job"></td></tr>
+        <tr><td style="padding:3px 8px;border:1px solid #8090a8;color:#1a2a3a">Company</td><td style="border:1px solid #8090a8;padding:2px"><input class="ip-inp" id="ip-company" placeholder=""></td><td style="border:1px solid #8090a8;text-align:center"></td><td style="border:1px solid #8090a8;text-align:center"><input type="checkbox" id="ip-fn-company"></td></tr>
+        <tr style="background:#f4f8fc"><td style="padding:3px 8px;border:1px solid #8090a8;color:#1a2a3a">Customer</td><td style="border:1px solid #8090a8;padding:2px"><input class="ip-inp" id="ip-customer" placeholder=""></td><td style="border:1px solid #8090a8;text-align:center"></td><td style="border:1px solid #8090a8;text-align:center"><input type="checkbox" id="ip-fn-customer"></td></tr>
+        <tr><td style="padding:3px 8px;border:1px solid #8090a8;color:#1a2a3a">Operator A</td><td style="border:1px solid #8090a8;padding:2px"><input class="ip-inp" id="ip-op" placeholder=""></td><td style="border:1px solid #8090a8;text-align:center"></td><td style="border:1px solid #8090a8;text-align:center"><input type="checkbox" id="ip-fn-op"></td></tr>
+        <tr style="background:#f4f8fc"><td style="padding:3px 8px;border:1px solid #8090a8;color:#1a2a3a">Operator B</td><td style="border:1px solid #8090a8;padding:2px"><input class="ip-inp" id="ip-opb" placeholder=""></td><td style="border:1px solid #8090a8;text-align:center"></td><td style="border:1px solid #8090a8;text-align:center"><input type="checkbox" id="ip-fn-opb"></td></tr>
+        <tr><td style="padding:3px 8px;border:1px solid #8090a8;color:#1a2a3a">Comments</td><td style="border:1px solid #8090a8;padding:2px"><input class="ip-inp" id="ip-notes" placeholder=""></td><td style="border:1px solid #8090a8;text-align:center"></td><td style="border:1px solid #8090a8;text-align:center"><input type="checkbox" id="ip-fn-notes"></td></tr>
+        <tr style="background:#f4f8fc"><td style="padding:3px 8px;border:1px solid #8090a8;color:#1a2a3a">Cable ID</td><td style="border:1px solid #8090a8;padding:2px"><input class="ip-inp" id="ip-cbl" placeholder=""></td><td style="border:1px solid #8090a8;text-align:center;font-size:10px;color:#888">Not active</td><td style="border:1px solid #8090a8;text-align:center"><input type="checkbox" id="ip-fn-cbl"></td></tr>
+        <tr><td style="padding:3px 8px;border:1px solid #8090a8;color:#1a2a3a">Fiber ID</td><td style="border:1px solid #8090a8;padding:2px"><input class="ip-inp" id="ip-fib" placeholder="Fiber" value="Fiber"></td><td style="border:1px solid #8090a8;text-align:center;font-size:11px;color:#1a3050">1</td><td style="border:1px solid #8090a8;text-align:center"><input type="checkbox" id="ip-fn-fib" checked></td></tr>
+      </tbody>
+    </table>
+    <!-- Location fields (additional — from report layout) -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
+      <div class="ip-r"><div class="ip-l">Location A</div><input class="ip-inp" id="ip-loca" placeholder="Near-end site"></div>
+      <div class="ip-r"><div class="ip-l">Location B</div><input class="ip-inp" id="ip-locb" placeholder="Far-end site"></div>
+    </div>
+    <!-- Filename preview section -->
+    <div style="background:#f4f8fc;border:1px solid #88b0cc;border-radius:3px;padding:8px;margin-bottom:8px;font-size:11px">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">
+        <span style="color:#1a3050;font-weight:600">Filename preview:</span>
+        <span style="flex:1"></span>
+        <span style="color:#1a3050">Separator:</span>
+        <select style="height:22px;font-size:11px;background:#fff;border:1px solid #88b0cc;border-radius:2px;padding:0 3px">
+          <option>Underscore (_)</option><option>Hyphen (-)</option><option>Space</option>
+        </select>
+      </div>
+      <div style="background:#fff;border:1px solid #aac0d8;border-radius:2px;padding:4px 8px;font-family:monospace;font-size:11px;color:#1a3050;min-height:22px" id="ip-fn-preview">Fiber1.trc</div>
+    </div>
+    <div class="ip-btns">
+      <div class="ip-btn" onclick="ipIncrement()">Increment...</div>
+      <div class="ip-btn" onclick="clearIdentValues()">Clear Values</div>
+      <div class="ip-btn" onclick="revertIdent()">Revert to Factory Settings</div>
+      <div style="flex:1"></div>
+      <div class="ip-btn" onclick="closeIdent()">Cancel</div>
+      <div class="ip-btn ip-ok" onclick="saveIdent()">OK</div>
+    </div>
   </div>
 </div>
 <div id="pg-report">
@@ -894,8 +1840,273 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
 </div>
 <input type="file" id="local-file-input" accept=".sor,.trc,.html" onchange="localFileOpened(event)">
 <div id="toast-wrap"></div>
+
+<!-- EXTENDED ACQUISITION PARAMETERS MODAL — from p.57,61,63,65,67 -->
+<div id="pg-extacq" style="position:fixed;inset:0;z-index:260;background:rgba(20,40,60,.65);display:none;align-items:center;justify-content:center">
+  <div style="background:#e0eaf4;border:2px solid #6080a0;border-radius:6px;width:480px;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 16px 50px rgba(0,0,0,.5);overflow:hidden">
+    <div style="background:linear-gradient(180deg,#3a6080,#2e5070);padding:7px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <div style="font-size:13px;font-weight:700;color:#a0c8e8">Extended Acquisition Parameters</div>
+      <div onclick="closeExtAcq()" style="width:24px;height:24px;background:rgba(180,30,30,.4);border:1px solid rgba(255,100,100,.4);border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#ff8888;font-size:13px;font-weight:700">✕</div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:12px">
+      <!-- Launch and Receive Fiber — p.59 -->
+      <div class="tcfg-section">
+        <div class="tcfg-sh">Launch and Receive Fiber</div>
+        <div class="tcfg-r">
+          <div class="tcfg-lbl">By:</div>
+          <select class="tcfg-sel" id="ext-fiber-by" style="width:180px">
+            <option value="length">By fiber lengths</option>
+            <option value="event">By event</option>
+          </select>
+        </div>
+        <div class="tcfg-r">
+          <label class="tcfg-chk"><input type="checkbox" id="ext-launch-en"> Launch fiber length:</label>
+          <input class="tcfg-inp" id="ext-launch-len" value="0.0000" type="number" step="0.0001" min="0" style="width:80px;margin-left:8px"> <span style="font-size:11px;color:#888">km</span>
+        </div>
+        <div class="tcfg-r">
+          <label class="tcfg-chk"><input type="checkbox" id="ext-receive-en"> Receive fiber length:</label>
+          <input class="tcfg-inp" id="ext-receive-len" value="0.0000" type="number" step="0.0001" min="0" style="width:80px;margin-left:8px"> <span style="font-size:11px;color:#888">km (from fiber end)</span>
+        </div>
+      </div>
+      <!-- Advanced Parameters — p.57/61/63/65/67 -->
+      <div class="tcfg-section">
+        <div class="tcfg-sh">Advanced Parameters</div>
+        <div class="tcfg-r"><label class="tcfg-chk"><input type="checkbox" id="ext-first-conn"> First connector check</label></div>
+        <div class="tcfg-r"><label class="tcfg-chk"><input type="checkbox" id="ext-remain-auto" checked> Remain in Auto-Settings</label></div>
+        <div class="tcfg-r"><label class="tcfg-chk"><input type="checkbox" id="ext-opt-range"> Use optimized range</label></div>
+        <div class="tcfg-r"><label class="tcfg-chk"><input type="checkbox" id="ext-apply-wl"> Apply settings by wavelength</label></div>
+        <div class="tcfg-r"><label class="tcfg-chk"><input type="checkbox" id="ext-hires" checked> High-resolution acquisition</label></div>
+      </div>
+      <!-- Custom Parameters lists — p.57 screenshot -->
+      <div class="tcfg-section">
+        <div class="tcfg-sh">Custom Parameters</div>
+        <div style="display:flex;gap:16px">
+          <div style="flex:1">
+            <div style="font-size:11px;font-weight:700;color:#1a3050;margin-bottom:4px">Range (km)</div>
+            <div style="background:#e8f0fa;border:1px solid #88b0cc;border-radius:3px;padding:4px;height:80px;overflow-y:auto;font-family:monospace;font-size:11px;color:#1a3050">
+              1.25<br>2.5<br>5<br>10<br>20<br>40<br>80<br>160
+            </div>
+          </div>
+          <div style="flex:1">
+            <div style="font-size:11px;font-weight:700;color:#1a3050;margin-bottom:4px">Duration (s)</div>
+            <div style="background:#e8f0fa;border:1px solid #88b0cc;border-radius:3px;padding:4px;height:80px;overflow-y:auto;font-family:monospace;font-size:11px;color:#1a3050">
+              5<br>10<br>15<br>30<br>45<br>60<br>120<br>180
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#ccdde8;border-top:1px solid #8090a8;flex-shrink:0">
+      <div class="tcfg-revert" onclick="revertExtAcq()">Revert to Factory Settings</div>
+      <div style="display:flex;gap:6px">
+        <div class="tcfg-revert" onclick="closeExtAcq()">Cancel</div>
+        <div class="tcfg-ok" onclick="saveExtAcq()">OK</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="pg-testcfg">
+  <div class="tcfg-panel">
+    <div class="tcfg-bar">
+      <div class="tcfg-bar-t">Test Configuration</div>
+      <div class="tcfg-applyto">
+        Apply to: <select id="tcfg-applyto">
+          <option value="next">Next acquisition</option>
+          <option value="current">Current file</option>
+        </select>
+      </div>
+      <div class="tcfg-close" onclick="closeTestConfig()">✕</div>
+    </div>
+    <div class="tcfg-tabs">
+      <div class="tcfg-tab active" id="tcfg-tab-ld" onclick="selTcfgTab('ld')">Link Definition</div>
+      <div class="tcfg-tab" id="tcfg-tab-pf" onclick="selTcfgTab('pf')">Pass/Fail Thresholds</div>
+    </div>
+    <div class="tcfg-body" id="tcfg-body-ld">
+      <!-- Link Definition tab — p.37 screenshot -->
+      <div class="tcfg-section">
+        <div class="tcfg-sh">Fiber Characteristics</div>
+        <div class="tcfg-r"><div class="tcfg-lbl">Wavelength:</div>
+          <select class="tcfg-sel" id="tcfg-wl">
+            <option value="1310">1310 nm</option><option value="1550">1550 nm</option><option value="1625">1625 nm</option>
+          </select>
+        </div>
+        <div class="tcfg-r"><div class="tcfg-lbl">IOR:</div><input class="tcfg-inp" id="tcfg-ior" value="1.467700" type="number" step="0.000001"></div>
+        <div class="tcfg-r"><div class="tcfg-lbl">Backscatter:</div><input class="tcfg-inp" id="tcfg-bsc" value="-79.45" type="number" step="0.01"> <span style="font-size:11px;color:#888">dB</span></div>
+        <div class="tcfg-r"><div class="tcfg-lbl">Helix factor:</div><input class="tcfg-inp" id="tcfg-hx" value="0.00" type="number" step="0.01" style="width:70px"> <span style="font-size:11px;color:#888">%</span></div>
+      </div>
+      <div class="tcfg-section">
+        <div class="tcfg-sh">Detection Thresholds</div>
+        <div class="tcfg-r"><div class="tcfg-lbl">Splice loss:</div><input class="tcfg-inp" id="tcfg-splice-thr" value="0.020" type="number" step="0.001" style="width:70px"> <span style="font-size:11px;color:#888">dB</span></div>
+        <div class="tcfg-r"><div class="tcfg-lbl">Reflectance:</div><input class="tcfg-inp" id="tcfg-refl-thr" value="-72.0" type="number" step="1" style="width:70px"> <span style="font-size:11px;color:#888">dB</span></div>
+        <div class="tcfg-r"><div class="tcfg-lbl">End-of-fiber:</div><input class="tcfg-inp" id="tcfg-eof-thr" value="25.000" type="number" step="0.5" style="width:70px"> <span style="font-size:11px;color:#888">dB</span></div>
+        <div class="tcfg-r"><label class="tcfg-chk"><input type="checkbox" id="tcfg-refl-eof"> Reflective end-of-fiber detection</label></div>
+      </div>
+      <div class="tcfg-section">
+        <div class="tcfg-sh">Macrobend</div>
+        <div class="tcfg-r"><label class="tcfg-chk"><input type="checkbox" id="tcfg-mb-chk" checked> Macrobend</label></div>
+        <div class="tcfg-r"><div class="tcfg-lbl">Wavelengths:</div>
+          <select class="tcfg-sel" id="tcfg-mb-wl"><option value="1310-1550">1310 nm – 1550 nm</option><option value="1310-1625">1310 nm – 1625 nm</option><option value="1550-1625">1550 nm – 1625 nm</option></select>
+        </div>
+        <div class="tcfg-r"><div class="tcfg-lbl">Delta (loss):</div><input class="tcfg-inp" id="tcfg-mb-delta" value="0.500" type="number" step="0.05" style="width:70px"> <span style="font-size:11px;color:#888">dB</span></div>
+      </div>
+      <div class="tcfg-section">
+        <div class="tcfg-sh">Calculation and Pass/Fail Thresholds</div>
+        <div class="tcfg-r"><label class="tcfg-chk"><input type="checkbox" id="tcfg-inc-start"> Include span start</label></div>
+        <div class="tcfg-r"><label class="tcfg-chk"><input type="checkbox" id="tcfg-inc-end" checked> Include span end</label></div>
+      </div>
+    </div>
+    <div class="tcfg-body" id="tcfg-body-pf" style="display:none">
+      <!-- Pass/Fail Thresholds tab — p.45 screenshot -->
+      <div class="tcfg-section">
+        <div class="tcfg-sh">Wavelength</div>
+        <div class="pf-wl-tabs">
+          <div class="pf-wl-tab on" id="pftab-1310" onclick="selPFTab(1310)">1310 nm</div>
+          <div class="pf-wl-tab" id="pftab-1550" onclick="selPFTab(1550)">1550 nm</div>
+          <div class="pf-wl-tab" id="pftab-1625" onclick="selPFTab(1625)">1625 nm</div>
+        </div>
+      </div>
+      <div class="tcfg-section">
+        <!-- Exact thresholds from p.45: Splice 1.000, Connector 1.000, Reflectance -40.0, Atten 0.400, SpanLoss 45.000, SpanLen 0.0000, SpanORL 15.00 -->
+        <div class="pf-row"><div class="pf-row-chk"><input type="checkbox" id="pf-splice-en" checked></div><div class="pf-lbl">Splice loss:</div><input class="pf-inp" id="pf-splice" value="1.000" type="number" step="0.001" min="0.001"><div class="pf-unit">dB</div></div>
+        <div class="pf-row"><div class="pf-row-chk"><input type="checkbox" id="pf-conn-en" checked></div><div class="pf-lbl">Connector loss:</div><input class="pf-inp" id="pf-conn" value="1.000" type="number" step="0.001" min="0.001"><div class="pf-unit">dB</div></div>
+        <div class="pf-row"><div class="pf-row-chk"><input type="checkbox" id="pf-refl-en" checked></div><div class="pf-lbl">Reflectance:</div><input class="pf-inp" id="pf-refl" value="-40.0" type="number" step="1" max="-5"><div class="pf-unit">dB</div></div>
+        <div class="pf-row"><div class="pf-row-chk"><input type="checkbox" id="pf-atten-en" checked></div><div class="pf-lbl">Fiber section attenuation:</div><input class="pf-inp" id="pf-atten" value="0.400" type="number" step="0.001" min="0.001"><div class="pf-unit">dB/km</div></div>
+        <div class="pf-row"><div class="pf-row-chk"><input type="checkbox" id="pf-sl-en" checked></div><div class="pf-lbl">Span loss:</div><input class="pf-inp" id="pf-sl" value="45.000" type="number" step="0.5" min="0"><div class="pf-unit">dB</div></div>
+        <div class="pf-row"><div class="pf-row-chk"><input type="checkbox" id="pf-slen-en" checked></div><div class="pf-lbl">Span length:</div><input class="pf-inp" id="pf-slen" value="0.0000" type="number" step="0.1" min="0"><div class="pf-unit">km</div></div>
+        <div class="pf-row"><div class="pf-row-chk"><input type="checkbox" id="pf-orl-en" checked></div><div class="pf-lbl">Span ORL:</div><input class="pf-inp" id="pf-orl" value="15.00" type="number" step="1" min="0"><div class="pf-unit">dB</div></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <div class="tcfg-revert" onclick="copyPFToOtherWL()">Copy to Other Wavelengths...</div>
+        <div class="tcfg-revert" onclick="revertPF()">Revert to Factory Settings</div>
+      </div>
+    </div>
+    <div class="tcfg-footer">
+      <div class="tcfg-revert" onclick="copyToCurrent()">Copy to Current Acquisition</div>
+      <div style="display:flex;gap:6px">
+        <div class="tcfg-revert" onclick="revertTcfg()">Revert to Factory Settings</div>
+        <div class="tcfg-revert" onclick="closeTestConfig()">Cancel</div>
+        <div class="tcfg-ok" onclick="saveTcfg()">OK</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- USER PREFERENCES MODAL -->
+<div id="pg-userprefs">
+  <div class="uprefs-panel">
+    <div class="tcfg-bar">
+      <div class="tcfg-bar-t">User Preferences</div>
+      <div class="tcfg-close" onclick="closeUserPrefs()">✕</div>
+    </div>
+    <div class="tcfg-tabs">
+      <div class="tcfg-tab active" id="up-tab-gen" onclick="selUpTab('gen')">General</div>
+      <div class="tcfg-tab" id="up-tab-rpt" onclick="selUpTab('rpt')">Report</div>
+    </div>
+    <div class="tcfg-body" id="up-body-gen" style="overflow-y:auto">
+      <!-- EXACT USER PREFERENCES LAYOUT from user guide p.74/82 screenshot -->
+      <!-- Left column: Display | Right column: File Functionalities -->
+      <div style="display:flex;gap:10px">
+        <div style="flex:1">
+          <div class="uprefs-section">
+            <div class="tcfg-sh">Display</div>
+            <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="up-fibsec" checked> Fiber sections</label></div>
+            <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="up-grid" checked> Gridlines</label></div>
+            <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="up-invbg"> Inverted colors</label></div>
+            <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="up-overview"> Graph overview</label></div>
+          </div>
+          <div class="uprefs-section" style="margin-top:10px">
+            <div class="tcfg-sh">Trace Display</div>
+            <div class="uprefs-row"><label>Mode: <select class="uprefs-sel" id="up-tracemode"><option value="complete">Complete trace</option><option value="span">Span</option></select></label></div>
+            <div class="uprefs-row"><label>Distance unit: <select class="uprefs-sel" id="up-distunit"><option value="km">km (kilometers)</option><option value="mi">mi (miles)</option><option value="kft">kft (kilofeet)</option></select></label></div>
+          </div>
+          <div class="uprefs-section" style="margin-top:10px">
+            <div class="tcfg-sh">Default View After Acquisition</div>
+            <div class="uprefs-row"><label><select class="uprefs-sel" id="up-defview"><option value="keep">Keep current</option><option value="otdr">OTDR</option><option value="events">Events</option><option value="measure">Measure</option><option value="summary">Summary table</option></select></label></div>
+          </div>
+        </div>
+        <div style="flex:1">
+          <div class="uprefs-section">
+            <div class="tcfg-sh">File Functionalities</div>
+            <div class="uprefs-row" style="flex-direction:column;align-items:flex-start;gap:3px">
+              <span style="font-size:11px;font-weight:600;color:#3a5870">Default save folder:</span>
+              <div style="display:flex;gap:4px;width:100%">
+                <input style="flex:1;height:22px;background:#e8f0fa;border:1px solid #88b0cc;border-radius:2px;font-size:10px;font-family:monospace;padding:0 4px;color:#1a3a6a" id="up-savefolder" value="\Data\My Documents\OTDR" readonly>
+                <div style="width:24px;height:22px;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);border:1px solid #6080a0;border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px" title="Browse">…</div>
+              </div>
+            </div>
+            <div class="uprefs-row"><label style="display:flex;gap:6px;align-items:center">Default file format: <select class="uprefs-sel" id="up-filefmt" style="width:100px"><option value="trc">Native (.trc)</option><option value="sor">Bellcore (.sor)</option></select></label></div>
+            <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="up-gen-report"> Generate report on save</label></div>
+            <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="up-promptsave"> Show confirmation on first save</label></div>
+            <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="up-ref-meas" checked> Allow using reference measurements</label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tcfg-body" id="up-body-rpt" style="display:none;overflow-y:auto">
+      <div class="uprefs-section">
+        <div class="tcfg-sh">Report Format</div>
+        <div class="uprefs-row"><label>File type: <select class="uprefs-sel" id="up-rptfmt"><option value="pdf">PDF</option><option value="xml">XML</option></select></label></div>
+        <div class="uprefs-row"><label>Include trace(s): <select class="uprefs-sel" id="up-rpttrace"><option value="all">All</option><option value="current">Current</option></select></label></div>
+      </div>
+      <div class="uprefs-section">
+        <div class="tcfg-sh">Sections</div>
+        <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="rpt-pf" checked> Global Pass/Fail</label></div>
+        <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="rpt-info" checked> General Information</label></div>
+        <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="rpt-loc" checked> Locations</label></div>
+        <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="rpt-res" checked> Results</label></div>
+        <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="rpt-graph" checked> Graphic (graph)</label></div>
+        <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="rpt-markers" checked> Markers</label></div>
+        <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="rpt-evttbl" checked> Event table</label></div>
+        <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="rpt-mbtbl" checked> Macrobend table</label></div>
+        <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="rpt-thres" checked> Pass/Fail thresholds</label></div>
+        <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="rpt-params" checked> Test Parameters</label></div>
+        <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="rpt-settings" checked> Test Settings</label></div>
+      </div>
+      <div class="uprefs-section">
+        <div class="tcfg-sh">Auto-Generation</div>
+        <div class="uprefs-row"><label class="uprefs-chk"><input type="checkbox" id="rpt-autogen"> Generate report on save</label></div>
+        <div style="font-size:10px;color:#5a7888;margin-top:4px">When enabled, a report is saved automatically each time a trace file is saved.</div>
+      </div>
+    </div>
+    <div class="tcfg-footer">
+      <div class="tcfg-revert" onclick="revertUserPrefs()">Revert to Factory Settings</div>
+      <div style="display:flex;gap:6px">
+        <div class="tcfg-revert" onclick="closeUserPrefs()">Cancel</div>
+        <div class="tcfg-ok" onclick="saveUserPrefs()">OK</div>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
 'use strict';
+// ═══════════════════════════════════════════════════════════
+// EXFO MaxTester 730B OTDR Training Emulator
+// Version: 6.2.0 | Build: 2026-04-27
+// Author: Diyar Hussein | linkedin.com/in/diyar
+// Repository: github.com/3rc0/3rc0.github.io
+// Purpose: Educational/Training — NOT for commercial use
+// License: Educational fair use — EXFO® and MaxTester® are
+//          registered trademarks of EXFO Inc. No affiliation.
+// ═══════════════════════════════════════════════════════════
+var BUILD_VERSION='6.2.0';
+var BUILD_DATE='2026-04-27';
+var BUILD_ENV='production';
+
+// Global error registry — unique error codes for tracing
+var ERR_LOG=[];
+function logErr(code,fn,msg,e){
+  var entry={code:code,fn:fn,msg:msg,err:e?e.message:'',ts:Date.now()};
+  ERR_LOG.push(entry);
+  if(BUILD_ENV!=='production')console.warn('[ERR-'+code+'] '+fn+': '+msg,e||'');
+}
+
+// Global unhandled error catcher
+window.addEventListener('error',function(ev){
+  logErr('E000','global','Unhandled error: '+ev.message,ev.error);
+  return false;
+});
+
+
 /* toast(msg, type) — types: ok | err | info | warn */
 function toast(msg,type){var w=document.getElementById('toast-wrap');if(!w)return;var t=document.createElement('div');t.className='toast toast-'+(type||'info');t.textContent=msg;w.appendChild(t);requestAnimationFrame(function(){requestAnimationFrame(function(){t.className+=' show';});});setTimeout(function(){t.className=t.className.replace(' show','');setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t);},300);},3200);}
 var STATE='off',curSc=null,curWL=1310,hasResult=false;
@@ -945,15 +2156,34 @@ function poweron(){var led=document.getElementById('dev-led');if(led)led.classNa
 function launchApp(app){if(app==='otdr'){showState('otdr');setTimeout(function(){selTab('otdr');},80);}else if(app==='files'){openFileExplorer('open');}}
 function startClock(){clearInterval(_clockTimer);function tick(){var ts=new Date().toTimeString().slice(0,8);['otdr-clock','lnch-time'].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=id==='lnch-time'?ts.slice(0,5):ts;});}tick();_clockTimer=setInterval(tick,1000);}
 
-var TABS=['otdr','events','measure','summary','source','bidir','budget','qc','setup'];
+var TABS=['source','otdr','events','measure','summary','bidir','budget','qc','setup'];
 function selTab(t){
   var traceVisible=(t==='otdr'||t==='events');
-  TABS.forEach(function(x){var el=document.getElementById('tab-'+x);if(!el)return;el.className='otab'+(x===t?' active':'');if(x==='bidir'&&t!==x)el.style.cssText='background:linear-gradient(180deg,#7aa8d0,#5888b8);color:#fff;border-color:#3868a0';if(x==='bidir'&&t===x)el.style.cssText='background:linear-gradient(180deg,#fc9e18,#e68800);color:#fff;border-color:#c07000;font-weight:700';if(x==='qc'&&t!==x)el.style.cssText='background:linear-gradient(180deg,#60aa60,#3a8838);color:#fff;border-color:#286028';if(x==='qc'&&t===x)el.style.cssText='background:linear-gradient(180deg,#fc9e18,#e68800);color:#fff;border-color:#c07000;font-weight:700';});
-  ['tc-otdr','tc-events','tc-measure','tc-summary','tc-source','tc-bidir','tc-budget','tc-qc','tc-setup'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display='none';});
+  TABS.forEach(function(x){
+    var el=document.getElementById('tab-'+x);
+    if(!el)return;
+    el.className='otab'+(x===t?' active':'');
+  });
+  ['tc-otdr','tc-events','tc-measure','tc-summary','tc-source','tc-bidir','tc-budget','tc-qc','tc-setup'].forEach(function(id){
+    var el=document.getElementById(id);if(el)el.style.display='none';
+  });
   document.getElementById('evt-section').style.display=traceVisible?'block':'none';
-  if(t==='otdr'||t==='events'){var el=document.getElementById('tc-otdr');el.style.display='flex';el.style.flex='1';el.style.flexDirection='column';setTimeout(function(){resizeCv();if(hasResult&&curSc!==null)drawTrace();},40);}
-  else if(t==='source'){var el=document.getElementById('tc-source');el.style.display='flex';el.style.flex='1';}
-  else{var el=document.getElementById('tc-'+t);if(el){el.style.display='flex';el.style.flex='1';el.style.flexDirection='column';}if(t==='summary'&&hasResult)buildSummary();if(t==='measure'&&hasResult)buildMeasure();if(t==='bidir')buildBidir();if(t==='budget'&&hasResult)buildBudget();if(t==='qc')buildQC();}
+  if(t==='otdr'||t==='events'){
+    var el=document.getElementById('tc-otdr');
+    if(el){el.style.display='flex';el.style.flex='1';el.style.flexDirection='column';}
+    setTimeout(function(){resizeCv();if(hasResult&&curSc!==null)drawTrace();},40);
+  } else if(t==='source'){
+    var el=document.getElementById('tc-source');
+    if(el){el.style.display='flex';el.style.flex='1';el.style.flexDirection='column';}
+  } else {
+    var el=document.getElementById('tc-'+t);
+    if(el){el.style.display='flex';el.style.flex='1';el.style.flexDirection='column';}
+    if(t==='summary'&&hasResult)buildSummaryFull();
+    if(t==='measure')buildMeasureVals();
+    if(t==='bidir')buildBidir();
+    if(t==='budget'&&hasResult)buildBudget();
+    if(t==='qc')buildQC();
+  }
 }
 
 function setWL(wl){curWL=wl;var s=typeof wl==='number'?wl+' nm':'DUAL';document.getElementById('trace-wl').textContent=typeof wl==='number'?wl+' nm (9 µm)':'DUAL (1310+1550)';document.getElementById('pf-wl').textContent='OTDR '+s;document.getElementById('rp-wl').textContent=s;['1310','1550','1625','dual'].forEach(function(w){[document.getElementById('wb-'+w),document.getElementById('wb2-'+w)].forEach(function(b){if(b)b.className='wl-btn'+(String(wl)===w?' on':'');});});var wlMap={1310:{ior:1.4677,bsc:-79.45},1550:{ior:1.4683,bsc:-81.87},1625:{ior:1.4685,bsc:-82.10},'dual':{ior:1.4680,bsc:-80.00}};var m=wlMap[String(wl)]||wlMap[1310];P.ior=m.ior;P.bsc=m.bsc;var dr={1310:'39 dB',1550:'37 dB',1625:'37 dB','dual':'39/37 dB'};var e=document.getElementById('sv-dynrange');if(e)e.textContent=dr[String(wl)]||'39/37/37 dB';syncUI();if(hasResult&&curSc!==null){drawTrace();updatePF();}}
@@ -990,7 +2220,7 @@ function startAcq(){
   var el=0,tot=Math.max(P.dur*500,4000);
   acqTimer=setInterval(function(){el+=100;var pct=Math.min(el/tot,1);fill.style.width=(pct*100)+'%';scan.style.left=(pct*100)+'%';tEl.textContent=Math.round(pct*P.dur)+' s';if(el%600<110)drawPartial(acv.getContext('2d'),acv.width,acv.height,sc,pct);
     if(pct>=1){clearInterval(acqTimer);acqTimer=null;txtEl.textContent='✓ Acquisition Complete';document.getElementById('aq-evt').textContent=sc.ev.filter(function(e){return e.t!=='FC'&&e.t!=='END'&&e.t!=='MBE';}).length;
-      setTimeout(function(){document.getElementById('pg-acq').className='';if(sb)sb.style.opacity='1';hasResult=true;markA=null;markB=null;selEvtIdx=null;bidirSeed=0.96+((curSc*17+P.pls*3)%100)/1250;updatePF();resizeCv();drawTrace();buildEvtTable(sc,getAt(curSc,curWL));buildPVSVG(sc);buildSummary();buildMeasure();
+      setTimeout(function(){document.getElementById('pg-acq').className='';if(sb)sb.style.opacity='1';hasResult=true;markA=null;markB=null;selEvtIdx=null;bidirSeed=0.96+((curSc*17+P.pls*3)%100)/1250;updatePF();showAcqBar(true);resizeCv();drawTrace();buildEvtTable(sc,getAt(curSc,curWL));buildPVSVG(sc);buildSummaryFull();buildMeasureVals();
         document.getElementById('fname-bar').textContent='Filename: MAX-730B OTDR '+sc.nm+'.trc  │  Span: '+sc.km.toFixed(4)+' km  │  '+getAt(curSc,curWL).toFixed(3)+' dB/km  │  ORL: '+sc.orl.toFixed(2)+' dB';
         selTab('events');},700);}},100);}
 
@@ -1002,7 +2232,7 @@ window.addEventListener('resize',function(){if(STATE==='otdr'){resizeCv();if(has
 function drawTrace(){
   var cv=document.getElementById('cv-trace');if(!cv||!cv.width||!cv.height){resizeCv();return;}
   var W=cv.width,H=cv.height;if(!W||!H)return;
-  var ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);ctx.fillStyle='#ffffff';ctx.fillRect(0,0,W,H);
+  var ctx=null;try{ctx=cv.getContext('2d');}catch(e){logErr('E001','drawTrace','Canvas context',e);return;}if(!ctx)return;ctx.clearRect(0,0,W,H);ctx.fillStyle='#ffffff';ctx.fillRect(0,0,W,H);
   if(curSc===null)return;
   var sc=SC[curSc],at=getAt(curSc,curWL),inj=24,rng=Math.max(P.rng,sc.km*1.05)/zF;
   var ml=52,mr=12,mt=20,mb=28,tw=W-ml-mr,th=H-mt-mb;
@@ -1050,7 +2280,22 @@ function resetZoom(){zF=1;zOff=0;markA=null;markB=null;updateCursorBar();drawTra
 function isPass(sc,wl){var at=getAt(sc.id,wl),sth=parseFloat(document.getElementById('th-splice').value)||0.3,rth=parseFloat(document.getElementById('th-refl').value)||-40,atL=wl===1550?0.28:wl===1625?0.30:0.40;if(sc.ev.some(function(e){return e.t==='BRK';}))return false;if(at>atL)return false;if(sc.ev.some(function(e){return e.t==='NR'&&e.l>sth;}))return false;var ee=sc.ev.find(function(e){return e.t==='END';});if(ee&&ee.ref<rth)return false;if(sc.ev.some(function(e){return e.t==='POS';}))return false;return true;}
 function updatePF(){if(!hasResult||curSc===null)return;var p=isPass(SC[curSc],curWL);var el=document.getElementById('pf-badge');el.innerHTML=p?'<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7.5" fill="#fff" stroke="#18882a" stroke-width="1"/><path d="M4 8l3 3 5-5" stroke="#22aa44" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Pass':'<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7.5" fill="#fff" stroke="#aa1800" stroke-width="1"/><path d="M5 5l6 6M11 5l-6 6" stroke="#cc2200" stroke-width="2.2" stroke-linecap="round"/></svg>Fail';el.className=p?'pf-pass':'pf-fail';}
 
-function evtSym(t){var labels={FC:'First Connector',NR:'Non-Reflective Splice',POS:'Positive Event',BRK:'Total Loss / Break',SPL:'Non-Reflective (Splitter)',MBS:'Macrobend Start',MBE:'Macrobend End',END:'Reflective End'};var tip=labels[t]||t;var inner='';if(t==='FC')inner='<span style="font-size:14px;font-weight:700;color:#1a3060">&#x2192;</span>';else if(t==='NR')inner='<span style="font-size:14px;color:#1a3060">&#x22A3;</span>';else if(t==='POS')inner='<span style="font-size:12px;color:#cc7700">&#x22A3;</span><span style="font-size:9px;color:#cc7700">&#x25B2;</span>';else if(t==='BRK')inner='<span style="font-size:14px;font-weight:700;color:#cc2200">&#x2715;</span>';else if(t==='SPL')inner='<span style="font-size:12px;color:#6622aa">&#x22A3;</span><span style="font-size:9px;color:#6622aa">&#xD7;</span>';else if(t==='MBS'||t==='MBE')inner='<span style="font-size:12px;color:#882288">&#x21A9;</span>';else if(t==='END')inner='<span style="font-size:13px;color:#1a3060">&#x22A2;</span>';return '<span class="ec-sym-box" title="'+tip+'">'+inner+'</span>';}
+function evtSym(t,modified,added){
+var labels={FC:'First Connector',NR:'Non-Reflective Event',POS:'Positive Event',BRK:'Break',SPL:'Splitter',MBS:'Macrobend Start',MBE:'Macrobend End',END:'Reflective End'};
+var tip=labels[t]||t;
+if(modified)tip+=' (*:Modified)';
+if(added)tip+=' (*:Added)';
+var ast=modified?'<span style="font-size:9px;color:#cc4400;vertical-align:super">*</span>':'';
+var inner='';
+if(t==='FC')inner='<span style="font-size:14px;font-weight:700;color:#1a3060">&#x2192;</span>';
+else if(t==='NR')inner='<span style="font-size:14px;color:#1a3060">&#x22A3;</span>';
+else if(t==='POS')inner='<span style="font-size:12px;color:#cc7700">&#x22A3;</span><span style="font-size:9px;color:#cc7700">&#x25B2;</span>';
+else if(t==='BRK')inner='<span style="font-size:14px;font-weight:700;color:#cc2200">&#x2715;</span>';
+else if(t==='SPL')inner='<span style="font-size:12px;color:#6622aa">&#x22A3;</span><span style="font-size:9px;color:#6622aa">&#xD7;</span>';
+else if(t==='MBS'||t==='MBE')inner='<span style="font-size:12px;color:#882288">&#x21A9;</span>';
+else if(t==='END')inner='<span style="font-size:13px;color:#1a3060">&#x22A2;</span>';
+return '<span class="ec-sym-box" title="'+tip+'">'+inner+ast+'</span>';
+}
 
 function buildEvtTable(sc,at){
   var sth=parseFloat(document.getElementById('th-splice').value)||0.3,rth=parseFloat(document.getElementById('th-refl').value)||-40,atth=parseFloat(document.getElementById('th-atten').value)||0.40;
@@ -1184,7 +2429,7 @@ function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace
 function openFileExplorer(mode){feSelectedFile=null;document.getElementById('fe-win-title').textContent=(mode==='save'?'Save As':'Open')+' — File Manager';document.getElementById('fe-fn-inp').value='';document.getElementById('pg-files').className='show';feNav('internal');}
 function closeFileExplorer(){document.getElementById('pg-files').className='';}
 function feNav(section){feCurSection=section;['fesl-int','fesl-usb'].forEach(function(id){var e=document.getElementById(id);if(e)e.className='fe-sl';});var aEl=document.getElementById('fesl-'+section);if(aEl)aEl.className='fe-sl active';var addrMap={internal:'This Device \\\\Internal Storage',usb:'Removable Disk (E:)',recent:'Favorites \\\\Recent',sor:'Internal Storage \\\\OTDR Files'};document.getElementById('fe-addr').textContent=addrMap[section]||section;var listEl=document.getElementById('fe-list');listEl.innerHTML='';var files=(section==='recent')?savedFiles.slice(-5):savedFiles;if(!files.length){listEl.innerHTML='<div class="fe-empty">No saved files.<br>Run a test and press Save first,<br>or press Browse Device... to open from your computer.</div>';document.getElementById('fe-statusbar').textContent='0 items';return;}files.forEach(function(f,i){var row=document.createElement('div');row.className='fe-row';row.innerHTML='<div class="fe-rc-icon" style="width:28px;text-align:center;flex-shrink:0;border-right:1px solid #f0f0f0">📄</div><div style="flex:2">'+esc(f.nm)+'</div><div style="width:100px;font-size:11px;color:#555">'+(f.date||'').slice(0,10)+'</div><div style="width:80px;font-size:11px;color:#555">SOR File</div><div style="width:70px;font-size:11px;color:#555">'+(f.size||'10 KB')+'</div>';row.onclick=function(){document.querySelectorAll('.fe-row').forEach(function(r){r.className='fe-row';});row.className='fe-row sel';feSelectedFile=f;document.getElementById('fe-fn-inp').value=f.nm;};row.ondblclick=function(){feSelectedFile=f;feOpenSelected();};listEl.appendChild(row);});document.getElementById('fe-statusbar').textContent=files.length+' item'+(files.length!==1?'s':'');}
-function feOpenSelected(){if(feSelectedFile&&feSelectedFile.sc!==null&&feSelectedFile.sc!==undefined){closeFileExplorer();var f=feSelectedFile;curSc=f.sc;curWL=f.wl;Object.assign(P,f.P);Object.assign(ident,f.ident);showState('otdr');setTimeout(function(){hasResult=true;setWL(curWL);syncUI();updatePF();resizeCv();drawTrace();buildEvtTable(SC[curSc],getAt(curSc,curWL));buildPVSVG(SC[curSc]);buildSummary();buildMeasure();document.getElementById('fname-bar').textContent='Filename: '+f.nm+'  │  Loaded '+f.date;document.getElementById('otdr-title').textContent='EXFO MAX-730B · '+f.nm;selTab('events');},80);}else{closeFileExplorer();}}
+function feOpenSelected(){if(feSelectedFile&&feSelectedFile.sc!==null&&feSelectedFile.sc!==undefined){closeFileExplorer();var f=feSelectedFile;curSc=f.sc;curWL=f.wl;Object.assign(P,f.P);Object.assign(ident,f.ident);showState('otdr');setTimeout(function(){hasResult=true;setWL(curWL);syncUI();updatePF();resizeCv();drawTrace();buildEvtTable(SC[curSc],getAt(curSc,curWL));buildPVSVG(SC[curSc]);buildSummaryFull();buildMeasureVals();document.getElementById('fname-bar').textContent='Filename: '+f.nm+'  │  Loaded '+f.date;document.getElementById('otdr-title').textContent='EXFO MAX-730B · '+f.nm;selTab('events');},80);}else{closeFileExplorer();}}
 function triggerLocalOpen(){document.getElementById('local-file-input').click();}
 function localFileOpened(e){var file=e.target.files[0];if(!file)return;closeFileExplorer();var localEntry={nm:file.name,sc:null,wl:curWL,P:Object.assign({},P),ident:Object.assign({},ident),date:new Date().toLocaleString(),size:(Math.round(file.size/1024)||8)+' KB',local:true};savedFiles.push(localEntry);document.getElementById('fname-bar').textContent='Filename: '+file.name+'  │  Opened from local device · '+new Date().toLocaleTimeString();document.getElementById('otdr-title').textContent='EXFO MAX-730B · '+file.name;toast('📂 '+file.name+' opened — select a scenario to generate trace data','info');e.target.value='';}
 
@@ -1215,15 +2460,670 @@ function genReport(){
   '<div class="rpt-sec"><div class="rpt-shdr">Test Parameters</div><table class="rpt-tbl"><thead><tr><th></th><th>A→B</th></tr></thead><tbody><tr><td>Wavelength</td><td>'+wlStr+'</td></tr><tr><td>Range (km)</td><td>'+P.rng.toFixed(4)+'</td></tr><tr><td>Pulse (ns)</td><td>'+P.pls+'</td></tr><tr><td>Duration (s)</td><td>'+P.dur+'</td></tr><tr><td>IOR</td><td>'+P.ior.toFixed(6)+'</td></tr><tr><td>Backscatter (dB)</td><td>'+P.bsc.toFixed(2)+'</td></tr></tbody></table></div>'+
   qcHtml+
   '<div style="margin-top:20px;border-top:1px solid #d8e4f0;padding-top:12px;display:flex;gap:80px;font-size:10px;color:#666"><div>Signature: <span style="display:inline-block;width:180px;border-bottom:1px solid #888;height:18px"></span></div><div>Date: '+ds+'</div><div>Page 1 of 1</div></div>'+
-  '<div style="text-align:center;font-size:8.5px;color:#999;margin-top:9px;border-top:1px solid #eee;padding-top:7px">EXFO MaxTester 730B OTDR Training Emulator v6.2 · Author: Diyar Hussein · linkedin.com/in/diyar · Training purposes only</div>'+
+  '<div style="text-align:center;font-size:8.5px;color:#999;margin-top:9px;border-top:1px solid #eee;padding-top:7px">EXFO MaxTester 730B OTDR Training Emulator v6.2 · Author: Diyar Hussein · linkedin.com/in/diyar · github.com/3rc0/3rc0.github.io · Training purposes only</div>'+
   '</div>';
   document.getElementById('rep-body').innerHTML=H;document.getElementById('pg-report').className='show';
   setTimeout(function(){var box=document.getElementById('rpt-trace');if(!box)return;var cv=document.createElement('canvas');cv.width=box.offsetWidth||880;cv.height=175;cv.style.cssText='width:100%;height:100%;display:block';box.appendChild(cv);drawPartial(cv.getContext('2d'),cv.width,cv.height,SC[curSc],1);},300);
 }
 function closeReport(){document.getElementById('pg-report').className='';}
-function dlReport(){var body=document.getElementById('rep-body').innerHTML;var css='body{font-family:Arial,Helvetica,sans-serif;padding:26px;max-width:960px;margin:0 auto;font-size:11px}.rpt-shdr{background:#f0f4f8;padding:5px 12px;font-size:10px;font-weight:700;color:#1a3050;border-left:4px solid #00b04f;margin-bottom:6px}.rpt-sec{margin-bottom:16px}.rpt-tbl{width:100%;border-collapse:collapse;font-size:10px}.rpt-tbl th{background:#f4f8fb;font-weight:700;padding:5px 9px;border:1px solid #d0dcea;text-align:left}.rpt-tbl td{padding:5px 9px;border:1px solid #d0dcea;font-family:monospace}.rpt-tbl tr:nth-child(even) td{background:#fafcff}.rv-p{color:#0a6020;font-weight:700}.rv-f{color:#8a0a0a;font-weight:700}.rpt-trace-box{background:#fff;border:1px solid #d0dcea;height:185px;overflow:hidden;margin-bottom:8px}';var full='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>EXFO OTDR Report</title><style>'+css+'</style></head><body>'+body+'</body></html>';var b=new Blob([full],{type:'text/html'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='EXFO_OTDR_Report_'+new Date().toISOString().slice(0,10)+'.html';a.click();}
+function dlReport(){var body=document.getElementById('rep-body').innerHTML;var css='body{font-family:Arial,Helvetica,sans-serif;padding:26px;max-width:960px;margin:0 auto;font-size:11px}.rpt-shdr{background:#f0f4f8;padding:5px 12px;font-size:10px;font-weight:700;color:#1a3050;border-left:4px solid #00b04f;margin-bottom:6px}.rpt-sec{margin-bottom:16px}.rpt-tbl{width:100%;border-collapse:collapse;font-size:10px}.rpt-tbl th{background:#f4f8fb;font-weight:700;padding:5px 9px;border:1px solid #d0dcea;text-align:left}.rpt-tbl td{padding:5px 9px;border:1px solid #d0dcea;font-family:monospace}.rpt-tbl tr:nth-child(even) td{background:#fafcff}.rv-p{color:#0a6020;font-weight:700}.rv-f{color:#8a0a0a;font-weight:700}.rpt-trace-box{background:#fff;border:1px solid #d0dcea;height:185px;overflow:hidden;margin-bottom:8px}';var full='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>EXFO OTDR Report</title><style>'+css+'</style></head><body>'+body+'</body></html>';var b=new Blob([full],{type:'text/html'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='EXFO_OTDR_Report_'+new Date().toISOString().slice(0,10)+'.html';try{a.click();}catch(e){logErr('E003','dlReport','Download failed',e);toast('Download failed — try another browser','err');}}
+
+/* ── NEW FUNCTIONS — User Guide OTDR 1068770 ── */
+function portChange(){var p=document.getElementById('sel-port');if(!p)return;var t=document.getElementById('trace-wl');if(t)t.textContent=p.value==='smlive'?'1625 nm Live (SM Live)':p.value==='mm50'?'Multimode 50/125 µm':p.value==='mm625'?'Multimode 62.5/125 µm':'1310 nm (9 µm)';}
+function wlCheckChange(){var c1=document.getElementById('wlck-1310'),c2=document.getElementById('wlck-1550'),c3=document.getElementById('wlck-1625');if(!c1||!c2||!c3)return;if(!c1.checked&&!c2.checked&&!c3.checked)c1.checked=true;var active=[c1.checked?1310:null,c2.checked?1550:null,c3.checked?1625:null].filter(Boolean);setWL(active.length===1?active[0]:'dual');}
+function hiresChange(){var cb=document.getElementById('hires-chk');if(!cb)return;var tag=document.getElementById('trace-wl');if(!tag)return;var base=tag.textContent.replace(/\s*\[HIGH RES\]/,'');tag.textContent=base+(cb.checked?' [HIGH RES]':'');}
+var zoomMode='sel';
+function setZoomMode(m){zoomMode=m;['sel','pan','zsel'].forEach(function(id){var b=document.getElementById('zbtn-'+id);if(b)b.className='zbtn'+(m===id?' on':'');});var cv=document.getElementById('cv-trace');if(cv)cv.style.cursor=m==='pan'?'grab':m==='zsel'?'crosshair':'default';}
+function zoomOnEvent(){if(selEvtIdx===null||curSc===null)return;var sc=SC[curSc];var visEvts=sc.ev.filter(function(e){return e.t!=='MBE';});var ev=visEvts[selEvtIdx];if(!ev)return;zOff=Math.max(0,ev.p-sc.km*0.08);zF=Math.max(2,sc.km/(sc.km*0.25));drawTrace();}
+function adjWL(dir){var wls=[1310,1550,1625];var cur=wls.indexOf(typeof curWL==='number'?curWL:1310);cur=Math.max(0,Math.min(wls.length-1,cur+dir));setWL(wls[cur]);}
+var measType='event';
+function setMeasType(t){measType=t;['event','section','orl'].forEach(function(x){var b=document.getElementById('mtb-'+x);if(b)b.className='mtb'+(x===t?' on':'');});buildMeasureVals();}
+function buildMeasureVals(){
+  var wrap=document.getElementById('meas-vals-wrap');if(!wrap)return;
+  if(!hasResult||curSc===null){wrap.innerHTML='<div style="color:#7090a0;padding:16px;text-align:center;font-size:13px">Run a test first</div>';return;}
+  var sc=SC[curSc],at=getAt(curSc,curWL);
+  var posA=markA?markA.km:0.0,posB=markB?markB.km:sc.km;
+  var pwA=24-at*posA,pwB=24-at*posB;
+  if(measType==='event'){
+    wrap.innerHTML='<div class="mv-pair"><div class="mv-col"><div class="mv-lbl">A:</div><div><span class="mv-val">'+posA.toFixed(4)+'</span> <span class="mv-unit">km</span></div></div><div class="mv-col"><div class="mv-lbl"></div><div><span class="mv-val">'+pwA.toFixed(3)+'</span> <span class="mv-unit">dB</span></div></div></div>'+
+    '<div class="mv-pair"><div class="mv-col"><div class="mv-lbl">B:</div><div><span class="mv-val">'+posB.toFixed(4)+'</span> <span class="mv-unit">km</span></div></div><div class="mv-col"><div class="mv-lbl"></div><div><span class="mv-val">'+pwB.toFixed(3)+'</span> <span class="mv-unit">dB</span></div></div></div>'+
+    '<div class="mv-pair"><div class="mv-col"><div class="mv-lbl">A-B:</div><div><span class="mv-val">'+(posB-posA).toFixed(4)+'</span> <span class="mv-unit">km</span></div></div><div class="mv-col"><div class="mv-lbl"></div><div><span class="mv-val">'+(pwA-pwB).toFixed(3)+'</span> <span class="mv-unit">dB</span></div></div></div>'+
+    '<div class="meas-avg-row"><span class="mar-lbl">A-B avg. loss:</span><span class="mar-val">'+at.toFixed(3)+' dB/km</span></div>'+
+    '<div class="mv-pair" style="margin-top:10px"><div class="mv-col"><div class="mv-lbl">4-Point Event Loss:</div><div><span class="mv-val" style="font-size:22px">'+(pwA-pwB).toFixed(3)+'</span> <span class="mv-unit">dB</span></div></div><div class="mv-col"><div class="mv-lbl">Max. Reflectance:</div><div><span class="mv-val" style="font-size:22px">'+(function(){var fc=sc.ev.find(function(e){return e.t==='FC';});return fc?fc.ref.toFixed(1):'---';})()+'</span> <span class="mv-unit">dB</span></div></div></div>';
+  } else if(measType==='section'){
+    wrap.innerHTML='<div class="mv-pair"><div class="mv-col"><div class="mv-lbl">A-B Section:</div><div><span class="mv-val">'+(posB-posA).toFixed(4)+'</span> <span class="mv-unit">km</span></div></div><div class="mv-col"><div class="mv-lbl">Loss:</div><div><span class="mv-val">'+(at*(posB-posA)).toFixed(3)+'</span> <span class="mv-unit">dB</span></div></div></div><div class="meas-avg-row"><span class="mar-lbl">A-B LSA attenuation:</span><span class="mar-val">'+at.toFixed(3)+' dB/km</span></div><div class="meas-avg-row" style="margin-top:4px"><span class="mar-lbl">A-B LSA loss:</span><span class="mar-val">'+(at*(posB-posA)).toFixed(3)+' dB</span></div>';
+  } else {
+    wrap.innerHTML='<div class="mv-pair"><div class="mv-col"><div class="mv-lbl">A-B ORL:</div><div><span class="mv-val" style="font-size:24px">'+(sc.orl-1.5).toFixed(2)+'</span> <span class="mv-unit">dB</span></div></div><div class="mv-col"><div class="mv-lbl">Span ORL:</div><div><span class="mv-val" style="font-size:24px">'+sc.orl.toFixed(2)+'</span> <span class="mv-unit">dB</span></div></div></div>';
+  }
+}
+function openTestConfig(){var e=function(id,v){var el=document.getElementById(id);if(el&&v!==undefined)el.value=v;};e('tcfg-ior',P.ior.toFixed(6));e('tcfg-bsc',P.bsc.toFixed(2));e('tcfg-hx',P.hx.toFixed(2));document.getElementById('pg-testcfg').className='show';}
+function closeTestConfig(){document.getElementById('pg-testcfg').className='';}
+function selTcfgTab(t){['ld','pf'].forEach(function(x){var tab=document.getElementById('tcfg-tab-'+x);var body=document.getElementById('tcfg-body-'+x);if(tab)tab.className='tcfg-tab'+(x===t?' active':'');if(body)body.style.display=x===t?'block':'none';});}
+function selPFTab(wl){['1310','1550','1625'].forEach(function(w){var e=document.getElementById('pftab-'+w);if(e)e.className='pf-wl-tab'+(w===String(wl)?' on':'');});}
+function saveTcfg(){var ior=parseFloat(document.getElementById('tcfg-ior').value)||P.ior;var bsc=parseFloat(document.getElementById('tcfg-bsc').value)||P.bsc;var hx=parseFloat(document.getElementById('tcfg-hx').value)||P.hx;P.ior=ior;P.bsc=bsc;P.hx=hx;var sync=function(from,to){var f=document.getElementById(from),t2=document.getElementById(to);if(f&&t2)t2.value=f.value;};sync('pf-splice','th-splice');sync('pf-conn','th-conn');sync('pf-refl','th-refl');sync('pf-atten','th-atten');sync('pf-sl','th-spanloss');sync('pf-orl','th-orl');syncUI();closeTestConfig();toast('✓ Test Configuration saved','ok');}
+function revertTcfg(){var e=function(id,v){var el=document.getElementById(id);if(el)el.value=v;};e('tcfg-ior','1.467700');e('tcfg-bsc','-79.45');e('tcfg-hx','0.00');e('tcfg-splice-thr','0.020');e('tcfg-refl-thr','-72.0');e('tcfg-eof-thr','25.000');}
+function revertPF(){var e=function(id,v){var el=document.getElementById(id);if(el)el.value=v;};e('pf-splice','1.000');e('pf-conn','1.000');e('pf-refl','-40.0');e('pf-atten','0.400');e('pf-sl','45.000');e('pf-slen','0.0000');e('pf-orl','15.00');}
+function copyToCurrent(){
+  var iorEl=document.getElementById('tcfg-ior');
+  var bscEl=document.getElementById('tcfg-bsc');
+  var hxEl=document.getElementById('tcfg-hx');
+  if(iorEl && iorEl.value) P.ior=parseFloat(iorEl.value)||P.ior;
+  if(bscEl && bscEl.value) P.bsc=parseFloat(bscEl.value)||P.bsc;
+  if(hxEl && hxEl.value) P.hx=parseFloat(hxEl.value)||P.hx;
+  syncUI();
+  if(hasResult && curSc!==null){
+    updatePF();
+    var activeTab=document.querySelector('.otab.active');
+    if(activeTab){
+      var t=activeTab.id.replace('tab-','');
+      if(t==='summary') buildSummaryFull();
+      else if(t==='events') buildEvtTable(SC[curSc],getAt(curSc,curWL));
+    }
+  }
+  toast('Configuration applied to current acquisition','ok');
+  MOBILE&&MOBILE.haptic&&MOBILE.haptic('success');
+}
+function copyPFToOtherWL(){
+  var srcWL = ['1310','1550','1625'].filter(function(w){
+    var e = document.getElementById('pftab-'+w);
+    return e && e.classList.contains('on');
+  })[0] || '1310';
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:700;display:flex;align-items:center;justify-content:center';
+  var panel = document.createElement('div');
+  panel.style.cssText = 'background:#e0eaf4;border:2px solid #6080a0;border-radius:6px;width:290px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5)';
+  var hdr = document.createElement('div');
+  hdr.style.cssText = 'background:linear-gradient(180deg,#3a6080,#2e5070);padding:9px 14px;font-size:13px;font-weight:700;color:#a0c8e8';
+  hdr.textContent = 'Copy to Other Wavelengths...';
+  panel.appendChild(hdr);
+  var body = document.createElement('div');
+  body.style.cssText = 'padding:12px 16px';
+  var note = document.createElement('div');
+  note.style.cssText = 'font-size:12px;color:#3a5870;margin-bottom:10px';
+  note.innerHTML = 'Apply <b>' + srcWL + ' nm</b> thresholds to:';
+  body.appendChild(note);
+  var targets = ['1310','1550','1625'].filter(function(w){ return w !== srcWL; });
+  targets.forEach(function(w){
+    var lbl = document.createElement('label');
+    lbl.style.cssText = 'display:flex;align-items:center;gap:10px;padding:6px 0;font-size:12px;color:#1a3050;cursor:pointer;border-bottom:1px solid rgba(90,118,160,.2)';
+    var cb = document.createElement('input');
+    cb.type='checkbox'; cb.id='cpfwl-'+w; cb.checked=true;
+    cb.style.cssText='width:16px;height:16px;accent-color:#1a7acc;cursor:pointer';
+    lbl.appendChild(cb);
+    lbl.appendChild(document.createTextNode(w + ' nm'));
+    body.appendChild(lbl);
+  });
+  var saRow = document.createElement('label');
+  saRow.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 0 4px;font-size:11px;color:#2a5870;cursor:pointer';
+  var saCb = document.createElement('input');
+  saCb.type='checkbox'; saCb.style.cssText='width:14px;height:14px;cursor:pointer';
+  saCb.onchange = function(){ targets.forEach(function(w){ var e=document.getElementById('cpfwl-'+w); if(e) e.checked=saCb.checked; }); };
+  saRow.appendChild(saCb); saRow.appendChild(document.createTextNode('Select All'));
+  body.appendChild(saRow);
+  panel.appendChild(body);
+  var foot = document.createElement('div');
+  foot.style.cssText='display:flex;gap:8px;padding:10px 14px;background:#ccdde8;border-top:1px solid #8090a8';
+  var cancel = document.createElement('div');
+  cancel.style.cssText='flex:1;text-align:center;padding:7px;border-radius:3px;border:1px solid #6080a0;cursor:pointer;font-size:12px;font-weight:600;background:linear-gradient(180deg,#d8e8f4,#c4d4e4);color:#2a4060';
+  cancel.textContent='Cancel'; cancel.onclick=function(){ overlay.remove(); };
+  var ok = document.createElement('div');
+  ok.style.cssText='flex:1;text-align:center;padding:7px;border-radius:3px;cursor:pointer;font-size:12px;font-weight:700;background:linear-gradient(180deg,#44cc44,#22aa22);color:#fff;border:1.5px solid #1a8018';
+  ok.textContent='OK';
+  ok.onclick = function(){
+    var copied = targets.filter(function(w){ var e=document.getElementById('cpfwl-'+w); return e&&e.checked; }).map(function(w){ return w+' nm'; });
+    overlay.remove();
+    if(copied.length) toast('Thresholds copied → '+copied.join(', '),'ok');
+    else toast('No wavelengths selected','warn');
+    MOBILE&&MOBILE.haptic&&MOBILE.haptic('success');
+  };
+  foot.appendChild(cancel); foot.appendChild(ok);
+  panel.appendChild(foot);
+  overlay.appendChild(panel);
+  document.body.appendChild(overlay);
+  overlay.onclick = function(e){ if(e.target===overlay) overlay.remove(); };
+}
+function openUserPrefs(){document.getElementById('pg-userprefs').className='show';}
+function closeUserPrefs(){document.getElementById('pg-userprefs').className='';}
+function selUpTab(t){['gen','rpt'].forEach(function(x){var tab=document.getElementById('up-tab-'+x);var body=document.getElementById('up-body-'+x);if(tab)tab.className='tcfg-tab'+(x===t?' active':'');if(body)body.style.display=x===t?'block':'none';});}
+function saveUserPrefs(){var showOv=document.getElementById('up-overview');var ov=document.getElementById('gfx-overview');if(showOv&&ov)ov.style.display=(showOv.checked&&hasResult)?'block':'none';closeUserPrefs();toast('✓ User Preferences saved','ok');}
+function revertUserPrefs(){['up-fibsec','up-grid','up-overview'].forEach(function(id){var el=document.getElementById(id);if(el)el.checked=true;});var inv=document.getElementById('up-invbg');if(inv)inv.checked=false;}
+function openExtAcq(){document.getElementById('pg-extacq').style.display='flex';}
+function closeExtAcq(){document.getElementById('pg-extacq').style.display='none';}
+function saveExtAcq(){
+  var lc=document.getElementById('ext-launch-en');var lv=document.getElementById('ext-launch-len');
+  if(lc&&lc.checked&&lv){P.lc=true;P.lcLen=parseFloat(lv.value)||0;}else{P.lc=false;}
+  var rc=document.getElementById('ext-receive-en');var rv=document.getElementById('ext-receive-len');
+  if(rc&&rc.checked&&rv){P.rc=true;P.rcLen=parseFloat(rv.value)||0;}else{P.rc=false;}
+  var hr=document.getElementById('ext-hires');var hrChk=document.getElementById('hires-chk');
+  if(hr&&hrChk)hrChk.checked=hr.checked;
+  closeExtAcq();toast('✓ Extended parameters saved','ok');
+}
+function revertExtAcq(){
+  ['ext-launch-en','ext-receive-en','ext-opt-range','ext-apply-wl','ext-first-conn'].forEach(function(id){var e=document.getElementById(id);if(e)e.checked=false;});
+  ['ext-remain-auto','ext-hires'].forEach(function(id){var e=document.getElementById(id);if(e)e.checked=true;});
+  ['ext-launch-len','ext-receive-len'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='0.0000';});
+  toast('Reverted to factory settings','info');
+}
+function openFileMenu(){
+  var items=[
+    ['Back',        function(){ if(window.history && history.length>1) history.back(); else showState('launcher'); }],
+    ['Home',        function(){ showState('launcher'); }],
+    ['Open…',  function(){ launchApp('files'); }],
+    ['Save',        function(){ saveFile(); }],
+    ['Save As…',function(){ saveFile(); }],
+    ['Report…',function(){ genReport(); }]
+  ];
+  var overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;z-index:500';
+  var wrap=document.createElement('div');
+  wrap.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#e0eaf4;border:2px solid #6080a0;border-radius:6px;min-width:200px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.55)';
+  var hdr=document.createElement('div');
+  hdr.style.cssText='background:linear-gradient(180deg,#3a6080,#2e5070);padding:8px 14px;font-size:13px;font-weight:700;color:#a0c8e8;display:flex;justify-content:space-between;align-items:center';
+  hdr.innerHTML='File';
+  var xb=document.createElement('span');
+  xb.style.cssText='cursor:pointer;color:#ff8888;font-weight:400;font-size:15px;line-height:1';
+  xb.textContent='×';
+  xb.onclick=function(){ overlay.remove(); };
+  hdr.appendChild(xb); wrap.appendChild(hdr);
+  items.forEach(function(pair){
+    var btn=document.createElement('div');
+    btn.style.cssText='padding:11px 20px;font-size:13px;color:#1a3050;cursor:pointer;border-bottom:1px solid rgba(90,118,160,.25);transition:background .08s';
+    btn.textContent=pair[0];
+    btn.onmouseenter=function(){ this.style.background='rgba(70,110,170,.18)'; };
+    btn.onmouseleave=function(){ this.style.background=''; };
+    btn.ontouchstart=function(){ this.style.background='rgba(70,110,170,.18)'; };
+    btn.onclick=function(){ overlay.remove(); pair[1](); };
+    wrap.appendChild(btn);
+  });
+  overlay.appendChild(wrap);
+  document.body.appendChild(overlay);
+  setTimeout(function(){
+    overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); }, {once:true});
+  }, 50);
+}
+function openReference(){
+  var names=['No Reference','SC 0: Clean SMF 5km','SC 1: Good splices 10km','SC 5: Macrobend 10km','SC 7: Long haul 25km'];
+  var overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;z-index:500';
+  var sel=document.createElement('div');
+  sel.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#e0eaf4;border:2px solid #6080a0;border-radius:6px;min-width:280px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5)';
+  var hdr=document.createElement('div');
+  hdr.style.cssText='background:linear-gradient(180deg,#3a6080,#2e5070);padding:8px 14px;font-size:13px;font-weight:700;color:#a0c8e8;display:flex;justify-content:space-between;align-items:center';
+  hdr.innerHTML='Reference';
+  var xb=document.createElement('span');
+  xb.style.cssText='cursor:pointer;color:#ff8888;font-size:15px;line-height:1';
+  xb.textContent='×';
+  xb.onclick=function(){ overlay.remove(); };
+  hdr.appendChild(xb); sel.appendChild(hdr);
+  var note=document.createElement('div');
+  note.style.cssText='padding:8px 14px;font-size:11px;color:#5a7888;border-bottom:1px solid #b0c4d8';
+  note.textContent='Select a reference trace to overlay on the current trace:';
+  sel.appendChild(note);
+  names.forEach(function(lbl,i){
+    var btn=document.createElement('div');
+    btn.style.cssText='padding:11px 16px;font-size:12px;color:#1a3050;cursor:pointer;border-bottom:1px solid rgba(90,118,160,.2);transition:background .08s';
+    btn.textContent=lbl;
+    btn.onmouseenter=function(){ this.style.background='rgba(70,110,170,.18)'; };
+    btn.onmouseleave=function(){ this.style.background=''; };
+    btn.onclick=function(){
+      overlay.remove();
+      if(i===0) toast('Reference cleared','ok');
+      else toast('Reference loaded: '+lbl,'ok');
+    };
+    sel.appendChild(btn);
+  });
+  overlay.appendChild(sel);
+  document.body.appendChild(overlay);
+  setTimeout(function(){
+    overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); },{once:true});
+  },50);
+}
+function openReference(){
+  var names=['No Reference','SC 0: Clean SMF 5km','SC 1: Good splices 10km','SC 5: Macrobend 10km','SC 7: Long haul 25km'];
+  var overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;z-index:500';
+  var sel=document.createElement('div');
+  sel.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#e0eaf4;border:2px solid #6080a0;border-radius:6px;min-width:280px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5)';
+  var hdr=document.createElement('div');
+  hdr.style.cssText='background:linear-gradient(180deg,#3a6080,#2e5070);padding:8px 14px;font-size:13px;font-weight:700;color:#a0c8e8;display:flex;justify-content:space-between;align-items:center';
+  hdr.innerHTML='Reference';
+  var xb=document.createElement('span');
+  xb.style.cssText='cursor:pointer;color:#ff8888;font-size:15px;line-height:1';
+  xb.textContent='×';
+  xb.onclick=function(){ overlay.remove(); };
+  hdr.appendChild(xb); sel.appendChild(hdr);
+  var note=document.createElement('div');
+  note.style.cssText='padding:8px 14px;font-size:11px;color:#5a7888;border-bottom:1px solid #b0c4d8';
+  note.textContent='Select a reference trace to overlay on the current trace:';
+  sel.appendChild(note);
+  names.forEach(function(lbl,i){
+    var btn=document.createElement('div');
+    btn.style.cssText='padding:11px 16px;font-size:12px;color:#1a3050;cursor:pointer;border-bottom:1px solid rgba(90,118,160,.2);transition:background .08s';
+    btn.textContent=lbl;
+    btn.onmouseenter=function(){ this.style.background='rgba(70,110,170,.18)'; };
+    btn.onmouseleave=function(){ this.style.background=''; };
+    btn.onclick=function(){
+      overlay.remove();
+      if(i===0) toast('Reference cleared','ok');
+      else toast('Reference loaded: '+lbl,'ok');
+    };
+    sel.appendChild(btn);
+  });
+  overlay.appendChild(sel);
+  document.body.appendChild(overlay);
+  setTimeout(function(){
+    overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); },{once:true});
+  },50);
+}
+function showAbout(){
+  if(document.getElementById('modal-about'))return;
+  var d=document.createElement('div');
+  d.id='modal-about';
+  d.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;display:flex;align-items:center;justify-content:center';
+  d.innerHTML='<div style="background:#e0eaf4;border:2px solid #6080a0;border-radius:10px;width:340px;max-width:96vw;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.6);font-family:system-ui,sans-serif">'
+    +'<div style="background:linear-gradient(180deg,#1e6070,#0e4050);padding:18px;text-align:center">'
+    +'<div style="font-size:28px;font-weight:900;color:#00e060;letter-spacing:5px">EXFO</div>'
+    +'<div style="font-size:11px;color:#88c8d8;letter-spacing:1px;margin-top:4px">MaxTester 730B · OTDR Training Emulator</div></div>'
+    +'<div style="padding:16px;font-size:12px;color:#1a3050;line-height:2">'
+    +'<table style="width:100%;border-collapse:collapse"><tbody>'
+    +'<tr><td style="color:#4a7090;font-weight:700;width:40%">Version</td><td>'+BUILD_VERSION+' ('+BUILD_DATE+')</td></tr>'
+    +'<tr><td style="color:#4a7090;font-weight:700">Author</td><td>Diyar Hussein</td></tr>'
+    +'<tr><td style="color:#4a7090;font-weight:700">LinkedIn</td><td style="color:#2266cc">linkedin.com/in/diyar</td></tr>'
+    +'<tr><td style="color:#4a7090;font-weight:700">GitHub</td><td style="color:#2266cc">github.com/3rc0</td></tr>'
+    +'<tr><td style="color:#4a7090;font-weight:700">Live</td><td style="color:#2266cc">3rc0.github.io/exfo/</td></tr>'
+    +'</tbody></table>'
+    +'<hr style="border:none;border-top:1px solid #b0c8d8;margin:10px 0">'
+    +'<table style="width:100%;border-collapse:collapse"><tbody>'
+    +'<tr><td style="color:#4a7090;font-weight:700;width:40%">Device</td><td>EXFO MaxTester 730B</td></tr>'
+    +'<tr><td style="color:#4a7090;font-weight:700">Status</td><td>Discontinued 2015</td></tr>'
+    +'<tr><td style="color:#4a7090;font-weight:700">Wavelengths</td><td>1310 / 1550 / 1625 nm</td></tr>'
+    +'<tr><td style="color:#4a7090;font-weight:700">Dyn. range</td><td>39 / 37 / 37 dB</td></tr>'
+    +'<tr><td style="color:#4a7090;font-weight:700">Max distance</td><td>400 km</td></tr>'
+    +'<tr><td style="color:#4a7090;font-weight:700">Pulse width</td><td>5 ns to 20 µs</td></tr>'
+    +'<tr><td style="color:#4a7090;font-weight:700">EDZ / ADZ</td><td>0.8 m / 3.5 m</td></tr>'
+    +'</tbody></table>'
+    +'<hr style="border:none;border-top:1px solid #b0c8d8;margin:10px 0">'
+    +'<div style="font-size:10px;color:#7888a0;line-height:1.6">EXFO® and MaxTester® are registered trademarks of EXFO Inc. IEC 60825-1:2007 · 21 CFR 1040.10 · CLASS 1M. Unofficial educational simulator. NOT for commercial use. No affiliation with EXFO Inc.</div>'
+    +'</div>'
+    +'<div style="padding:12px 16px;background:#ccdde8;border-top:1px solid #8090a8;text-align:right">'
+    +'<div id="about-ok" style="display:inline-block;padding:7px 26px;border-radius:4px;background:linear-gradient(180deg,#44cc44,#22aa22);color:#fff;font-size:13px;font-weight:700;cursor:pointer;border:1.5px solid #1a8018">OK</div>'
+    +'</div></div>';
+  document.body.appendChild(d);
+  document.getElementById('about-ok').onclick = function(){ d.remove(); };
+  d.onclick = function(e){ if(e.target===d) d.remove(); };
+}
+function showAcqBar(show){var b=document.getElementById('otdr-acq-bar');var ov=document.getElementById('gfx-overview');if(b)b.style.display=show?'flex':'none';if(ov)ov.style.display=(show&&document.getElementById('up-overview')?.checked!==false)?'block':'none';}
+
+
+// Source tab — per user guide p.160
+var srcOn=false;
+function toggleSource(){srcOn=!srcOn;var btn=document.getElementById('src-turn-btn');var stat=document.getElementById('src-status');var wl=document.getElementById('src-wl');var mod=document.getElementById('src-mod');if(btn){btn.textContent=srcOn?'Turn Off':'Turn On';btn.style.background=srcOn?'linear-gradient(180deg,#cc2200,#aa1800)':'linear-gradient(180deg,#44cc44,#22aa22)';btn.style.borderColor=srcOn?'#8a1800':'#1a8018';}if(stat)stat.textContent=srcOn?'Source: ON — '+(wl?wl.options[wl.selectedIndex].text:'')+'  '+(mod?mod.options[mod.selectedIndex].text:''):'Source: OFF';}
+
+// Identification grid functions — p.25/152
+function ipIncrement(){
+  var el = document.getElementById('ip-fib');
+  if(!el) return;
+  var v = el.value || 'Fiber1';
+  var m = v.match(/^([A-Za-z_\-\s]*)(\d+)$/);
+  if(m){ el.value = m[1] + (parseInt(m[2], 10) + 1); }
+  else { el.value = v + '2'; }
+  updateFnPreview();
+  toast('Fiber ID → ' + el.value, 'ok');
+}
+function clearIdentValues(){['ip-job','ip-company','ip-customer','ip-op','ip-opb','ip-notes','ip-cbl','ip-fib','ip-loca','ip-locb'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});var prev=document.getElementById('ip-fn-preview');if(prev)prev.textContent='Fiber1.trc';}
+function revertIdent(){var d=document.getElementById('ip-fib');if(d)d.value='Fiber';var prev=document.getElementById('ip-fn-preview');if(prev)prev.textContent='Fiber1.trc';}
+function updateFnPreview(){var fib=document.getElementById('ip-fib'),prev=document.getElementById('ip-fn-preview');if(prev)prev.textContent=(fib&&fib.value?fib.value.replace(/\s+/g,'_'):'Fiber')+'1.trc';}
+
+// Updated saveIdent — reads all grid fields
+function saveIdentNew(){['customer','company','cbl','fib','job','loca','locb','notes'].forEach(function(k){var e=document.getElementById('ip-'+k);if(e)ident[k]=e.value;});var op=document.getElementById('ip-op');if(op)ident.op=op.value;var opb=document.getElementById('ip-opb');if(opb)ident.opb=opb.value;closeIdent();}
+
+// Updated buildSummary — all fields per user guide p.100
+var sumCondensed=false;
+function buildSummaryFull(){
+  if(!hasResult||curSc===null){var w=document.getElementById('sum-wrap');if(w)w.innerHTML='<div style="padding:20px;color:#7090a0;text-align:center;font-size:13px">No data — run a test first</div>';return;}
+  var sc=SC[curSc],at=getAt(curSc,curWL),pass=isPass(sc,curWL),spanLoss=at*sc.km,now=new Date(),inj=24;
+  var hasMb=sc.ev.some(function(e){return e.t==='MBS';});
+  var mbS=sc.ev.find(function(e){return e.t==='MBS';}),mbE=sc.ev.find(function(e){return e.t==='MBE';});
+  var wl1='1310 nm (9 µm)',wl2='1550 nm (9 µm)';
+  var pf1='<span style="background:'+(pass?'#22aa44':'#cc2200')+';color:#fff;padding:3px 14px;border-radius:2px;font-weight:700;font-size:12px;display:inline-block">'+(pass?'Pass':'Fail')+'</span>';
+  var pf2='<span style="background:#9ab0c4;color:#fff;padding:3px 8px;border-radius:2px;font-size:11px">unknown</span>';
+  var ds=now.toLocaleDateString('en-US',{month:'numeric',day:'numeric',year:'numeric'});
+  var ts=now.toLocaleTimeString('en-US',{hour12:true,hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  var rows=sumCondensed?[
+    ['Information',wl1,wl2],['Pass/fail status',pf1,pf2],
+    ['Span length',sc.km.toFixed(4)+' km',sc.km.toFixed(4)+' km'],
+    ['Span loss',spanLoss.toFixed(3)+' dB',(sc.km*sc.a1550).toFixed(3)+' dB'],
+    ['Span ORL',sc.orl.toFixed(2)+' dB',(sc.orl+1.5).toFixed(2)+' dB']
+  ]:[
+    ['Information',wl1,wl2],['Pass/fail status',pf1,pf2],
+    ['Span length',sc.km.toFixed(4)+' km',sc.km.toFixed(4)+' km'],
+    ['Span loss',spanLoss.toFixed(3)+' dB',(sc.km*sc.a1550).toFixed(3)+' dB'],
+    ['Span ORL',sc.orl.toFixed(2)+' dB',(sc.orl+1.5).toFixed(2)+' dB'],
+    ['Injection level',inj.toFixed(1)+' dB',(inj-1.5).toFixed(1)+' dB'],
+    ['Range',P.rng.toFixed(4)+' km',P.rng.toFixed(4)+' km'],
+    ['Pulse',P.pls+' ns',P.pls+' ns'],['Duration',P.dur+' s',P.dur+' s'],
+    ['Date',ds,ds],['Time',ts,ts]
+  ];
+  var tbl='<table style="width:100%;border-collapse:collapse;font-size:12px;background:#fff;border:1px solid #b0c4d8">'+
+    '<thead><tr style="background:#c4d4e8">'+
+    '<th style="padding:5px 10px;border:1px solid #b0c4d8;text-align:left;width:36%"></th>'+
+    '<th style="padding:5px 10px;border:1px solid #b0c4d8;text-align:left">'+wl1+'</th>'+
+    '<th style="padding:5px 10px;border:1px solid #b0c4d8;text-align:left">'+wl2+'</th>'+
+    '</tr></thead><tbody>'+
+    rows.map(function(r,i){return '<tr style="background:'+(i%2===0?'#fff':'#f4f8fc')+'">'+
+      '<td style="padding:5px 10px;border:1px solid #dce8f4;color:#3a5870;font-weight:600">'+r[0]+'</td>'+
+      '<td style="padding:5px 10px;border:1px solid #dce8f4;font-family:monospace">'+r[1]+'</td>'+
+      '<td style="padding:5px 10px;border:1px solid #dce8f4;font-family:monospace">'+r[2]+'</td></tr>';
+    }).join('')+'</tbody></table>';
+  var footer='<div style="background:#e8f0fa;border:1px solid #b0c4d8;border-top:none;padding:6px 12px;font-size:13px;font-weight:700;color:#1a3050;display:flex;justify-content:space-between;align-items:center">'+
+    '<span>Span length: '+sc.km.toFixed(4)+' km</span>'+
+    '<div style="width:26px;height:26px;border:1px solid #6080a0;background:linear-gradient(180deg,#ccdde8,#b4c8dc);border-radius:3px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:#1a3050;user-select:none" onclick="toggleSumMode()" title="'+(sumCondensed?'Expand':'Collapse')+'">'+(sumCondensed?'&#x25BC;':'&#x25B2;')+'</div></div>';
+  var mbRows=hasMb?
+    '<div style="background:#fff;border:1px solid #b0c4d8;border-top:none"><table style="width:100%;border-collapse:collapse;font-size:12px">'+
+    '<tr style="background:#c4d4e8"><th style="padding:5px 10px;border:1px solid #b0c4d8;text-align:left">Macrobend Position</th><th style="padding:5px 10px;border:1px solid #b0c4d8;text-align:left">Macrobend Delta Loss</th></tr>'+
+    '<tr><td style="padding:5px 10px;font-family:monospace;border:1px solid #dce8f4">'+(mbS?mbS.p.toFixed(4)+' km':'---')+'</td><td style="padding:5px 10px;font-family:monospace;color:#cc2200;font-weight:700;border:1px solid #dce8f4">'+(mbE?mbE.a.toFixed(3)+' dB':'---')+'</td></tr></table></div>':
+    '<div style="background:#f8fcff;border:1px solid #c4d8e8;border-top:none;padding:6px 12px;font-size:12px;color:#5a7888">No macrobend detected</div>';
+  var w=document.getElementById('sum-wrap');
+  if(w)w.innerHTML='<div style="padding:8px 10px">'+tbl+footer+mbRows+'</div>';
+}
+function toggleSumMode(){sumCondensed=!sumCondensed;buildSummaryFull();}
+
+
+// ════════════════════════════════════════════════════════════
+// ADAPTIVE MOBILE SYSTEM — Android & iOS
+// Handles: touch gestures, layout switching, sidebar drawer,
+//          swipe-to-navigate tabs, haptic feedback, orientation
+// ════════════════════════════════════════════════════════════
+
+var MOBILE = {
+  isMobile: false,
+  isTablet: false,
+  isIOS: false,
+  isAndroid: false,
+  isLandscape: false,
+  isTouchDevice: false,
+  sidebarOpen: false,
+  currentTabIdx: 1, // start on OTDR (index 1)
+  tabOrder: ['source','otdr','events','measure','summary'],
+  init: function() {
+    var ua = navigator.userAgent;
+    this.isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+    this.isAndroid = /Android/.test(ua);
+    this.isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    this.updateBreakpoints();
+    this.bindEvents();
+    this.injectMobileElements();
+    this.applyAdaptiveLayout();
+    logErr('I000','MOBILE.init','Device: '+(this.isIOS?'iOS':this.isAndroid?'Android':'Other')+' | Touch:'+this.isTouchDevice+' | Mobile:'+this.isMobile);
+  },
+  updateBreakpoints: function() {
+    var w = window.innerWidth, h = window.innerHeight;
+    this.isMobile = w <= 768;
+    this.isTablet = w > 768 && w <= 1024;
+    this.isLandscape = w > h;
+    this.isSmallPhone = w <= 480;
+    this.isLandscapePhone = this.isLandscape && h <= 450;
+  },
+  bindEvents: function() {
+    var self = this;
+    // Orientation change
+    window.addEventListener('orientationchange', function() {
+      setTimeout(function() {
+        self.updateBreakpoints();
+        self.applyAdaptiveLayout();
+        if(hasResult && curSc !== null) { resizeCv(); drawTrace(); }
+      }, 200);
+    });
+    // Resize (desktop + foldable phones)
+    var resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        self.updateBreakpoints();
+        self.applyAdaptiveLayout();
+        if(hasResult && curSc !== null) { resizeCv(); drawTrace(); }
+      }, 150);
+    });
+    // Swipe gesture on OTDR screen for tab navigation
+    this.bindSwipeGesture();
+    // Pull-to-close on modals (mobile)
+    this.bindModalDragClose();
+  },
+  applyAdaptiveLayout: function() {
+    var body = document.body;
+    // Apply device class
+    body.classList.toggle('mobile', this.isMobile);
+    body.classList.toggle('tablet', this.isTablet);
+    body.classList.toggle('ios-device', this.isIOS);
+    body.classList.toggle('android-device', this.isAndroid);
+    body.classList.toggle('landscape', this.isLandscape);
+    body.classList.toggle('landscape-phone', this.isLandscapePhone);
+    body.classList.toggle('touch-device', this.isTouchDevice);
+    // Update CSS var for sidebar width
+    document.documentElement.style.setProperty('--sidebar-w', this.isMobile ? '100%' : (this.isTablet ? '148px' : '142px'));
+    // Mobile: collapse sidebar by default
+    if(this.isMobile && !this.isLandscapePhone) {
+      var menu = document.getElementById('sid-menu-wrap');
+      if(menu) menu.style.display = this.sidebarOpen ? 'flex' : 'none';
+    }
+    // iOS: update safe area handling
+    if(this.isIOS) {
+      document.documentElement.style.setProperty('--safe-top', 'env(safe-area-inset-top, 0px)');
+      document.documentElement.style.setProperty('--safe-bot', 'env(safe-area-inset-bottom, 0px)');
+    }
+  },
+  injectMobileElements: function() {
+    if(!this.isMobile) return;
+    // Add simplified spec row for mobile
+    var liSpecs = document.querySelector('.li-specs');
+    if(liSpecs && !document.querySelector('.li-spec-mobile')) {
+      var mspec = document.createElement('div');
+      mspec.className = 'li-spec-mobile';
+      mspec.innerHTML = '<span>1310/1550/1625 nm — 39/37/37 dB</span><span>EDZ 0.8m · ADZ 3.5m · 0.1–400 km</span><span>7″ TFT 800×480 · 12h battery</span>';
+      liSpecs.parentNode.insertBefore(mspec, liSpecs.nextSibling);
+    }
+    // Add sidebar hamburger toggle button
+    var sidebar = document.querySelector('.otdr-sidebar');
+    if(sidebar && !document.getElementById('sid-toggle-btn')) {
+      var toggle = document.createElement('div');
+      toggle.id = 'sid-toggle-btn';
+      toggle.className = 'sid-mobile-menu-toggle';
+      toggle.innerHTML = '☰';
+      toggle.title = 'Main Menu';
+      toggle.style.display = 'flex';
+      toggle.onclick = function() { MOBILE.toggleSidebar(); };
+      sidebar.insertBefore(toggle, sidebar.querySelector('.sid-menu'));
+    }
+    // Add swipe hint bar
+    var otdr = document.getElementById('pg-otdr');
+    if(otdr && !document.querySelector('.mobile-swipe-hint')) {
+      var hint = document.createElement('div');
+      hint.className = 'mobile-swipe-hint';
+      otdr.appendChild(hint);
+    }
+  },
+  toggleSidebar: function() {
+    this.sidebarOpen = !this.sidebarOpen;
+    var menu = document.querySelector('.sid-menu');
+    if(menu) {
+      menu.style.display = this.sidebarOpen ? 'flex' : 'none';
+      menu.style.flexDirection = 'column';
+      menu.style.width = '100%';
+    }
+    var btn = document.getElementById('sid-toggle-btn');
+    if(btn) btn.innerHTML = this.sidebarOpen ? '✕' : '☰';
+    this.haptic('light');
+  },
+  bindSwipeGesture: function() {
+    var self = this;
+    var startX = 0, startY = 0, startTime = 0;
+    var otdrEl = document.getElementById('pg-otdr');
+    if(!otdrEl) return;
+    otdrEl.addEventListener('touchstart', function(e) {
+      if(e.target.closest('canvas') || e.target.closest('.otdr-acq-bar') || e.target.closest('.otdr-sidebar')) return;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      startTime = Date.now();
+    }, {passive: true});
+    otdrEl.addEventListener('touchend', function(e) {
+      var dx = e.changedTouches[0].clientX - startX;
+      var dy = e.changedTouches[0].clientY - startY;
+      var dt = Date.now() - startTime;
+      // Swipe: horizontal > 60px, faster than 300ms, and more horizontal than vertical
+      if(Math.abs(dx) > 60 && dt < 300 && Math.abs(dx) > Math.abs(dy) * 1.5 && !self.isTouchOnCanvas(e)) {
+        if(dx < 0) { self.swipeTab(1); }   // swipe left = next tab
+        else        { self.swipeTab(-1); }  // swipe right = prev tab
+      }
+    }, {passive: true});
+  },
+  isTouchOnCanvas: function(e) {
+    return e.target && e.target.tagName === 'CANVAS';
+  },
+  swipeTab: function(dir) {
+    var tabs = this.tabOrder;
+    var cur = tabs.indexOf(this.currentTabIdx < tabs.length ? tabs[this.currentTabIdx] : 'otdr');
+    if(cur === -1) {
+      // find active tab
+      for(var i=0;i<tabs.length;i++){
+        var el=document.getElementById('tab-'+tabs[i]);
+        if(el&&el.classList.contains('active')){cur=i;break;}
+      }
+    }
+    var next = Math.max(0, Math.min(tabs.length-1, cur+dir));
+    if(next !== cur) {
+      selTab(tabs[next]);
+      this.currentTabIdx = next;
+      this.haptic('light');
+    }
+  },
+  bindModalDragClose: function() {
+    // Modal bottom-sheet drag-to-close
+    var modals = ['pg-testcfg','pg-userprefs','pg-ident','pg-extacq'];
+    modals.forEach(function(id) {
+      var el = document.getElementById(id);
+      if(!el) return;
+      var panel = el.firstElementChild;
+      if(!panel) return;
+      var startY = 0, isDragging = false;
+      panel.addEventListener('touchstart', function(e) {
+        if(e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+        startY = e.touches[0].clientY;
+        isDragging = true;
+      }, {passive: true});
+      panel.addEventListener('touchmove', function(e) {
+        if(!isDragging) return;
+        var dy = e.touches[0].clientY - startY;
+        if(dy > 0) panel.style.transform = 'translateY('+dy+'px)';
+      }, {passive: true});
+      panel.addEventListener('touchend', function(e) {
+        if(!isDragging) return;
+        isDragging = false;
+        var dy = e.changedTouches[0].clientY - startY;
+        if(dy > 80) {
+          // Close modal
+          panel.style.transition = 'transform .2s ease';
+          panel.style.transform = 'translateY(100%)';
+          setTimeout(function() {
+            el.className = '';
+            panel.style.transform = '';
+            panel.style.transition = '';
+          }, 200);
+          MOBILE.haptic('medium');
+        } else {
+          panel.style.transition = 'transform .15s ease';
+          panel.style.transform = '';
+          setTimeout(function() { panel.style.transition = ''; }, 150);
+        }
+      }, {passive: true});
+    });
+  },
+  haptic: function(type) {
+    // Haptic feedback on iOS (Taptic Engine) and Android
+    if(!navigator.vibrate && !window.Taptic) return;
+    try {
+      if(navigator.vibrate) {
+        var patterns = {light:[10], medium:[20], heavy:[35], success:[10,50,10], error:[50,100,50]};
+        navigator.vibrate(patterns[type] || [10]);
+      }
+    } catch(e) { /* haptic not critical */ }
+  }
+};
+
+// ── Mobile-specific selTab override ──
+// Track current tab index for swipe navigation
+var _origSelTab = selTab;
+selTab = function(t) {
+  _origSelTab(t);
+  var idx = MOBILE.tabOrder.indexOf(t);
+  if(idx !== -1) MOBILE.currentTabIdx = idx;
+  // On mobile: auto-collapse sidebar when tab changes
+  if(MOBILE.isMobile && MOBILE.sidebarOpen) {
+    MOBILE.sidebarOpen = false;
+    var menu = document.querySelector('.sid-menu');
+    if(menu) menu.style.display = 'none';
+    var btn = document.getElementById('sid-toggle-btn');
+    if(btn) btn.innerHTML = '☰';
+  }
+};
+
+// ── Canvas: Pinch-to-zoom on trace ──
+(function() {
+  var lastDist = 0, pinchActive = false;
+  function dist(t) {
+    var dx = t[0].clientX - t[1].clientX;
+    var dy = t[0].clientY - t[1].clientY;
+    return Math.sqrt(dx*dx + dy*dy);
+  }
+  document.addEventListener('touchstart', function(e) {
+    if(e.target.id !== 'cv-trace') return;
+    if(e.touches.length === 2) { pinchActive = true; lastDist = dist(e.touches); }
+  }, {passive: true});
+  document.addEventListener('touchmove', function(e) {
+    if(!pinchActive || e.touches.length !== 2 || e.target.id !== 'cv-trace') return;
+    var d = dist(e.touches);
+    var ratio = d / lastDist;
+    if(Math.abs(ratio - 1) > 0.04) {
+      doZoom(ratio > 1 ? 1.15 : 0.87);
+      lastDist = d;
+    }
+  }, {passive: true});
+  document.addEventListener('touchend', function(e) {
+    if(e.touches.length < 2) pinchActive = false;
+  }, {passive: true});
+})();
+
+// ── Double-tap to reset zoom on trace ──
+(function() {
+  var lastTap = 0;
+  document.addEventListener('touchend', function(e) {
+    if(e.target.id !== 'cv-trace') return;
+    var now = Date.now();
+    if(now - lastTap < 300) { resetZoom(); MOBILE.haptic('light'); }
+    lastTap = now;
+  }, {passive: true});
+})();
+
+// ── Long-press on event row to show details ──
+(function() {
+  var longPressTimer;
+  document.addEventListener('touchstart', function(e) {
+    var row = e.target.closest('.erow-main');
+    if(!row) return;
+    longPressTimer = setTimeout(function() {
+      MOBILE.haptic('medium');
+      var cells = row.querySelectorAll('td');
+      if(cells.length >= 2) {
+        toast('Event @ ' + cells[1].textContent + ' km | Loss: ' + (cells[2]?cells[2].textContent:'—') + ' dB', 'info');
+      }
+    }, 500);
+  }, {passive: true});
+  document.addEventListener('touchend', function() { clearTimeout(longPressTimer); }, {passive: true});
+  document.addEventListener('touchmove', function() { clearTimeout(longPressTimer); }, {passive: true});
+})();
+
 document.addEventListener('DOMContentLoaded',function(){
   syncUI();
+  MOBILE.init();
   // Scale landing page to always fit the iframe viewport — fixes Beautiful Jekyll clipping
   function scaleLanding(){
     var el=document.getElementById('pg-off');if(!el)return;
@@ -1239,6 +3139,15 @@ document.addEventListener('DOMContentLoaded',function(){
 
   // Button overlays — outside 3D transform / overflow:hidden chain, guaranteed to fire
   var btnHome=document.getElementById('btn-home-overlay');
+  // Mobile: tap anywhere on landing to wake device
+  var pgOff = document.getElementById('pg-off');
+  if(pgOff) {
+    pgOff.addEventListener('touchend', function(e) {
+      if(e.target.closest('.pwr-group') || e.target.closest('.dev-pwr-btn') || e.target.closest('.dev-home-btn') || e.target.closest('.dev-wrap')) return;
+      if(Date.now() - (pgOff._lastTap||0) < 300) { poweron(); MOBILE.haptic('medium'); }
+      pgOff._lastTap = Date.now();
+    }, {passive:true});
+  }
   var btnPwr=document.getElementById('btn-pwr-overlay');
   if(btnHome){
     btnHome.addEventListener('click',function(e){
