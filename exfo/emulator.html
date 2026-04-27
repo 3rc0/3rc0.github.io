@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <meta name="googlebot" content="noindex,nofollow">
-<title>EXFO MaxTester 730B — OTDR Training Emulator v6</title>
+<title>EXFO MaxTester 730B — OTDR Training Emulator v6.2</title>
 <style>
 /* EXFO MaxTester 730B v6 — Author: Diyar Hussein · linkedin.com/in/diyar */
 *{margin:0;padding:0;box-sizing:border-box}
@@ -23,34 +23,218 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
   .landing-info{max-width:220px!important;}
   .li-brand{font-size:22px!important;}
 }
-.dev-wrap{perspective:1400px;cursor:pointer;flex-shrink:0}
-.dev-3d{width:640px;height:400px;transform:rotateX(7deg) rotateY(-14deg) rotateZ(-1deg);transform-style:preserve-3d;transition:transform .9s cubic-bezier(.25,.8,.25,1)}
-.dev-wrap:hover .dev-3d{transform:rotateX(3deg) rotateY(-5deg) rotateZ(-.5deg)}
-.dev-chassis{position:absolute;inset:0;background:linear-gradient(148deg,#78aed2 0%,#5c92bc 15%,#4a7aac 35%,#3e70a0 55%,#306092 75%,#285280 100%);border-radius:18px;box-shadow:0 -1px 0 rgba(180,220,255,.32),inset 0 1px 0 rgba(255,255,255,.22),0 0 0 1.5px #284870,0 0 0 3px #1a3050,9px 13px 0 -1px #1a3860,18px 28px 55px rgba(0,0,0,.82);overflow:hidden}
-.dev-c{position:absolute;width:48px;height:48px;background:radial-gradient(circle at 33% 33%,#3a5878,#0e1e2e)}
-.dc-tl{top:0;left:0;border-radius:18px 0 18px 0}.dc-tr{top:0;right:0;border-radius:0 18px 0 18px}
-.dc-bl{bottom:0;left:0;border-radius:0 18px 18px 0}.dc-br{bottom:0;right:0;border-radius:18px 0 0 18px}
-.dev-bezel{position:absolute;top:20px;left:14px;right:14px;bottom:42px;background:#111214;border-radius:7px;box-shadow:inset 0 3px 12px rgba(0,0,0,.95)}
-.dev-maxtester{position:absolute;top:5px;right:9px;font-size:12px;font-weight:500;color:rgba(255,255,255,.7);letter-spacing:.5px;font-style:italic}
-.dev-screen{position:absolute;top:3px;left:3px;right:3px;bottom:3px;background:#000;border-radius:5px;overflow:hidden}
-.dev-ports{position:absolute;top:0;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:2px 14px 5px;background:rgba(10,22,36,.72);border-radius:0 0 9px 9px}
-.dev-fc{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 37% 32%,#555,#111);border:2px solid #3a5a3a;position:relative}
-.dev-fc::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#5a9a5a,#1a4a1a)}
-.dev-plbl{font-size:8px;color:#3a7a5a;font-family:'Courier New',monospace}
-.dev-aled{width:7px;height:7px;border-radius:50%;background:#0a1a0a;border:1px solid #1a2a1a;transition:all .3s}
-.dev-aled.on{background:#00e044;box-shadow:0 0 5px #00e044}
-.dev-stylus{position:absolute;left:3px;top:28%;width:5px;height:55px;background:linear-gradient(to right,#4a7aaa,#2a5080);border-radius:0 3px 3px 0;border:1px solid #5a8ab8}
-.dev-bottom{position:absolute;bottom:0;left:0;right:0;height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 16px}
-.dev-exfo{font-size:18px;font-weight:700;color:rgba(255,255,255,.82);letter-spacing:2px}
-.dev-btns{display:flex;align-items:center;gap:8px}
-.dev-home{width:40px;height:22px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.2);border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,.65);font-size:14px;transition:all .15s}
-.dev-home:hover{background:rgba(255,255,255,.15);color:#fff}
-.dev-pwr{width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.4);border:1.5px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,.55);font-size:13px;transition:all .15s}
-.dev-pwr:hover{background:rgba(255,255,255,.15);color:#fff}
-.dev-battled{width:9px;height:9px;border-radius:50%;background:rgba(0,200,80,.7);box-shadow:0 0 5px rgba(0,200,80,.4)}
-.dev-stand{position:absolute;right:-5px;bottom:28px;width:7px;height:50px;background:linear-gradient(to right,#4a7ab0,#2a5080);border-radius:0 4px 4px 0;border:1px solid #3a6098}
-.screen-off{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000}
-.off-logo{font-size:36px;font-weight:700;letter-spacing:7px;color:rgba(0,176,79,.22)}
+/* ═══════════════════════════════════════════════
+   MAX-730B DEVICE MOCKUP — Forensic reconstruction
+   Source: EXFO datasheets SPMAX730B.1AN / .4AN
+   Color refs: actual device photos pages 2,3 both PDFs
+   ═══════════════════════════════════════════════ */
+.dev-wrap{perspective:1600px;cursor:pointer;flex-shrink:0;position:relative}
+.dev-3d{width:640px;height:400px;transform:rotateX(6deg) rotateY(-12deg) rotateZ(-0.5deg);transform-style:preserve-3d;transition:transform .9s cubic-bezier(.25,.8,.25,1);position:relative}
+.dev-wrap:hover .dev-3d{transform:rotateX(2deg) rotateY(-4deg) rotateZ(0deg)}
+
+/* Main chassis — real device: dark teal-blue, matte rubber coating
+   Measured from datasheet photos: approximately HSL(200°,62%,27%) */
+.dev-chassis{
+  position:absolute;inset:0;
+  background:linear-gradient(155deg,
+    #2a7080 0%,#1e6070 8%,
+    #1a5868 22%,#165060 38%,
+    #124858 55%,#0e4050 72%,
+    #0a3848 88%,#083040 100%);
+  border-radius:12px;
+  /* Matte rubber: no bright specular, deep shadow for 3D depth */
+  box-shadow:
+    inset 0 1px 0 rgba(60,140,160,.28),
+    inset 1px 0 0 rgba(60,140,160,.15),
+    0 0 0 1.5px #0a2830,
+    0 0 0 3px #061820,
+    8px 12px 0 -1px #061c24,
+    16px 26px 60px rgba(0,0,0,.90),
+    0 4px 12px rgba(0,0,0,.5);
+  overflow:hidden
+}
+/* Rubber texture overlay — simulates matte grip coating */
+.dev-chassis::before{
+  content:'';position:absolute;inset:0;border-radius:12px;
+  background:
+    radial-gradient(ellipse 40% 60% at 20% 30%, rgba(255,255,255,.04) 0%, transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='1' height='1' fill='rgba(0,0,0,.08)'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:1
+}
+/* Perimeter bevel — plastic trim ring around rubber body */
+.dev-chassis::after{
+  content:'';position:absolute;inset:0;border-radius:12px;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.06),inset 0 0 0 3px rgba(0,0,0,.3);
+  pointer-events:none;z-index:2
+}
+
+/* ── SCREEN BEZEL ─────────────────────────────── */
+/* Real device: black bezel, thin, slight inset from chassis edge */
+.dev-bezel{
+  position:absolute;top:18px;left:12px;right:12px;bottom:40px;
+  background:#0a0b0c;border-radius:6px;z-index:3;
+  box-shadow:inset 0 2px 10px rgba(0,0,0,.98),0 1px 0 rgba(255,255,255,.05)
+}
+/* "MaxTester" label — datasheet: white text, top-right of bezel, italic */
+.dev-maxtester{
+  position:absolute;top:4px;right:8px;
+  font-size:10px;font-weight:600;color:rgba(255,255,255,.55);
+  letter-spacing:.8px;font-style:italic;z-index:10;
+  font-family:'Courier New',monospace
+}
+.dev-screen{
+  position:absolute;top:3px;left:3px;right:3px;bottom:3px;
+  background:#000;border-radius:4px;overflow:hidden;z-index:4
+}
+
+/* ── PORT AREA — TOP ──────────────────────────────
+   Datasheet diagram: ① SM OTDR, ② In-service OTDR, ③ LED
+   Located along the top edge of the device */
+.dev-ports{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  display:flex;align-items:flex-end;gap:5px;
+  padding:0 18px 4px;
+  background:linear-gradient(180deg,#061420,#0a1c28);
+  border-radius:0 0 8px 8px;
+  border:1px solid #0a2030;border-top:none;
+  z-index:10;
+  box-shadow:0 3px 8px rgba(0,0,0,.6)
+}
+/* ① SM OTDR port — FC/APC green ferrule (datasheet: green connector cap) */
+.dev-port-sm{
+  display:flex;flex-direction:column;align-items:center;gap:2px;padding-bottom:3px
+}
+.dev-fc-body{
+  width:20px;height:20px;border-radius:50%;
+  background:radial-gradient(circle at 38% 32%,#5a5a5a,#1a1a1a);
+  border:2px solid #222;position:relative;
+  box-shadow:0 1px 3px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.1)
+}
+/* FC/APC green ferrule — the green plastic key piece */
+.dev-fc-body::before{
+  content:'';position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:11px;height:11px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#3aaa44,#1a6020);
+  border:1.5px solid #116010
+}
+/* FC ferrule key slot — the alignment key notch */
+.dev-fc-body::after{
+  content:'';position:absolute;bottom:1px;left:50%;
+  transform:translateX(-50%);
+  width:3px;height:5px;
+  background:#2a8030;border-radius:1px
+}
+/* ② In-service OTDR port — different: recessed, smaller, protective cover */
+.dev-port-live{
+  display:flex;flex-direction:column;align-items:center;gap:2px;padding-bottom:3px
+}
+.dev-fc-live{
+  width:16px;height:16px;border-radius:3px;
+  background:linear-gradient(135deg,#2a2a2a,#111);
+  border:1.5px solid #1a1a1a;position:relative;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.9)
+}
+/* ③ Testing LED indicator */
+.dev-aled{width:7px;height:7px;border-radius:50%;background:#0a1a0a;border:1px solid #1a2a1a;transition:all .3s;margin-bottom:5px;align-self:flex-end}
+.dev-aled.on{background:#00e044;box-shadow:0 0 6px #00e044,0 0 12px rgba(0,220,68,.4)}
+.dev-plbl{font-size:7px;color:#2a6a4a;font-family:'Courier New',monospace;letter-spacing:.3px;white-space:nowrap}
+
+/* ── STYLUS — LEFT SIDE ───────────────────────────
+   Datasheet ④: stylus stored in slot on left edge */
+.dev-stylus{
+  position:absolute;left:2px;top:22%;
+  width:4px;height:62px;z-index:10;
+  background:linear-gradient(to right,#2a3040,#1a2030,#2a3040);
+  border-radius:0 2px 2px 0;
+  border-right:1px solid #3a4050;
+  box-shadow:1px 0 3px rgba(0,0,0,.5)
+}
+/* Stylus tip */
+.dev-stylus::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;
+  height:6px;background:linear-gradient(to bottom,#2a3040,#888);
+  border-radius:0 0 3px 3px
+}
+
+/* ── BOTTOM BAR ──────────────────────────────────
+   Datasheet bottom diagram: EXFO logo (left) | ⑩ Home | ⑪ Power | ⑫ LED
+   Real device: the bottom strip is same teal color, slightly darker */
+.dev-bottom{
+  position:absolute;bottom:0;left:0;right:0;height:40px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 14px 0 16px;z-index:10;
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,.2))
+}
+/* EXFO wordmark — datasheet: white, bold, left side */
+.dev-exfo{
+  font-size:17px;font-weight:800;letter-spacing:2.5px;
+  color:rgba(255,255,255,.85);
+  text-shadow:0 1px 4px rgba(0,0,0,.6)
+}
+.dev-btns{display:flex;align-items:center;gap:7px}
+
+/* ⑩ Home/switch button — datasheet: rectangular, like a tablet home key */
+.dev-home{
+  width:36px;height:20px;
+  background:rgba(0,0,0,.45);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:rgba(255,255,255,.6);font-size:13px;
+  transition:all .15s;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 1px 3px rgba(0,0,0,.5)
+}
+.dev-home:hover{background:rgba(255,255,255,.14);color:#fff}
+
+/* ⑪ Power button — datasheet: circular, classic power symbol */
+.dev-pwr{
+  width:28px;height:28px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,#1a3040,#0a1820);
+  border:1.5px solid rgba(255,255,255,.2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:rgba(255,255,255,.55);font-size:12px;
+  transition:all .15s;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 2px 5px rgba(0,0,0,.6)
+}
+.dev-pwr:hover{border-color:rgba(255,255,255,.4);color:#fff;box-shadow:0 0 8px rgba(255,255,255,.2)}
+
+/* ⑫ Battery LED — datasheet: small green indicator dot */
+.dev-battled{
+  width:8px;height:8px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#44ee66,#00aa33);
+  box-shadow:0 0 4px rgba(0,200,80,.6)
+}
+
+/* ⑭ Stand — datasheet: fold-out stand, visible on right edge */
+.dev-stand{
+  position:absolute;right:-6px;bottom:22px;
+  width:6px;height:56px;z-index:5;
+  background:linear-gradient(to right,#0e3040,#1a4a5a,#0e3040);
+  border-radius:0 3px 3px 0;
+  border-right:1px solid #2a6070;
+  box-shadow:2px 0 6px rgba(0,0,0,.6)
+}
+/* Stand hinge detail */
+.dev-stand::before{
+  content:'';position:absolute;top:4px;left:0;right:0;
+  height:3px;background:rgba(255,255,255,.12);border-radius:1px
+}
+.dev-stand::after{
+  content:'';position:absolute;bottom:4px;left:0;right:0;
+  height:3px;background:rgba(255,255,255,.12);border-radius:1px
+}
+
+/* Screen OFF state */
+.screen-off{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse 60% 50% at 50% 50%,#040608,#000)
+}
+.off-logo{
+  font-size:38px;font-weight:800;letter-spacing:8px;
+  color:rgba(0,176,79,.18);
+  text-shadow:0 0 20px rgba(0,176,79,.1)
+}
 .landing-info{display:flex;flex-direction:column;gap:18px;max-width:260px}
 .li-brand{font-size:26px;font-weight:700;color:#007a36;letter-spacing:3px;font-family:'Courier New',Courier,monospace}
 .li-model{font-size:12px;color:#2a4a60;letter-spacing:1px;font-family:'Courier New',Courier,monospace;margin-top:-12px;font-weight:600}
@@ -321,7 +505,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
 .fe-ftr-btn{height:28px;padding:0 18px;border-radius:2px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid}
 .fe-open-btn{border-color:#1a6018;background:linear-gradient(180deg,#44cc44,#22aa22);color:#fff}
 .fe-cancel-btn{border-color:#888;background:linear-gradient(180deg,#f4f4f4,#e0e0e0);color:#333}
-/* Toast notification system — replaces alert() for iframe compatibility */
+/* Toast notification system — replaces blocking dialog APIs for iframe compatibility */
 #toast-wrap{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
 .toast{padding:11px 20px;border-radius:5px;font-size:13px;font-weight:600;color:#fff;box-shadow:0 4px 18px rgba(0,0,0,.45);opacity:0;transform:translateY(12px);transition:all .22s ease;pointer-events:none;max-width:420px;text-align:center;line-height:1.5}
 .toast.show{opacity:1;transform:translateY(0)}
@@ -340,11 +524,40 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
 <div id="pg-off">
   <div class="dev-wrap" onclick="poweron()">
     <div class="dev-3d"><div class="dev-chassis">
-      <div class="dev-c dc-tl"></div><div class="dev-c dc-tr"></div><div class="dev-c dc-bl"></div><div class="dev-c dc-br"></div>
-      <div class="dev-ports"><div class="dev-fc"></div><div class="dev-plbl">SM</div><div class="dev-fc"></div><div class="dev-plbl">SM&nbsp;LIVE</div><div class="dev-aled" id="dev-led"></div><div class="dev-plbl" style="color:#2a5a4a">ACT</div></div>
+      <!-- ① SM OTDR port + ② In-service + ③ LED — top, per datasheet diagram -->
+      <div class="dev-ports">
+        <div class="dev-port-sm">
+          <div class="dev-fc-body"></div>
+          <div class="dev-plbl">① SM</div>
+        </div>
+        <div class="dev-port-live">
+          <div class="dev-fc-live"></div>
+          <div class="dev-plbl">② LIVE</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding-bottom:3px">
+          <div class="dev-aled" id="dev-led"></div>
+          <div class="dev-plbl">③</div>
+        </div>
+      </div>
+      <!-- ④ Stylus — left side slot -->
       <div class="dev-stylus"></div>
-      <div class="dev-bezel"><div class="dev-maxtester">MaxTester</div><div class="dev-screen"><div class="screen-off"><div class="off-logo">EXFO</div></div></div></div>
-      <div class="dev-bottom"><div class="dev-exfo">EXFO</div><div class="dev-btns"><div class="dev-home" onclick="showState('launcher');event.stopPropagation()" title="Home">⌂</div><div class="dev-pwr" onclick="poweron();event.stopPropagation()">⏻</div><div class="dev-battled"></div></div></div>
+      <!-- Screen bezel + MaxTester label + screen -->
+      <div class="dev-bezel">
+        <div class="dev-maxtester">MaxTester</div>
+        <div class="dev-screen">
+          <div class="screen-off"><div class="off-logo">EXFO</div></div>
+        </div>
+      </div>
+      <!-- Bottom: EXFO | ⑩ Home | ⑪ Power | ⑫ Battery LED -->
+      <div class="dev-bottom">
+        <div class="dev-exfo">EXFO</div>
+        <div class="dev-btns">
+          <div class="dev-home" onclick="showState('launcher');event.stopPropagation()" title="⑩ Home / Switch Application">⌂</div>
+          <div class="dev-pwr" onclick="poweron();event.stopPropagation()" title="⑪ Power On/Off">⏻</div>
+          <div class="dev-battled" title="⑫ Battery LED"></div>
+        </div>
+      </div>
+      <!-- ⑭ Stand support — right edge -->
       <div class="dev-stand"></div>
     </div></div>
   </div>
@@ -356,6 +569,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
       <div class="li-spec">EDZ 0.8 m · ADZ 3.5 m · 0.1–400 km range</div>
       <div class="li-spec">Pulse 5–20 000 ns · Up to 256 K sampling points</div>
       <div class="li-spec">iOLM · VFL · OPM · Wi-Fi · Bluetooth</div>
+      <div class="li-spec">Part of the MAX-700B series · Discontinued 2015</div>
       <div class="li-spec">12 h battery · 200×155×68 mm · 1.29 kg</div>
     </div>
     <div class="pwr-group">
@@ -363,9 +577,9 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
       <div class="pwr-label">PRESS TO POWER ON</div>
       <div style="font-size:10px;color:#2a6040;text-align:center">or click device body</div>
     </div>
-    <div class="li-caution">⚠ CLASS 1M LASER PRODUCT — IEC 60825-1 · Training simulation only</div>
+    <div class="li-caution">⚠ CLASS 1M LASER PRODUCT — IEC 60825-1:2007 · 21 CFR 1040.10 · Training simulation only</div>
     <div class="li-caution" style="border-color:#6080a0;color:#2a4060;background:rgba(200,220,240,.2)">
-      📋 Unofficial educational training simulator. EXFO® and MaxTester® are registered trademarks of EXFO Inc. All specifications from public documentation. NOT for commercial use.<br>Author: Diyar Hussein · linkedin.com/in/diyar
+      📋 Unofficial educational training simulator. EXFO® and MaxTester® are registered trademarks of EXFO Inc. No affiliation with EXFO Inc. All specifications from public documentation. NOT for commercial use.<br>Author: Diyar Hussein · linkedin.com/in/diyar
     </div>
   </div>
 </div>
@@ -406,7 +620,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
     <div class="otdr-col-left">
       <div id="tc-source" style="display:none;flex:1;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:#f0f5fa">
         <div style="font-size:40px">💡</div>
-        <div style="font-size:14px;color:#4a6880;text-align:center;line-height:1.9;max-width:340px"><strong>Source Module (CW / 1 kHz / 2 kHz)</strong><br>Output: 1310 / 1550 / 1625 nm · −2.5 dBm typical<br>Auto-Lambda auto-switching compatible</div>
+        <div style="font-size:14px;color:#4a6880;text-align:center;line-height:1.9;max-width:340px"><strong>Source Module (CW / 1 kHz / 2 kHz)</strong><br>Output: 1310 / 1550 / 1625 nm · -2.5 dBm typical<br>Auto-Lambda auto-switching compatible</div>
       </div>
       <div id="tc-otdr" style="display:flex;flex:1;flex-direction:column;min-height:0">
         <div class="trace-wrap" id="trace-wrap">
@@ -494,10 +708,16 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-sy
             <div class="sp-r"><div class="spr-l">Serial Number</div><div class="spr-v" style="background:none;border:none">839640</div></div>
             <div class="sp-r"><div class="spr-l">Calibration Date</div><div class="spr-v" style="background:none;border:none">2025-10-15</div></div>
             <div class="sp-r"><div class="spr-l">Firmware</div><div class="spr-v" style="background:none;border:none">7.0.1.1</div></div>
+            <div class="sp-r"><div class="spr-l">Storage</div><div class="spr-v" style="background:none;border:none">2 GB internal (~20 000 traces)</div></div>
             <div class="sp-r"><div class="spr-l">Dynamic Range</div><div class="spr-v" style="background:none;border:none" id="sv-dynrange">39 / 37 / 37 dB</div></div>
             <div class="sp-r"><div class="spr-l">Max Distance</div><div class="spr-v" style="background:none;border:none">400 km</div></div>
             <div class="sp-r"><div class="spr-l">Distance Accuracy</div><div class="spr-v" style="background:none;border:none">±(0.75 + 0.0025%×d) m</div></div>
             <div class="sp-r"><div class="spr-l">Linearity</div><div class="spr-v" style="background:none;border:none">±0.03 dB/dB</div></div>
+            <div class="sp-r"><div class="spr-l">Loss Threshold</div><div class="spr-v" style="background:none;border:none">0.01 dB</div></div>
+            <div class="sp-r"><div class="spr-l">Loss Resolution</div><div class="spr-v" style="background:none;border:none">0.001 dB</div></div>
+            <div class="sp-r"><div class="spr-l">Reflectance Accuracy</div><div class="spr-v" style="background:none;border:none">±2 dB</div></div>
+            <div class="sp-r"><div class="spr-l">VFL (optional)</div><div class="spr-v" style="background:none;border:none">650 nm ±10 nm · Class 2</div></div>
+            <div class="sp-r"><div class="spr-l">Source (optional)</div><div class="spr-v" style="background:none;border:none">-2.5 dBm · CW/1kHz/2kHz</div></div>
             <div class="sp-r"><div class="spr-l">Laser Safety</div><div class="spr-v" style="background:none;border:none">Class 1M</div></div>
           </div>
           <div class="sp-box"><div class="spb-t">MACROBEND DETECTION (AUTO)</div>
@@ -666,6 +886,7 @@ var P={rng:10,pls:100,dur:15,ior:1.4677,bsc:-79.45,hx:0.00};
 var curMode=null,markA=null,markB=null,selEvtIdx=null;
 var feSelectedFile=null,feCurSection='internal';
 var bidirSeed=null; // seeded once per acquisition — M-001 fix
+var _clockTimer=null; // module-scoped clock — avoids global namespace pollution
 
 var SC=[
   {id:0,nm:'Clean SMF — 5 km',meta:'Perfect G.652 fiber, FC/APC both ends, no defects',km:5.0,tg:'easy',ev:[{t:'FC',p:0,ref:-44.5},{t:'END',p:5.0,ref:-55.0}],a1310:0.350,a1550:0.200,orl:38.5,desc:'Single-mode G.652 fiber. FC/APC at both ends. No splices or defects. Ideal reference trace.'},
@@ -687,7 +908,7 @@ function durStr(d){return d>=60?(d/60).toFixed(0)+' min':d+' s';}
 var chips=document.getElementById('sc-chips');
 SC.forEach(function(sc){
   var el=document.createElement('div');el.className='sc-chip sc-'+sc.tg;
-  el.innerHTML='<span>'+(sc.tg==='easy'?'🟢':sc.tg==='med'?'🟡':'🔴')+'</span><span><strong>'+sc.nm+'</strong><br><small>'+sc.meta+'</small></span>';
+  el.innerHTML='<span>'+(sc.tg==='easy'?'🟢':sc.tg==='med'?'🟡':'🔴')+'</span><span><strong>'+esc(sc.nm)+'</strong><br><small>'+sc.meta+'</small></span>';
   el.onclick=function(){selectSc(sc.id);};chips.appendChild(el);
 });
 function openScOverlay(){var ov=document.getElementById('sc-overlay');if(ov)ov.style.display='flex';var cb=document.getElementById('sc-cancel-btn');if(cb)cb.style.display=hasResult?'block':'none';}
@@ -697,7 +918,7 @@ function selectSc(id){curSc=id;var sc=SC[id];document.getElementById('otdr-title
 function showState(s){['off','boot','launcher','otdr'].forEach(function(id){var el=document.getElementById('pg-'+id);if(el)el.style.display='none';});var el=document.getElementById('pg-'+s);if(el){el.style.display='flex';el.style.flexDirection=(s==='off')?'row':'column';}STATE=s;if(s==='otdr'){setTimeout(function(){resizeCv();if(hasResult&&curSc!==null)drawTrace();},50);startClock();}if(s==='launcher')startClock();}
 function poweron(){var led=document.getElementById('dev-led');if(led)led.className='dev-aled on';showState('boot');var p=0;var msgs=['Loading system...','Initializing OTDR module...','Calibrating optical port...','Running self-test...','Mounting storage...','Starting OTDR 7.0.1.1...','All systems nominal'];var t=setInterval(function(){p+=1.4;document.getElementById('boot-fill').style.width=Math.min(p,100)+'%';document.getElementById('boot-msg').textContent=msgs[Math.min(Math.floor(p/15),msgs.length-1)];if(p>=100){clearInterval(t);setTimeout(function(){showState('launcher');},500);}},18);}
 function launchApp(app){if(app==='otdr'){showState('otdr');setTimeout(function(){selTab('otdr');},80);}else if(app==='files'){openFileExplorer('open');}}
-function startClock(){clearInterval(window._clk);function tick(){var ts=new Date().toTimeString().slice(0,8);['otdr-clock','lnch-time'].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=id==='lnch-time'?ts.slice(0,5):ts;});}tick();window._clk=setInterval(tick,1000);}
+function startClock(){clearInterval(_clockTimer);function tick(){var ts=new Date().toTimeString().slice(0,8);['otdr-clock','lnch-time'].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=id==='lnch-time'?ts.slice(0,5):ts;});}tick();_clockTimer=setInterval(tick,1000);}
 
 var TABS=['otdr','events','measure','summary','source','bidir','budget','qc','setup'];
 function selTab(t){
@@ -926,7 +1147,7 @@ function buildSummary(){if(!hasResult||curSc===null)return;var sc=SC[curSc],at=g
 function buildMeasure(){if(!hasResult||curSc===null)return;var sc=SC[curSc],at=getAt(curSc,curWL);document.getElementById('meas-wrap').innerHTML='<div class="sg-box"><div class="sgb-t">MARKER A → B</div><div class="sgb-r"><span class="sgb-l">Position A</span><span class="sgb-v">'+(markA?markA.km.toFixed(4)+' km':'0.0000 km')+'</span></div><div class="sgb-r"><span class="sgb-l">Position B</span><span class="sgb-v">'+(markB?markB.km.toFixed(4)+' km':sc.km.toFixed(4)+' km')+'</span></div><div class="sgb-r"><span class="sgb-l">Distance A→B</span><span class="sgb-v">'+sc.km.toFixed(4)+' km</span></div><div class="sgb-r"><span class="sgb-l">Loss A→B</span><span class="sgb-v">'+(at*sc.km).toFixed(3)+' dB</span></div><div class="sgb-r"><span class="sgb-l">Attenuation A→B</span><span class="sgb-v">'+at.toFixed(3)+' dB/km</span></div></div><div class="sg-box"><div class="sgb-t">OPTICAL PARAMETERS</div><div class="sgb-r"><span class="sgb-l">Span ORL</span><span class="sgb-v">'+sc.orl.toFixed(2)+' dB</span></div><div class="sgb-r"><span class="sgb-l">Injection Level</span><span class="sgb-v">24.00 dB</span></div><div class="sgb-r"><span class="sgb-l">IOR</span><span class="sgb-v">'+P.ior.toFixed(4)+'</span></div><div class="sgb-r"><span class="sgb-l">Backscatter</span><span class="sgb-v">'+P.bsc.toFixed(2)+' dB</span></div></div>';}
 function buildBidir(){var div=document.getElementById('bidir-wrap');div.innerHTML='';var sc=curSc!==null?SC[curSc]:null,hasAB=hasResult&&sc!==null;var atAB=hasAB?getAt(curSc,curWL):null,atBA=hasAB?(atAB*(bidirSeed||0.98)):null,avg=hasAB?((atAB+atBA)/2):null;div.innerHTML='<div class="sg-box" style="margin-bottom:10px"><div class="sgb-t">Bidirectional Measurement Wizard</div><div class="bidir-step bs-done"><div class="bs-num">1</div><div class="bs-txt">Connect OTDR at End A · Test A→B</div><div class="bs-val">'+(hasAB?atAB.toFixed(3)+' dB/km':'—')+'</div></div><div class="bidir-step '+(hasAB?'bs-done':'bs-active')+'"><div class="bs-num">2</div><div class="bs-txt">Swap ends · Test B→A</div><div class="bs-val">'+(hasAB?atBA.toFixed(3)+' dB/km':'Awaiting')+'</div></div><div class="bidir-step '+(hasAB?'bs-done':'bs-pending')+'"><div class="bs-num">3</div><div class="bs-txt">Geometric average [(A→B)+(B→A)]/2</div><div class="bs-val">'+(avg?avg.toFixed(3)+' dB/km':'—')+'</div></div></div>'+(hasAB?'<div class="sg-box"><div class="sgb-t">AVERAGED RESULTS</div><div class="sgb-r"><span class="sgb-l">A→B</span><span class="sgb-v">'+atAB.toFixed(3)+' dB/km</span></div><div class="sgb-r"><span class="sgb-l">B→A</span><span class="sgb-v">'+atBA.toFixed(3)+' dB/km</span></div><div class="sgb-r"><span class="sgb-l">Geometric Avg</span><span class="sgb-v sv-pass" style="font-size:15px">'+avg.toFixed(3)+' dB/km</span></div></div>':'<div style="font-size:13px;color:#7090a0;padding:18px;text-align:center">Run a test first</div>');}
 function buildBudget(){if(!hasResult||curSc===null)return;var sc=SC[curSc],at=getAt(curSc,curWL),budget=parseFloat(document.getElementById('th-spanloss').value)||30,fiberLoss=at*sc.km,spliceLoss=sc.ev.filter(function(e){return e.t==='NR';}).reduce(function(a,e){return a+(e.l||0);},0),splitterLoss=sc.ev.filter(function(e){return e.t==='SPL';}).reduce(function(a,e){return a+(e.l||0);},0),total=fiberLoss+spliceLoss+splitterLoss,margin=budget-total;document.getElementById('budget-wrap').innerHTML='<div class="budget-box"><div style="font-size:14px;font-weight:700;color:#1a3050;margin-bottom:10px">Link Loss Budget — '+curWL+(curWL==='dual'?'':' nm')+'</div><div class="budget-row"><span class="br-label">Fiber attenuation ('+at.toFixed(3)+' × '+sc.km.toFixed(4)+' km)</span><span class="br-val br-neutral">'+fiberLoss.toFixed(3)+' dB</span></div><div class="budget-row"><span class="br-label">Splice loss</span><span class="br-val br-neutral">'+spliceLoss.toFixed(3)+' dB</span></div>'+(splitterLoss>0?'<div class="budget-row"><span class="br-label">Splitter loss</span><span class="br-val br-neutral">'+splitterLoss.toFixed(3)+' dB</span></div>':'')+'<div class="budget-row"><span class="br-label">Measured span loss</span><span class="br-val br-neutral">'+total.toFixed(3)+' dB</span></div><div class="budget-row"><span class="br-label">System budget</span><span class="br-val br-neutral">'+budget.toFixed(1)+' dB</span></div><div class="budget-row"><span class="br-label" style="font-weight:700">Budget Margin</span><span class="br-val '+(margin>=0?'br-pos':'br-neg')+'">'+margin.toFixed(2)+' dB '+(margin>=0?'✓ OK':'✗ OVER')+'</span></div></div>';}
-function buildQC(){var div=document.getElementById('qc-wrap');div.innerHTML='';if(!hasResult||curSc===null){div.innerHTML='<div class="qc-na-b qc-banner">ℹ Run a test first to enable QC verification.</div>';return;}var sc=SC[curSc],pass=isPass(sc,curWL);div.innerHTML='<div class="qc-banner '+(pass?'qc-pass-b':'qc-fail-b')+'"><div style="font-size:32px">'+(pass?'✅':'❌')+'</div><div><div>'+(pass?'TEST PASSED — Ready for QC Approval':'TEST FAILED — Issues must be resolved')+'</div><div style="font-size:12px;font-weight:400">'+sc.nm+'</div></div></div><div class="qc-box"><div class="qcb-t">Quality Control Sign-Off</div><div class="qc-r"><div class="qcr-l">Technician</div><input class="qcr-inp" id="qc-tech" placeholder="Full name" value="'+(ident.op||'')+'"></div><div class="qc-r"><div class="qcr-l">Supervisor</div><input class="qcr-inp" id="qc-sup" placeholder="Inspector name"></div><div class="qc-r"><div class="qcr-l">Work Order</div><input class="qcr-inp" id="qc-wo" placeholder="WO-XXXX"></div><div class="qc-r"><div class="qcr-l">Remarks</div><input class="qcr-inp" id="qc-rem" placeholder="Observations, corrective actions"></div><div class="qc-stamp"><div class="qcs-btn qcs-approve" onclick="qcApprove(true)">✅ APPROVE &amp; SIGN</div><div class="qcs-btn qcs-reject" onclick="qcApprove(false)">❌ REJECT</div></div></div>';}
+function buildQC(){var div=document.getElementById('qc-wrap');div.innerHTML='';if(!hasResult||curSc===null){div.innerHTML='<div class="qc-na-b qc-banner">ℹ Run a test first to enable QC verification.</div>';return;}var sc=SC[curSc],pass=isPass(sc,curWL);div.innerHTML='<div class="qc-banner '+(pass?'qc-pass-b':'qc-fail-b')+'"><div style="font-size:32px">'+(pass?'✅':'❌')+'</div><div><div>'+(pass?'TEST PASSED — Ready for QC Approval':'TEST FAILED — Issues must be resolved')+'</div><div style="font-size:12px;font-weight:400">'+esc(sc.nm)+'</div></div></div><div class="qc-box"><div class="qcb-t">Quality Control Sign-Off</div><div class="qc-r"><div class="qcr-l">Technician</div><input class="qcr-inp" id="qc-tech" placeholder="Full name" value="'+esc(ident.op||'')+'"></div><div class="qc-r"><div class="qcr-l">Supervisor</div><input class="qcr-inp" id="qc-sup" placeholder="Inspector name"></div><div class="qc-r"><div class="qcr-l">Work Order</div><input class="qcr-inp" id="qc-wo" placeholder="WO-XXXX"></div><div class="qc-r"><div class="qcr-l">Remarks</div><input class="qcr-inp" id="qc-rem" placeholder="Observations, corrective actions"></div><div class="qc-stamp"><div class="qcs-btn qcs-approve" onclick="qcApprove(true)">✅ APPROVE &amp; SIGN</div><div class="qcs-btn qcs-reject" onclick="qcApprove(false)">❌ REJECT</div></div></div>';}
 function qcApprove(ok){qcRecord={ok:ok,tech:document.getElementById('qc-tech').value,sup:document.getElementById('qc-sup').value,wo:document.getElementById('qc-wo').value,rem:document.getElementById('qc-rem').value,date:new Date().toLocaleString()};toast((ok?'✅ QC APPROVED — '+qcRecord.tech+' · '+qcRecord.date:'❌ QC REJECTED'),(ok?'ok':'err'));if(ok)genReport();}
 function showIdent(){document.getElementById('pg-ident').className='show';}
 function closeIdent(){document.getElementById('pg-ident').className='';}
@@ -957,7 +1178,7 @@ function genReport(){
   }
   var mbS=sc.ev.find(function(e){return e.t==='MBS';}),mbE2=sc.ev.find(function(e){return e.t==='MBE';});
   var mbHtml=mbS&&mbE2?'<div class="rpt-sec"><div class="rpt-shdr">Macrobend</div><table class="rpt-tbl"><thead><tr><th>Position (km)</th><th>Delta Loss (dB)</th></tr></thead><tbody><tr><td>'+mbS.p.toFixed(4)+'</td><td class="rv-f">'+(mbE2.a||0).toFixed(3)+'</td></tr></tbody></table></div>':'<div class="rpt-sec"><div class="rpt-shdr">Macrobend</div><p style="font-size:10px;color:#888;padding:4px 0">No macrobend detected.</p></div>';
-  var qcHtml=qcRecord?'<div class="rpt-sec"><div class="rpt-shdr">Quality Verification</div><table class="rpt-tbl"><tbody><tr><td><b>Decision</b></td><td class="'+(qcRecord.ok?'rv-p':'rv-f')+'">'+(qcRecord.ok?'APPROVED':'REJECTED')+'</td><td><b>Date</b></td><td>'+qcRecord.date+'</td></tr><tr><td><b>Technician</b></td><td>'+esc(qcRecord.tech||'—')+'</td><td><b>Supervisor</b></td><td>'+esc(qcRecord.sup||'—')+'</td></tr></tbody></table></div>':'';
+  var qcHtml=qcRecord?'<div class="rpt-sec"><div class="rpt-shdr">Quality Verification</div><table class="rpt-tbl"><tbody><tr><td><b>Decision</b></td><td class="'+(qcRecord.ok?'rv-p':'rv-f')+'">'+(qcRecord.ok?'APPROVED':'REJECTED')+'</td><td><b>Date</b></td><td>'+esc(qcRecord.date)+'</td></tr><tr><td><b>Technician</b></td><td>'+esc(qcRecord.tech||'—')+'</td><td><b>Supervisor</b></td><td>'+esc(qcRecord.sup||'—')+'</td></tr></tbody></table></div>':'';
   var H='<div class="rpt"><table style="width:100%;border-collapse:collapse;margin-bottom:12px"><tr><td style="font-size:14px;font-weight:700">OTDR Report ('+wlStr+')</td><td style="text-align:right"><span style="padding:4px 14px;border:2px solid '+(pass?'#22aa44':'#cc2200')+';border-radius:3px;font-weight:700;font-size:13px;color:'+(pass?'#0a6020':'#8a0a0a')+';background:'+(pass?'#eef8f0':'#f8eeee')+'">'+(pass?'Pass':'Fail')+'</span></td></tr></table>'+
   '<div class="rpt-sec"><div class="rpt-shdr">General Information</div><table style="width:100%;font-size:10px;border-collapse:collapse"><tr><td style="width:15%;padding:2px 0"><b>File name:</b></td><td style="width:45%">'+esc(ident.cbl?ident.cbl+'-'+ident.fib+'.trc':sc.nm.toLowerCase().replace(/[^a-z0-9]/g,'-')+'.trc')+'</td><td style="width:15%"><b>Customer:</b></td><td>'+esc(ident.customer||'')+'</td></tr><tr><td><b>Test date:</b></td><td>'+ds+'</td><td><b>Company:</b></td><td>'+esc(ident.company||'')+'</td></tr><tr><td><b>Test time:</b></td><td>'+ts+'</td><td><b>Fiber ID:</b></td><td>'+esc(ident.fib||'')+'</td></tr><tr><td><b>Cable ID:</b></td><td>'+esc(ident.cbl||'')+'</td><td><b>Job ID:</b></td><td>'+esc(ident.job||'')+'</td></tr><tr><td><b>Comments:</b></td><td colspan="3">'+esc(ident.notes||'')+'</td></tr></table></div>'+
   '<div class="rpt-sec"><div class="rpt-shdr">Locations</div><table class="rpt-tbl"><thead><tr><th></th><th>Location A</th><th>Location B</th></tr></thead><tbody><tr><td><b>Location</b></td><td>'+esc(ident.loca||'')+'</td><td>'+esc(ident.locb||'')+'</td></tr><tr><td><b>Operator</b></td><td>'+esc(ident.op||'')+'</td><td></td></tr><tr><td><b>Model</b></td><td>MAX-730B</td><td></td></tr><tr><td><b>S/N</b></td><td>839640</td><td></td></tr><tr><td><b>Cal. date</b></td><td>15-Oct-25</td><td></td></tr></tbody></table></div>'+
@@ -969,7 +1190,7 @@ function genReport(){
   '<div class="rpt-sec"><div class="rpt-shdr">Test Parameters</div><table class="rpt-tbl"><thead><tr><th></th><th>A→B</th></tr></thead><tbody><tr><td>Wavelength</td><td>'+wlStr+'</td></tr><tr><td>Range (km)</td><td>'+P.rng.toFixed(4)+'</td></tr><tr><td>Pulse (ns)</td><td>'+P.pls+'</td></tr><tr><td>Duration (s)</td><td>'+P.dur+'</td></tr><tr><td>IOR</td><td>'+P.ior.toFixed(6)+'</td></tr><tr><td>Backscatter (dB)</td><td>'+P.bsc.toFixed(2)+'</td></tr></tbody></table></div>'+
   qcHtml+
   '<div style="margin-top:20px;border-top:1px solid #d8e4f0;padding-top:12px;display:flex;gap:80px;font-size:10px;color:#666"><div>Signature: <span style="display:inline-block;width:180px;border-bottom:1px solid #888;height:18px"></span></div><div>Date: '+ds+'</div><div>Page 1 of 1</div></div>'+
-  '<div style="text-align:center;font-size:8.5px;color:#999;margin-top:9px;border-top:1px solid #eee;padding-top:7px">EXFO MaxTester 730B OTDR Training Emulator v6 · Author: Diyar Hussein · linkedin.com/in/diyar · Training purposes only</div>'+
+  '<div style="text-align:center;font-size:8.5px;color:#999;margin-top:9px;border-top:1px solid #eee;padding-top:7px">EXFO MaxTester 730B OTDR Training Emulator v6.2 · Author: Diyar Hussein · linkedin.com/in/diyar · Training purposes only</div>'+
   '</div>';
   document.getElementById('rep-body').innerHTML=H;document.getElementById('pg-report').className='show';
   setTimeout(function(){var box=document.getElementById('rpt-trace');if(!box)return;var cv=document.createElement('canvas');cv.width=box.offsetWidth||880;cv.height=175;cv.style.cssText='width:100%;height:100%;display:block';box.appendChild(cv);drawPartial(cv.getContext('2d'),cv.width,cv.height,SC[curSc],1);},300);
