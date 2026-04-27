@@ -10,7 +10,19 @@
 /* EXFO MaxTester 730B v6 — Author: Diyar Hussein · linkedin.com/in/diyar */
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:14px;background:#141824;color:#1a2a3a;line-height:1.4}
-#pg-off{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;gap:60px;background:linear-gradient(135deg,#dde8f4 0%,#e8f2fb 40%,#d0e4f2 100%)}
+/* Scale landing page to fit any iframe width */
+#pg-off{
+  width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;
+  gap:40px;background:linear-gradient(135deg,#dde8f4 0%,#e8f2fb 40%,#d0e4f2 100%);
+  overflow:hidden;
+}
+@media(max-width:1100px){
+  #pg-off{transform-origin:top left;transform:scale(var(--pg-scale,1));width:calc(100vw / var(--pg-scale,1));height:calc(100vh / var(--pg-scale,1));}
+  .dev-3d{width:520px!important;height:325px!important;}
+  .dev-chassis{border-radius:14px!important;}
+  .landing-info{max-width:220px!important;}
+  .li-brand{font-size:22px!important;}
+}
 .dev-wrap{perspective:1400px;cursor:pointer;flex-shrink:0}
 .dev-3d{width:640px;height:400px;transform:rotateX(7deg) rotateY(-14deg) rotateZ(-1deg);transform-style:preserve-3d;transition:transform .9s cubic-bezier(.25,.8,.25,1)}
 .dev-wrap:hover .dev-3d{transform:rotateX(3deg) rotateY(-5deg) rotateZ(-.5deg)}
@@ -964,7 +976,21 @@ function genReport(){
 }
 function closeReport(){document.getElementById('pg-report').className='';}
 function dlReport(){var body=document.getElementById('rep-body').innerHTML;var css='body{font-family:Arial,Helvetica,sans-serif;padding:26px;max-width:960px;margin:0 auto;font-size:11px}.rpt-shdr{background:#f0f4f8;padding:5px 12px;font-size:10px;font-weight:700;color:#1a3050;border-left:4px solid #00b04f;margin-bottom:6px}.rpt-sec{margin-bottom:16px}.rpt-tbl{width:100%;border-collapse:collapse;font-size:10px}.rpt-tbl th{background:#f4f8fb;font-weight:700;padding:5px 9px;border:1px solid #d0dcea;text-align:left}.rpt-tbl td{padding:5px 9px;border:1px solid #d0dcea;font-family:monospace}.rpt-tbl tr:nth-child(even) td{background:#fafcff}.rv-p{color:#0a6020;font-weight:700}.rv-f{color:#8a0a0a;font-weight:700}.rpt-trace-box{background:#fff;border:1px solid #d0dcea;height:185px;overflow:hidden;margin-bottom:8px}';var full='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>EXFO OTDR Report</title><style>'+css+'</style></head><body>'+body+'</body></html>';var b=new Blob([full],{type:'text/html'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='EXFO_OTDR_Report_'+new Date().toISOString().slice(0,10)+'.html';a.click();}
-document.addEventListener('DOMContentLoaded',function(){syncUI();});
+document.addEventListener('DOMContentLoaded',function(){
+  syncUI();
+  // Scale landing page to always fit the iframe viewport — fixes Beautiful Jekyll clipping
+  function scaleLanding(){
+    var el=document.getElementById('pg-off');if(!el)return;
+    var needed=980, avail=window.innerWidth;
+    var scale=avail<needed?avail/needed:1;
+    el.style.transform=scale<1?'scale('+scale+')':'';
+    el.style.transformOrigin=scale<1?'top left':'';
+    el.style.width=scale<1?(100/scale)+'vw':'';
+    el.style.height=scale<1?(100/scale)+'vh':'';
+  }
+  scaleLanding();
+  window.addEventListener('resize',scaleLanding);
+});
 </script>
 </body>
 </html>
