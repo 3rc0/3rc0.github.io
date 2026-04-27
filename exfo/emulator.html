@@ -1,1 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="googlebot" content="noindex,nofollow">
+<title>EXFO MaxTester 730B — OTDR Training Emulator v6</title>
+<style>
+/* EXFO MaxTester 730B v6 — Author: Diyar Hussein · linkedin.com/in/diyar */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:14px;background:#141824;color:#1a2a3a;line-height:1.4}
+#pg-off{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;gap:60px;background:linear-gradient(135deg,#dde8f4 0%,#e8f2fb 40%,#d0e4f2 100%)}
+.dev-wrap{perspective:1400px;cursor:pointer;flex-shrink:0}
+.dev-3d{width:640px;height:400px;transform:rotateX(7deg) rotateY(-14deg) rotateZ(-1deg);transform-style:preserve-3d;transition:transform .9s cubic-bezier(.25,.8,.25,1)}
+.dev-wrap:hover .dev-3d{transform:rotateX(3deg) rotateY(-5deg) rotateZ(-.5deg)}
+.dev-chassis{position:absolute;inset:0;background:linear-gradient(148deg,#78aed2 0%,#5c92bc 15%,#4a7aac 35%,#3e70a0 55%,#306092 75%,#285280 100%);border-radius:18px;box-shadow:0 -1px 0 rgba(180,220,255,.32),inset 0 1px 0 rgba(255,255,255,.22),0 0 0 1.5px #284870,0 0 0 3px #1a3050,9px 13px 0 -1px #1a3860,18px 28px 55px rgba(0,0,0,.82);overflow:hidden}
+.dev-c{position:absolute;width:48px;height:48px;background:radial-gradient(circle at 33% 33%,#3a5878,#0e1e2e)}
+.dc-tl{top:0;left:0;border-radius:18px 0 18px 0}.dc-tr{top:0;right:0;border-radius:0 18px 0 18px}
+.dc-bl{bottom:0;left:0;border-radius:0 18px 18px 0}.dc-br{bottom:0;right:0;border-radius:18px 0 0 18px}
+.dev-bezel{position:absolute;top:20px;left:14px;right:14px;bottom:42px;background:#111214;border-radius:7px;box-shadow:inset 0 3px 12px rgba(0,0,0,.95)}
+.dev-maxtester{position:absolute;top:5px;right:9px;font-size:12px;font-weight:500;color:rgba(255,255,255,.7);letter-spacing:.5px;font-style:italic}
+.dev-screen{position:absolute;top:3px;left:3px;right:3px;bottom:3px;background:#000;border-radius:5px;overflow:hidden}
+.dev-ports{position:absolute;top:0;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:2px 14px 5px;background:rgba(10,22,36,.72);border-radius:0 0 9px 9px}
+.dev-fc{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 37% 32%,#555,#111);border:2px solid #3a5a3a;position:relative}
+.dev-fc::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#5a9a5a,#1a4a1a)}
+.dev-plbl{font-size:8px;color:#3a7a5a;font-family:'Courier New',monospace}
+.dev-aled{width:7px;height:7px;border-radius:50%;background:#0a1a0a;border:1px solid #1a2a1a;transition:all .3s}
+.dev-aled.on{background:#00e044;box-shadow:0 0 5px #00e044}
+.dev-stylus{position:absolute;left:3px;top:28%;width:5px;height:55px;background:linear-gradient(to right,#4a7aaa,#2a5080);border-radius:0 3px 3px 0;border:1px solid #5a8ab8}
+.dev-bottom{position:absolute;bottom:0;left:0;right:0;height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 16px}
+.dev-exfo{font-size:18px;font-weight:700;color:rgba(255,255,255,.82);letter-spacing:2px}
+.dev-btns{display:flex;align-items:center;gap:8px}
+.dev-home{width:40px;height:22px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.2);border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,.65);font-size:14px;transition:all .15s}
+.dev-home:hover{background:rgba(255,255,255,.15);color:#fff}
+.dev-pwr{width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.4);border:1.5px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,.55);font-size:13px;transition:all .15s}
+.dev-pwr:hover{background:rgba(255,255,255,.15);color:#fff}
+.dev-battled{width:9px;height:9px;border-radius:50%;background:rgba(0,200,80,.7);box-shadow:0 0 5px rgba(0,200,80,.4)}
+.dev-stand{position:absolute;right:-5px;bottom:28px;width:7px;height:50px;background:linear-gradient(to right,#4a7ab0,#2a5080);border-radius:0 4px 4px 0;border:1px solid #3a6098}
+.screen-off{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000}
+.off-logo{font-size:36px;font-weight:700;letter-spacing:7px;color:rgba(0,176,79,.22)}
+.landing-info{display:flex;flex-direction:column;gap:18px;max-width:260px}
+.li-brand{font-size:26px;font-weight:700;color:#007a36;letter-spacing:3px;font-family:'Courier New',Courier,monospace}
+.li-model{font-size:12px;color:#2a4a60;letter-spacing:1px;font-family:'Courier New',Courier,monospace;margin-top:-12px;font-weight:600}
+.li-specs{display:flex;flex-direction:column;gap:5px}
+.li-spec{font-size:12px;color:#1a3a5a;font-family:'Courier New',Courier,monospace;display:flex;gap:6px}
+.li-spec::before{content:'›';color:#008040;font-weight:700}
+.pwr-group{display:flex;flex-direction:column;align-items:center;gap:8px}
+.pwr-ring{width:68px;height:68px;border-radius:50%;border:2.5px solid #008040;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,128,64,.08);transition:all .3s;box-shadow:0 0 20px rgba(0,128,64,.2)}
+.pwr-ring:hover{box-shadow:0 0 30px rgba(0,128,64,.5);border-color:#00a050;background:rgba(0,128,64,.15);transform:scale(1.05)}
+.pwr-label{font-size:11px;color:#1a5028;letter-spacing:2px;font-family:'Courier New',Courier,monospace;font-weight:700}
+.li-caution{font-size:11px;color:#7a2000;border:1.5px solid #cc4400;border-radius:4px;padding:8px 10px;line-height:1.7;font-family:'Courier New',Courier,monospace;background:rgba(255,200,150,.15)}
+#pg-boot{width:100vw;height:100vh;background:#061428;display:none;flex-direction:column;align-items:center;justify-content:center;gap:13px}
+.boot-logo{font-size:54px;font-weight:700;color:#00b04f;letter-spacing:8px;text-shadow:0 0 32px rgba(0,176,79,.4)}
+.boot-tagline{font-size:12px;color:#2a8050;letter-spacing:3px;font-family:'Courier New',Courier,monospace}
+.boot-bar{width:280px;height:5px;background:#0a2a18;border-radius:3px;overflow:hidden;border:1px solid #1a4a28}
+.boot-fill{height:100%;background:linear-gradient(90deg,#00b04f,#00e060);width:0%}
+.boot-msg{font-size:13px;color:#44aa66;font-family:'Courier New',Courier,monospace}
+.boot-info{font-size:11px;color:#2a5a3a;font-family:'Courier New',Courier,monospace}
+#pg-launcher{width:100vw;height:100vh;display:none;flex-direction:column;background:radial-gradient(ellipse 70% 80% at 65% 65%,#0a2040,transparent),linear-gradient(160deg,#060c14,#0a1420)}
+.lnch-topbar{height:30px;background:rgba(5,10,20,.78);border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;padding:0 14px;z-index:1;flex-shrink:0}
+.ltb-l{font-size:12px;font-weight:600;color:rgba(255,255,255,.6);font-family:'Courier New',Courier,monospace;letter-spacing:1px}
+.ltb-r{display:flex;align-items:center;gap:14px;font-size:12px;color:rgba(255,255,255,.4);font-family:'Courier New',Courier,monospace}
+.lnch-desktop{flex:1;position:relative;z-index:1;display:grid;grid-template-columns:repeat(5,112px);align-content:start;padding:24px 20px;gap:10px}
+.desk-app{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;padding:10px 6px;border-radius:8px;transition:background .15s}
+.desk-app:hover{background:rgba(255,255,255,.1)}
+.da-icon{width:60px;height:60px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 4px 14px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.16);position:relative;overflow:hidden}
+.da-icon::after{content:'';position:absolute;inset:0;border-radius:13px;background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 55%)}
+.da-otdr{background:linear-gradient(145deg,#1a4a9e,#0c2860)}.da-file{background:linear-gradient(145deg,#2a5a8e,#102848)}.da-data{background:linear-gradient(145deg,#1a608a,#0a3050)}.da-cfg{background:linear-gradient(145deg,#2a2a40,#12121e)}.da-doc{background:linear-gradient(145deg,#3a2810,#1a0e04)}.da-ie{background:linear-gradient(145deg,#1a4a9e,#0c2860)}.da-vnc{background:linear-gradient(145deg,#5a1a1a,#280808)}
+.da-lbl{font-size:13px;color:#fff;text-align:center;line-height:1.3;text-shadow:0 2px 6px rgba(0,0,0,.95);font-weight:500}
+.lnch-taskbar{height:30px;background:rgba(5,10,20,.82);border-top:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(255,255,255,.6);flex-shrink:0;z-index:1}
+#pg-otdr{width:100vw;height:100vh;background:#b4c8d8;display:none;flex-direction:column}
+.otdr-titlebar{height:28px;background:linear-gradient(180deg,#3a6080,#2e5070);display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0}
+.tb-l{font-size:12px;color:#c0d8f0;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-r{display:flex;align-items:center;gap:12px;font-size:12px;color:#88a8c8;font-family:'Courier New',Courier,monospace;flex-shrink:0}
+.otdr-tabbar{height:38px;background:#90aac4;border-bottom:2px solid #5878a0;display:flex;align-items:flex-end;padding-left:4px;flex-shrink:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;gap:2px}
+.otdr-tabbar::-webkit-scrollbar{display:none}
+.otab{height:32px;flex-shrink:0;padding:0 14px;background:linear-gradient(180deg,#a8c0d4,#90aac0);border:1px solid #5878a0;border-bottom:none;border-radius:5px 5px 0 0;font-size:13px;font-weight:500;color:#1a2e40;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .1s;white-space:nowrap;gap:5px}
+.otab:hover{background:linear-gradient(180deg,#b8d0e4,#a0b8cc)}
+.otab.active{background:linear-gradient(180deg,#fc9e18,#e68800);color:#fff;border-color:#cc7800;font-weight:700;box-shadow:0 -1px 0 0 #e09000 inset}
+.otdr-main{flex:1;display:flex;min-height:0}
+.otdr-col-left{flex:1;min-width:0;display:flex;flex-direction:column;min-height:0}
+/* PORT VIEW — 620px wider panel */
+.pv-panel{width:620px;flex-shrink:0;background:#eef4f8;border-left:2px solid #5878a0;display:flex;flex-direction:column;min-height:0;transition:width .3s ease}
+.pv-panel.collapsed{width:0;overflow:hidden;border-left:none}
+.pvp-hdr{height:36px;background:linear-gradient(180deg,#1e5080,#164070);display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0}
+.pvp-title{font-size:13px;font-weight:700;color:#a0d0ff;display:flex;align-items:center;gap:6px}
+.pvp-hdr-btns{display:flex;align-items:center;gap:6px}
+.pvp-hbtn{height:26px;padding:0 8px;background:rgba(255,255,255,.12);border-radius:4px;cursor:pointer;display:flex;align-items:center;font-size:12px;color:#80b8e8;border:1px solid rgba(255,255,255,.18);transition:all .15s;gap:4px;white-space:nowrap}
+.pvp-hbtn:hover{background:rgba(255,255,255,.22);color:#fff}
+.pvp-body{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-height:0}
+.pvp-cable-section{flex-shrink:0;padding:12px 12px 8px;background:#fff;border-bottom:1px solid #c0d4e4}
+.pvp-cable-title{font-size:12px;font-weight:700;color:#1a3050;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.pvp-legend{display:flex;flex-wrap:wrap;gap:7px;padding:7px 12px;background:#f4f8fc;border-bottom:1px solid #c0d4e4;flex-shrink:0}
+.pvl{display:flex;align-items:center;gap:4px;font-size:11px;color:#3a5060}
+.pvl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.pvp-events-section{padding:10px;flex:1;overflow-y:auto}
+.pvp-events-title{font-size:13px;font-weight:700;color:#1a3050;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+#pv-no-data{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;font-size:13px;color:#7090a0;text-align:center;line-height:2;padding:24px}
+.pv-event-cards{display:flex;flex-direction:column;gap:8px}
+.pvec{background:#fff;border:1px solid #c0d4e8;border-radius:5px;padding:11px 13px;border-left:4px solid #7890a8;transition:all .2s;cursor:pointer}
+.pvec:hover{box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.pvec.ev-pass{border-left-color:#22aa44}.pvec.ev-fail{border-left-color:#cc2200}.pvec.ev-warn{border-left-color:#cc8800}.pvec.ev-info{border-left-color:#2266cc}
+.pvec.pv-sel{background:#e8f4ff;box-shadow:0 0 0 2px #3a88cc}
+.pvec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.pvec-title{font-size:13px;font-weight:700;color:#1a3050}
+.pvec-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:3px}
+.pvcb-pass{background:#d4f0d8;color:#1a6028}.pvcb-fail{background:#f0d0d0;color:#7a1818}.pvcb-warn{background:#f0e8d0;color:#7a4800}.pvcb-info{background:#d4e8f8;color:#1a3a6a}.pvcb-bidir{background:#ffe8d0;color:#8a3800}
+.pvec-rows{display:flex;flex-direction:column;gap:0}
+.pvec-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid #f0f6fa;font-size:12px}
+.pvec-row:last-child{border-bottom:none}
+.pvec-k{color:#5a7080;font-weight:500}.pvec-v{font-family:'Courier New',Courier,monospace;font-weight:600;color:#1a3050}
+.pvec-desc{font-size:12px;color:#2a4060;line-height:1.7;margin-top:6px;padding-top:6px;border-top:1px solid #e8f2f8}
+.pv-quality{display:inline-block;padding:1px 7px;border-radius:3px;font-size:11px;font-weight:700;margin-left:4px}
+.pq-excel{background:#d4f0d8;color:#1a5a28}.pq-good{background:#e4f8e8;color:#1a6428}.pq-accept{background:#fff0d0;color:#7a4800}.pq-poor{background:#f8d8d8;color:#7a1818}
+.otdr-sidebar{width:194px;flex-shrink:0;background:linear-gradient(180deg,#b8c8dc,#a8b8cc);border-left:1px solid #5878a0;display:flex;flex-direction:column;overflow-y:auto}
+.sid-pf{height:36px;background:linear-gradient(180deg,#a4b4c8,#94a4b8);border-bottom:1px solid #5878a0;display:flex;align-items:center;justify-content:space-between;padding:0 10px;flex-shrink:0}
+.pf-pass{background:#22aa44;color:#fff;border:1.5px solid #18882a;border-radius:4px;display:flex;align-items:center;gap:5px;padding:4px 12px;font-size:13px;font-weight:700}
+.pf-fail{background:#cc2200;color:#fff;border:1.5px solid #aa1800;border-radius:4px;display:flex;align-items:center;gap:5px;padding:4px 12px;font-size:13px;font-weight:700}
+.pf-na{background:#d4e4f0;color:#3a5878;border:1px solid #6888a0;border-radius:4px;padding:4px 12px;font-size:13px;font-weight:600}
+.pf-wl{font-size:11px;color:#2a4060;font-weight:600}
+.sid-start{margin:8px 8px 4px;height:56px;font-size:16px;font-weight:700;background:linear-gradient(180deg,#4acc44,#22aa22);border:2px solid #1a8018;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;gap:8px;box-shadow:0 3px 8px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.3);transition:all .12s}
+.sid-start:hover{background:linear-gradient(180deg,#5add55,#33bb33);transform:translateY(-1px)}
+.sid-start:active{transform:translateY(1px)}
+.sid-scen{margin:4px 8px 6px;height:40px;font-size:13px;font-weight:600;background:linear-gradient(180deg,#e8a020,#cc8800);border:1.5px solid #a06800;border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;gap:6px;box-shadow:0 2px 5px rgba(0,0,0,.22);transition:all .1s}
+.sid-scen:hover{background:linear-gradient(180deg,#f0b030,#e09800)}
+.sid-sect{border-bottom:1px solid #7090a8;padding:7px 8px}
+.sid-sect-t{font-size:11px;font-weight:700;color:#2a4870;letter-spacing:.5px;margin-bottom:6px;text-transform:uppercase}
+.wl-btns{display:flex;gap:3px;flex-wrap:wrap}
+.wl-btn{flex:1;height:34px;min-width:42px;border-radius:4px;border:1px solid #6080a0;font-size:12px;font-weight:500;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#1a3050;display:flex;align-items:center;justify-content:center;transition:all .08s}
+.wl-btn:hover{background:linear-gradient(180deg,#e0f4ff,#ccdef4)}.wl-btn.on{background:linear-gradient(180deg,#1a7acc,#1460aa);border-color:#1050a8;color:#fff;font-weight:600}
+.param-row{display:flex;flex-direction:column;gap:3px;margin-bottom:7px}
+.param-lbl{font-size:12px;color:#2a4870;font-weight:600}
+.param-ctrl{display:flex;align-items:center;gap:3px}
+.param-val{height:34px;padding:0 8px;border:1px solid #6080a0;border-radius:4px;background:#ddeeff;color:#1a3a6a;font-family:'Courier New',Courier,monospace;font-size:13px;font-weight:700;display:flex;align-items:center;flex:1;min-width:0}
+.param-pm{width:30px;height:34px;background:linear-gradient(180deg,#ccdde8,#b4c8dc);border:1px solid #6080a0;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:300;color:#1a4060;flex-shrink:0;transition:all .08s;user-select:none}
+.param-pm:hover{background:linear-gradient(180deg,#ddeeff,#c4d8ec)}.param-pm:active{transform:scale(.95)}
+.mode-btns{display:flex;gap:3px}
+.mode-btn{flex:1;height:32px;border-radius:4px;border:1px solid #6080a0;font-size:12px;font-weight:500;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#2a4060;display:flex;align-items:center;justify-content:center;transition:all .08s}
+.mode-btn:hover{background:linear-gradient(180deg,#e0f4ff,#ccddf4)}.mode-btn.on{background:linear-gradient(180deg,#cc8800,#aa6800);border-color:#886400;color:#fff}.mode-btn.rt-on{background:linear-gradient(180deg,#1a7acc,#1460aa);border-color:#1050a8;color:#fff}.mode-btn.pv-on{background:linear-gradient(180deg,#1e5080,#144070);border-color:#103060;color:#a0d0ff}
+.sid-action-row{display:flex;gap:3px;padding:6px 8px}
+.sid-act{flex:1;height:44px;border-radius:4px;border:1px solid #6080a0;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#1a3050;transition:all .08s}
+.sid-act:hover{background:linear-gradient(180deg,#e0f4ff,#ccdef4)}
+.sid-act-icon{font-size:18px;line-height:1}.sid-act-lbl{font-size:11px;font-weight:500}
+.sid-nav{display:flex;gap:3px;padding:4px 8px}
+.sid-nav-btn{flex:1;height:30px;border-radius:4px;border:1px solid #6080a0;font-size:12px;font-weight:500;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#1a3050;display:flex;align-items:center;justify-content:center;transition:all .08s}
+.sid-nav-btn:hover{background:linear-gradient(180deg,#e0f4ff,#ccddf4)}
+.sid-menu{flex:1;background:linear-gradient(180deg,#b4c4d8,#a4b4c8);overflow-y:auto}
+.sid-mhdr{padding:5px 10px;font-size:12px;font-weight:700;color:#1a3050;background:linear-gradient(180deg,#9cb0c4,#8ca0b4);border-top:1px solid #6080a0;border-bottom:1px solid #6080a0}
+.sid-mi{padding:9px 12px;font-size:13px;color:#1a3050;cursor:pointer;border-bottom:1px solid rgba(90,118,160,.3);display:flex;justify-content:space-between;align-items:center;transition:background .08s}
+.sid-mi:hover{background:rgba(70,110,170,.18)}.sid-mi-arr{color:#4a6888;font-size:12px}
+.sid-params{padding:8px 10px;border-top:1px solid #7090a8}
+.sid-p{font-size:12px;color:#1a3060;margin-bottom:5px;font-family:'Courier New',Courier,monospace;display:flex;justify-content:space-between;align-items:center}
+.sid-p-v{color:#0a2858;font-weight:700;font-size:13px}
+.trace-wrap{flex:1;position:relative;background:#fff;border-bottom:1px solid #6080a0;overflow:hidden;min-height:0}
+#cv-trace{position:absolute;top:0;left:0;display:block;cursor:crosshair}
+.trace-wl-tag{position:absolute;top:8px;left:58px;font-size:12px;color:#1a3050;background:rgba(240,248,255,.92);padding:3px 8px;border-radius:3px;border:1px solid #c0d4e8;pointer-events:none;font-weight:600}
+.cursor-bar{position:absolute;bottom:6px;left:58px;display:flex;gap:8px;pointer-events:none}
+.cur-badge{padding:3px 9px;border-radius:3px;font-size:12px;font-family:'Courier New',Courier,monospace;font-weight:700;display:flex;align-items:center;gap:4px}
+.cur-a{background:rgba(180,20,0,.88);color:#fff}.cur-b{background:rgba(0,50,180,.88);color:#fff}.cur-diff{background:rgba(10,70,10,.88);color:#b0ffb0}
+.zoom-row{position:absolute;bottom:6px;right:8px;display:flex;gap:3px}
+.zbtn{width:28px;height:28px;background:rgba(200,220,240,.9);border:1px solid #6080a0;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:#1a3050;font-weight:500}
+.zbtn:hover{background:rgba(220,238,255,.95)}
+#sc-overlay{position:absolute;inset:0;background:rgba(248,252,255,.97);overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:9px;z-index:10}
+.sc-hdr{font-size:17px;font-weight:700;color:#1a3a5a}
+.sc-sub{font-size:12px;color:#5a7888;margin-top:-5px}
+.sc-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.sc-chip{padding:9px 16px;border-radius:5px;border:1.5px solid;font-size:13px;font-weight:500;cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:6px}
+.sc-easy{border-color:#44aa55;background:#edf8ef;color:#1a6428}.sc-easy:hover{background:#d0f0da;transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,0,0,.12)}
+.sc-med{border-color:#cc8800;background:#fdf4e0;color:#7a4800}.sc-med:hover{background:#fce8a0;transform:translateY(-1px)}
+.sc-hard{border-color:#cc2200;background:#fdf0ee;color:#7a1800}.sc-hard:hover{background:#fcd0c8;transform:translateY(-1px)}
+.sc-cancel{align-self:flex-start;padding:8px 18px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid #6080a0;background:linear-gradient(180deg,#d4e4f4,#c0d0e4);color:#2a4060}
+.evt-section{flex-shrink:0}
+.evt-wrap{background:#fff;border-top:1px solid #6080a0}
+.evt-scroll{overflow-y:auto;max-height:205px}
+.evt-tbl{width:100%;border-collapse:collapse;table-layout:fixed}
+.evt-tbl th{background:linear-gradient(180deg,#c4daea,#b0c8dc);color:#1a2e40;font-weight:700;padding:7px 8px;border-bottom:2px solid #6080a0;border-right:1px solid #7090a8;text-align:left;font-size:12px;white-space:nowrap;position:sticky;top:0;z-index:1}
+.evt-tbl td{padding:7px 8px;border-bottom:1px solid rgba(90,118,160,.3);border-right:1px solid rgba(90,118,160,.2);white-space:nowrap;font-family:'Courier New',Courier,monospace;font-size:12px;color:#101e30;overflow:hidden;text-overflow:ellipsis}
+.erow-main{cursor:pointer;transition:background .08s}.erow-main:hover td{background:rgba(70,140,220,.1)}.erow-main.erow-sel td{background:#1a68c8;color:#fff}
+.erow-sub td{background:#f0f6fa;color:#4a6070;font-size:11px;padding:5px 8px}
+/* v6 FIX: missing CSS classes causing visual defects */
+.ec-no-col{text-align:center;width:52px;min-width:52px}
+.ec-cell-fail{color:#8a1818!important;font-weight:700!important;background:rgba(255,220,220,.55)!important}
+.ec-sym-box{display:inline-flex;align-items:center;gap:1px;line-height:1}
+.fname-bar{height:22px;background:linear-gradient(180deg,#b4c8d8,#a4b8c8);border-top:1px solid #6080a0;display:flex;align-items:center;padding:0 10px;font-size:11px;color:#1a3060;font-family:'Courier New',Courier,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.sum-grid{padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sg-box{background:#fff;border:1px solid #b0c4d8;border-radius:5px;padding:14px}
+.sgb-t{font-size:14px;font-weight:700;color:#1a3050;border-bottom:1px solid #d4e4f4;padding-bottom:6px;margin-bottom:10px}
+.sgb-r{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;padding:3px 0;border-bottom:1px solid #f2f8ff}
+.sgb-r:last-child{border-bottom:none}
+.sgb-l{font-size:13px;color:#3a5870}.sgb-v{font-size:13px;font-family:'Courier New',Courier,monospace;font-weight:600;color:#101e30}
+.sv-pass{color:#1a6428;font-weight:700}.sv-fail{color:#7a1818;font-weight:700}.sv-warn{color:#7a4800;font-weight:700}
+.setup-grid{padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;overflow-y:auto}
+.sp-box{background:#fff;border:1px solid #b0c4d8;border-radius:5px;padding:12px}
+.spb-t{font-size:13px;font-weight:700;color:#1a3050;border-bottom:1px solid #d4e4f4;padding-bottom:4px;margin-bottom:9px}
+.sp-r{margin-bottom:9px}
+.spr-l{font-size:12px;color:#3a5870;margin-bottom:3px;font-weight:600}
+.spr-c{display:flex;gap:3px;align-items:center}
+.spr-v{font-family:'Courier New',Courier,monospace;font-size:13px;font-weight:700;color:#1a4a7a;background:#e0eefa;border:1px solid #88b0cc;border-radius:4px;padding:4px 8px;flex:1}
+.spr-pm{width:30px;height:32px;background:linear-gradient(180deg,#ccdde8,#b4c8dc);border:1px solid #6080a0;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:#1a4060;flex-shrink:0;transition:all .08s;user-select:none}
+.spr-pm:hover{background:linear-gradient(180deg,#dcedfc,#c4d8ec)}
+.spr-inp{width:100%;background:#e0eefa;border:1px solid #88b0cc;border-radius:4px;color:#1a4a7a;font-family:'Courier New',Courier,monospace;font-size:13px;font-weight:700;padding:5px 8px}
+.spr-sel{width:100%;height:34px;background:#e0eefa;border:1px solid #88b0cc;border-radius:4px;color:#1a4a7a;font-family:'Courier New',Courier,monospace;font-size:12px;font-weight:600;padding:0 8px;cursor:pointer;-webkit-appearance:none}
+.wl-btn2{padding:5px 10px;border-radius:4px;border:1px solid #6080a0;font-size:12px;cursor:pointer;background:linear-gradient(180deg,#d0e4f4,#bcd0e4);color:#1a3050;transition:all .08s;font-weight:500}
+.wl-btn2:hover{background:linear-gradient(180deg,#e0f4ff,#ccdef4)}.wl-btn2.on{background:linear-gradient(180deg,#1a7acc,#1460aa);border-color:#1050a8;color:#fff;font-weight:600}
+.sp-info{padding:8px 10px;background:#fff3e0;border-radius:4px;border:1px solid #ffcc80;font-size:12px;color:#7a4800;line-height:1.7;margin-top:6px}
+.qc-wrap{padding:14px;display:flex;flex-direction:column;gap:12px;overflow-y:auto}
+.qc-banner{padding:14px 18px;border-radius:6px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:12px;border:2px solid}
+.qc-pass-b{background:#d4f4d8;border-color:#44aa55;color:#1a5a28}.qc-fail-b{background:#f4d4d4;border-color:#aa4444;color:#5a1a1a}.qc-na-b{background:#f0f4f8;border-color:#8090a8;color:#3a5878}
+.qc-box{background:#fff;border:1px solid #b0c4d8;border-radius:5px;padding:14px}
+.qcb-t{font-size:14px;font-weight:700;color:#1a3050;border-bottom:1px solid #d4e4f4;padding-bottom:5px;margin-bottom:11px}
+.qc-r{margin-bottom:9px}.qcr-l{font-size:12px;color:#3a5870;font-weight:600;margin-bottom:4px}
+.qcr-inp{width:100%;border:1.5px solid #88b0cc;border-radius:4px;padding:7px 9px;font-size:13px;color:#1a2a3a;background:#f4faff}
+.qcr-inp:focus{outline:2px solid #3a88cc}
+.qc-stamp{display:flex;gap:10px;margin-top:10px}
+.qcs-btn{flex:1;height:46px;border-radius:5px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;border:2px solid;transition:all .1s;gap:6px}
+.qcs-approve{background:#d0f4d8;border-color:#44aa55;color:#1a5a28}.qcs-approve:hover{background:#b4ecc0}
+.qcs-reject{background:#f4d0d0;border-color:#aa4444;color:#5a1a1a}.qcs-reject:hover{background:#ecc0c0}
+.bidir-wrap{padding:14px;overflow-y:auto}
+.bidir-step{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:5px;margin-bottom:8px;border:1.5px solid}
+.bs-done{background:#edf8ef;border-color:#88cc88}.bs-active{background:#e8f0f8;border-color:#5888cc}.bs-pending{background:#f4f4f6;border-color:#b0b8c8;opacity:.6}
+.bs-num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.bs-done .bs-num{background:#44aa55;color:#fff}.bs-active .bs-num{background:#2266cc;color:#fff}.bs-pending .bs-num{background:#8090a8;color:#fff}
+.bs-txt{font-size:13px;font-weight:500;flex:1}.bs-val{font-size:13px;font-family:'Courier New',Courier,monospace;color:#1a3060;font-weight:600}
+.budget-wrap{padding:14px;overflow-y:auto}
+.budget-box{background:#fff;border:1px solid #b0c4d8;border-radius:5px;padding:14px;margin-bottom:10px}
+.budget-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #eef4f8}
+.budget-row:last-child{border-bottom:none}.br-label{font-size:13px;color:#3a5870}.br-val{font-size:14px;font-family:'Courier New',Courier,monospace;font-weight:700}
+.br-pos{color:#1a6428}.br-neg{color:#7a1818}.br-neutral{color:#1a2a3a}
+#pg-acq{position:fixed;inset:0;z-index:100;background:rgba(20,40,60,.65);display:none;align-items:center;justify-content:center}
+#pg-acq.show{display:flex}
+.acq-panel{background:#e0eaf4;border:2px solid #6080a0;border-radius:8px;padding:22px;min-width:480px;box-shadow:0 16px 45px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:12px}
+.acq-top{display:flex;align-items:center;gap:10px}
+.acq-led{width:13px;height:13px;border-radius:50%;background:#cc4400;box-shadow:0 0 8px #cc4400;animation:ap .5s infinite alternate;flex-shrink:0}
+@keyframes ap{to{opacity:.2}}
+.acq-txt{font-size:16px;font-weight:700;color:#1a3050}
+.acq-prog{height:6px;background:#9ab4cc;border-radius:3px;overflow:hidden;border:1px solid #6080a0}
+.acq-fill{height:100%;background:linear-gradient(90deg,#1a7acc,#44aaff);width:0%;transition:width .12s}
+.acq-stats{display:flex;gap:10px;background:#fff;border:1px solid #9ab4cc;border-radius:4px;padding:10px}
+.acs{text-align:center;flex:1}.acs-l{font-size:11px;color:#4a6880;font-weight:600}
+.acs-v{font-family:'Courier New',Courier,monospace;font-size:14px;color:#1a3a6a;display:block;margin-top:3px;font-weight:700}
+.acq-cv{height:82px;background:#fff;border:1px solid #9ab4cc;border-radius:4px;overflow:hidden;position:relative}
+.acq-scan{position:absolute;top:0;bottom:0;width:2px;background:#cc4400;left:0;box-shadow:0 0 6px #cc4400}
+#pg-ident{position:fixed;inset:0;z-index:150;background:rgba(20,40,60,.62);display:none;align-items:center;justify-content:center}
+#pg-ident.show{display:flex}
+.ident-panel{background:#e0eaf4;border:2px solid #6080a0;border-radius:7px;padding:20px;width:420px;display:flex;flex-direction:column;gap:10px;box-shadow:0 14px 36px rgba(0,0,0,.44)}
+.ip-title{font-size:15px;font-weight:700;color:#1a3050;border-bottom:1.5px solid #8090a8;padding-bottom:8px}
+.ip-r{display:flex;flex-direction:column;gap:3px}.ip-l{font-size:12px;color:#2a4060;font-weight:700}
+.ip-inp{background:#fff;border:1.5px solid #6888a0;border-radius:4px;color:#1a2a3a;font-size:13px;padding:7px 9px}
+.ip-inp:focus{outline:2px solid #3a88cc}
+.ip-btns{display:flex;gap:7px;justify-content:flex-end;margin-top:4px}
+.ip-btn{padding:7px 16px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid #6888a0;background:linear-gradient(180deg,#d8e8f4,#c4d4e4);color:#1a2a3a}
+.ip-ok{border-color:#1a8018;background:linear-gradient(180deg,#44cc44,#22aa22);color:#fff}
+#pg-report{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.76);display:none;align-items:center;justify-content:center}
+#pg-report.show{display:flex}
+.rep-modal{width:960px;max-height:92vh;background:#fff;border-radius:5px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 22px 65px rgba(0,0,0,.75)}
+.rep-bar{background:#1a3a5a;padding:9px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.rep-bar-t{font-size:13px;color:#88b0cc;font-family:'Courier New',Courier,monospace;font-weight:600}
+.rep-btns{display:flex;gap:7px}
+.rep-btn{padding:6px 14px;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid}
+.rep-dl{border-color:#228822;background:#144414;color:#88cc88}.rep-cl{border-color:#882222;background:#441414;color:#cc8888}
+.rep-scroll{flex:1;overflow-y:auto}
+.rpt{padding:26px 30px;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#111}
+.rpt-shdr{background:#f0f4f8;padding:5px 12px;font-size:10px;font-weight:700;color:#1a3050;border-left:4px solid #00b04f;margin-bottom:6px}
+.rpt-sec{margin-bottom:16px}
+.rpt-tbl{width:100%;border-collapse:collapse;font-size:10px}
+.rpt-tbl th{background:#f4f8fb;font-weight:700;padding:5px 9px;border:1px solid #d0dcea;text-align:left;font-size:9px;color:#1a3050}
+.rpt-tbl td{padding:5px 9px;border:1px solid #d0dcea;font-family:'Courier New',Courier,monospace;font-size:10px}
+.rpt-tbl tr:nth-child(even) td{background:#fafcff}
+.rv-p{color:#0a6020;font-weight:700}.rv-f{color:#8a0a0a;font-weight:700}.rv-w{color:#7a4800;font-weight:700}
+.rpt-trace-box{background:#fff;border:1px solid #d0dcea;height:185px;overflow:hidden;margin-bottom:8px}
+/* Windows File Explorer Modal (v6) */
+#pg-files{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center}
+#pg-files.show{display:flex}
+.fe-window{width:780px;max-height:88vh;background:#f0f0f0;border:2px solid #888;border-radius:3px;display:flex;flex-direction:column;box-shadow:0 12px 44px rgba(0,0,0,.7);overflow:hidden}
+.fe-titlebar{height:28px;background:linear-gradient(180deg,#2a5a8a,#1a4070);display:flex;align-items:center;justify-content:space-between;padding:0 8px;flex-shrink:0}
+.fe-title{font-size:12px;color:#fff;font-weight:600;display:flex;align-items:center;gap:6px}
+.fe-winbtns{display:flex;gap:4px}
+.fe-wb{width:20px;height:18px;border:1px solid rgba(255,255,255,.3);border-radius:2px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;font-weight:700;color:rgba(255,255,255,.8)}
+.fe-wb:hover{background:rgba(255,255,255,.2)}
+.fe-wb.close{background:#aa2200}.fe-wb.close:hover{background:#cc2200}
+.fe-toolbar{height:36px;background:#e8e8e8;border-bottom:1px solid #c0c0c0;display:flex;align-items:center;padding:0 8px;gap:4px;flex-shrink:0}
+.fe-tbtn{height:26px;padding:0 10px;background:linear-gradient(180deg,#f4f4f4,#e0e0e0);border:1px solid #aaa;border-radius:2px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px;color:#1a1a1a}
+.fe-tbtn:hover{background:linear-gradient(180deg,#fff,#eee)}
+.fe-addr{flex:1;height:24px;background:#fff;border:1px solid #888;border-radius:2px;padding:0 8px;font-size:12px;color:#1a1a1a;font-family:'Courier New',Courier,monospace;display:flex;align-items:center}
+.fe-body{flex:1;display:flex;min-height:0}
+.fe-sidebar{width:160px;flex-shrink:0;background:#f4f4f4;border-right:1px solid #c8c8c8;padding:8px 0;overflow-y:auto}
+.fe-sl{padding:6px 12px;font-size:12px;color:#1a1a1a;cursor:pointer;display:flex;align-items:center;gap:6px}
+.fe-sl:hover{background:rgba(0,100,200,.12)}
+.fe-sl.active{background:rgba(0,100,200,.18);font-weight:600}
+.fe-sl-icon{font-size:14px;flex-shrink:0}
+.fe-sl-sep{padding:4px 12px 2px;font-size:10px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-top:1px solid #d8d8d8;margin-top:4px}
+.fe-main{flex:1;display:flex;flex-direction:column;min-width:0}
+.fe-list-hdr{height:26px;background:#e8e8e8;border-bottom:1px solid #c8c8c8;display:flex;align-items:center;font-size:12px;font-weight:700;color:#333;flex-shrink:0}
+.fe-list-hdr div{padding:0 8px;border-right:1px solid #c8c8c8}
+.fe-list{flex:1;overflow-y:auto;background:#fff}
+.fe-row{display:flex;align-items:center;height:28px;border-bottom:1px solid #f0f0f0;cursor:pointer;font-size:12px}
+.fe-row:hover{background:rgba(0,100,200,.08)}
+.fe-row.sel{background:rgba(0,100,200,.18)}
+.fe-row div{padding:0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-right:1px solid #f0f0f0}
+.fe-row .fe-rc-icon{width:28px;text-align:center;flex-shrink:0}
+.fe-empty{padding:30px;text-align:center;color:#888;font-size:13px}
+.fe-statusbar{height:26px;background:#e8e8e8;border-top:1px solid #c8c8c8;display:flex;align-items:center;padding:0 10px;font-size:11px;color:#555;flex-shrink:0}
+.fe-footer{height:50px;background:#e8e8e8;border-top:1px solid #c0c0c0;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:0 14px;flex-shrink:0}
+.fe-fn-bar{flex:1;display:flex;align-items:center;gap:8px}
+.fe-fn-lbl{font-size:12px;color:#333;white-space:nowrap}
+.fe-fn-inp{flex:1;height:26px;background:#fff;border:1px solid #888;border-radius:2px;padding:0 8px;font-size:12px;font-family:'Courier New',Courier,monospace;color:#1a1a1a}
+.fe-ft-sel{height:26px;background:#fff;border:1px solid #888;border-radius:2px;padding:0 6px;font-size:12px}
+.fe-ftr-btn{height:28px;padding:0 18px;border-radius:2px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid}
+.fe-open-btn{border-color:#1a6018;background:linear-gradient(180deg,#44cc44,#22aa22);color:#fff}
+.fe-cancel-btn{border-color:#888;background:linear-gradient(180deg,#f4f4f4,#e0e0e0);color:#333}
+/* Toast notification system — replaces alert() for iframe compatibility */
+#toast-wrap{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:11px 20px;border-radius:5px;font-size:13px;font-weight:600;color:#fff;box-shadow:0 4px 18px rgba(0,0,0,.45);opacity:0;transform:translateY(12px);transition:all .22s ease;pointer-events:none;max-width:420px;text-align:center;line-height:1.5}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast-ok{background:#1a7a30;border:1.5px solid #22aa44}
+.toast-err{background:#8a1a00;border:1.5px solid #cc2200}
+.toast-info{background:#1a4a7a;border:1.5px solid #2a7acc}
+.toast-warn{background:#8a5200;border:1.5px solid #cc8800}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#c0d4e8}
+::-webkit-scrollbar-thumb{background:#6888a8;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#4868a0}
+#local-file-input{display:none}
+</style>
+</head>
+<body>
+<div id="pg-off">
+  <div class="dev-wrap" onclick="poweron()">
+    <div class="dev-3d"><div class="dev-chassis">
+      <div class="dev-c dc-tl"></div><div class="dev-c dc-tr"></div><div class="dev-c dc-bl"></div><div class="dev-c dc-br"></div>
+      <div class="dev-ports"><div class="dev-fc"></div><div class="dev-plbl">SM</div><div class="dev-fc"></div><div class="dev-plbl">SM&nbsp;LIVE</div><div class="dev-aled" id="dev-led"></div><div class="dev-plbl" style="color:#2a5a4a">ACT</div></div>
+      <div class="dev-stylus"></div>
+      <div class="dev-bezel"><div class="dev-maxtester">MaxTester</div><div class="dev-screen"><div class="screen-off"><div class="off-logo">EXFO</div></div></div></div>
+      <div class="dev-bottom"><div class="dev-exfo">EXFO</div><div class="dev-btns"><div class="dev-home" onclick="showState('launcher');event.stopPropagation()" title="Home">⌂</div><div class="dev-pwr" onclick="poweron();event.stopPropagation()">⏻</div><div class="dev-battled"></div></div></div>
+      <div class="dev-stand"></div>
+    </div></div>
+  </div>
+  <div class="landing-info">
+    <div><div class="li-brand">EXFO</div><div class="li-model">MaxTester 730B — PON/Metro OTDR</div></div>
+    <div class="li-specs">
+      <div class="li-spec">7″ outdoor touchscreen · 800×480 · Windows GUI</div>
+      <div class="li-spec">1310 / 1550 / 1625 nm — 39/37/37 dB dynamic range</div>
+      <div class="li-spec">EDZ 0.8 m · ADZ 3.5 m · 0.1–400 km range</div>
+      <div class="li-spec">Pulse 5–20 000 ns · Up to 256 K sampling points</div>
+      <div class="li-spec">iOLM · VFL · OPM · Wi-Fi · Bluetooth</div>
+      <div class="li-spec">12 h battery · 200×155×68 mm · 1.29 kg</div>
+    </div>
+    <div class="pwr-group">
+      <div class="pwr-ring" onclick="poweron()"><svg viewBox="0 0 28 28" fill="none" stroke="#00b04f" stroke-width="2.4" stroke-linecap="round" width="28" height="28"><path d="M14 3.5v10"/><path d="M8 7.8A10 10 0 1 0 20 7.8"/></svg></div>
+      <div class="pwr-label">PRESS TO POWER ON</div>
+      <div style="font-size:10px;color:#2a6040;text-align:center">or click device body</div>
+    </div>
+    <div class="li-caution">⚠ CLASS 1M LASER PRODUCT — IEC 60825-1 · Training simulation only</div>
+    <div class="li-caution" style="border-color:#6080a0;color:#2a4060;background:rgba(200,220,240,.2)">
+      📋 Unofficial educational training simulator. EXFO® and MaxTester® are registered trademarks of EXFO Inc. All specifications from public documentation. NOT for commercial use.<br>Author: Diyar Hussein · linkedin.com/in/diyar
+    </div>
+  </div>
+</div>
+<div id="pg-boot">
+  <div class="boot-logo">EXFO</div>
+  <div class="boot-tagline">Right-first-time results, every time</div>
+  <div class="boot-bar"><div class="boot-fill" id="boot-fill"></div></div>
+  <div class="boot-msg" id="boot-msg">Loading system...</div>
+  <div class="boot-info">FW: 7.0.1.1 · S/N: 839640 · Cal: 2025-10-15 · MaxTester 730B</div>
+</div>
+<div id="pg-launcher">
+  <div class="lnch-topbar"><div class="ltb-l">EXFO MAX-730B</div><div class="ltb-r"><span id="lnch-time">00:00</span><span>▪</span></div></div>
+  <div class="lnch-desktop">
+    <div class="desk-app" onclick="launchApp('otdr')"><div class="da-icon da-otdr">⊿</div><div class="da-lbl">OTDR</div></div>
+    <div class="desk-app" onclick="launchApp('files')"><div class="da-icon da-file">🗂</div><div class="da-lbl">File Manager</div></div>
+    <div class="desk-app"><div class="da-icon da-data">⇄</div><div class="da-lbl">Data Mover</div></div>
+    <div class="desk-app" onclick="launchApp('otdr');selTab('setup')"><div class="da-icon da-cfg">⚙</div><div class="da-lbl">Configuration</div></div>
+    <div class="desk-app"><div class="da-icon da-doc">📄</div><div class="da-lbl">Documentation</div></div>
+    <div class="desk-app"><div class="da-icon da-ie">🌐</div><div class="da-lbl">Internet Explorer</div></div>
+    <div class="desk-app"><div class="da-icon da-vnc">🖥</div><div class="da-lbl">VNC</div></div>
+  </div>
+  <div class="lnch-taskbar">Tap application to launch — EXFO MaxTester 730B · FW 7.0.1.1</div>
+</div>
+<div id="pg-otdr">
+  <div class="otdr-titlebar"><div class="tb-l" id="otdr-title">EXFO MaxTester 730B · OTDR Module</div><div class="tb-r"><span id="otdr-clock">--:--:--</span><span>▪</span></div></div>
+  <div class="otdr-tabbar">
+    <div class="otab active" id="tab-otdr" onclick="selTab('otdr')">OTDR</div>
+    <div class="otab" id="tab-events" onclick="selTab('events')">Events</div>
+    <div class="otab" id="tab-measure" onclick="selTab('measure')">Measure</div>
+    <div class="otab" id="tab-summary" onclick="selTab('summary')">Summary</div>
+    <div class="otab" id="tab-source" onclick="selTab('source')">Source</div>
+    <div class="otab" id="tab-bidir" onclick="selTab('bidir')" style="background:linear-gradient(180deg,#7aa8d0,#5888b8);color:#fff;border-color:#3868a0">↔ Bidir</div>
+    <div class="otab" id="tab-budget" onclick="selTab('budget')">Link Budget</div>
+    <div class="otab" id="tab-qc" onclick="selTab('qc')" style="background:linear-gradient(180deg,#60aa60,#3a8838);color:#fff;border-color:#286028">✔ QC Verify</div>
+    <div class="otab" id="tab-setup" onclick="selTab('setup')">⚙ Setup</div>
+  </div>
+  <div class="otdr-main">
+    <div class="otdr-col-left">
+      <div id="tc-source" style="display:none;flex:1;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:#f0f5fa">
+        <div style="font-size:40px">💡</div>
+        <div style="font-size:14px;color:#4a6880;text-align:center;line-height:1.9;max-width:340px"><strong>Source Module (CW / 1 kHz / 2 kHz)</strong><br>Output: 1310 / 1550 / 1625 nm · −2.5 dBm typical<br>Auto-Lambda auto-switching compatible</div>
+      </div>
+      <div id="tc-otdr" style="display:flex;flex:1;flex-direction:column;min-height:0">
+        <div class="trace-wrap" id="trace-wrap">
+          <canvas id="cv-trace"></canvas>
+          <div class="trace-wl-tag" id="trace-wl">1310 nm (9 µm)</div>
+          <div class="cursor-bar" id="cursor-bar" style="display:none">
+            <div class="cur-badge cur-a" id="cur-a-lbl">A: — km</div>
+            <div class="cur-badge cur-b" id="cur-b-lbl">B: — km</div>
+            <div class="cur-badge cur-diff" id="cur-diff-lbl">ΔL: — km | ΔdB: — dB</div>
+          </div>
+          <div class="zoom-row">
+            <div class="zbtn" onclick="doZoom(.6)" title="Zoom Out">−</div>
+            <div class="zbtn" onclick="doZoom(1.6)" title="Zoom In">+</div>
+            <div class="zbtn" onclick="resetZoom()" title="Fit">⤢</div>
+            <div class="zbtn" onclick="selCurMode('A')" title="Marker A" style="color:#cc2200;font-weight:700;font-size:12px">A</div>
+            <div class="zbtn" onclick="selCurMode('B')" title="Marker B" style="color:#0044cc;font-weight:700;font-size:12px">B</div>
+          </div>
+          <div id="sc-overlay">
+            <div class="sc-hdr">📡 SELECT FIBER SCENARIO</div>
+            <div class="sc-sub">Choose a scenario · Press ▶ Start to acquire</div>
+            <div class="sc-chips" id="sc-chips"></div>
+            <div style="font-size:12px;color:#5a7888;margin-top:10px">🟢 Easy — 🟡 Medium — 🔴 Hard</div>
+            <div class="sc-cancel" id="sc-cancel-btn" onclick="closeScOverlay()" style="display:none">↩ Cancel</div>
+          </div>
+        </div>
+        <div class="evt-section" id="evt-section">
+          <div class="evt-wrap"><div class="evt-scroll">
+            <table class="evt-tbl">
+              <thead><tr>
+                <th style="text-align:center;width:52px">No.</th>
+                <th style="min-width:130px">Pos./Length (km)</th>
+                <th style="min-width:88px">Loss (dB)</th>
+                <th style="min-width:120px">Reflectance (dB)</th>
+                <th style="min-width:100px">Att. (dB/km)</th>
+                <th style="min-width:110px">Cumulative (dB)</th>
+              </tr></thead>
+              <tbody id="evt-tbody"></tbody>
+            </table>
+          </div></div>
+          <div class="fname-bar" id="fname-bar">Filename: [ no file loaded ]</div>
+        </div>
+      </div>
+      <div id="tc-summary" style="display:none;flex:1;overflow-y:auto"><div class="sum-grid" id="sum-wrap"></div></div>
+      <div id="tc-measure" style="display:none;flex:1;overflow-y:auto"><div class="sum-grid" id="meas-wrap"></div></div>
+      <div id="tc-bidir" style="display:none;flex:1;overflow-y:auto"><div class="bidir-wrap" id="bidir-wrap"></div></div>
+      <div id="tc-budget" style="display:none;flex:1;overflow-y:auto"><div class="budget-wrap" id="budget-wrap"></div></div>
+      <div id="tc-qc" style="display:none;flex:1;overflow-y:auto"><div class="qc-wrap" id="qc-wrap"></div></div>
+      <div id="tc-setup" style="display:none;flex:1;overflow-y:auto">
+        <div class="setup-grid">
+          <div class="sp-box"><div class="spb-t">WAVELENGTH &amp; FIBER TYPE</div>
+            <div class="sp-r"><div class="spr-l">Wavelength</div><div style="display:flex;gap:4px"><div class="wl-btn2 on" id="wb-1310" onclick="setWL(1310)">1310 nm</div><div class="wl-btn2" id="wb-1550" onclick="setWL(1550)">1550 nm</div><div class="wl-btn2" id="wb-1625" onclick="setWL(1625)">1625 nm</div><div class="wl-btn2" id="wb-dual" onclick="setWL('dual')">DUAL</div></div></div>
+            <div class="sp-r"><div class="spr-l">Fiber Type (IEC 60793)</div><select class="spr-sel" id="fib-type" onchange="fiberTypeChange()"><option value="g652">G.652 SMF — 9/125 µm standard</option><option value="g654">G.654 Ultra-low loss SMF</option><option value="g655">G.655 NZDSF</option><option value="g657">G.657 BIF — Bend-insensitive</option><option value="g651">G.651 OM3/OM4 MMF — 50/125 µm</option></select></div>
+            <div class="sp-r"><div class="spr-l">Index of Refraction (IOR)</div><div class="spr-c"><div class="spr-pm" onclick="adjPv('ior',-1)">−</div><div class="spr-v" id="sv-ior">1.4677</div><div class="spr-pm" onclick="adjPv('ior',1)">+</div></div></div>
+            <div class="sp-r"><div class="spr-l">Backscatter Coefficient (dB)</div><div class="spr-c"><div class="spr-pm" onclick="adjPv('bsc',-1)">−</div><div class="spr-v" id="sv-bsc">-79.45</div><div class="spr-pm" onclick="adjPv('bsc',1)">+</div></div></div>
+            <div class="sp-r"><div class="spr-l">Helix Factor (%)</div><div class="spr-c"><div class="spr-pm" onclick="adjPv('hx',-1)">−</div><div class="spr-v" id="sv-hx">0.00</div><div class="spr-pm" onclick="adjPv('hx',1)">+</div></div></div>
+            <div class="sp-r"><div class="spr-l">Connector Type</div><select class="spr-sel" id="sel-conn"><option value="fcapc" selected>FC/APC — 8° angled (green)</option><option value="fcupc">FC/UPC — flat polish (blue)</option><option value="scapc">SC/APC — 8° angled</option><option value="scupc">SC/UPC — flat polish</option><option value="lcapc">LC/APC — small form factor</option><option value="mtp">MTP/MPO — multi-fiber</option></select></div>
+          </div>
+          <div class="sp-box"><div class="spb-t">ACQUISITION PARAMETERS</div>
+            <div class="sp-r"><div class="spr-l">Distance Range (km)</div><select class="spr-sel" id="sel-rng" onchange="selParamChange()"><option value="0.5">0.5 km</option><option value="1">1 km</option><option value="2">2 km</option><option value="4">4 km</option><option value="6">6 km</option><option value="10" selected>10 km</option><option value="20">20 km</option><option value="40">40 km</option><option value="80">80 km</option><option value="160">160 km</option><option value="320">320 km</option><option value="400">400 km (max)</option></select></div>
+            <div class="sp-r"><div class="spr-l">Pulse Width (ns)</div><select class="spr-sel" id="sel-pls" onchange="selParamChange()"><option value="5">5 ns (EDZ 0.8 m)</option><option value="10">10 ns</option><option value="30">30 ns</option><option value="50">50 ns</option><option value="100" selected>100 ns</option><option value="275">275 ns</option><option value="1000">1 000 ns</option><option value="2000">2 000 ns</option><option value="5000">5 000 ns</option><option value="10000">10 000 ns</option><option value="20000">20 000 ns (max)</option></select></div>
+            <div class="sp-r"><div class="spr-l">Averaging Duration</div><select class="spr-sel" id="sel-dur" onchange="selParamChange()"><option value="5">5 s</option><option value="10">10 s</option><option value="15" selected>15 s</option><option value="30">30 s</option><option value="60">1 min</option><option value="120">2 min</option><option value="180">3 min</option><option value="300">5 min</option><option value="600">10 min</option><option value="1800">30 min</option><option value="3600">60 min (max)</option></select></div>
+            <div class="sp-r"><div class="spr-l">Sampling Resolution (m)</div><select class="spr-sel" id="sel-res"><option value="0.04">0.04 m (finest)</option><option value="0.08">0.08 m</option><option value="0.20">0.20 m</option><option value="0.50" selected>0.50 m (recommended)</option><option value="1.00">1.00 m</option><option value="2.00">2.00 m</option><option value="5.00">5.00 m (fastest)</option></select></div>
+            <div class="sp-r"><div class="spr-l">Avg. Passes (calculated)</div><div class="spr-v" id="sv-avg">--</div></div>
+            <div class="sp-r"><div class="spr-l">Auto Mode</div><div style="display:flex;gap:4px"><div class="wl-btn2" id="sw-on" onclick="setAuto(true)">ON</div><div class="wl-btn2 on" id="sw-off" onclick="setAuto(false)">OFF</div></div></div>
+          </div>
+          <div class="sp-box"><div class="spb-t">PASS/FAIL THRESHOLDS (ITU-T G.671)</div>
+            <div class="sp-r"><div class="spr-l">Max Non-Reflective Event Loss (dB)</div><input class="spr-inp" id="th-splice" value="0.300" type="number" step="0.01" min="0.01" max="3.00"></div>
+            <div class="sp-r"><div class="spr-l">Max Reflective Event Loss (dB)</div><input class="spr-inp" id="th-conn" value="0.750" type="number" step="0.01" min="0.10" max="5.00"></div>
+            <div class="sp-r"><div class="spr-l">Min Reflectance at Events (dB)</div><input class="spr-inp" id="th-refl" value="-40.0" type="number" step="1" min="-70" max="-10"></div>
+            <div class="sp-r"><div class="spr-l">Max Section Attenuation (dB/km)</div><input class="spr-inp" id="th-atten" value="0.400" type="number" step="0.01" min="0.10" max="2.00"></div>
+            <div class="sp-r"><div class="spr-l">Min Span ORL (dB)</div><input class="spr-inp" id="th-orl" value="15.0" type="number" step="1" min="5" max="50"></div>
+            <div class="sp-r"><div class="spr-l">Max Total Span Loss (dB)</div><input class="spr-inp" id="th-spanloss" value="20.000" type="number" step="0.5" min="0"></div>
+            <div class="sp-r"><div class="spr-l">Min End Reflectance (dB)</div><input class="spr-inp" id="th-endrefl" value="-50.0" type="number" step="1" min="-80" max="-5"></div>
+          </div>
+          <div class="sp-box"><div class="spb-t">LAUNCH &amp; RECEIVE CABLE</div>
+            <div class="sp-r"><div class="spr-l">Launch Cable Compensation</div><div style="display:flex;gap:4px"><div class="wl-btn2 on" id="lc-off" onclick="setLC(false)">OFF</div><div class="wl-btn2" id="lc-on" onclick="setLC(true)">ON</div></div></div>
+            <div class="sp-r"><div class="spr-l">Launch Cable Length (m)</div><div class="spr-c"><div class="spr-pm" onclick="adjLC(-5)">−</div><div class="spr-v" id="sv-lc">0 m</div><div class="spr-pm" onclick="adjLC(5)">+</div></div></div>
+            <div class="sp-r"><div class="spr-l">Receive Cable Compensation</div><div style="display:flex;gap:4px"><div class="wl-btn2 on" id="rc-off" onclick="setRC(false)">OFF</div><div class="wl-btn2" id="rc-on" onclick="setRC(true)">ON</div></div></div>
+            <div class="sp-r"><div class="spr-l">Receive Cable Length (m)</div><div class="spr-c"><div class="spr-pm" onclick="adjRC(-5)">−</div><div class="spr-v" id="sv-rc">0 m</div><div class="spr-pm" onclick="adjRC(5)">+</div></div></div>
+            <div class="sp-r"><div class="spr-l">EDZ</div><div class="spr-v" style="background:none;border:none;color:#5a7888">0.8 m (at 5 ns pulse)</div></div>
+            <div class="sp-r"><div class="spr-l">ADZ</div><div class="spr-v" style="background:none;border:none;color:#5a7888">3.5 m (at 5 ns pulse)</div></div>
+          </div>
+          <div class="sp-box"><div class="spb-t">INSTRUMENT INFORMATION</div>
+            <div class="sp-r"><div class="spr-l">Module</div><div class="spr-v" style="background:none;border:none">MAX-730B</div></div>
+            <div class="sp-r"><div class="spr-l">Serial Number</div><div class="spr-v" style="background:none;border:none">839640</div></div>
+            <div class="sp-r"><div class="spr-l">Calibration Date</div><div class="spr-v" style="background:none;border:none">2025-10-15</div></div>
+            <div class="sp-r"><div class="spr-l">Firmware</div><div class="spr-v" style="background:none;border:none">7.0.1.1</div></div>
+            <div class="sp-r"><div class="spr-l">Dynamic Range</div><div class="spr-v" style="background:none;border:none" id="sv-dynrange">39 / 37 / 37 dB</div></div>
+            <div class="sp-r"><div class="spr-l">Max Distance</div><div class="spr-v" style="background:none;border:none">400 km</div></div>
+            <div class="sp-r"><div class="spr-l">Distance Accuracy</div><div class="spr-v" style="background:none;border:none">±(0.75 + 0.0025%×d) m</div></div>
+            <div class="sp-r"><div class="spr-l">Linearity</div><div class="spr-v" style="background:none;border:none">±0.03 dB/dB</div></div>
+            <div class="sp-r"><div class="spr-l">Laser Safety</div><div class="spr-v" style="background:none;border:none">Class 1M</div></div>
+          </div>
+          <div class="sp-box"><div class="spb-t">MACROBEND DETECTION (AUTO)</div>
+            <div class="sp-r"><div class="spr-l">Auto Detection</div><div style="display:flex;gap:4px"><div class="wl-btn2 on" id="mb-on" onclick="setMB(true)">ON</div><div class="wl-btn2" id="mb-off" onclick="setMB(false)">OFF</div></div></div>
+            <div class="sp-r"><div class="spr-l">Min Bend Section Loss (dB/km)</div><input class="spr-inp" id="th-mb" value="0.500" type="number" step="0.05" min="0.10" max="5.00"></div>
+            <div class="sp-r"><div class="spr-l">Min Bend Radius</div><select class="spr-sel"><option value="30" selected>30 mm (G.652/G.654)</option><option value="20">20 mm (G.657A)</option><option value="15">15 mm (G.657B)</option><option value="10">10 mm (G.657B3)</option></select></div>
+            <div class="sp-info">💡 Macrobend loss is <strong>more severe at 1550 nm</strong>. Always select <strong>DUAL</strong> when macrobends are suspected.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pv-panel" id="pv-panel">
+      <div class="pvp-hdr">
+        <div class="pvp-title">🔌 PORT VIEW — Fiber Cable</div>
+        <div class="pvp-hdr-btns"><div class="pvp-hbtn" onclick="selEvt(null)">✕ Clear</div><div class="pvp-hbtn" onclick="togglePV()">↤ Hide</div></div>
+      </div>
+      <div class="pvp-body" id="pvp-body">
+        <div class="pvp-cable-section">
+          <div class="pvp-cable-title">📐 Cable Route Diagram <span style="font-size:11px;color:#5a7888;font-weight:400">(click event cards to highlight)</span></div>
+          <div id="pv-cable-area"><div id="pv-no-data">Select a scenario<br>and run a test<br>to see the fiber diagram</div><svg id="pv-svg" style="display:none;width:100%"></svg></div>
+        </div>
+        <div class="pvp-legend">
+          <div class="pvl"><div class="pvl-dot" style="background:#22aa44"></div>Pass / Good</div>
+          <div class="pvl"><div class="pvl-dot" style="background:#cc2200"></div>Fail / Break</div>
+          <div class="pvl"><div class="pvl-dot" style="background:#cc8800"></div>Warning</div>
+          <div class="pvl"><div class="pvl-dot" style="background:#2266cc"></div>FC/APC</div>
+          <div class="pvl"><div class="pvl-dot" style="background:#7722cc"></div>Splitter</div>
+          <div class="pvl"><div class="pvl-dot" style="background:#cc5500"></div>Bidir needed</div>
+        </div>
+        <div class="pvp-events-section">
+          <div class="pvp-events-title">📋 Event Analysis <span id="pvp-ev-count" style="font-size:11px;color:#5a7888;font-weight:400"></span></div>
+          <div class="pv-event-cards" id="pv-event-cards"><div style="font-size:12px;color:#7090a0;padding:16px;text-align:center">No events to display</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="otdr-sidebar">
+      <div class="sid-pf"><span class="pf-na" id="pf-badge">N/A</span><span class="pf-wl" id="pf-wl">OTDR</span></div>
+      <div class="sid-start" id="start-btn" onclick="startAcq()">▶  Start</div>
+      <div class="sid-scen" onclick="openScOverlay()">📡  Load Scenario</div>
+      <div class="sid-sect"><div class="sid-sect-t">Wavelength</div>
+        <div class="wl-btns"><div class="wl-btn on" id="wb2-1310" onclick="setWL(1310)">1310</div><div class="wl-btn" id="wb2-1550" onclick="setWL(1550)">1550</div><div class="wl-btn" id="wb2-1625" onclick="setWL(1625)">1625</div><div class="wl-btn" id="wb2-dual" onclick="setWL('dual')">DUAL</div></div>
+      </div>
+      <div class="sid-sect"><div class="sid-sect-t">Acquisition</div>
+        <div class="param-row"><div class="param-lbl">Range</div><div class="param-ctrl"><div class="param-pm" onclick="adjP('rng',-1)">−</div><div class="param-val" id="pr-rng">10 km</div><div class="param-pm" onclick="adjP('rng',1)">+</div></div></div>
+        <div class="param-row"><div class="param-lbl">Pulse Width</div><div class="param-ctrl"><div class="param-pm" onclick="adjP('pls',-1)">−</div><div class="param-val" id="pr-pls">100 ns</div><div class="param-pm" onclick="adjP('pls',1)">+</div></div></div>
+        <div class="param-row"><div class="param-lbl">Duration</div><div class="param-ctrl"><div class="param-pm" onclick="adjP('dur',-1)">−</div><div class="param-val" id="pr-dur">15 s</div><div class="param-pm" onclick="adjP('dur',1)">+</div></div></div>
+      </div>
+      <div class="sid-sect"><div class="sid-sect-t">Mode &amp; View</div>
+        <div class="mode-btns" style="margin-bottom:4px"><div class="mode-btn" id="btn-auto" onclick="toggleAuto()">Auto</div><div class="mode-btn" id="btn-rt" onclick="toggleRT()">⟳ RT</div></div>
+        <div class="mode-btns"><div class="mode-btn pv-on" id="btn-pv" onclick="togglePV()">📡 Port View</div></div>
+      </div>
+      <div class="sid-sect"><div class="sid-sect-t">Actions</div>
+        <div class="sid-action-row">
+          <div class="sid-act" onclick="launchApp('files')"><div class="sid-act-icon">📂</div><div class="sid-act-lbl">Open</div></div>
+          <div class="sid-act" onclick="saveFile()"><div class="sid-act-icon">💾</div><div class="sid-act-lbl">Save</div></div>
+          <div class="sid-act" onclick="genReport()"><div class="sid-act-icon">📄</div><div class="sid-act-lbl">Report</div></div>
+        </div>
+        <div class="sid-nav"><div class="sid-nav-btn">◄ Prev</div><div class="sid-nav-btn">All</div><div class="sid-nav-btn">Next ►</div></div>
+      </div>
+      <div class="sid-menu">
+        <div class="sid-mhdr">Main Menu</div>
+        <div class="sid-mi" onclick="showIdent()">Identification...<span class="sid-mi-arr">▸</span></div>
+        <div class="sid-mi" onclick="selTab('setup')">Test Configuration...<span class="sid-mi-arr">▸</span></div>
+        <div class="sid-mi">User Preferences...<span class="sid-mi-arr">▸</span></div>
+        <div class="sid-mi" onclick="selTab('bidir')">Bidirectional...<span class="sid-mi-arr">▸</span></div>
+        <div class="sid-mi" onclick="selTab('budget')">Link Budget...<span class="sid-mi-arr">▸</span></div>
+        <div class="sid-mi" onclick="selTab('qc')">QC Verification...<span class="sid-mi-arr">▸</span></div>
+        <div class="sid-mi" onclick="showState('launcher')" style="color:#2a5878">← Main Menu</div>
+        <div class="sid-params">
+          <div class="sid-p">Range<span class="sid-p-v" id="rp-rng">10 km</span></div>
+          <div class="sid-p">Pulse<span class="sid-p-v" id="rp-pls">100 ns</span></div>
+          <div class="sid-p">Dur<span class="sid-p-v" id="rp-dur">15 s</span></div>
+          <div class="sid-p">WL<span class="sid-p-v" id="rp-wl">1310 nm</span></div>
+          <div class="sid-p">Avg<span class="sid-p-v" id="rp-avg">--</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="pg-acq">
+  <div class="acq-panel">
+    <div class="acq-top"><div class="acq-led"></div><span class="acq-txt" id="acq-txt">● ACQUIRING DATA...</span></div>
+    <div class="acq-prog"><div class="acq-fill" id="acq-fill"></div></div>
+    <div class="acq-stats">
+      <div class="acs"><div class="acs-l">WAVELENGTH</div><span class="acs-v" id="aq-wl">--</span></div>
+      <div class="acs"><div class="acs-l">RANGE</div><span class="acs-v" id="aq-rng">--</span></div>
+      <div class="acs"><div class="acs-l">PULSE</div><span class="acs-v" id="aq-pls">--</span></div>
+      <div class="acs"><div class="acs-l">DURATION</div><span class="acs-v" id="aq-dur">--</span></div>
+      <div class="acs"><div class="acs-l">ELAPSED</div><span class="acs-v" id="aq-t">0 s</span></div>
+      <div class="acs"><div class="acs-l">EVENTS</div><span class="acs-v" id="aq-evt">--</span></div>
+    </div>
+    <div class="acq-cv"><canvas id="acq-cv" style="width:100%;height:100%"></canvas><div class="acq-scan" id="acq-scan"></div></div>
+  </div>
+</div>
+<div id="pg-ident">
+  <div class="ident-panel">
+    <div class="ip-title">Identification</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="ip-r"><div class="ip-l">Customer</div><input class="ip-inp" id="ip-customer" placeholder="Customer name"></div>
+      <div class="ip-r"><div class="ip-l">Company</div><input class="ip-inp" id="ip-company" placeholder="Company / Contractor"></div>
+      <div class="ip-r"><div class="ip-l">Cable ID</div><input class="ip-inp" id="ip-cbl" placeholder="e.g. FIB-001-A"></div>
+      <div class="ip-r"><div class="ip-l">Fiber ID</div><input class="ip-inp" id="ip-fib" placeholder="e.g. Fiber-61"></div>
+      <div class="ip-r"><div class="ip-l">Job ID</div><input class="ip-inp" id="ip-job" placeholder="Job number"></div>
+      <div class="ip-r"><div class="ip-l">Operator A</div><input class="ip-inp" id="ip-op" placeholder="Technician name"></div>
+      <div class="ip-r"><div class="ip-l">Location A</div><input class="ip-inp" id="ip-loca" placeholder="Near-end site name"></div>
+      <div class="ip-r"><div class="ip-l">Location B</div><input class="ip-inp" id="ip-locb" placeholder="Far-end site name"></div>
+    </div>
+    <div class="ip-r"><div class="ip-l">Comments</div><input class="ip-inp" id="ip-notes" placeholder="Optional comments"></div>
+    <div class="ip-btns"><div class="ip-btn" onclick="closeIdent()">Cancel</div><div class="ip-btn ip-ok" onclick="saveIdent()">✓ OK</div></div>
+  </div>
+</div>
+<div id="pg-report">
+  <div class="rep-modal">
+    <div class="rep-bar"><div class="rep-bar-t">EXFO MaxTester 730B — OTDR Report</div><div class="rep-btns"><div class="rep-btn rep-dl" onclick="dlReport()">⬇ Download</div><div class="rep-btn rep-cl" onclick="closeReport()">✕ Close</div></div></div>
+    <div class="rep-scroll" id="rep-body"></div>
+  </div>
+</div>
+<div id="pg-files">
+  <div class="fe-window">
+    <div class="fe-titlebar"><div class="fe-title">🗂 <span id="fe-win-title">Open — File Manager</span></div><div class="fe-winbtns"><div class="fe-wb">−</div><div class="fe-wb">□</div><div class="fe-wb close" onclick="closeFileExplorer()">✕</div></div></div>
+    <div class="fe-toolbar"><div class="fe-tbtn" onclick="feNav('internal')">⬆ Up</div><div class="fe-tbtn" onclick="feNav('internal')">⌂ Home</div><div class="fe-addr" id="fe-addr">This Device \ Internal Storage</div><div class="fe-tbtn" onclick="triggerLocalOpen()">📁 Browse Device...</div></div>
+    <div class="fe-body">
+      <div class="fe-sidebar">
+        <div class="fe-sl active" id="fesl-int" onclick="feNav('internal')"><span class="fe-sl-icon">💾</span>Internal Storage</div>
+        <div class="fe-sl" id="fesl-usb" onclick="feNav('usb')"><span class="fe-sl-icon">🔌</span>USB Drive</div>
+        <div class="fe-sl-sep">Favorites</div>
+        <div class="fe-sl" onclick="feNav('recent')"><span class="fe-sl-icon">🕐</span>Recent</div>
+        <div class="fe-sl" onclick="feNav('sor')"><span class="fe-sl-icon">📂</span>SOR Files</div>
+        <div class="fe-sl-sep">Network</div>
+        <div class="fe-sl"><span class="fe-sl-icon">🌐</span>Wi-Fi Share</div>
+      </div>
+      <div class="fe-main">
+        <div class="fe-list-hdr"><div style="flex:2">Name</div><div style="width:100px">Date</div><div style="width:80px">Type</div><div style="width:70px">Size</div></div>
+        <div class="fe-list" id="fe-list"><div class="fe-empty">No saved files.<br>Run a test and press Save first,<br>or use Browse Device... to open from your computer.</div></div>
+      </div>
+    </div>
+    <div class="fe-statusbar" id="fe-statusbar">0 items</div>
+    <div class="fe-footer">
+      <div class="fe-fn-bar">
+        <div class="fe-fn-lbl">File name:</div>
+        <input class="fe-fn-inp" id="fe-fn-inp" placeholder="Select a file or browse device..." readonly>
+        <div class="fe-fn-lbl" style="margin-left:8px">File type:</div>
+        <select class="fe-ft-sel"><option>All OTDR Files (*.sor, *.trc)</option><option>SOR Files (*.sor)</option><option>Trace Files (*.trc)</option><option>HTML Reports (*.html)</option></select>
+      </div>
+      <div class="fe-ftr-btn fe-open-btn" onclick="feOpenSelected()">Open</div>
+      <div class="fe-ftr-btn fe-cancel-btn" onclick="closeFileExplorer()">Cancel</div>
+    </div>
+  </div>
+</div>
+<input type="file" id="local-file-input" accept=".sor,.trc,.html" onchange="localFileOpened(event)">
+<div id="toast-wrap"></div>
+<script>
+'use strict';
+/* toast(msg, type) — types: ok | err | info | warn */
+function toast(msg,type){var w=document.getElementById('toast-wrap');if(!w)return;var t=document.createElement('div');t.className='toast toast-'+(type||'info');t.textContent=msg;w.appendChild(t);requestAnimationFrame(function(){requestAnimationFrame(function(){t.className+=' show';});});setTimeout(function(){t.className=t.className.replace(' show','');setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t);},300);},3200);}
+var STATE='off',curSc=null,curWL=1310,hasResult=false;
+var autoMode=false,rtMode=false,pvVisible=true,mbDetect=true;
+var lcComp=false,rcComp=false,lcLen=0,rcLen=0;
+var acqTimer=null,zF=1,zOff=0;
+var ident={op:'',customer:'',company:'',cbl:'',fib:'',job:'',loca:'',locb:'',notes:'',dir:'A → B'};
+var savedFiles=[],qcRecord=null;
+var ranges=[0.5,1,2,4,6,10,20,40,80,160,320,400],rI=5;
+var pulses=[5,10,30,50,100,275,1000,2000,5000,10000,20000],pI=4;
+var durs=[5,10,15,30,60,120,180,300,600,1800,3600],dI=2;
+var P={rng:10,pls:100,dur:15,ior:1.4677,bsc:-79.45,hx:0.00};
+var curMode=null,markA=null,markB=null,selEvtIdx=null;
+var feSelectedFile=null,feCurSection='internal';
+var bidirSeed=null; // seeded once per acquisition — M-001 fix
 
+var SC=[
+  {id:0,nm:'Clean SMF — 5 km',meta:'Perfect G.652 fiber, FC/APC both ends, no defects',km:5.0,tg:'easy',ev:[{t:'FC',p:0,ref:-44.5},{t:'END',p:5.0,ref:-55.0}],a1310:0.350,a1550:0.200,orl:38.5,desc:'Single-mode G.652 fiber. FC/APC at both ends. No splices or defects. Ideal reference trace.'},
+  {id:1,nm:'Good splices — 10 km',meta:'3 fusion splices all ≤0.10 dB (Excellent quality)',km:10.0,tg:'easy',ev:[{t:'FC',p:0,ref:-45.0},{t:'NR',p:2.5,l:0.042,a:0.368},{t:'NR',p:5.8,l:0.065,a:0.381},{t:'NR',p:8.1,l:0.028,a:0.363},{t:'END',p:10.0,ref:-53.0}],a1310:0.372,a1550:0.215,orl:35.2,desc:'Three well-executed fusion splices. All Excellent quality (IEC 61300-3-4).'},
+  {id:2,nm:'Bad splice — 0.420 dB at 4.0 km',meta:'Splice #2 exceeds 0.300 dB threshold — FAIL',km:8.0,tg:'med',ev:[{t:'FC',p:0,ref:-44.0},{t:'NR',p:2.1,l:0.055,a:0.371},{t:'NR',p:4.0,l:0.420,a:0.538},{t:'NR',p:6.5,l:0.038,a:0.384},{t:'END',p:8.0,ref:-52.0}],a1310:0.392,a1550:0.228,orl:34.8,desc:'Splice #2 at 4.0 km has ~2 µm core misalignment causing 0.420 dB loss. FAILS threshold. Re-splice required.'},
+  {id:3,nm:'Fiber break — cut at 3.8 km',meta:'Physical severance — Fresnel at break face −14 dB',km:8.0,tg:'med',ev:[{t:'FC',p:0,ref:-44.0},{t:'NR',p:1.5,l:0.048,a:0.387},{t:'BRK',p:3.8,ref:-14.0}],a1310:0.386,a1550:0.220,orl:33.1,desc:'Physical cable severance at 3.8 km. Fresnel reflection at break face: −14 dB (glass/air interface). No signal beyond.'},
+  {id:4,nm:'Positive events — mixed fiber types',meta:'2 positive events — bidirectional measurement mandatory',km:7.0,tg:'med',ev:[{t:'FC',p:0,ref:-44.0},{t:'POS',p:0.8,l:-0.312,a:0.390},{t:'POS',p:2.2,l:-0.185,a:0.388},{t:'NR',p:4.5,l:0.078,a:0.375},{t:'END',p:7.0,ref:-51.0}],a1310:0.375,a1550:0.210,orl:34.5,desc:'Positive events occur when fiber types with different Rayleigh backscatter coefficients are joined. Bidirectional A→B and B→A measurement and geometric average is mandatory.'},
+  {id:5,nm:'Macrobend — tight bend 5.0–6.2 km',meta:'Cable bent below 30 mm radius — excess 0.921 dB/km',km:10.0,tg:'med',ev:[{t:'FC',p:0,ref:-44.0},{t:'NR',p:2.8,l:0.050,a:0.377},{t:'MBS',p:5.0},{t:'MBE',p:6.2,a:0.921},{t:'NR',p:8.5,l:0.061,a:0.381},{t:'END',p:10.0,ref:-52.0}],a1310:0.391,a1550:0.230,orl:34.1,desc:'Cable bent below 30 mm minimum bend radius over 1.2 km. Excess loss 0.921 dB/km. Much worse at 1550 nm.'},
+  {id:6,nm:'Dirty connector — far-end contamination',meta:'End reflectance −28 dB, FAILS −40 dB APC threshold',km:5.0,tg:'easy',ev:[{t:'FC',p:0,ref:-44.0},{t:'NR',p:2.3,l:0.041,a:0.374},{t:'END',p:5.0,ref:-28.0}],a1310:0.371,a1550:0.210,orl:35.0,desc:'Far-end FC/APC end-face contaminated. −28 dB indicates severe contamination. Clean with fiber optic end-face cleaner and re-inspect.'},
+  {id:7,nm:'Long haul — 25 km backbone',meta:'7 non-reflective events + 1 positive event — use 275+ ns pulse',km:25.0,tg:'hard',ev:[{t:'FC',p:0,ref:-45.5},{t:'NR',p:2.1,l:0.038,a:0.381},{t:'NR',p:4.8,l:0.055,a:0.386},{t:'POS',p:7.2,l:-0.095,a:0.383},{t:'NR',p:9.5,l:0.072,a:0.379},{t:'NR',p:13.1,l:0.048,a:0.384},{t:'NR',p:17.8,l:0.081,a:0.382},{t:'NR',p:21.5,l:0.044,a:0.381},{t:'END',p:25.0,ref:-51.0}],a1310:0.382,a1550:0.218,orl:31.2,desc:'Metro backbone 25 km. Use ≥275 ns pulse. Positive event at 7.2 km requires bidirectional measurement.'},
+  {id:8,nm:'UPC connector — high far-end reflection',meta:'FC/UPC at far end (−38 dB) fails APC −40 dB threshold',km:6.0,tg:'easy',ev:[{t:'FC',p:0,ref:-44.0},{t:'NR',p:3.1,l:0.047,a:0.384},{t:'END',p:6.0,ref:-38.0}],a1310:0.373,a1550:0.213,orl:35.6,desc:'Far-end FC/UPC (flat polish). FAILS APC threshold −40 dB. Never mate FC/APC with FC/UPC.'},
+  {id:9,nm:'PON 1×32 Splitter — 3.07 km (MAX-730B ref)',meta:'1×32 splitter 16.922 dB · exact MAX-730B OTDR reference trace',km:3.0735,tg:'hard',ev:[{t:'FC',p:0,ref:-73.6},{t:'NR',p:1.0079,l:0.545,a:0.352},{t:'SPL',p:1.3647,l:16.922,a:0.323},{t:'END',p:3.0735,ref:-50.0,a:0.580}],a1310:0.380,a1550:0.215,orl:28.5,desc:'FTTx PON with 1×32 passive optical splitter. Loss = 10log₁₀(32)+excess. Requires full 39 dB dynamic range. Set range ≥ 6 km.'}
+];
+
+function getAt(id,wl){var sc=SC[id];return(wl===1550||wl==='dual')?sc.a1550:(wl===1625?sc.a1550*1.06:sc.a1310);}
+function spliceQuality(l){if(l<=0.05)return{lbl:'Excellent'};if(l<=0.15)return{lbl:'Good'};if(l<=0.30)return{lbl:'Acceptable'};return{lbl:'Poor'};}
+function durStr(d){return d>=60?(d/60).toFixed(0)+' min':d+' s';}
+
+var chips=document.getElementById('sc-chips');
+SC.forEach(function(sc){
+  var el=document.createElement('div');el.className='sc-chip sc-'+sc.tg;
+  el.innerHTML='<span>'+(sc.tg==='easy'?'🟢':sc.tg==='med'?'🟡':'🔴')+'</span><span><strong>'+sc.nm+'</strong><br><small>'+sc.meta+'</small></span>';
+  el.onclick=function(){selectSc(sc.id);};chips.appendChild(el);
+});
+function openScOverlay(){var ov=document.getElementById('sc-overlay');if(ov)ov.style.display='flex';var cb=document.getElementById('sc-cancel-btn');if(cb)cb.style.display=hasResult?'block':'none';}
+function closeScOverlay(){var ov=document.getElementById('sc-overlay');if(ov)ov.style.display='none';}
+function selectSc(id){curSc=id;var sc=SC[id];document.getElementById('otdr-title').textContent='EXFO MAX-730B · OTDR '+sc.nm+'.sor';document.getElementById('fname-bar').textContent='Filename: MAX-730B OTDR '+sc.nm+'.trc';if(autoMode){rI=ranges.findIndex(function(r){return r>=sc.km*1.5;});if(rI<0)rI=ranges.length-1;P.rng=ranges[rI];pI=(sc.km>10)?pulses.indexOf(275):4;P.pls=pulses[pI];syncUI();}closeScOverlay();}
+
+function showState(s){['off','boot','launcher','otdr'].forEach(function(id){var el=document.getElementById('pg-'+id);if(el)el.style.display='none';});var el=document.getElementById('pg-'+s);if(el){el.style.display='flex';el.style.flexDirection=(s==='off')?'row':'column';}STATE=s;if(s==='otdr'){setTimeout(function(){resizeCv();if(hasResult&&curSc!==null)drawTrace();},50);startClock();}if(s==='launcher')startClock();}
+function poweron(){var led=document.getElementById('dev-led');if(led)led.className='dev-aled on';showState('boot');var p=0;var msgs=['Loading system...','Initializing OTDR module...','Calibrating optical port...','Running self-test...','Mounting storage...','Starting OTDR 7.0.1.1...','All systems nominal'];var t=setInterval(function(){p+=1.4;document.getElementById('boot-fill').style.width=Math.min(p,100)+'%';document.getElementById('boot-msg').textContent=msgs[Math.min(Math.floor(p/15),msgs.length-1)];if(p>=100){clearInterval(t);setTimeout(function(){showState('launcher');},500);}},18);}
+function launchApp(app){if(app==='otdr'){showState('otdr');setTimeout(function(){selTab('otdr');},80);}else if(app==='files'){openFileExplorer('open');}}
+function startClock(){clearInterval(window._clk);function tick(){var ts=new Date().toTimeString().slice(0,8);['otdr-clock','lnch-time'].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=id==='lnch-time'?ts.slice(0,5):ts;});}tick();window._clk=setInterval(tick,1000);}
+
+var TABS=['otdr','events','measure','summary','source','bidir','budget','qc','setup'];
+function selTab(t){
+  var traceVisible=(t==='otdr'||t==='events');
+  TABS.forEach(function(x){var el=document.getElementById('tab-'+x);if(!el)return;el.className='otab'+(x===t?' active':'');if(x==='bidir'&&t!==x)el.style.cssText='background:linear-gradient(180deg,#7aa8d0,#5888b8);color:#fff;border-color:#3868a0';if(x==='bidir'&&t===x)el.style.cssText='background:linear-gradient(180deg,#fc9e18,#e68800);color:#fff;border-color:#c07000;font-weight:700';if(x==='qc'&&t!==x)el.style.cssText='background:linear-gradient(180deg,#60aa60,#3a8838);color:#fff;border-color:#286028';if(x==='qc'&&t===x)el.style.cssText='background:linear-gradient(180deg,#fc9e18,#e68800);color:#fff;border-color:#c07000;font-weight:700';});
+  ['tc-otdr','tc-events','tc-measure','tc-summary','tc-source','tc-bidir','tc-budget','tc-qc','tc-setup'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display='none';});
+  document.getElementById('evt-section').style.display=traceVisible?'block':'none';
+  if(t==='otdr'||t==='events'){var el=document.getElementById('tc-otdr');el.style.display='flex';el.style.flex='1';el.style.flexDirection='column';setTimeout(function(){resizeCv();if(hasResult&&curSc!==null)drawTrace();},40);}
+  else if(t==='source'){var el=document.getElementById('tc-source');el.style.display='flex';el.style.flex='1';}
+  else{var el=document.getElementById('tc-'+t);if(el){el.style.display='flex';el.style.flex='1';el.style.flexDirection='column';}if(t==='summary'&&hasResult)buildSummary();if(t==='measure'&&hasResult)buildMeasure();if(t==='bidir')buildBidir();if(t==='budget'&&hasResult)buildBudget();if(t==='qc')buildQC();}
+}
+
+function setWL(wl){curWL=wl;var s=typeof wl==='number'?wl+' nm':'DUAL';document.getElementById('trace-wl').textContent=typeof wl==='number'?wl+' nm (9 µm)':'DUAL (1310+1550)';document.getElementById('pf-wl').textContent='OTDR '+s;document.getElementById('rp-wl').textContent=s;['1310','1550','1625','dual'].forEach(function(w){[document.getElementById('wb-'+w),document.getElementById('wb2-'+w)].forEach(function(b){if(b)b.className='wl-btn'+(String(wl)===w?' on':'');});});var wlMap={1310:{ior:1.4677,bsc:-79.45},1550:{ior:1.4683,bsc:-81.87},1625:{ior:1.4685,bsc:-82.10},'dual':{ior:1.4680,bsc:-80.00}};var m=wlMap[String(wl)]||wlMap[1310];P.ior=m.ior;P.bsc=m.bsc;var dr={1310:'39 dB',1550:'37 dB',1625:'37 dB','dual':'39/37 dB'};var e=document.getElementById('sv-dynrange');if(e)e.textContent=dr[String(wl)]||'39/37/37 dB';syncUI();if(hasResult&&curSc!==null){drawTrace();updatePF();}}
+function adjP(p,d){if(p==='rng'){rI=Math.max(0,Math.min(ranges.length-1,rI+d));P.rng=ranges[rI];var s=document.getElementById('sel-rng');if(s)s.value=P.rng;}if(p==='pls'){pI=Math.max(0,Math.min(pulses.length-1,pI+d));P.pls=pulses[pI];var s=document.getElementById('sel-pls');if(s)s.value=P.pls;}if(p==='dur'){dI=Math.max(0,Math.min(durs.length-1,dI+d));P.dur=durs[dI];var s=document.getElementById('sel-dur');if(s)s.value=P.dur;}syncUI();}
+function adjPv(p,d){if(p==='ior')P.ior=Math.round((P.ior+d*0.0001)*10000)/10000;if(p==='bsc')P.bsc=Math.round((P.bsc+d*0.01)*100)/100;if(p==='hx')P.hx=Math.round((P.hx+d*0.01)*100)/100;syncUI();}
+function selParamChange(){var sr=document.getElementById('sel-rng');if(sr){P.rng=parseFloat(sr.value);rI=ranges.indexOf(P.rng);}var sp=document.getElementById('sel-pls');if(sp){P.pls=parseFloat(sp.value);pI=pulses.indexOf(P.pls);}var sd=document.getElementById('sel-dur');if(sd){P.dur=parseFloat(sd.value);dI=durs.indexOf(P.dur);}syncUI();}
+function syncUI(){function sv(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}sv('pr-rng',P.rng+' km');sv('pr-pls',P.pls+' ns');sv('pr-dur',durStr(P.dur));sv('sv-ior',P.ior.toFixed(4));sv('sv-bsc',P.bsc.toFixed(2));sv('sv-hx',P.hx.toFixed(2));var avg=Math.min(Math.round(P.dur*1e9/P.pls),99999);sv('sv-avg',avg>9999?'>9999':String(avg));sv('rp-avg',avg>9999?'>9999':String(avg));sv('rp-rng',P.rng+' km');sv('rp-pls',P.pls+' ns');sv('rp-dur',durStr(P.dur));}
+function setAuto(v){autoMode=v;['sw-on','sw-off'].forEach(function(id){var el=document.getElementById(id);if(el)el.className='wl-btn2'+(id==='sw-on'&&v||id==='sw-off'&&!v?' on':'');});var b=document.getElementById('btn-auto');if(b)b.className='mode-btn'+(v?' on':'');}
+function toggleAuto(){setAuto(!autoMode);}
+function toggleRT(){rtMode=!rtMode;var b=document.getElementById('btn-rt');if(b)b.className='mode-btn'+(rtMode?' rt-on':'');}
+function setMB(v){mbDetect=v;['mb-on','mb-off'].forEach(function(id){var el=document.getElementById(id);if(el)el.className='wl-btn2'+(id==='mb-on'&&v||id==='mb-off'&&!v?' on':'');});}
+function setLC(v){lcComp=v;['lc-on','lc-off'].forEach(function(id){var el=document.getElementById(id);if(el)el.className='wl-btn2'+(id==='lc-on'&&v||id==='lc-off'&&!v?' on':'');});}
+function adjLC(d){lcLen=Math.max(0,lcLen+d);var e=document.getElementById('sv-lc');if(e)e.textContent=lcLen+' m';}
+function setRC(v){rcComp=v;['rc-on','rc-off'].forEach(function(id){var el=document.getElementById(id);if(el)el.className='wl-btn2'+(id==='rc-on'&&v||id==='rc-off'&&!v?' on':'');});}
+function adjRC(d){rcLen=Math.max(0,rcLen+d);var e=document.getElementById('sv-rc');if(e)e.textContent=rcLen+' m';}
+function fiberTypeChange(){var sel=document.getElementById('fib-type');if(!sel)return;var m={'g652':1.4677,'g654':1.4690,'g655':1.4701,'g657':1.4677,'g651':1.4960};P.ior=m[sel.value]||1.4677;syncUI();}
+function togglePV(){pvVisible=!pvVisible;var p=document.getElementById('pv-panel');if(p)p.className='pv-panel'+(pvVisible?'':' collapsed');var b=document.getElementById('btn-pv');if(b)b.className='mode-btn'+(pvVisible?' pv-on':'');setTimeout(function(){resizeCv();if(hasResult&&curSc!==null)drawTrace();},320);}
+function selCurMode(m){curMode=m;}
+var cvEl=document.getElementById('cv-trace');
+if(cvEl){cvEl.addEventListener('click',function(e){if(!hasResult||curSc===null)return;var sc=SC[curSc];var at=getAt(curSc,curWL);var rect=cvEl.getBoundingClientRect();var px=e.clientX-rect.left;var ml=50,mr=12,tw=cvEl.width-ml-mr;var rng=Math.max(P.rng,sc.km*1.05)/zF;var km=zOff+(px-ml)/tw*rng;km=Math.max(0,Math.min(km,sc.km));var db=at*km;if(curMode==='A'){markA={km:km,db:db};curMode=null;}else if(curMode==='B'){markB={km:km,db:db};curMode=null;}updateCursorBar();drawTrace();});}
+function updateCursorBar(){var bar=document.getElementById('cursor-bar');if(!bar)return;if(markA||markB){bar.style.display='flex';var al=document.getElementById('cur-a-lbl'),bl=document.getElementById('cur-b-lbl'),dl=document.getElementById('cur-diff-lbl');if(al)al.textContent='A: '+(markA?markA.km.toFixed(4)+' km':'—');if(bl)bl.textContent='B: '+(markB?markB.km.toFixed(4)+' km':'—');if(dl&&markA&&markB){var dk=Math.abs(markB.km-markA.km);var ddb=getAt(curSc,curWL)*dk;dl.textContent='ΔL: '+dk.toFixed(4)+' km  |  ΔdB: '+ddb.toFixed(3)+' dB';}else if(dl)dl.textContent='ΔL: — km  |  ΔdB: — dB';}else{bar.style.display='none';}}
+function selEvt(idx){selEvtIdx=idx;document.querySelectorAll('.erow-main').forEach(function(r,i){r.className='erow-main'+(i===idx?' erow-sel':'');});document.querySelectorAll('.pvec').forEach(function(c,i){var base=c.className.replace(/\s*pv-sel/g,'');c.className=base+(i===idx?' pv-sel':'');});if(idx!==null){var pvCards=document.querySelectorAll('.pvec');if(pvCards[idx])pvCards[idx].scrollIntoView({behavior:'smooth',block:'nearest'});}if(hasResult&&curSc!==null)drawTrace();}
+function mkNoise(seed){return function(){seed=(seed*1664525+1013904223)&0xffffffff;return(seed>>>0)/4294967296-0.5;};}
+
+function startAcq(){
+  if(curSc===null){openScOverlay();return;}
+  var sc=SC[curSc];var sb=document.getElementById('start-btn');if(sb)sb.style.opacity='.6';
+  document.getElementById('pg-acq').className='show';
+  document.getElementById('aq-wl').textContent=curWL==='dual'?'DUAL':curWL+' nm';
+  document.getElementById('aq-rng').textContent=P.rng+' km';document.getElementById('aq-pls').textContent=P.pls+' ns';document.getElementById('aq-dur').textContent=durStr(P.dur);
+  var acv=document.getElementById('acq-cv');acv.width=acv.offsetWidth||440;acv.height=80;drawPartial(acv.getContext('2d'),acv.width,acv.height,sc,0);
+  var fill=document.getElementById('acq-fill'),scan=document.getElementById('acq-scan');fill.style.width='0%';scan.style.left='0%';
+  var tEl=document.getElementById('aq-t'),txtEl=document.getElementById('acq-txt');
+  var el=0,tot=Math.max(P.dur*500,4000);
+  acqTimer=setInterval(function(){el+=100;var pct=Math.min(el/tot,1);fill.style.width=(pct*100)+'%';scan.style.left=(pct*100)+'%';tEl.textContent=Math.round(pct*P.dur)+' s';if(el%600<110)drawPartial(acv.getContext('2d'),acv.width,acv.height,sc,pct);
+    if(pct>=1){clearInterval(acqTimer);acqTimer=null;txtEl.textContent='✓ Acquisition Complete';document.getElementById('aq-evt').textContent=sc.ev.filter(function(e){return e.t!=='FC'&&e.t!=='END'&&e.t!=='MBE';}).length;
+      setTimeout(function(){document.getElementById('pg-acq').className='';if(sb)sb.style.opacity='1';hasResult=true;markA=null;markB=null;selEvtIdx=null;bidirSeed=0.96+((curSc*17+P.pls*3)%100)/1250;updatePF();resizeCv();drawTrace();buildEvtTable(sc,getAt(curSc,curWL));buildPVSVG(sc);buildSummary();buildMeasure();
+        document.getElementById('fname-bar').textContent='Filename: MAX-730B OTDR '+sc.nm+'.trc  │  Span: '+sc.km.toFixed(4)+' km  │  '+getAt(curSc,curWL).toFixed(3)+' dB/km  │  ORL: '+sc.orl.toFixed(2)+' dB';
+        selTab('events');},700);}},100);}
+
+function drawPartial(ctx,W,H,sc,pct){ctx.fillStyle='#f8f8f8';ctx.fillRect(0,0,W,H);var at=getAt(curSc!==null?curSc:sc.id,curWL),inj=22,rng=Math.max(P.rng,sc.km*1.1),ml=40,tw=W-ml-8,mt=6,th=H-mt-14;var xS=function(x){return ml+x/rng*tw;};var yS=function(y){return mt+th*(1-y/inj);};ctx.strokeStyle='rgba(160,190,215,.5)';ctx.lineWidth=0.5;for(var i=0;i<=4;i++){ctx.beginPath();ctx.moveTo(ml,mt+th*i/4);ctx.lineTo(ml+tw,mt+th*i/4);ctx.stroke();}var kl=pct*rng,ck=0,cd=inj,noise=mkNoise(sc.id*77+7);ctx.beginPath();ctx.strokeStyle='#1a1a28';ctx.lineWidth=1.2;var started=false;sc.ev.forEach(function(ev){if(ck>kl)return;if(ev.t==='FC'){ctx.moveTo(xS(0),yS(inj));started=true;return;}var sk=Math.min(ev.p,kl)-ck;if(sk>0&&started){var pts=Math.max(2,Math.round(Math.abs(xS(ev.p)-xS(ck))));for(var i=0;i<=pts;i++){var t2=i/pts,km=ck+sk*t2;cd-=at*sk/pts;ctx.lineTo(xS(km),yS(cd+noise()*0.15));}}ck=ev.p;if(ev.p>kl)return;if(ev.t==='NR')cd-=(ev.l||0);else if(ev.t==='POS')cd+=Math.abs(ev.l||0)*.8;else if(ev.t==='BRK'){ctx.stroke();ctx.beginPath();started=false;}else if(ev.t==='SPL'){cd-=(ev.l||10);cd=Math.max(cd,0);}});if(started)ctx.stroke();}
+
+function resizeCv(){var wrap=document.getElementById('trace-wrap'),cv=document.getElementById('cv-trace');if(!wrap||!cv)return;var W=wrap.offsetWidth,H=wrap.offsetHeight;cv.width=W;cv.height=H;cv.style.width=W+'px';cv.style.height=H+'px';}
+window.addEventListener('resize',function(){if(STATE==='otdr'){resizeCv();if(hasResult&&curSc!==null)drawTrace();}});
+
+function drawTrace(){
+  var cv=document.getElementById('cv-trace');if(!cv||!cv.width||!cv.height){resizeCv();return;}
+  var W=cv.width,H=cv.height;if(!W||!H)return;
+  var ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);ctx.fillStyle='#ffffff';ctx.fillRect(0,0,W,H);
+  if(curSc===null)return;
+  var sc=SC[curSc],at=getAt(curSc,curWL),inj=24,rng=Math.max(P.rng,sc.km*1.05)/zF;
+  var ml=52,mr=12,mt=20,mb=28,tw=W-ml-mr,th=H-mt-mb;
+  var xS=function(x){return ml+((x-zOff)/rng)*tw;};var yS=function(y){return mt+th*(1-y/inj);};
+  ctx.fillStyle='#f6f9fc';ctx.fillRect(ml,mt,tw,th);
+  ctx.strokeStyle='rgba(140,175,210,.45)';ctx.lineWidth=0.5;
+  var gDb=4;for(var db=0;db<=inj;db+=gDb){var gy=yS(db);if(gy<mt-3||gy>mt+th+3)continue;ctx.beginPath();ctx.moveTo(ml,gy);ctx.lineTo(ml+tw,gy);ctx.stroke();}
+  var gKm=rng<=5?.5:rng<=12?1:rng<=30?2:rng<=60?5:rng<=120?10:20;
+  for(var k=0;k<=rng+zOff+gKm;k+=gKm){var gx=xS(zOff+k);if(gx<ml-2||gx>ml+tw+2)continue;ctx.beginPath();ctx.moveTo(gx,mt);ctx.lineTo(gx,mt+th);ctx.stroke();}
+  ctx.strokeStyle='#7890a8';ctx.lineWidth=0.9;ctx.strokeRect(ml,mt,tw,th);
+  ctx.fillStyle='#1a3050';ctx.font='bold ctx.font='bold 12px system-ui,Arial,sans-serif';ctx.textAlign='right';
+  for(var db=0;db<=inj;db+=gDb){var gy=yS(db);if(gy<mt-3||gy>mt+th+3)continue;ctx.fillText((inj-db).toFixed(0),ml-5,gy+4);}
+  ctx.fillStyle='#6a8090';ctx.font='ctx.font='11px system-ui,Arial,sans-serif';ctx.fillText('dB',ml-4,mt-6);
+  ctx.textAlign='center';ctx.fillStyle='#1a3050';ctx.font='ctx.font='12px system-ui,Arial,sans-serif';
+  for(var k=0;k<=rng;k+=gKm){var gx=xS(zOff+k);if(gx<ml-2||gx>ml+tw+2)continue;ctx.fillText((zOff+k).toFixed(gKm<1?1:0),gx,mt+th+18);}
+  ctx.textAlign='left';ctx.fillStyle='#6a8090';ctx.font='ctx.font='11px system-ui,Arial,sans-serif';ctx.fillText('km',ml+tw+3,mt+th+18);
+  ctx.strokeStyle='rgba(140,165,190,.35)';ctx.lineWidth=0.6;ctx.setLineDash([6,5]);ctx.beginPath();ctx.moveTo(ml,yS(0));ctx.lineTo(ml+tw,yS(0));ctx.stroke();ctx.setLineDash([]);
+  var noise=mkNoise(curSc*100+['1310','1550','1625','dual'].indexOf(String(curWL))*10);
+  var segs=[],ck=0,cd=inj;
+  sc.ev.forEach(function(ev){if(ev.t==='FC'){ck=0;cd=inj;return;}segs.push({x1:ck,y1:cd,x2:ev.p,y2:cd-at*(ev.p-ck),ev:ev});cd-=at*(ev.p-ck);ck=ev.p;if(ev.t==='NR')cd-=(ev.l||0);else if(ev.t==='POS')cd+=Math.abs(ev.l||0)*.8;else if(ev.t==='SPL'){cd-=(ev.l||10);cd=Math.max(cd,0.5);}});
+  ctx.save();ctx.beginPath();ctx.rect(ml,mt,tw,th);ctx.clip();
+  ctx.beginPath();ctx.strokeStyle='#18183a';ctx.lineWidth=1.5;ctx.lineJoin='round';var started=false;
+  segs.forEach(function(seg){if(seg.ev.t==='BRK'){ctx.stroke();ctx.beginPath();started=false;return;}var pts=Math.max(2,Math.round(Math.abs(xS(seg.x2)-xS(seg.x1))));for(var i=0;i<=pts;i++){var t2=i/pts,km=seg.x1+(seg.x2-seg.x1)*t2,db=seg.y1+(seg.y2-seg.y1)*t2;var px=xS(km),py=yS(db+noise()*0.12*(1+Math.max(0,(inj-db-2)/15)));if(!started){ctx.moveTo(px,py);started=true;}else ctx.lineTo(px,py);}});ctx.stroke();
+  var sth=parseFloat(document.getElementById('th-splice').value)||0.3,rth=parseFloat(document.getElementById('th-refl').value)||-40;
+  var ck2=0,cd2=inj,en=0;
+  sc.ev.forEach(function(ev,evI){cd2-=at*(ev.p-ck2);ck2=ev.p;var ex2=xS(ev.p),ey=yS(cd2);if(ex2<ml-10||ex2>ml+tw+10)return;var isSel=(evI===selEvtIdx);
+    ctx.strokeStyle=isSel?'rgba(255,128,0,.85)':'rgba(170,10,10,.6)';ctx.lineWidth=isSel?1.8:0.9;ctx.setLineDash([5,3]);ctx.beginPath();ctx.moveTo(ex2,mt);ctx.lineTo(ex2,mt+th);ctx.stroke();ctx.setLineDash([]);
+    ctx.font='bold ctx.font='bold 13px system-ui,Arial,sans-serif';ctx.textAlign='center';
+    if(ev.t==='FC'){en++;ctx.fillStyle='#1a3060';ctx.fillText(String(en),ex2,mt+16);}
+    else if(ev.t==='NR'){en++;var col=ev.l<=sth?'#1a6428':'#7a1818';var dy=(ev.l||0)*th/inj;ctx.strokeStyle=col;ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(ex2,ey+dy);ctx.lineTo(ex2,ey);ctx.stroke();ctx.fillStyle=col;ctx.fillText(String(en),ex2,mt+16);cd2-=(ev.l||0);}
+    else if(ev.t==='POS'){en++;ctx.fillStyle='#884400';ctx.fillText('P'+en,ex2,mt+16);cd2+=Math.abs(ev.l||0)*.8;}
+    else if(ev.t==='BRK'){ctx.fillStyle='rgba(200,215,225,.65)';ctx.fillRect(ex2,mt,ml+tw-ex2,th);ctx.fillStyle='#aa0000';ctx.font='bold ctx.font='bold 14px system-ui,Arial,sans-serif';ctx.fillText('BREAK',ex2+4,mt+16);}
+    else if(ev.t==='SPL'){en++;ctx.fillStyle='#551188';ctx.fillText('S'+en,ex2,mt+16);cd2-=(ev.l||10);cd2=Math.max(cd2,.5);}
+    else if(ev.t==='MBS'){ctx.strokeStyle='rgba(150,50,200,.42)';ctx.lineWidth=0.9;ctx.setLineDash([3,2]);ctx.beginPath();ctx.moveTo(ex2,mt);ctx.lineTo(ex2,mt+th);ctx.stroke();ctx.setLineDash([]);ctx.font='ctx.font='12px system-ui,Arial,sans-serif';ctx.fillStyle='#882288';ctx.fillText('↩',ex2,mt+14);}
+    else if(ev.t==='MBE'){ctx.strokeStyle='rgba(150,50,200,.42)';ctx.lineWidth=0.9;ctx.setLineDash([3,2]);ctx.beginPath();ctx.moveTo(ex2,mt);ctx.lineTo(ex2,mt+th);ctx.stroke();ctx.setLineDash([]);ctx.font='ctx.font='12px system-ui,Arial,sans-serif';ctx.fillStyle='#882288';ctx.fillText('↪',ex2,mt+14);}
+    else if(ev.t==='END'){if(ev.ref>-52){var sh=Math.min(Math.abs(ev.ref+62)*0.45,22);ctx.strokeStyle='#222';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(ex2,ey);ctx.lineTo(ex2,ey-sh);ctx.lineTo(ex2+6,ey-sh*.3);ctx.lineTo(ex2+12,ey);ctx.stroke();}ctx.fillStyle='#1a3888';ctx.font='bold ctx.font='bold 12px system-ui,Arial,sans-serif';ctx.fillText('A',ex2,mt+th-5);}});
+  ctx.save();if(markA){var ax=xS(markA.km);ctx.strokeStyle='#cc2200';ctx.lineWidth=2;ctx.setLineDash([]);ctx.beginPath();ctx.moveTo(ax,mt);ctx.lineTo(ax,mt+th);ctx.stroke();ctx.fillStyle='#cc2200';ctx.fillRect(ax-8,mt,16,18);ctx.fillStyle='#fff';ctx.font='bold ctx.font='bold 12px system-ui,Arial,sans-serif';ctx.textAlign='center';ctx.fillText('A',ax,mt+13);}
+  if(markB){var bx=xS(markB.km);ctx.strokeStyle='#0033cc';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(bx,mt);ctx.lineTo(bx,mt+th);ctx.stroke();ctx.fillStyle='#0033cc';ctx.fillRect(bx-8,mt,16,18);ctx.fillStyle='#fff';ctx.font='bold ctx.font='bold 12px system-ui,Arial,sans-serif';ctx.textAlign='center';ctx.fillText('B',bx,mt+13);}
+  if(markA&&markB){var ax2=xS(markA.km),bx2=xS(markB.km);ctx.fillStyle='rgba(0,128,0,.1)';ctx.fillRect(Math.min(ax2,bx2),mt,Math.abs(bx2-ax2),th);}
+  ctx.restore();ctx.restore();}
+
+function doZoom(f){zF=Math.max(1,Math.min(20,zF*f));drawTrace();}
+function resetZoom(){zF=1;zOff=0;markA=null;markB=null;updateCursorBar();drawTrace();}
+
+function isPass(sc,wl){var at=getAt(sc.id,wl),sth=parseFloat(document.getElementById('th-splice').value)||0.3,rth=parseFloat(document.getElementById('th-refl').value)||-40,atL=wl===1550?0.28:wl===1625?0.30:0.40;if(sc.ev.some(function(e){return e.t==='BRK';}))return false;if(at>atL)return false;if(sc.ev.some(function(e){return e.t==='NR'&&e.l>sth;}))return false;var ee=sc.ev.find(function(e){return e.t==='END';});if(ee&&ee.ref<rth)return false;if(sc.ev.some(function(e){return e.t==='POS';}))return false;return true;}
+function updatePF(){if(!hasResult||curSc===null)return;var p=isPass(SC[curSc],curWL);var el=document.getElementById('pf-badge');el.innerHTML=p?'<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7.5" fill="#fff" stroke="#18882a" stroke-width="1"/><path d="M4 8l3 3 5-5" stroke="#22aa44" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Pass':'<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7.5" fill="#fff" stroke="#aa1800" stroke-width="1"/><path d="M5 5l6 6M11 5l-6 6" stroke="#cc2200" stroke-width="2.2" stroke-linecap="round"/></svg>Fail';el.className=p?'pf-pass':'pf-fail';}
+
+function evtSym(t){var labels={FC:'First Connector',NR:'Non-Reflective Splice',POS:'Positive Event',BRK:'Total Loss / Break',SPL:'Non-Reflective (Splitter)',MBS:'Macrobend Start',MBE:'Macrobend End',END:'Reflective End'};var tip=labels[t]||t;var inner='';if(t==='FC')inner='<span style="font-size:14px;font-weight:700;color:#1a3060">&#x2192;</span>';else if(t==='NR')inner='<span style="font-size:14px;color:#1a3060">&#x22A3;</span>';else if(t==='POS')inner='<span style="font-size:12px;color:#cc7700">&#x22A3;</span><span style="font-size:9px;color:#cc7700">&#x25B2;</span>';else if(t==='BRK')inner='<span style="font-size:14px;font-weight:700;color:#cc2200">&#x2715;</span>';else if(t==='SPL')inner='<span style="font-size:12px;color:#6622aa">&#x22A3;</span><span style="font-size:9px;color:#6622aa">&#xD7;</span>';else if(t==='MBS'||t==='MBE')inner='<span style="font-size:12px;color:#882288">&#x21A9;</span>';else if(t==='END')inner='<span style="font-size:13px;color:#1a3060">&#x22A2;</span>';return '<span class="ec-sym-box" title="'+tip+'">'+inner+'</span>';}
+
+function buildEvtTable(sc,at){
+  var sth=parseFloat(document.getElementById('th-splice').value)||0.3,rth=parseFloat(document.getElementById('th-refl').value)||-40,atth=parseFloat(document.getElementById('th-atten').value)||0.40;
+  var tb=document.getElementById('evt-tbody');tb.innerHTML='';var cumLoss=0,evNum=0,mainRowIdx=0;
+  for(var i=0;i<sc.ev.length;i++){
+    var ev=sc.ev[i],nextEv=(i+1<sc.ev.length)?sc.ev[i+1]:null;
+    if(ev.t==='MBE')continue; // v6 FIX: MBE not a standalone numbered row
+    evNum++;
+    var evLoss=null;if(ev.t==='NR')evLoss=ev.l||0;else if(ev.t==='POS')evLoss=Math.abs(ev.l||0);else if(ev.t==='SPL')evLoss=ev.l||10.5;if(evLoss!==null)cumLoss+=evLoss;
+    var lossDisp='--',reflDisp='',attDisp='',lF=false,rF=false,aF=false;
+    if(ev.t==='FC'){reflDisp=(ev.ref<-60)?'>-60.0':ev.ref.toFixed(1);}
+    else if(ev.t==='NR'){lossDisp=ev.l.toFixed(3);lF=(ev.l>sth);}
+    else if(ev.t==='POS'){lossDisp=Math.abs(ev.l).toFixed(3);lF=true;}
+    else if(ev.t==='BRK'){reflDisp=(ev.ref||0).toFixed(1);lF=true;}
+    else if(ev.t==='SPL'){lossDisp=(ev.l||10.5).toFixed(3);}
+    else if(ev.t==='MBS'){var mbeEv=sc.ev.find(function(e,ei){return e.t==='MBE'&&ei>i;});attDisp=mbeEv?(mbeEv.a||0).toFixed(3):'--';aF=true;}
+    else if(ev.t==='END'){reflDisp=ev.ref.toFixed(1);rF=(ev.ref<rth);}
+    var r=tb.insertRow();r.className='erow-main';var captIdx=mainRowIdx;r.onclick=(function(ri){return function(){selEvt(ri);};})(captIdx);mainRowIdx++;
+    r.innerHTML='<td class="ec-no-col">'+evtSym(ev.t)+' '+evNum+'</td>'+
+      '<td style="font-family:'Courier New',Courier,monospace">'+ev.p.toFixed(4)+'</td>'+
+      '<td class="'+(lF?'ec-cell-fail':'')+'" style="font-family:'Courier New',Courier,monospace">'+lossDisp+'</td>'+
+      '<td class="'+(rF?'ec-cell-fail':'')+'" style="font-family:'Courier New',Courier,monospace">'+reflDisp+'</td>'+
+      '<td class="'+(aF?'ec-cell-fail':'')+'" style="font-family:'Courier New',Courier,monospace">'+attDisp+'</td>'+
+      '<td style="font-family:'Courier New',Courier,monospace">'+cumLoss.toFixed(3)+'</td>';
+    if(nextEv&&ev.t!=='BRK'&&nextEv.t!=='MBE'){var secKm=nextEv.p-ev.p;if(secKm>0.0001){var secAtt=(nextEv.a&&nextEv.t==='NR')?nextEv.a:at;var secLoss=secKm*secAtt;cumLoss+=secLoss;var afSub=(secAtt>atth);var sr=tb.insertRow();sr.className='erow-sub';sr.innerHTML='<td class="ec-no-col"></td><td style="padding-left:22px;font-family:'Courier New',Courier,monospace">('+secKm.toFixed(4)+')</td><td style="font-family:'Courier New',Courier,monospace">'+secLoss.toFixed(3)+'</td><td></td><td class="'+(afSub?'ec-cell-fail':'')+'" style="font-family:'Courier New',Courier,monospace">'+secAtt.toFixed(3)+'</td><td style="font-family:'Courier New',Courier,monospace">'+cumLoss.toFixed(3)+'</td>';}}
+  }
+}
+
+function buildPVSVG(sc){
+  if(!sc)return;var at=getAt(sc.id,curWL),sth=parseFloat(document.getElementById('th-splice').value)||0.3,rth=parseFloat(document.getElementById('th-refl').value)||-40;
+  var nd=document.getElementById('pv-no-data');if(nd)nd.style.display='none';var svgEl=document.getElementById('pv-svg');if(!svgEl)return;svgEl.style.display='block';
+  var W=570,cabY=68,H=220,sx=50,ex=W-22;var toX=function(km){return sx+(km/sc.km)*(ex-sx);};
+  var mbS=sc.ev.find(function(e){return e.t==='MBS';}),mbE=sc.ev.find(function(e){return e.t==='MBE';});
+  var o='<defs><linearGradient id="jg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5e060"/><stop offset="1" stop-color="#b89010"/></linearGradient><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dce8f4"/><stop offset="1" stop-color="#9ab0c4"/></linearGradient><linearGradient id="fg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7ab8e4"/><stop offset="1" stop-color="#1a68aa"/></linearGradient></defs>';
+  o+='<rect width="'+W+'" height="'+H+'" fill="#f2f8fd" rx="5"/>';
+  if(mbS&&mbE){var bx1=toX(mbS.p),bx2=toX(mbE.p);o+='<rect x="'+bx1+'" y="'+(cabY-16)+'" width="'+(bx2-bx1)+'" height="32" fill="rgba(200,100,240,.12)" stroke="rgba(170,50,210,.35)" stroke-width="1" stroke-dasharray="4,2" rx="4"/>';}
+  o+='<rect x="'+sx+'" y="'+(cabY-11)+'" width="'+(ex-sx)+'" height="22" rx="4" fill="url(#jg)" stroke="#b09010" stroke-width="0.8"/>';
+  o+='<rect x="'+sx+'" y="'+(cabY-6)+'" width="'+(ex-sx)+'" height="12" rx="2.5" fill="url(#sg)"/>';
+  o+='<rect x="'+sx+'" y="'+(cabY-2)+'" width="'+(ex-sx)+'" height="4" rx="2" fill="url(#fg)"/>';
+  o+='<rect x="'+(sx-36)+'" y="'+(cabY-14)+'" width="34" height="28" rx="5" fill="#1a4a7a" stroke="#3a7ab8" stroke-width="1.2"/>';
+  o+='<text x="'+(sx-19)+'" y="'+(cabY-2)+'" text-anchor="middle" font-size="7" fill="#fff" font-weight="bold" font-family="system-ui,Arial,sans-serif">MAX</text>';
+  o+='<text x="'+(sx-19)+'" y="'+(cabY+7)+'" text-anchor="middle" font-size="6.5" fill="#88ccff" font-family="system-ui,Arial,sans-serif">730B</text>';
+  o+='<line x1="'+(sx-2)+'" y1="'+cabY+'" x2="'+sx+'" y2="'+cabY+'" stroke="#2a88cc" stroke-width="2"/>';
+  var scY=cabY+18;o+='<line x1="'+sx+'" y1="'+scY+'" x2="'+ex+'" y2="'+scY+'" stroke="#8090a8" stroke-width="0.5"/>';
+  var nTick=Math.min(Math.ceil(sc.km)+1,12);for(var i=0;i<nTick;i++){var tkm=sc.km*i/(nTick-1),tx=toX(tkm);o+='<line x1="'+tx+'" y1="'+scY+'" x2="'+tx+'" y2="'+(scY+4)+'" stroke="#8090a8" stroke-width="0.8"/>';o+='<text x="'+tx+'" y="'+(scY+15)+'" text-anchor="middle" font-size="9" fill="#3a5870" font-family="system-ui,Arial,sans-serif">'+tkm.toFixed(tkm<1?2:1)+'</text>';}
+  o+='<text x="'+(ex+4)+'" y="'+(scY+15)+'" font-size="9" fill="#3a5870" font-family="system-ui,Arial,sans-serif">km</text>';
+  o+='<defs><marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#2a5a9a"/></marker></defs>';
+  o+='<line x1="'+(sx+10)+'" y1="'+(cabY-28)+'" x2="'+(sx+55)+'" y2="'+(cabY-28)+'" stroke="#2a5a9a" stroke-width="1.2" marker-end="url(#arr)"/>';
+  o+='<text x="'+(sx+10)+'" y="'+(cabY-31)+'" font-size="8" fill="#2a5a9a" font-family="system-ui,Arial,sans-serif">→ Propagation</text>';
+  o+='<text x="'+ex+'" y="'+(cabY-28)+'" text-anchor="end" font-size="8" fill="#8090a8" font-family="system-ui,Arial,sans-serif">G.652 SMF 9/125µm</text>';
+  var evCards='',cardIdx=0,ck=0,cd=24;
+  sc.ev.forEach(function(ev){
+    cd-=at*(ev.p-ck);ck=ev.p;var epx=toX(ev.p),thisIdx=cardIdx;
+    if(ev.t==='FC'){
+      o+='<rect x="'+(epx-5)+'" y="'+(cabY-13)+'" width="10" height="26" rx="3" fill="#22aa44" stroke="#1a8034" stroke-width="1"/>';
+      o+='<circle cx="'+epx+'" cy="'+cabY+'" r="2.5" fill="#116a2a"/>';
+      o+='<text x="'+epx+'" y="'+(cabY-18)+'" text-anchor="middle" font-size="8" fill="#1a8034" font-weight="bold" font-family="system-ui,Arial,sans-serif">FC/APC</text>';
+      o+='<text x="'+epx+'" y="'+(cabY+24)+'" text-anchor="middle" font-size="8" fill="#1a7034" font-family="system-ui,Arial,sans-serif">'+ev.ref.toFixed(1)+'dB</text>';
+      evCards+=mkEvCard(ev,thisIdx,at,sth,rth,sc);cardIdx++;
+    } else if(ev.t==='NR'){
+      var pass=ev.l<=sth,col=pass?'#22aa44':'#cc2200',q=spliceQuality(ev.l);
+      o+='<rect x="'+(epx-6)+'" y="'+(cabY-9)+'" width="12" height="18" rx="3" fill="'+(pass?'#eef8f0':'#feeee8')+'" stroke="'+col+'" stroke-width="1.5"/>';
+      o+='<circle cx="'+epx+'" cy="'+(cabY-18)+'" r="7" fill="'+col+'"/>';
+      o+='<text x="'+epx+'" y="'+(cabY-14)+'" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold" font-family="system-ui,Arial,sans-serif">'+(cardIdx+1)+'</text>';
+      o+='<rect x="'+(epx-13)+'" y="'+(cabY+12)+'" width="26" height="11" rx="2" fill="'+col+'" opacity="0.9"/>';
+      o+='<text x="'+epx+'" y="'+(cabY+21)+'" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold" font-family="system-ui,Arial,sans-serif">'+ev.l.toFixed(3)+'dB</text>';
+      evCards+=mkEvCard(ev,thisIdx,at,sth,rth,sc);cardIdx++;cd-=(ev.l||0);
+    } else if(ev.t==='POS'){
+      o+='<circle cx="'+epx+'" cy="'+(cabY-16)+'" r="7" fill="#cc5500"/>';
+      o+='<text x="'+epx+'" y="'+(cabY-12)+'" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold" font-family="system-ui,Arial,sans-serif">P</text>';
+      o+='<text x="'+epx+'" y="'+(cabY+22)+'" text-anchor="middle" font-size="7.5" fill="#cc5500" font-weight="bold" font-family="system-ui,Arial,sans-serif">BIDIR!</text>';
+      evCards+=mkEvCard(ev,thisIdx,at,sth,rth,sc);cardIdx++;cd+=Math.abs(ev.l||0)*.8;
+    } else if(ev.t==='BRK'){
+      o+='<circle cx="'+epx+'" cy="'+cabY+'" r="14" fill="none" stroke="rgba(255,80,0,.25)" stroke-width="10"/>';
+      o+='<rect x="'+(epx+5)+'" y="'+(cabY-13)+'" width="'+(ex-epx-5)+'" height="26" fill="rgba(190,200,210,.65)" rx="4"/>';
+      o+='<text x="'+epx+'" y="'+(cabY-18)+'" text-anchor="middle" font-size="9" fill="#cc2200" font-weight="bold" font-family="system-ui,Arial,sans-serif">BREAK</text>';
+      evCards+=mkEvCard(ev,thisIdx,at,sth,rth,sc);cardIdx++;
+    } else if(ev.t==='SPL'){
+      o+='<rect x="'+(epx-10)+'" y="'+(cabY-18)+'" width="20" height="36" rx="4" fill="#6622aa" stroke="#4a1888" stroke-width="1.2"/>';
+      o+='<text x="'+epx+'" y="'+(cabY-6)+'" text-anchor="middle" font-size="7" fill="#fff" font-weight="bold" font-family="system-ui,Arial,sans-serif">1×32</text>';
+      o+='<text x="'+epx+'" y="'+(cabY+4)+'" text-anchor="middle" font-size="6" fill="#ddb0ff" font-family="system-ui,Arial,sans-serif">PON</text>';
+      o+='<text x="'+epx+'" y="'+(cabY+28)+'" text-anchor="middle" font-size="8" fill="#6622aa" font-weight="bold" font-family="system-ui,Arial,sans-serif">'+(ev.l||16.9).toFixed(1)+'dB</text>';
+      evCards+=mkEvCard(ev,thisIdx,at,sth,rth,sc);cardIdx++;cd-=(ev.l||10);cd=Math.max(cd,0.5);
+    } else if(ev.t==='MBS'){
+      o+='<path d="M '+(epx-8)+' '+(cabY-8)+' C '+(epx-8)+' '+(cabY-22)+' '+(epx+8)+' '+(cabY-22)+' '+(epx+8)+' '+(cabY-8)+'" fill="none" stroke="#aa22cc" stroke-width="3" stroke-linecap="round"/>';
+      o+='<text x="'+epx+'" y="'+(cabY-27)+'" text-anchor="middle" font-size="8" fill="#882288" font-weight="bold" font-family="system-ui,Arial,sans-serif">Bend↓</text>';
+    } else if(ev.t==='MBE'){
+      o+='<text x="'+epx+'" y="'+(cabY-27)+'" text-anchor="middle" font-size="8" fill="#882288" font-weight="bold" font-family="system-ui,Arial,sans-serif">Bend↑</text>';
+      if(mbS&&mbE){evCards+=mkMbCard(mbS,mbE,ev.a||0.921,at,cardIdx);cardIdx++;}
+    } else if(ev.t==='END'){
+      var p2=ev.ref>rth,dirty=sc.id===6,upc=sc.id===8;
+      o+='<rect x="'+(epx-5)+'" y="'+(cabY-14)+'" width="10" height="28" rx="2.5" fill="'+(dirty?'#666':upc?'#3366cc':'#2266cc')+'" stroke="'+(p2?'#1144aa':'#aa2200')+'" stroke-width="1.5"/>';
+      o+='<text x="'+epx+'" y="'+(cabY-19)+'" text-anchor="middle" font-size="8" fill="'+(p2?'#1a6028':'#aa1100')+'" font-weight="bold" font-family="system-ui,Arial,sans-serif">'+(dirty?'Dirty':upc?'UPC':'APC')+'</text>';
+      o+='<text x="'+epx+'" y="'+(cabY+26)+'" text-anchor="middle" font-size="8" fill="'+(p2?'#1a6028':'#aa1100')+'" font-family="system-ui,Arial,sans-serif">'+ev.ref.toFixed(1)+'dB</text>';
+      evCards+=mkEvCard(ev,thisIdx,at,sth,rth,sc);cardIdx++;
+    }
+  });
+  svgEl.setAttribute('viewBox','0 0 '+W+' '+H);svgEl.innerHTML=o;
+  document.getElementById('pv-event-cards').innerHTML=evCards;
+  var cnt=document.getElementById('pvp-ev-count');if(cnt)cnt.textContent='('+cardIdx+' events)';
+  document.querySelectorAll('.pvec').forEach(function(c,i){c.onclick=function(){selEvt(i);};});
+}
+
+function mkEvCard(ev,idx,at,sth,rth,sc){
+  var pass,type,badge,badgeCls,rows='',desc='';
+  if(ev.t==='FC'){type='Reflective Event (FC/APC)';pass=true;badge='OK ✓';badgeCls='pvcb-info';rows='<div class="pvec-row"><span class="pvec-k">Position</span><span class="pvec-v">'+ev.p.toFixed(4)+' km</span></div><div class="pvec-row"><span class="pvec-k">Reflectance</span><span class="pvec-v">'+ev.ref.toFixed(1)+' dB</span></div><div class="pvec-row"><span class="pvec-k">Connector type</span><span class="pvec-v">FC/APC · 8° angled</span></div>';desc='Near-end FC/APC connector. Green ferrule, 8° angled polish.';}
+  else if(ev.t==='NR'){var p=ev.l<=sth;pass=p;type='Non-Reflective Event (Fusion Splice)';badge=p?'PASS ✓':'FAIL ✗';badgeCls=p?'pvcb-pass':'pvcb-fail';var q=spliceQuality(ev.l);var qcol={'Excellent':'#d4f0d8','Good':'#e4f8e8','Acceptable':'#fff0d0','Poor':'#f8d8d8'}[q.lbl]||'#eee';rows='<div class="pvec-row"><span class="pvec-k">Position</span><span class="pvec-v">'+ev.p.toFixed(4)+' km</span></div><div class="pvec-row"><span class="pvec-k">Splice Loss</span><span class="pvec-v" style="color:'+(p?'#1a6428':'#7a1818')+'">'+ev.l.toFixed(3)+' dB</span></div><div class="pvec-row"><span class="pvec-k">Threshold</span><span class="pvec-v">'+sth+' dB</span></div><div class="pvec-row"><span class="pvec-k">Quality</span><span class="pvec-v"><span style="background:'+qcol+';padding:1px 7px;border-radius:3px;font-size:11px;font-weight:700">'+q.lbl+'</span></span></div>';desc=p?'Fusion splice within threshold.':'Core misalignment. Re-splice required.';}
+  else if(ev.t==='POS'){pass=false;type='Positive Event (Δ+) — Fiber Type Change';badge='BIDIR REQUIRED';badgeCls='pvcb-bidir';rows='<div class="pvec-row"><span class="pvec-k">Position</span><span class="pvec-v">'+ev.p.toFixed(4)+' km</span></div><div class="pvec-row"><span class="pvec-k">Apparent Loss A→B</span><span class="pvec-v">'+ev.l.toFixed(3)+' dB (FALSE)</span></div>';desc='Bidirectional measurement mandatory. Measure A→B and B→A, take geometric average.';}
+  else if(ev.t==='BRK'){pass=false;type='Total Loss — Fiber Severance';badge='CRITICAL ✗';badgeCls='pvcb-fail';rows='<div class="pvec-row"><span class="pvec-k">Position</span><span class="pvec-v">'+ev.p.toFixed(4)+' km</span></div><div class="pvec-row"><span class="pvec-k">Fresnel Reflection</span><span class="pvec-v">'+ev.ref+' dB (air gap)</span></div>';desc='Physical cable cut. Fresnel reflection from glass/air interface. No signal beyond.';}
+  else if(ev.t==='SPL'){pass=null;type='Passive Optical Splitter (PON 1×32)';badge='INFO';badgeCls='pvcb-info';rows='<div class="pvec-row"><span class="pvec-k">Position</span><span class="pvec-v">'+ev.p.toFixed(4)+' km</span></div><div class="pvec-row"><span class="pvec-k">Insertion Loss</span><span class="pvec-v">'+(ev.l||16.9).toFixed(1)+' dB</span></div><div class="pvec-row"><span class="pvec-k">Dynamic range needed</span><span class="pvec-v">≥ 39 dB</span></div>';desc='1×32 PON splitter. Testing through splitter requires maximum dynamic range.';}
+  else if(ev.t==='MBE'){return '';}
+  else if(ev.t==='END'){var p2=ev.ref>rth;pass=p2;var dirty=sc.id===6,upc=sc.id===8;type='End of Fiber — '+(dirty?'Contaminated':upc?'UPC':'APC')+' Connector';badge=p2?'OK ✓':'FAIL ✗';badgeCls=p2?'pvcb-pass':'pvcb-fail';rows='<div class="pvec-row"><span class="pvec-k">Length</span><span class="pvec-v">'+ev.p.toFixed(4)+' km</span></div><div class="pvec-row"><span class="pvec-k">End Reflectance</span><span class="pvec-v" style="color:'+(p2?'#1a6428':'#7a1818')+'">'+ev.ref.toFixed(1)+' dB</span></div><div class="pvec-row"><span class="pvec-k">Threshold</span><span class="pvec-v">'+rth+' dB</span></div>';desc=dirty?'End-face contamination detected. Clean and re-inspect.':upc?'FC/UPC — FAILS APC threshold. Replace with FC/APC.':'Far-end FC/APC connector.';}
+  else return '';
+  return '<div class="pvec ev-'+(pass===true?'pass':pass===false?'fail':'info')+'" id="pvec-'+idx+'"><div class="pvec-hdr"><div class="pvec-title">'+type+'</div><span class="pvec-badge '+badgeCls+'">'+badge+'</span></div><div class="pvec-rows">'+rows+'</div><div class="pvec-desc">'+desc+'</div></div>';
+}
+function mkMbCard(mbS,mbE,sectionAt,at,idx){return '<div class="pvec ev-fail" id="pvec-'+idx+'"><div class="pvec-hdr"><div class="pvec-title">Macrobend Zone</div><span class="pvec-badge pvcb-fail">FAIL ✗</span></div><div class="pvec-rows"><div class="pvec-row"><span class="pvec-k">Start</span><span class="pvec-v">'+mbS.p.toFixed(4)+' km</span></div><div class="pvec-row"><span class="pvec-k">End</span><span class="pvec-v">'+mbE.p.toFixed(4)+' km</span></div><div class="pvec-row"><span class="pvec-k">Bent length</span><span class="pvec-v">'+(mbE.p-mbS.p).toFixed(4)+' km</span></div><div class="pvec-row"><span class="pvec-k">Section atten.</span><span class="pvec-v" style="color:#7a1818">'+sectionAt.toFixed(3)+' dB/km</span></div></div><div class="pvec-desc">Cable bent below 30 mm minimum bend radius. Macrobend loss is worse at 1550 nm. Locate and relax cable routing.</div></div>';}
+
+function buildSummary(){if(!hasResult||curSc===null)return;var sc=SC[curSc],at=getAt(curSc,curWL),pass=isPass(sc,curWL),sl=at*sc.km,sth=parseFloat(document.getElementById('th-splice').value)||0.3,rth=parseFloat(document.getElementById('th-refl').value)||-40,atL=curWL===1550?0.28:curWL===1625?0.30:0.40,pc=sc.ev.filter(function(e){return e.t==='POS';}).length,hb=sc.ev.some(function(e){return e.t==='BRK';}),ee=sc.ev.find(function(e){return e.t==='END';}),hasMb=sc.ev.some(function(e){return e.t==='MBS';}),spl=sc.ev.filter(function(e){return e.t==='NR';});var avgSp=spl.length>0?(spl.reduce(function(a,e){return a+(e.l||0);},0)/spl.length):null;var maxSp=spl.length>0?Math.max.apply(null,spl.map(function(e){return e.l||0;})):null;document.getElementById('sum-wrap').innerHTML='<div class="sg-box" style="grid-column:span 2"><div class="sgb-t">Results — '+(curWL==='dual'?'All Wavelengths':curWL+' nm')+'</div><table style="width:100%;border-collapse:collapse;font-size:13px"><tr><td style="padding:5px 8px;width:24%"><b>Span length:</b></td><td style="width:20%">'+sc.km.toFixed(4)+' km</td><td style="width:24%"><b>Average loss:</b></td><td>'+at.toFixed(3)+' dB/km</td><td><b>Injection:</b></td><td>24.0 dB</td></tr><tr><td style="padding:5px 8px"><b>Span loss:</b></td><td>'+sl.toFixed(3)+' dB</td><td><b>Avg. splice:</b></td><td>'+(avgSp!==null?avgSp.toFixed(3)+' dB':'---')+'</td><td><b>ORL:</b></td><td>'+sc.orl.toFixed(2)+' dB</td></tr></table></div><div class="sg-box"><div class="sgb-t">Pass / Fail Status</div><div class="sgb-r"><span class="sgb-l">Overall</span><span class="sgb-v '+(pass?'sv-pass':'sv-fail')+'" style="font-size:16px;font-weight:800">'+(pass?'Pass':'Fail')+'</span></div><div class="sgb-r"><span class="sgb-l">Fiber Break</span><span class="sgb-v '+(hb?'sv-fail':'sv-pass')+'">'+(hb?'Detected ✗':'None ✓')+'</span></div><div class="sgb-r"><span class="sgb-l">Positive Events</span><span class="sgb-v '+(pc>0?'sv-warn':'sv-pass')+'">'+pc+(pc>0?' Bidir required':' ✓')+'</span></div><div class="sgb-r"><span class="sgb-l">Macrobend</span><span class="sgb-v '+(hasMb?'sv-fail':'sv-pass')+'">'+(hasMb?'Detected ✗':'None ✓')+'</span></div><div class="sgb-r"><span class="sgb-l">Attenuation</span><span class="sgb-v '+(at<=atL?'sv-pass':'sv-fail')+'">'+at.toFixed(3)+' / '+atL.toFixed(3)+' dB/km</span></div><div class="sgb-r"><span class="sgb-l">End Reflectance</span><span class="sgb-v '+(ee?(ee.ref>rth?'sv-pass':'sv-fail'):'sv-pass')+'">'+(ee?ee.ref.toFixed(1)+' dB':'—')+'</span></div></div><div class="sg-box"><div class="sgb-t">Test Description</div><div style="font-size:13px;color:#2a4060;line-height:1.9">'+sc.desc+'</div></div>';}
+function buildMeasure(){if(!hasResult||curSc===null)return;var sc=SC[curSc],at=getAt(curSc,curWL);document.getElementById('meas-wrap').innerHTML='<div class="sg-box"><div class="sgb-t">MARKER A → B</div><div class="sgb-r"><span class="sgb-l">Position A</span><span class="sgb-v">'+(markA?markA.km.toFixed(4)+' km':'0.0000 km')+'</span></div><div class="sgb-r"><span class="sgb-l">Position B</span><span class="sgb-v">'+(markB?markB.km.toFixed(4)+' km':sc.km.toFixed(4)+' km')+'</span></div><div class="sgb-r"><span class="sgb-l">Distance A→B</span><span class="sgb-v">'+sc.km.toFixed(4)+' km</span></div><div class="sgb-r"><span class="sgb-l">Loss A→B</span><span class="sgb-v">'+(at*sc.km).toFixed(3)+' dB</span></div><div class="sgb-r"><span class="sgb-l">Attenuation A→B</span><span class="sgb-v">'+at.toFixed(3)+' dB/km</span></div></div><div class="sg-box"><div class="sgb-t">OPTICAL PARAMETERS</div><div class="sgb-r"><span class="sgb-l">Span ORL</span><span class="sgb-v">'+sc.orl.toFixed(2)+' dB</span></div><div class="sgb-r"><span class="sgb-l">Injection Level</span><span class="sgb-v">24.00 dB</span></div><div class="sgb-r"><span class="sgb-l">IOR</span><span class="sgb-v">'+P.ior.toFixed(4)+'</span></div><div class="sgb-r"><span class="sgb-l">Backscatter</span><span class="sgb-v">'+P.bsc.toFixed(2)+' dB</span></div></div>';}
+function buildBidir(){var div=document.getElementById('bidir-wrap');div.innerHTML='';var sc=curSc!==null?SC[curSc]:null,hasAB=hasResult&&sc!==null;var atAB=hasAB?getAt(curSc,curWL):null,atBA=hasAB?(atAB*(bidirSeed||0.98)):null,avg=hasAB?((atAB+atBA)/2):null;div.innerHTML='<div class="sg-box" style="margin-bottom:10px"><div class="sgb-t">Bidirectional Measurement Wizard</div><div class="bidir-step bs-done"><div class="bs-num">1</div><div class="bs-txt">Connect OTDR at End A · Test A→B</div><div class="bs-val">'+(hasAB?atAB.toFixed(3)+' dB/km':'—')+'</div></div><div class="bidir-step '+(hasAB?'bs-done':'bs-active')+'"><div class="bs-num">2</div><div class="bs-txt">Swap ends · Test B→A</div><div class="bs-val">'+(hasAB?atBA.toFixed(3)+' dB/km':'Awaiting')+'</div></div><div class="bidir-step '+(hasAB?'bs-done':'bs-pending')+'"><div class="bs-num">3</div><div class="bs-txt">Geometric average [(A→B)+(B→A)]/2</div><div class="bs-val">'+(avg?avg.toFixed(3)+' dB/km':'—')+'</div></div></div>'+(hasAB?'<div class="sg-box"><div class="sgb-t">AVERAGED RESULTS</div><div class="sgb-r"><span class="sgb-l">A→B</span><span class="sgb-v">'+atAB.toFixed(3)+' dB/km</span></div><div class="sgb-r"><span class="sgb-l">B→A</span><span class="sgb-v">'+atBA.toFixed(3)+' dB/km</span></div><div class="sgb-r"><span class="sgb-l">Geometric Avg</span><span class="sgb-v sv-pass" style="font-size:15px">'+avg.toFixed(3)+' dB/km</span></div></div>':'<div style="font-size:13px;color:#7090a0;padding:18px;text-align:center">Run a test first</div>');}
+function buildBudget(){if(!hasResult||curSc===null)return;var sc=SC[curSc],at=getAt(curSc,curWL),budget=parseFloat(document.getElementById('th-spanloss').value)||30,fiberLoss=at*sc.km,spliceLoss=sc.ev.filter(function(e){return e.t==='NR';}).reduce(function(a,e){return a+(e.l||0);},0),splitterLoss=sc.ev.filter(function(e){return e.t==='SPL';}).reduce(function(a,e){return a+(e.l||0);},0),total=fiberLoss+spliceLoss+splitterLoss,margin=budget-total;document.getElementById('budget-wrap').innerHTML='<div class="budget-box"><div style="font-size:14px;font-weight:700;color:#1a3050;margin-bottom:10px">Link Loss Budget — '+curWL+(curWL==='dual'?'':' nm')+'</div><div class="budget-row"><span class="br-label">Fiber attenuation ('+at.toFixed(3)+' × '+sc.km.toFixed(4)+' km)</span><span class="br-val br-neutral">'+fiberLoss.toFixed(3)+' dB</span></div><div class="budget-row"><span class="br-label">Splice loss</span><span class="br-val br-neutral">'+spliceLoss.toFixed(3)+' dB</span></div>'+(splitterLoss>0?'<div class="budget-row"><span class="br-label">Splitter loss</span><span class="br-val br-neutral">'+splitterLoss.toFixed(3)+' dB</span></div>':'')+'<div class="budget-row"><span class="br-label">Measured span loss</span><span class="br-val br-neutral">'+total.toFixed(3)+' dB</span></div><div class="budget-row"><span class="br-label">System budget</span><span class="br-val br-neutral">'+budget.toFixed(1)+' dB</span></div><div class="budget-row"><span class="br-label" style="font-weight:700">Budget Margin</span><span class="br-val '+(margin>=0?'br-pos':'br-neg')+'">'+margin.toFixed(2)+' dB '+(margin>=0?'✓ OK':'✗ OVER')+'</span></div></div>';}
+function buildQC(){var div=document.getElementById('qc-wrap');div.innerHTML='';if(!hasResult||curSc===null){div.innerHTML='<div class="qc-na-b qc-banner">ℹ Run a test first to enable QC verification.</div>';return;}var sc=SC[curSc],pass=isPass(sc,curWL);div.innerHTML='<div class="qc-banner '+(pass?'qc-pass-b':'qc-fail-b')+'"><div style="font-size:32px">'+(pass?'✅':'❌')+'</div><div><div>'+(pass?'TEST PASSED — Ready for QC Approval':'TEST FAILED — Issues must be resolved')+'</div><div style="font-size:12px;font-weight:400">'+sc.nm+'</div></div></div><div class="qc-box"><div class="qcb-t">Quality Control Sign-Off</div><div class="qc-r"><div class="qcr-l">Technician</div><input class="qcr-inp" id="qc-tech" placeholder="Full name" value="'+(ident.op||'')+'"></div><div class="qc-r"><div class="qcr-l">Supervisor</div><input class="qcr-inp" id="qc-sup" placeholder="Inspector name"></div><div class="qc-r"><div class="qcr-l">Work Order</div><input class="qcr-inp" id="qc-wo" placeholder="WO-XXXX"></div><div class="qc-r"><div class="qcr-l">Remarks</div><input class="qcr-inp" id="qc-rem" placeholder="Observations, corrective actions"></div><div class="qc-stamp"><div class="qcs-btn qcs-approve" onclick="qcApprove(true)">✅ APPROVE &amp; SIGN</div><div class="qcs-btn qcs-reject" onclick="qcApprove(false)">❌ REJECT</div></div></div>';}
+function qcApprove(ok){qcRecord={ok:ok,tech:document.getElementById('qc-tech').value,sup:document.getElementById('qc-sup').value,wo:document.getElementById('qc-wo').value,rem:document.getElementById('qc-rem').value,date:new Date().toLocaleString()};toast((ok?'✅ QC APPROVED — '+qcRecord.tech+' · '+qcRecord.date:'❌ QC REJECTED'),(ok?'ok':'err'));if(ok)genReport();}
+function showIdent(){document.getElementById('pg-ident').className='show';}
+function closeIdent(){document.getElementById('pg-ident').className='';}
+function saveIdent(){['customer','company','cbl','fib','job','op','loca','locb','notes'].forEach(function(k){var e=document.getElementById('ip-'+k);if(e)ident[k]=e.value;});closeIdent();}
+function saveFile(){if(!hasResult||curSc===null){toast('No results — run a test first.','warn');return;}var sc=SC[curSc];var fn='MAX-730B OTDR '+sc.nm+' '+new Date().toISOString().slice(0,10)+'.sor';savedFiles.push({nm:fn,sc:curSc,wl:curWL,P:Object.assign({},P),ident:Object.assign({},ident),date:new Date().toLocaleString(),size:Math.round(8+P.rng*0.4+sc.km*0.3)+' KB'});toast('💾 Saved: '+fn,'ok');}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// Windows File Explorer (v6)
+function openFileExplorer(mode){feSelectedFile=null;document.getElementById('fe-win-title').textContent=(mode==='save'?'Save As':'Open')+' — File Manager';document.getElementById('fe-fn-inp').value='';document.getElementById('pg-files').className='show';feNav('internal');}
+function closeFileExplorer(){document.getElementById('pg-files').className='';}
+function feNav(section){feCurSection=section;['fesl-int','fesl-usb'].forEach(function(id){var e=document.getElementById(id);if(e)e.className='fe-sl';});var aEl=document.getElementById('fesl-'+section);if(aEl)aEl.className='fe-sl active';var addrMap={internal:'This Device \\\\Internal Storage',usb:'Removable Disk (E:)',recent:'Favorites \\\\Recent',sor:'Internal Storage \\\\OTDR Files'};document.getElementById('fe-addr').textContent=addrMap[section]||section;var listEl=document.getElementById('fe-list');listEl.innerHTML='';var files=(section==='recent')?savedFiles.slice(-5):savedFiles;if(!files.length){listEl.innerHTML='<div class="fe-empty">No saved files.<br>Run a test and press Save first,<br>or press Browse Device... to open from your computer.</div>';document.getElementById('fe-statusbar').textContent='0 items';return;}files.forEach(function(f,i){var row=document.createElement('div');row.className='fe-row';row.innerHTML='<div class="fe-rc-icon" style="width:28px;text-align:center;flex-shrink:0;border-right:1px solid #f0f0f0">📄</div><div style="flex:2">'+esc(f.nm)+'</div><div style="width:100px;font-size:11px;color:#555">'+(f.date||'').slice(0,10)+'</div><div style="width:80px;font-size:11px;color:#555">SOR File</div><div style="width:70px;font-size:11px;color:#555">'+(f.size||'10 KB')+'</div>';row.onclick=function(){document.querySelectorAll('.fe-row').forEach(function(r){r.className='fe-row';});row.className='fe-row sel';feSelectedFile=f;document.getElementById('fe-fn-inp').value=f.nm;};row.ondblclick=function(){feSelectedFile=f;feOpenSelected();};listEl.appendChild(row);});document.getElementById('fe-statusbar').textContent=files.length+' item'+(files.length!==1?'s':'');}
+function feOpenSelected(){if(feSelectedFile&&feSelectedFile.sc!==null&&feSelectedFile.sc!==undefined){closeFileExplorer();var f=feSelectedFile;curSc=f.sc;curWL=f.wl;Object.assign(P,f.P);Object.assign(ident,f.ident);showState('otdr');setTimeout(function(){hasResult=true;setWL(curWL);syncUI();updatePF();resizeCv();drawTrace();buildEvtTable(SC[curSc],getAt(curSc,curWL));buildPVSVG(SC[curSc]);buildSummary();buildMeasure();document.getElementById('fname-bar').textContent='Filename: '+f.nm+'  │  Loaded '+f.date;document.getElementById('otdr-title').textContent='EXFO MAX-730B · '+f.nm;selTab('events');},80);}else{closeFileExplorer();}}
+function triggerLocalOpen(){document.getElementById('local-file-input').click();}
+function localFileOpened(e){var file=e.target.files[0];if(!file)return;closeFileExplorer();var localEntry={nm:file.name,sc:null,wl:curWL,P:Object.assign({},P),ident:Object.assign({},ident),date:new Date().toLocaleString(),size:(Math.round(file.size/1024)||8)+' KB',local:true};savedFiles.push(localEntry);document.getElementById('fname-bar').textContent='Filename: '+file.name+'  │  Opened from local device · '+new Date().toLocaleTimeString();document.getElementById('otdr-title').textContent='EXFO MAX-730B · '+file.name;toast('📂 '+file.name+' opened — select a scenario to generate trace data','info');e.target.value='';}
+
+function genReport(){
+  if(!hasResult||curSc===null){toast('No results — run a test first.','warn');return;}
+  var sc=SC[curSc],at=getAt(curSc,curWL),pass=isPass(sc,curWL);
+  var sth=parseFloat(document.getElementById('th-splice').value)||0.3,cth=parseFloat(document.getElementById('th-conn').value)||0.75,rth=parseFloat(document.getElementById('th-refl').value)||-40,atth=parseFloat(document.getElementById('th-atten').value)||0.4,sloss=parseFloat(document.getElementById('th-spanloss').value)||20,sorl=parseFloat(document.getElementById('th-orl').value)||15;
+  var now=new Date(),ds=now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'}),ts=now.toLocaleTimeString('en-US',{hour12:true,hour:'2-digit',minute:'2-digit'});
+  var wlStr=curWL==='dual'?'1310/1550 nm (9 µm)':curWL+' nm (9 µm)',spanLoss=at*sc.km,inj=24;
+  var spl=sc.ev.filter(function(e){return e.t==='NR';});var avgSp=spl.length>0?(spl.reduce(function(a,e){return a+(e.l||0);},0)/spl.length).toFixed(3):'---',maxSp=spl.length>0?Math.max.apply(null,spl.map(function(e){return e.l||0;})).toFixed(3):'---';
+  var evRows='',cumLoss=0,evNum=0;
+  var etn=function(t){return{FC:'First Connector',NR:'Non-Reflective',POS:'Positive',BRK:'Total Loss',SPL:'Non-Reflective',MBS:'Macrobend',END:'Reflective'}[t]||t;};
+  for(var i=0;i<sc.ev.length;i++){var ev=sc.ev[i],nextEv=(i+1<sc.ev.length)?sc.ev[i+1]:null;if(ev.t==='MBE')continue;evNum++;var el=null;if(ev.t==='NR')el=ev.l||0;else if(ev.t==='POS')el=Math.abs(ev.l||0);else if(ev.t==='SPL')el=ev.l||16.9;if(el!==null)cumLoss+=el;var ld='---',rd='',ad='',lf=false,rf=false;if(ev.t==='FC'){rd=(ev.ref<-60)?'>-60.0':ev.ref.toFixed(1);}else if(ev.t==='NR'){ld=ev.l.toFixed(3);lf=(ev.l>sth);}else if(ev.t==='POS'){ld=Math.abs(ev.l).toFixed(3);lf=true;}else if(ev.t==='BRK'){rd=(ev.ref||0).toFixed(1);lf=true;}else if(ev.t==='SPL'){ld=(ev.l||16.9).toFixed(3);}else if(ev.t==='MBS'){var mbe=sc.ev.find(function(e,ei){return e.t==='MBE'&&ei>i;});ad=mbe?(mbe.a||0).toFixed(3):'--';}else if(ev.t==='END'){rd=ev.ref.toFixed(1);rf=(ev.ref<rth);}
+    evRows+='<tr><td>'+etn(ev.t)+'</td><td>'+evNum+'</td><td>'+ev.p.toFixed(4)+'</td><td class="'+(lf?'rv-f':'')+'">'+ld+'</td><td class="'+(rf?'rv-f':'')+'">'+rd+'</td><td>'+ad+'</td><td>'+cumLoss.toFixed(3)+'</td></tr>';
+    if(nextEv&&ev.t!=='BRK'&&nextEv.t!=='MBE'){var sk=nextEv.p-ev.p;if(sk>0.0001){var sa=(nextEv.a&&nextEv.t==='NR')?nextEv.a:at;var sl2=sk*sa;cumLoss+=sl2;evRows+='<tr style="background:#fffbf0"><td style="padding-left:20px;color:#888">Section</td><td></td><td style="padding-left:14px;color:#444">('+sk.toFixed(4)+')</td><td>'+sl2.toFixed(3)+'</td><td></td><td class="'+(sa>atth?'rv-f':'')+'">'+sa.toFixed(3)+'</td><td>'+cumLoss.toFixed(3)+'</td></tr>';}}
+  }
+  var mbS=sc.ev.find(function(e){return e.t==='MBS';}),mbE2=sc.ev.find(function(e){return e.t==='MBE';});
+  var mbHtml=mbS&&mbE2?'<div class="rpt-sec"><div class="rpt-shdr">Macrobend</div><table class="rpt-tbl"><thead><tr><th>Position (km)</th><th>Delta Loss (dB)</th></tr></thead><tbody><tr><td>'+mbS.p.toFixed(4)+'</td><td class="rv-f">'+(mbE2.a||0).toFixed(3)+'</td></tr></tbody></table></div>':'<div class="rpt-sec"><div class="rpt-shdr">Macrobend</div><p style="font-size:10px;color:#888;padding:4px 0">No macrobend detected.</p></div>';
+  var qcHtml=qcRecord?'<div class="rpt-sec"><div class="rpt-shdr">Quality Verification</div><table class="rpt-tbl"><tbody><tr><td><b>Decision</b></td><td class="'+(qcRecord.ok?'rv-p':'rv-f')+'">'+(qcRecord.ok?'APPROVED':'REJECTED')+'</td><td><b>Date</b></td><td>'+qcRecord.date+'</td></tr><tr><td><b>Technician</b></td><td>'+esc(qcRecord.tech||'—')+'</td><td><b>Supervisor</b></td><td>'+esc(qcRecord.sup||'—')+'</td></tr></tbody></table></div>':'';
+  var H='<div class="rpt"><table style="width:100%;border-collapse:collapse;margin-bottom:12px"><tr><td style="font-size:14px;font-weight:700">OTDR Report ('+wlStr+')</td><td style="text-align:right"><span style="padding:4px 14px;border:2px solid '+(pass?'#22aa44':'#cc2200')+';border-radius:3px;font-weight:700;font-size:13px;color:'+(pass?'#0a6020':'#8a0a0a')+';background:'+(pass?'#eef8f0':'#f8eeee')+'">'+(pass?'Pass':'Fail')+'</span></td></tr></table>'+
+  '<div class="rpt-sec"><div class="rpt-shdr">General Information</div><table style="width:100%;font-size:10px;border-collapse:collapse"><tr><td style="width:15%;padding:2px 0"><b>File name:</b></td><td style="width:45%">'+esc(ident.cbl?ident.cbl+'-'+ident.fib+'.trc':sc.nm.toLowerCase().replace(/[^a-z0-9]/g,'-')+'.trc')+'</td><td style="width:15%"><b>Customer:</b></td><td>'+esc(ident.customer||'')+'</td></tr><tr><td><b>Test date:</b></td><td>'+ds+'</td><td><b>Company:</b></td><td>'+esc(ident.company||'')+'</td></tr><tr><td><b>Test time:</b></td><td>'+ts+'</td><td><b>Fiber ID:</b></td><td>'+esc(ident.fib||'')+'</td></tr><tr><td><b>Cable ID:</b></td><td>'+esc(ident.cbl||'')+'</td><td><b>Job ID:</b></td><td>'+esc(ident.job||'')+'</td></tr><tr><td><b>Comments:</b></td><td colspan="3">'+esc(ident.notes||'')+'</td></tr></table></div>'+
+  '<div class="rpt-sec"><div class="rpt-shdr">Locations</div><table class="rpt-tbl"><thead><tr><th></th><th>Location A</th><th>Location B</th></tr></thead><tbody><tr><td><b>Location</b></td><td>'+esc(ident.loca||'')+'</td><td>'+esc(ident.locb||'')+'</td></tr><tr><td><b>Operator</b></td><td>'+esc(ident.op||'')+'</td><td></td></tr><tr><td><b>Model</b></td><td>MAX-730B</td><td></td></tr><tr><td><b>S/N</b></td><td>839640</td><td></td></tr><tr><td><b>Cal. date</b></td><td>15-Oct-25</td><td></td></tr></tbody></table></div>'+
+  '<div class="rpt-sec"><div class="rpt-shdr">Results</div><table style="width:100%;font-size:10px;border-collapse:collapse"><tr><td style="width:20%;padding:2px 0"><b>Span length:</b></td><td style="width:15%">'+sc.km.toFixed(4)+' km</td><td style="width:20%"><b>Average loss:</b></td><td style="width:15%">'+at.toFixed(3)+' dB/km</td><td><b>Injection:</b></td><td>'+inj.toFixed(1)+' dB</td></tr><tr><td><b>Span loss:</b></td><td>'+spanLoss.toFixed(3)+' dB</td><td><b>Avg. splice:</b></td><td>'+avgSp+' dB</td><td><b>Max. splice:</b></td><td>'+maxSp+' dB</td></tr><tr><td><b>ORL:</b></td><td>'+sc.orl.toFixed(2)+' dB</td><td colspan="4"></td></tr></table></div>'+
+  '<div class="rpt-sec"><div class="rpt-shdr">Graph</div><div class="rpt-trace-box" id="rpt-trace"></div></div>'+
+  '<div class="rpt-sec"><div class="rpt-shdr">Event Table</div><table class="rpt-tbl"><thead><tr><th>Type</th><th>No.</th><th>Pos./Length (km)</th><th>Loss (dB)</th><th>Reflectance (dB)</th><th>Att. (dB/km)</th><th>Cumulative (dB)</th></tr></thead><tbody>'+evRows+'</tbody></table></div>'+
+  mbHtml+
+  '<div class="rpt-sec"><div class="rpt-shdr">Pass/Fail Thresholds</div><table class="rpt-tbl"><thead><tr><th></th><th>'+wlStr+'</th></tr></thead><tbody><tr><td>Splice loss (dB)</td><td>'+sth.toFixed(3)+'</td></tr><tr><td>Connector loss (dB)</td><td>'+cth.toFixed(3)+'</td></tr><tr><td>Reflectance (dB)</td><td>'+rth.toFixed(1)+'</td></tr><tr><td>Section atten. (dB/km)</td><td>'+atth.toFixed(3)+'</td></tr><tr><td>Span loss (dB)</td><td>'+sloss.toFixed(3)+'</td></tr><tr><td>ORL (dB)</td><td>'+sorl.toFixed(2)+'</td></tr></tbody></table></div>'+
+  '<div class="rpt-sec"><div class="rpt-shdr">Test Parameters</div><table class="rpt-tbl"><thead><tr><th></th><th>A→B</th></tr></thead><tbody><tr><td>Wavelength</td><td>'+wlStr+'</td></tr><tr><td>Range (km)</td><td>'+P.rng.toFixed(4)+'</td></tr><tr><td>Pulse (ns)</td><td>'+P.pls+'</td></tr><tr><td>Duration (s)</td><td>'+P.dur+'</td></tr><tr><td>IOR</td><td>'+P.ior.toFixed(6)+'</td></tr><tr><td>Backscatter (dB)</td><td>'+P.bsc.toFixed(2)+'</td></tr></tbody></table></div>'+
+  qcHtml+
+  '<div style="margin-top:20px;border-top:1px solid #d8e4f0;padding-top:12px;display:flex;gap:80px;font-size:10px;color:#666"><div>Signature: <span style="display:inline-block;width:180px;border-bottom:1px solid #888;height:18px"></span></div><div>Date: '+ds+'</div><div>Page 1 of 1</div></div>'+
+  '<div style="text-align:center;font-size:8.5px;color:#999;margin-top:9px;border-top:1px solid #eee;padding-top:7px">EXFO MaxTester 730B OTDR Training Emulator v6 · Author: Diyar Hussein · linkedin.com/in/diyar · Training purposes only</div>'+
+  '</div>';
+  document.getElementById('rep-body').innerHTML=H;document.getElementById('pg-report').className='show';
+  setTimeout(function(){var box=document.getElementById('rpt-trace');if(!box)return;var cv=document.createElement('canvas');cv.width=box.offsetWidth||880;cv.height=175;cv.style.cssText='width:100%;height:100%;display:block';box.appendChild(cv);drawPartial(cv.getContext('2d'),cv.width,cv.height,SC[curSc],1);},300);
+}
+function closeReport(){document.getElementById('pg-report').className='';}
+function dlReport(){var body=document.getElementById('rep-body').innerHTML;var css='body{font-family:Arial,Helvetica,sans-serif;padding:26px;max-width:960px;margin:0 auto;font-size:11px}.rpt-shdr{background:#f0f4f8;padding:5px 12px;font-size:10px;font-weight:700;color:#1a3050;border-left:4px solid #00b04f;margin-bottom:6px}.rpt-sec{margin-bottom:16px}.rpt-tbl{width:100%;border-collapse:collapse;font-size:10px}.rpt-tbl th{background:#f4f8fb;font-weight:700;padding:5px 9px;border:1px solid #d0dcea;text-align:left}.rpt-tbl td{padding:5px 9px;border:1px solid #d0dcea;font-family:monospace}.rpt-tbl tr:nth-child(even) td{background:#fafcff}.rv-p{color:#0a6020;font-weight:700}.rv-f{color:#8a0a0a;font-weight:700}.rpt-trace-box{background:#fff;border:1px solid #d0dcea;height:185px;overflow:hidden;margin-bottom:8px}';var full='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>EXFO OTDR Report</title><style>'+css+'</style></head><body>'+body+'</body></html>';var b=new Blob([full],{type:'text/html'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='EXFO_OTDR_Report_'+new Date().toISOString().slice(0,10)+'.html';a.click();}
+document.addEventListener('DOMContentLoaded',function(){syncUI();});
+</script>
+</body>
+</html>
