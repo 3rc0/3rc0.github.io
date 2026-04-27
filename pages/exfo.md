@@ -6,24 +6,38 @@ permalink: /exfo/
 ---
 
 <style>
+/* Full-bleed technique — breaks iframe out of Beautiful Jekyll's content container */
 .exfo-wrap {
-  width: 100%;
-  margin: 0 -15px;
+  position: relative;
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  margin-top: 10px;
+  margin-bottom: 0;
 }
+
 .exfo-frame {
   width: 100%;
-  height: 85vh;
-  min-height: 600px;
+  height: 88vh;
+  min-height: 580px;
   border: none;
   display: block;
-  border-radius: 6px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  background: #141824;
 }
+
 .exfo-notice {
+  max-width: 900px;
+  margin: 10px auto 0;
   font-size: 11px;
   color: #888;
-  margin-top: 10px;
-  line-height: 1.7;
+  line-height: 1.8;
+  padding: 0 20px;
+}
+
+.exfo-notice a {
+  color: #aaa;
 }
 </style>
 
@@ -43,5 +57,5 @@ permalink: /exfo/
   EXFO® and MaxTester® are registered trademarks of EXFO Inc., Quebec, Canada.
   This is an unofficial educational training simulator with no affiliation to EXFO Inc.
   No laser output. No user data collected.
-  Source code: <a href="https://github.com/3rc0/3rc0.github.io" style="color:#aaa">github.com/3rc0/3rc0.github.io</a>
+  Source: <a href="https://github.com/3rc0/3rc0.github.io">github.com/3rc0/3rc0.github.io</a>
 </p>
