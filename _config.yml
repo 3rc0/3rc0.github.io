@@ -21,7 +21,7 @@ author: Diyar Hussein
 
 navbar-links:
   Projects: 
-    - EXFO Max Tester Simulation: "exfo:
+    - EXFO Max Tester Simulation: "exfo"
     - "UNDRAWN — The Native Earth Map": "nativearth"
     - Sentinel Planner: "https://planner.sentinelmesh.io"
     - JobsIn: "https://jobsiniraq.github.io/"
