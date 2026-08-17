@@ -61,10 +61,9 @@ permalink: /cryptogen/
   </div>
 
   <div id="key-panel" hidden>
-
     <div class="pwgen-field">
       <label for="key-base64">Base64</label>
-      <textarea id="key-base64" rows="2" spellcheck="false" placeholder="Paste base64 here, or click Generate above"></textarea>
+      <textarea id="key-base64" rows="2" spellcheck="false" placeholder="Paste base64 here, or click Generate below"></textarea>
       <div class="pwgen-key-row">
         <button id="copy-key-base64-btn" type="button">📋 Copy Base64</button>
         <span id="key-base64-status" class="status-msg"></span>
@@ -74,7 +73,7 @@ permalink: /cryptogen/
 
     <div class="pwgen-field">
       <label for="key-hex">Hex (grouped)</label>
-      <textarea id="key-hex" rows="2" spellcheck="false" placeholder="Paste hex here, or click Generate above"></textarea>
+      <textarea id="key-hex" rows="2" spellcheck="false" placeholder="Paste hex here, or click Generate below"></textarea>
       <div class="pwgen-key-row">
         <button id="copy-key-hex-btn" type="button">📋 Copy Hex</button>
         <span id="key-hex-status" class="status-msg"></span>
@@ -83,12 +82,46 @@ permalink: /cryptogen/
 
     <div class="pwgen-field">
       <label for="key-bits">Binary</label>
-      <textarea id="key-bits" rows="3" spellcheck="false" placeholder="Paste binary (0s and 1s) here, or click Generate above"></textarea>
+      <textarea id="key-bits" rows="3" spellcheck="false" placeholder="Paste binary (0s and 1s) here, or click Generate below"></textarea>
       <div class="pwgen-key-row">
         <button id="copy-key-bits-btn" type="button">📋 Copy Binary</button>
         <span id="key-bits-status" class="status-msg"></span>
       </div>
     </div>
+  </div>
+
+  <div class="pwgen-field">
+    <label for="clipboard-clear-select">Auto-clear clipboard after copying</label>
+    <select id="clipboard-clear-select">
+      <option value="0">Never (not recommended)</option>
+      <option value="15">15 seconds</option>
+      <option value="30" selected>30 seconds</option>
+      <option value="60">60 seconds</option>
+    </select>
+  </div>
+
+  <div class="pwgen-actions">
+    <button id="generate-btn" type="button">🔁 Generate (Ctrl/Cmd+Enter)</button>
+  </div>
+
+  <div id="standard-output-section">
+    <div class="pwgen-actions">
+      <button id="copy-btn" type="button">📋 Copy</button>
+    </div>
+
+    <p id="output" class="pwgen-output placeholder" tabindex="0" aria-live="polite">Your password will appear here</p>
+    <div id="output-qr" class="pwgen-qr" hidden></div>
+
+    <div id="entropy-bar" class="entropy-bar" role="progressbar" aria-valuemin="0" aria-valuemax="128" aria-valuenow="0" aria-label="Password strength">
+      <div id="entropy-fill" class="entropy-fill" data-strength="weak"></div>
+    </div>
+    <p id="entropy-label" class="entropy-label">Strength: —</p>
+  </div>
+
+  <p id="status-msg" class="status-msg" role="status" aria-live="polite"></p>
+
+  <div id="key-extras-panel" hidden>
+    <p class="pwgen-section-label">Extra tools, using the key above</p>
 
     <div class="pwgen-field">
       <label for="uuid-output">Random UUID</label>
@@ -102,7 +135,7 @@ permalink: /cryptogen/
     </div>
 
     <div class="pwgen-field">
-      <label for="encrypt-plaintext">Text to encrypt, using the key above</label>
+      <label for="encrypt-plaintext">Text to encrypt</label>
       <textarea id="encrypt-plaintext" rows="3" spellcheck="false"></textarea>
       <div class="pwgen-key-row">
         <button id="encrypt-btn" type="button">🔒 Encrypt</button>
@@ -120,7 +153,7 @@ permalink: /cryptogen/
     </div>
 
     <div class="pwgen-field">
-      <label for="decrypt-ciphertext">Encrypted text to decrypt, using the key above</label>
+      <label for="decrypt-ciphertext">Encrypted text to decrypt</label>
       <textarea id="decrypt-ciphertext" rows="2" spellcheck="false"></textarea>
       <div class="pwgen-key-row">
         <button id="decrypt-btn" type="button">🔓 Decrypt</button>
@@ -137,34 +170,4 @@ permalink: /cryptogen/
       <div id="decrypt-output-qr" class="pwgen-qr" hidden></div>
     </div>
   </div>
-
-  <div id="standard-output-section">
-    <div class="pwgen-field">
-      <label for="clipboard-clear-select">Auto-clear clipboard after copying</label>
-      <select id="clipboard-clear-select">
-        <option value="0">Never (not recommended)</option>
-        <option value="15">15 seconds</option>
-        <option value="30" selected>30 seconds</option>
-        <option value="60">60 seconds</option>
-      </select>
-    </div>
-
-    <div class="pwgen-actions">
-      <button id="copy-btn" type="button">📋 Copy</button>
-    </div>
-
-    <p id="output" class="pwgen-output placeholder" tabindex="0" aria-live="polite">Your password will appear here</p>
-    <div id="output-qr" class="pwgen-qr" hidden></div>
-
-    <div id="entropy-bar" class="entropy-bar" role="progressbar" aria-valuemin="0" aria-valuemax="128" aria-valuenow="0" aria-label="Password strength">
-      <div id="entropy-fill" class="entropy-fill" data-strength="weak"></div>
-    </div>
-    <p id="entropy-label" class="entropy-label">Strength: —</p>
-  </div>
-
-  <div class="pwgen-actions">
-    <button id="generate-btn" type="button">🔁 Generate (Ctrl/Cmd+Enter)</button>
-  </div>
-
-  <p id="status-msg" class="status-msg" role="status" aria-live="polite"></p>
 </section>

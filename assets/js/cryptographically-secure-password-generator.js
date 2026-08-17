@@ -117,6 +117,7 @@
       'mode-key': 'modeKey',
       'random-panel': 'randomPanel', 'passphrase-panel': 'passphrasePanel',
       'key-panel': 'keyPanel', 'standard-output-section': 'standardOutputSection',
+      'key-extras-panel': 'keyExtrasPanel',
       'length': 'length', 'length-value': 'lengthValueDisplay',
       'opt-upper': 'optUpper', 'opt-lower': 'optLower', 'opt-digits': 'optDigits',
       'opt-symbols': 'optSymbols', 'opt-exclude-ambiguous': 'optExcludeLookalikes',
@@ -166,6 +167,7 @@
     pageElements.randomPanel.hidden = !randomModeIsSelected;
     pageElements.passphrasePanel.hidden = randomModeIsSelected || keyModeIsSelected;
     pageElements.keyPanel.hidden = !keyModeIsSelected;
+    pageElements.keyExtrasPanel.hidden = !keyModeIsSelected;
     pageElements.standardOutputSection.hidden = keyModeIsSelected;
     clearAllGeneratedOutput();
   }
