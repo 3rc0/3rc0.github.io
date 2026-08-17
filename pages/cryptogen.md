@@ -116,12 +116,4 @@ permalink: /cryptogen/
   </div>
 
   <p id="status-msg" class="status-msg" role="status" aria-live="polite"></p>
-
-  <div class="pwgen-history">
-    <h3>
-      This session's history
-      <button id="clear-history-btn" type="button">Clear</button>
-    </h3>
-    <ul id="history-list"><li class="history-empty">No history yet this session.</li></ul>
-  </div>
 </section>

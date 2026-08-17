@@ -129,7 +129,6 @@
 
   let pageElements = {};
   let currentGeneratedValue = '';
-  let sessionHistory = [];
   let pendingClipboardClearTimer = null;
 
   document.addEventListener('DOMContentLoaded', startPage);
@@ -143,10 +142,6 @@
 
     pageElements.generateButton.addEventListener('click', handleGenerateClick);
     pageElements.copyButton.addEventListener('click', handleCopyClick);
-    pageElements.clearHistoryButton.addEventListener('click', function () {
-      sessionHistory = [];
-      redrawHistory();
-    });
     pageElements.outputText.addEventListener('click', selectAllOutputText);
   }
 
@@ -167,7 +162,6 @@
       'entropy-bar': 'strengthBar', 'entropy-fill': 'strengthFill',
       'entropy-label': 'strengthLabel', 'crack-time-label': 'guessTimeLabel',
       'clipboard-clear-select': 'clipboardClearSelect', 'status-msg': 'statusMessage',
-      'history-list': 'historyList', 'clear-history-btn': 'clearHistoryButton',
       'key-base64': 'keyBase64Field', 'key-hex': 'keyHexField',
       'copy-key-base64-btn': 'copyKeyBase64Button', 'copy-key-hex-btn': 'copyKeyHexButton',
       'key-base64-status': 'keyBase64Status', 'key-hex-status': 'keyHexStatus',
@@ -473,7 +467,6 @@
     if (!result) return;
 
     currentGeneratedValue = result.value;
-    addResultToHistory(currentGeneratedValue, result.strengthInBits);
 
     if (pageElements.modeKey.checked) return;
 
@@ -546,31 +539,6 @@
     const currentSelection = window.getSelection();
     currentSelection.removeAllRanges();
     currentSelection.addRange(selectionRange);
-  }
-
-  function addResultToHistory(value, strengthInBits) {
-    sessionHistory.unshift({ value: value, strengthInBits: Math.round(strengthInBits) });
-    if (sessionHistory.length > 8) sessionHistory.pop();
-    redrawHistory();
-  }
-
-  function redrawHistory() {
-    pageElements.historyList.innerHTML = '';
-    if (sessionHistory.length === 0) {
-      pageElements.historyList.innerHTML =
-        '<li class="history-empty">Nothing generated yet during this visit.</li>';
-      return;
-    }
-    sessionHistory.forEach(function (item) {
-      const listItem = document.createElement('li');
-      listItem.className = 'history-item';
-      listItem.textContent = item.value + ' ';
-      const detailText = document.createElement('span');
-      detailText.className = 'history-meta';
-      detailText.textContent = '(approximately ' + item.strengthInBits + ' bits)';
-      listItem.appendChild(detailText);
-      pageElements.historyList.appendChild(listItem);
-    });
   }
 
   function showStatusMessage(message, type) {
