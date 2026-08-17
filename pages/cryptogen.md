@@ -2,7 +2,7 @@
 layout: page
 title: Cryptographically Secure Password Generator
 subtitle: Random passwords and NIST-aligned passphrases, generated entirely in your browser
-description: "Generate strong, truly random passwords and passphrases using your browser's own built-in Web Cryptography feature."
+description: "Generate strong, truly random passwords and passphrases using your browser's own built-in Web Cryptography feature. Nothing you generate ever leaves your browser."
 author: "Diyar Hussein"
 permalink: /cryptogen/
 ---
@@ -108,7 +108,6 @@ permalink: /cryptogen/
       <div id="entropy-fill" class="entropy-fill" data-strength="weak"></div>
     </div>
     <p id="entropy-label" class="entropy-label">Strength: —</p>
-    <p id="crack-time-label" class="crack-time-label">Estimated offline crack time: —</p>
   </div>
 
   <div class="pwgen-actions">

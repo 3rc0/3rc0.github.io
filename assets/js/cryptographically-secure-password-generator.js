@@ -91,42 +91,6 @@
     "steer","stride","swim","teach","travel","trust","voyage","wander","weave","write"
   ];
 
-  // This number comes from a figure published by the security research
-  // company Hive Systems in their 2026 Password Table: they measured
-  // that a randomly generated eight-character password using the full
-  // set of ninety-five printable keyboard characters would take about
-  // one hundred and thirty-two years to guess, using rented graphics
-  // cards running the bcrypt password-hashing method at a moderate
-  // difficulty setting. That single measured result was used to work
-  // backward to an estimated average guessing speed, shown here. This
-  // estimate assumes the system storing the password uses a properly
-  // slow, secure hashing method -- a weak or fast hashing method would
-  // make real-world guessing far quicker than this estimate suggests.
-  const ESTIMATED_AVERAGE_GUESSES_PER_SECOND = 796308;
-
-  function estimateTimeToGuess(strengthInBits) {
-    const totalPossibleCombinations = Math.pow(2, strengthInBits);
-    const estimatedSeconds = (totalPossibleCombinations / 2) / ESTIMATED_AVERAGE_GUESSES_PER_SECOND;
-    return describeDuration(estimatedSeconds);
-  }
-
-  function describeDuration(totalSeconds) {
-    const timeUnits = [
-      ['century', 3153600000], ['year', 31536000], ['day', 86400],
-      ['hour', 3600], ['minute', 60], ['second', 1],
-    ];
-    if (totalSeconds < 1) return 'instantly';
-    for (const [unitName, secondsInUnit] of timeUnits) {
-      if (totalSeconds >= secondsInUnit) {
-        const value = totalSeconds / secondsInUnit;
-        if (value > 1000000) return 'many millions of ' + unitName + 's';
-        const rounded = value >= 100 ? Math.round(value) : Math.round(value * 10) / 10;
-        return rounded + ' ' + unitName + (rounded === 1 ? '' : 's');
-      }
-    }
-    return 'instantly';
-  }
-
   let pageElements = {};
   let currentGeneratedValue = '';
   let pendingClipboardClearTimer = null;
@@ -160,7 +124,7 @@
       'opt-append-number': 'optAppendNumber', 'generate-btn': 'generateButton',
       'copy-btn': 'copyButton', 'output': 'outputText',
       'entropy-bar': 'strengthBar', 'entropy-fill': 'strengthFill',
-      'entropy-label': 'strengthLabel', 'crack-time-label': 'guessTimeLabel',
+      'entropy-label': 'strengthLabel',
       'clipboard-clear-select': 'clipboardClearSelect', 'status-msg': 'statusMessage',
       'key-base64': 'keyBase64Field', 'key-hex': 'keyHexField',
       'copy-key-base64-btn': 'copyKeyBase64Button', 'copy-key-hex-btn': 'copyKeyHexButton',
@@ -187,6 +151,26 @@
     pageElements.passphrasePanel.hidden = randomModeIsSelected || keyModeIsSelected;
     pageElements.keyPanel.hidden = !keyModeIsSelected;
     pageElements.standardOutputSection.hidden = keyModeIsSelected;
+    clearAllGeneratedOutput();
+  }
+
+  function clearAllGeneratedOutput() {
+    currentGeneratedValue = '';
+
+    pageElements.outputText.textContent = 'Your password will appear here';
+    pageElements.outputText.classList.add('placeholder');
+    pageElements.strengthFill.style.width = '0%';
+    pageElements.strengthFill.dataset.strength = 'weak';
+    pageElements.strengthBar.setAttribute('aria-valuenow', '0');
+    pageElements.strengthLabel.textContent = 'Strength: —';
+
+    pageElements.keyBase64Field.value = '';
+    pageElements.keyHexField.value = '';
+    setKeyFieldStatus(pageElements.keyBase64Status, '', '');
+    setKeyFieldStatus(pageElements.keyHexStatus, '', '');
+
+    pageElements.statusMessage.textContent = '';
+    pageElements.statusMessage.className = 'status-msg';
   }
 
   function setUpLiveNumberDisplays() {
@@ -487,9 +471,6 @@
     pageElements.strengthLabel.textContent = 'Strength: ' +
       strengthLevel.charAt(0).toUpperCase() + strengthLevel.slice(1) +
       ' (approximately ' + Math.round(strengthInBits) + ' bits of randomness)';
-    pageElements.guessTimeLabel.textContent =
-      'Estimated time to guess, assuming a properly secured system: approximately ' +
-      estimateTimeToGuess(strengthInBits);
   }
 
   function handleCopyClick() {
