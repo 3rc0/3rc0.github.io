@@ -103,6 +103,8 @@
     setUpLiveNumberDisplays();
     setUpKeyboardShortcut();
     setUpEncryptionKeyMode();
+    setUpUuidGenerator();
+    setUpEncryptDecrypt();
 
     pageElements.generateButton.addEventListener('click', handleGenerateClick);
     pageElements.copyButton.addEventListener('click', handleCopyClick);
@@ -126,9 +128,23 @@
       'entropy-bar': 'strengthBar', 'entropy-fill': 'strengthFill',
       'entropy-label': 'strengthLabel',
       'clipboard-clear-select': 'clipboardClearSelect', 'status-msg': 'statusMessage',
+      'output-qr': 'outputQr', 'key-base64-qr': 'keyBase64Qr',
+      'uuid-qr': 'uuidQr', 'encrypt-output-qr': 'encryptOutputQr',
+      'decrypt-output-qr': 'decryptOutputQr',
       'key-base64': 'keyBase64Field', 'key-hex': 'keyHexField',
+      'key-bits': 'keyBitsField',
       'copy-key-base64-btn': 'copyKeyBase64Button', 'copy-key-hex-btn': 'copyKeyHexButton',
+      'copy-key-bits-btn': 'copyKeyBitsButton',
       'key-base64-status': 'keyBase64Status', 'key-hex-status': 'keyHexStatus',
+      'key-bits-status': 'keyBitsStatus',
+      'uuid-output': 'uuidOutput', 'generate-uuid-btn': 'generateUuidButton',
+      'copy-uuid-btn': 'copyUuidButton', 'uuid-status': 'uuidStatus',
+      'encrypt-plaintext': 'encryptPlaintextField', 'encrypt-btn': 'encryptButton',
+      'encrypt-output': 'encryptOutputField', 'copy-encrypt-output-btn': 'copyEncryptOutputButton',
+      'encrypt-status': 'encryptStatus',
+      'decrypt-ciphertext': 'decryptCiphertextField', 'decrypt-btn': 'decryptButton',
+      'decrypt-output': 'decryptOutputField', 'copy-decrypt-output-btn': 'copyDecryptOutputButton',
+      'decrypt-status': 'decryptStatus',
     };
     const found = {};
     Object.keys(nameMap).forEach(function (id) {
@@ -154,6 +170,30 @@
     clearAllGeneratedOutput();
   }
 
+  // Renders a live QR code into the given container so a value on
+  // screen can be scanned straight onto a phone. Uses the qrcode.js
+  // library loaded separately (self-hosted, not a live external call)
+  // -- error correction level M balances QR density against how
+  // reliably a phone camera can read it back off a screen.
+  function renderLiveQrCode(containerElement, text) {
+    if (!containerElement) return;
+    if (!text) {
+      containerElement.hidden = true;
+      containerElement.innerHTML = '';
+      return;
+    }
+    try {
+      const qr = qrcode(0, 'M');
+      qr.addData(text);
+      qr.make();
+      containerElement.innerHTML = qr.createSvgTag({ scalable: true });
+      containerElement.hidden = false;
+    } catch (error) {
+      containerElement.hidden = true;
+      containerElement.innerHTML = '';
+    }
+  }
+
   function clearAllGeneratedOutput() {
     currentGeneratedValue = '';
 
@@ -163,11 +203,25 @@
     pageElements.strengthFill.dataset.strength = 'weak';
     pageElements.strengthBar.setAttribute('aria-valuenow', '0');
     pageElements.strengthLabel.textContent = 'Strength: —';
+    renderLiveQrCode(pageElements.outputQr, '');
 
     pageElements.keyBase64Field.value = '';
     pageElements.keyHexField.value = '';
+    pageElements.keyBitsField.value = '';
     setKeyFieldStatus(pageElements.keyBase64Status, '', '');
     setKeyFieldStatus(pageElements.keyHexStatus, '', '');
+    setKeyFieldStatus(pageElements.keyBitsStatus, '', '');
+    setKeyFieldValidity(pageElements.keyBase64Field, pageElements.copyKeyBase64Button, false);
+    setKeyFieldValidity(pageElements.keyHexField, pageElements.copyKeyHexButton, false);
+    setKeyFieldValidity(pageElements.keyBitsField, pageElements.copyKeyBitsButton, false);
+    renderLiveQrCode(pageElements.keyBase64Qr, '');
+
+    pageElements.uuidOutput.value = '';
+    renderLiveQrCode(pageElements.uuidQr, '');
+    pageElements.encryptOutputField.value = '';
+    renderLiveQrCode(pageElements.encryptOutputQr, '');
+    pageElements.decryptOutputField.value = '';
+    renderLiveQrCode(pageElements.decryptOutputQr, '');
 
     pageElements.statusMessage.textContent = '';
     pageElements.statusMessage.className = 'status-msg';
@@ -303,8 +357,59 @@
     return bytes;
   }
 
+  function bytesToGroupedBits(bytes) {
+    const groups = [];
+    for (let i = 0; i < bytes.length; i++) {
+      groups.push(bytes[i].toString(2).padStart(8, '0'));
+    }
+    return groups.join(' ');
+  }
+
+  function groupedBitsToBytes(bitsText) {
+    const cleanedBits = bitsText.replace(/\s+/g, '');
+    if (!cleanedBits) return null;
+    if (!/^[01]+$/.test(cleanedBits)) {
+      throw new Error('contains characters other than 0 and 1');
+    }
+    if (cleanedBits.length % 8 !== 0) {
+      throw new Error('length is not a multiple of 8 bits');
+    }
+    const bytes = new Uint8Array(cleanedBits.length / 8);
+    for (let i = 0; i < cleanedBits.length; i += 8) {
+      bytes[i / 8] = parseInt(cleanedBits.substr(i, 8), 2);
+    }
+    return bytes;
+  }
+
   function setUpEncryptionKeyMode() {
     let syncingFields = false;
+
+    function markAllInvalid() {
+      setKeyFieldValidity(pageElements.keyBase64Field, pageElements.copyKeyBase64Button, false);
+      setKeyFieldValidity(pageElements.keyHexField, pageElements.copyKeyHexButton, false);
+      setKeyFieldValidity(pageElements.keyBitsField, pageElements.copyKeyBitsButton, false);
+      renderLiveQrCode(pageElements.keyBase64Qr, '');
+    }
+
+    function markAllValid() {
+      setKeyFieldValidity(pageElements.keyBase64Field, pageElements.copyKeyBase64Button, true);
+      setKeyFieldValidity(pageElements.keyHexField, pageElements.copyKeyHexButton, true);
+      setKeyFieldValidity(pageElements.keyBitsField, pageElements.copyKeyBitsButton, true);
+      renderLiveQrCode(pageElements.keyBase64Qr, pageElements.keyBase64Field.value);
+    }
+
+    function clearAllKeyStatus() {
+      setKeyFieldStatus(pageElements.keyBase64Status, '', '');
+      setKeyFieldStatus(pageElements.keyHexStatus, '', '');
+      setKeyFieldStatus(pageElements.keyBitsStatus, '', '');
+    }
+
+    function describeAllKeyLengths(byteCount) {
+      const message = 'Valid — ' + byteCount + ' bytes (' + (byteCount * 8) + ' bits)';
+      setKeyFieldStatus(pageElements.keyBase64Status, message, 'success');
+      setKeyFieldStatus(pageElements.keyHexStatus, message, 'success');
+      setKeyFieldStatus(pageElements.keyBitsStatus, message, 'success');
+    }
 
     pageElements.keyBase64Field.addEventListener('input', function () {
       if (syncingFields) return;
@@ -312,19 +417,23 @@
       if (!value.trim()) {
         syncingFields = true;
         pageElements.keyHexField.value = '';
+        pageElements.keyBitsField.value = '';
         syncingFields = false;
-        setKeyFieldStatus(pageElements.keyBase64Status, '', '');
-        setKeyFieldStatus(pageElements.keyHexStatus, '', '');
+        clearAllKeyStatus();
+        markAllInvalid();
         return;
       }
       try {
         const bytes = base64ToBytes(value);
         syncingFields = true;
         pageElements.keyHexField.value = bytesToGroupedHex(bytes);
+        pageElements.keyBitsField.value = bytesToGroupedBits(bytes);
         syncingFields = false;
-        describeKeyLength(bytes.length);
+        describeAllKeyLengths(bytes.length);
+        markAllValid();
       } catch (error) {
         setKeyFieldStatus(pageElements.keyBase64Status, 'This is not valid base64 text.', 'error');
+        markAllInvalid();
       }
     });
 
@@ -334,19 +443,49 @@
       if (!value.trim()) {
         syncingFields = true;
         pageElements.keyBase64Field.value = '';
+        pageElements.keyBitsField.value = '';
         syncingFields = false;
-        setKeyFieldStatus(pageElements.keyBase64Status, '', '');
-        setKeyFieldStatus(pageElements.keyHexStatus, '', '');
+        clearAllKeyStatus();
+        markAllInvalid();
         return;
       }
       try {
         const bytes = groupedHexToBytes(value);
         syncingFields = true;
         pageElements.keyBase64Field.value = bytesToBase64(bytes);
+        pageElements.keyBitsField.value = bytesToGroupedBits(bytes);
         syncingFields = false;
-        describeKeyLength(bytes.length);
+        describeAllKeyLengths(bytes.length);
+        markAllValid();
       } catch (error) {
         setKeyFieldStatus(pageElements.keyHexStatus, 'This is not valid hex text: ' + error.message + '.', 'error');
+        markAllInvalid();
+      }
+    });
+
+    pageElements.keyBitsField.addEventListener('input', function () {
+      if (syncingFields) return;
+      const value = pageElements.keyBitsField.value;
+      if (!value.trim()) {
+        syncingFields = true;
+        pageElements.keyBase64Field.value = '';
+        pageElements.keyHexField.value = '';
+        syncingFields = false;
+        clearAllKeyStatus();
+        markAllInvalid();
+        return;
+      }
+      try {
+        const bytes = groupedBitsToBytes(value);
+        syncingFields = true;
+        pageElements.keyBase64Field.value = bytesToBase64(bytes);
+        pageElements.keyHexField.value = bytesToGroupedHex(bytes);
+        syncingFields = false;
+        describeAllKeyLengths(bytes.length);
+        markAllValid();
+      } catch (error) {
+        setKeyFieldStatus(pageElements.keyBitsStatus, 'This is not valid binary text: ' + error.message + '.', 'error');
+        markAllInvalid();
       }
     });
 
@@ -356,6 +495,20 @@
     pageElements.copyKeyHexButton.addEventListener('click', function () {
       copyTextToClipboard(pageElements.keyHexField.value, pageElements.keyHexStatus);
     });
+    pageElements.copyKeyBitsButton.addEventListener('click', function () {
+      copyTextToClipboard(pageElements.keyBitsField.value, pageElements.keyBitsStatus);
+    });
+
+    markAllInvalid();
+  }
+
+  // Marks a key field as invalid (red border) and disables its own Copy
+  // button whenever the field is empty or fails to parse -- an invalid
+  // or empty value should never be one click away from being copied
+  // and mistaken for a real key.
+  function setKeyFieldValidity(fieldElement, copyButtonElement, isValid) {
+    fieldElement.classList.toggle('invalid', !isValid);
+    copyButtonElement.disabled = !isValid;
   }
 
   function describeKeyLength(byteCount) {
@@ -385,11 +538,120 @@
     });
   }
 
+  function setUpUuidGenerator() {
+    pageElements.generateUuidButton.addEventListener('click', function () {
+      pageElements.uuidOutput.value = crypto.randomUUID();
+      setKeyFieldStatus(pageElements.uuidStatus, 'Generated.', 'success');
+      renderLiveQrCode(pageElements.uuidQr, pageElements.uuidOutput.value);
+    });
+    pageElements.copyUuidButton.addEventListener('click', function () {
+      copyTextToClipboard(pageElements.uuidOutput.value, pageElements.uuidStatus);
+    });
+  }
+
+  // AES-256-GCM, using the browser's own built-in Web Cryptography
+  // interface -- no external library. The twelve-byte value the
+  // browser generates for each encryption (the initialization vector)
+  // must be different every time, even with the same key and the same
+  // text, or the encryption's guarantees weaken. It is not secret, so
+  // it is stored right alongside the encrypted result rather than
+  // hidden separately -- this is the standard, expected way to handle
+  // it, not a shortcut.
+  async function encryptTextWithKey(plainText, base64Key) {
+    const keyBytes = base64ToBytes(base64Key);
+    if (!keyBytes || keyBytes.length !== 32) {
+      throw new Error('The key above must be exactly 32 bytes (256 bits) to encrypt with it.');
+    }
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw', keyBytes, { name: 'AES-GCM' }, false, ['encrypt']
+    );
+    const initializationVector = crypto.getRandomValues(new Uint8Array(12));
+    const encodedText = new TextEncoder().encode(plainText);
+    const encryptedBuffer = await crypto.subtle.encrypt(
+      { name: 'AES-GCM', iv: initializationVector }, cryptoKey, encodedText
+    );
+    const encryptedBytes = new Uint8Array(encryptedBuffer);
+    const combined = new Uint8Array(initializationVector.length + encryptedBytes.length);
+    combined.set(initializationVector, 0);
+    combined.set(encryptedBytes, initializationVector.length);
+    return bytesToBase64(combined);
+  }
+
+  async function decryptTextWithKey(combinedBase64Text, base64Key) {
+    const keyBytes = base64ToBytes(base64Key);
+    if (!keyBytes || keyBytes.length !== 32) {
+      throw new Error('The key above must be exactly 32 bytes (256 bits) to decrypt with it.');
+    }
+    const combinedBytes = base64ToBytes(combinedBase64Text);
+    if (!combinedBytes || combinedBytes.length < 13) {
+      throw new Error('This does not look like something encrypted by this tool.');
+    }
+    const initializationVector = combinedBytes.slice(0, 12);
+    const encryptedBytes = combinedBytes.slice(12);
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw', keyBytes, { name: 'AES-GCM' }, false, ['decrypt']
+    );
+    const decryptedBuffer = await crypto.subtle.decrypt(
+      { name: 'AES-GCM', iv: initializationVector }, cryptoKey, encryptedBytes
+    );
+    return new TextDecoder().decode(decryptedBuffer);
+  }
+
+  function setUpEncryptDecrypt() {
+    pageElements.encryptButton.addEventListener('click', function () {
+      const plainText = pageElements.encryptPlaintextField.value;
+      if (!plainText) {
+        setKeyFieldStatus(pageElements.encryptStatus, 'Type something to encrypt first.', 'warning');
+        return;
+      }
+      encryptTextWithKey(plainText, pageElements.keyBase64Field.value).then(function (result) {
+        pageElements.encryptOutputField.value = result;
+        setKeyFieldStatus(pageElements.encryptStatus, 'Encrypted.', 'success');
+        renderLiveQrCode(pageElements.encryptOutputQr, result);
+      }).catch(function (error) {
+        setKeyFieldStatus(pageElements.encryptStatus, error.message, 'error');
+        renderLiveQrCode(pageElements.encryptOutputQr, '');
+      });
+    });
+
+    pageElements.copyEncryptOutputButton.addEventListener('click', function () {
+      copyTextToClipboard(pageElements.encryptOutputField.value, pageElements.encryptStatus);
+    });
+
+    pageElements.decryptButton.addEventListener('click', function () {
+      const cipherText = pageElements.decryptCiphertextField.value;
+      if (!cipherText) {
+        setKeyFieldStatus(pageElements.decryptStatus, 'Paste something to decrypt first.', 'warning');
+        return;
+      }
+      decryptTextWithKey(cipherText, pageElements.keyBase64Field.value).then(function (result) {
+        pageElements.decryptOutputField.value = result;
+        setKeyFieldStatus(pageElements.decryptStatus, 'Decrypted.', 'success');
+        renderLiveQrCode(pageElements.decryptOutputQr, result);
+      }).catch(function () {
+        // The Web Crypto API's own error message for a failed
+        // authentication check is not informative to a reader who
+        // is not a cryptography specialist -- shown here in plain
+        // language instead. A failure here always means one of two
+        // things: the key does not match, or the encrypted text was
+        // altered after it was created.
+        pageElements.decryptOutputField.value = '';
+        setKeyFieldStatus(pageElements.decryptStatus, 'Could not decrypt -- the key above does not match, or this text was altered.', 'error');
+        renderLiveQrCode(pageElements.decryptOutputQr, '');
+      });
+    });
+
+    pageElements.copyDecryptOutputButton.addEventListener('click', function () {
+      copyTextToClipboard(pageElements.decryptOutputField.value, pageElements.decryptStatus);
+    });
+  }
+
   function generateEncryptionKey() {
     const bytes = new Uint8Array(32);
     crypto.getRandomValues(bytes);
     const base64Value = bytesToBase64(bytes);
     const hexValue = bytesToGroupedHex(bytes);
+    const bitsValue = bytesToGroupedBits(bytes);
 
     const roundTripBytes = groupedHexToBytes(hexValue);
     const roundTripBase64 = bytesToBase64(roundTripBytes);
@@ -397,14 +659,23 @@
 
     pageElements.keyBase64Field.value = base64Value;
     pageElements.keyHexField.value = hexValue;
+    pageElements.keyBitsField.value = bitsValue;
 
     if (selfCheckPassed) {
       describeKeyLength(32);
-      showStatusMessage('Encryption key created and verified.', 'success');
+      setKeyFieldValidity(pageElements.keyBase64Field, pageElements.copyKeyBase64Button, true);
+      setKeyFieldValidity(pageElements.keyHexField, pageElements.copyKeyHexButton, true);
+      setKeyFieldValidity(pageElements.keyBitsField, pageElements.copyKeyBitsButton, true);
+      renderLiveQrCode(pageElements.keyBase64Qr, base64Value);
     } else {
       setKeyFieldStatus(pageElements.keyBase64Status, 'Self-check failed — please generate again.', 'error');
       setKeyFieldStatus(pageElements.keyHexStatus, 'Self-check failed — please generate again.', 'error');
+      setKeyFieldStatus(pageElements.keyBitsStatus, 'Self-check failed — please generate again.', 'error');
       showStatusMessage('Something went wrong. Please generate again.', 'error');
+      setKeyFieldValidity(pageElements.keyBase64Field, pageElements.copyKeyBase64Button, false);
+      setKeyFieldValidity(pageElements.keyHexField, pageElements.copyKeyHexButton, false);
+      setKeyFieldValidity(pageElements.keyBitsField, pageElements.copyKeyBitsButton, false);
+      renderLiveQrCode(pageElements.keyBase64Qr, '');
     }
     return { value: base64Value, strengthInBits: 256 };
   }
@@ -457,6 +728,7 @@
     pageElements.outputText.textContent = currentGeneratedValue;
     pageElements.outputText.classList.remove('placeholder');
     updateStrengthDisplay(result.strengthInBits);
+    renderLiveQrCode(pageElements.outputQr, currentGeneratedValue);
   }
 
   function updateStrengthDisplay(strengthInBits) {
