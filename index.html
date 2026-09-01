@@ -3,3 +3,188 @@ layout: home
 title: 
 subtitle: Main Page
 ---
+
+<style>
+  :root{
+    --page-col:#FFFFFF;
+    --text-col:#404040;
+    --link-col:#008AFF;
+    --hover-col:#0085A1;
+    --navbar-border-col:#DDDDDD;
+    --body-font:'Lora','Times New Roman',serif;
+    --header-font:'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--page-col); color:var(--text-col); font-family:var(--body-font); font-size:1.125rem; }
+  .wrap{ max-width:1080px; margin:0 auto; padding:3rem 1.5rem 5rem; }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+    gap:1.25rem;
+  }
+
+  .card{
+    position:relative;
+    background:var(--page-col);
+    border:1px solid var(--navbar-border-col);
+    border-radius:6px;
+    padding:1.5rem 1.4rem;
+    display:flex;
+    flex-direction:column;
+    gap:.7rem;
+    text-decoration:none;
+    color:inherit;
+    overflow:hidden;
+    transform:perspective(700px) rotateX(0deg) rotateY(0deg) scale(1);
+    transition:transform .5s cubic-bezier(.23,1,.32,1), box-shadow .5s cubic-bezier(.23,1,.32,1), border-color .2s ease;
+    will-change:transform;
+  }
+  .card:hover, .card:focus-visible{
+    border-color:var(--link-col);
+    box-shadow:0 20px 40px -12px rgba(0,0,0,.18);
+    outline:none;
+  }
+  .card.tilting{ transition:transform .08s linear, border-color .2s ease; }
+
+  .card-glare{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    z-index:2;
+    background:transparent;
+    border-radius:inherit;
+  }
+
+  .card--lg{
+    grid-column:1 / -1;
+    padding:2.25rem 2.5rem 2rem;
+  }
+  .card--lg h4{ font-size:1.65rem; }
+  .card--lg p{ font-size:1.05rem; max-width:62ch; }
+
+  .card .tag{
+    align-self:flex-start;
+    font-family:var(--header-font);
+    font-size:.74rem;
+    font-weight:600;
+    padding:.25rem .55rem;
+    border:1px solid var(--navbar-border-col);
+    border-radius:3px;
+    color:var(--text-col);
+    opacity:.7;
+  }
+  .card h4{ font-family:var(--header-font); font-weight:800; font-size:1.05rem; line-height:1.3; margin:0; }
+  .card p{ margin:0; font-size:.92rem; line-height:1.55; flex:1; }
+  .card .open{
+    font-family:var(--header-font); font-size:.84rem; font-weight:600; color:var(--link-col);
+    border-bottom:1px solid var(--link-col); align-self:flex-start;
+  }
+  .card:hover .open{ color:var(--hover-col); border-color:var(--hover-col); }
+
+  @media (prefers-reduced-motion:reduce){
+    .card{ transition:border-color .2s ease; transform:none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="grid">
+
+    <a class="card card--lg" href="https://kidab.io" target="_blank" rel="noopener">
+      <span class="tag">Flagship · production</span>
+      <h4>KIDAB — Intelligent Work Platform</h4>
+      <p>Kidab is an iBPMS — an intelligent business process management suite built to connect processes, technology, and people into one place, so everything stays connected from start to finish.</p>
+      <span class="open">Open project</span>
+    </a>
+
+    <a class="card" href="https://3rc0.github.io/nativearth" target="_blank" rel="noopener">
+      <span class="tag">Web app</span>
+      <h4>UNDRAWN — The Native Earth Map</h4>
+      <p>An interactive map of indigenous territory names drawn from cuneiform tablets, hieroglyphs, and steles — 28 territories and 38 archaeological sites, each cited to a source.</p>
+      <span class="open">Open project</span>
+    </a>
+
+    <a class="card" href="https://jobsiniraq.github.io/" target="_blank" rel="noopener">
+      <span class="tag">Research</span>
+      <h4>JobsIn Iraq</h4>
+      <p>A directory of job platforms, recruitment agencies, and salary insights across the Iraqi market — the groundwork research behind KIDAB.</p>
+      <span class="open">Open project</span>
+    </a>
+
+    <a class="card" href="https://3rc0.github.io/cryptogen" target="_blank" rel="noopener">
+      <span class="tag">Tool</span>
+      <h4>Cryptographic Generator</h4>
+      <p>A password, passphrase, and key generator that runs entirely in the browser using the Web Crypto API — nothing generated ever leaves the device.</p>
+      <span class="open">Open project</span>
+    </a>
+
+    <a class="card" href="https://3rc0.github.io/exfo" target="_blank" rel="noopener">
+      <span class="tag">Simulation</span>
+      <h4>EXFO Max Tester Simulation</h4>
+      <p>An unofficial, browser-based training emulator for the EXFO MaxTester 730B OTDR, built for hands-on fiber-test practice without the hardware.</p>
+      <span class="open">Open project</span>
+    </a>
+
+    <a class="card" href="https://3rc0.github.io/privacy-settings-controls" target="_blank" rel="noopener">
+      <span class="tag">Guide</span>
+      <h4>Privacy Settings &amp; Controls</h4>
+      <p>A step-by-step guide to opting out of telemetry, ad tracking, and personalization across iOS, Android, Windows, macOS, and major browsers.</p>
+      <span class="open">Open project</span>
+    </a>
+
+    <a class="card" href="https://voronezhgraffiti.github.io/" target="_blank" rel="noopener">
+      <span class="tag">Photography</span>
+      <h4>Voronezh Graffiti</h4>
+      <p>A lightbox photo gallery of street art and graffiti photographed around Voronezh, Russia.</p>
+      <span class="open">Open project</span>
+    </a>
+
+    <a class="card" href="https://github.com/3rc0/SWSaver/" target="_blank" rel="noopener">
+      <span class="tag">Hardware prototype</span>
+      <h4>SWSaver — Smart Wardrobe</h4>
+      <p>An Arduino-based automation prototype for a smart wardrobe, taken from problem research through CAD modeling to a working microcontroller build.</p>
+      <span class="open">Open project</span>
+    </a>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) return;
+
+  document.querySelectorAll('.card').forEach(function(card){
+    var glare = document.createElement('div');
+    glare.className = 'card-glare';
+    card.appendChild(glare);
+
+    var raf = null;
+
+    card.addEventListener('mousemove', function(e){
+      var rect = card.getBoundingClientRect();
+      var x = e.clientX - rect.left;
+      var y = e.clientY - rect.top;
+      var cx = rect.width / 2;
+      var cy = rect.height / 2;
+      var rotateX = ((y - cy) / cy) * -5;
+      var rotateY = ((x - cx) / cx) * 5;
+
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(function(){
+        card.classList.add('tilting');
+        card.style.transform = 'perspective(700px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) scale(1.02)';
+        glare.style.background = 'radial-gradient(circle at ' + x + 'px ' + y + 'px, rgba(255,255,255,.35), transparent 55%)';
+      });
+    });
+
+    card.addEventListener('mouseleave', function(){
+      card.classList.remove('tilting');
+      card.style.transform = 'perspective(700px) rotateX(0deg) rotateY(0deg) scale(1)';
+      glare.style.background = 'transparent';
+    });
+  });
+})();
+</script>
