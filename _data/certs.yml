@@ -27,7 +27,7 @@
   file: assets/data/certs/Udemy_CompTIA_PT0_003_Diyar_Hussein.jpg
   verify_url: https://ude.my/UC-0598a122-f1cf-4921-9351-91402e2bfe72
 
-- name: Security Testing: Nmap Security Scanning
+- name: "Security Testing: Nmap Security Scanning"
   issuer: LinkedIn Learning
   year: 2020
   category: Cybersecurity
