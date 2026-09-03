@@ -19,11 +19,12 @@
   var closeBtn = document.getElementById('doc-viewer-close');
   var lastTrigger = null;
 
-  function openViewer(file, type, name, triggerEl){
+  function openViewer(file, type, name, triggerEl, originalFile){
     lastTrigger = triggerEl;
     title.textContent = name;
-    openLink.href = file;
+    openLink.href = originalFile || file;
     body.innerHTML = '';
+
     if (type === 'pdf'){
       var iframe = document.createElement('iframe');
       iframe.src = file;
@@ -34,7 +35,20 @@
       img.src = file;
       img.alt = name;
       body.appendChild(img);
+    } else {
+      var wrap = document.createElement('div');
+      wrap.className = 'doc-viewer-unsupported';
+      var msg = document.createElement('p');
+      msg.textContent = "Preview isn't available for this file type.";
+      var dl = document.createElement('a');
+      dl.className = 'doc-viewer-download-link';
+      dl.href = originalFile || file;
+      dl.textContent = 'Download file';
+      wrap.appendChild(msg);
+      wrap.appendChild(dl);
+      body.appendChild(wrap);
     }
+
     viewer.classList.add('open');
     document.body.style.overflow = 'hidden';
     closeBtn.focus();
@@ -49,12 +63,12 @@
 
   document.querySelectorAll('.cert-card[data-file]').forEach(function(card){
     card.addEventListener('click', function(){
-      openViewer(card.dataset.file, card.dataset.type, card.dataset.name, card);
+      openViewer(card.dataset.file, card.dataset.type, card.dataset.name, card, card.dataset.original);
     });
     card.addEventListener('keydown', function(e){
       if (e.key === 'Enter' || e.key === ' '){
         e.preventDefault();
-        openViewer(card.dataset.file, card.dataset.type, card.dataset.name, card);
+        openViewer(card.dataset.file, card.dataset.type, card.dataset.name, card, card.dataset.original);
       }
     });
   });
@@ -70,9 +84,11 @@
       return;
     }
 
-    // simple focus trap: only openLink and closeBtn are focusable inside the viewer
     if (e.key === 'Tab'){
-      var focusable = [openLink, closeBtn];
+      var focusable = Array.prototype.slice.call(
+        document.querySelectorAll('#doc-viewer-open, #doc-viewer-close, .doc-viewer-download-link')
+      ).filter(function(el){ return el.offsetParent !== null; });
+      if (focusable.length === 0) return;
       var first = focusable[0];
       var last = focusable[focusable.length - 1];
       if (e.shiftKey && document.activeElement === first){

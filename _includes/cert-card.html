@@ -1,0 +1,61 @@
+{% assign c = include.c %}
+{% assign has_file = false %}
+{% if c.file and c.file != empty %}{% assign has_file = true %}{% endif %}
+{% assign has_link = false %}
+{% if c.verify_url and c.verify_url != empty %}{% assign has_link = true %}{% endif %}
+
+{% if has_file or has_link %}
+  {% assign is_image = false %}
+  {% if c.file contains '.jpg' or c.file contains '.jpeg' or c.file contains '.png' or c.file contains '.gif' or c.file contains '.webp' %}{% assign is_image = true %}{% endif %}
+  {% assign is_pdf = false %}
+  {% if c.file contains '.pdf' %}{% assign is_pdf = true %}{% endif %}
+  {% assign is_office = false %}
+  {% if c.file contains '.docx' or c.file contains '.doc' or c.file contains '.pptx' or c.file contains '.ppt' or c.file contains '.xlsx' or c.file contains '.xls' %}{% assign is_office = true %}{% endif %}
+
+  {% assign preview_file = c.file %}
+  {% assign preview_type = "unsupported" %}
+  {% assign thumb_src = "" %}
+
+  {% if is_pdf %}
+    {% assign preview_type = "pdf" %}
+    {% assign fname = c.file | split: '/' | last %}
+    {% assign base = fname | remove: '.pdf' | remove: '.PDF' %}
+    {% assign thumb_src = 'assets/data/certs/thumbs/' | append: base | append: '-thumb.jpg' %}
+  {% elsif is_image %}
+    {% assign preview_type = "image" %}
+  {% elsif is_office %}
+    {% assign preview_type = "pdf" %}
+    {% assign fname = c.file | split: '/' | last %}
+    {% assign base = fname | remove: '.docx' | remove: '.doc' | remove: '.pptx' | remove: '.ppt' | remove: '.xlsx' | remove: '.xls' %}
+    {% assign preview_file = 'assets/data/certs/converted/' | append: base | append: '.pdf' %}
+    {% assign thumb_src = 'assets/data/certs/thumbs/' | append: base | append: '-thumb.jpg' %}
+  {% endif %}
+
+  {% if c.thumb and c.thumb != empty %}
+    {% assign thumb_src = c.thumb %}
+  {% endif %}
+
+  {% if has_file %}
+    <div class="cert-card" tabindex="0" role="button"
+         data-file="{{ preview_file | relative_url }}"
+         data-original="{{ c.file | relative_url }}"
+         data-type="{{ preview_type }}"
+         data-name="{{ c.name }}">
+  {% else %}
+    <a class="cert-card" href="{{ c.verify_url }}" target="_blank" rel="noopener">
+  {% endif %}
+    <div class="cert-thumb">
+      {% if has_link %}<span class="verify-tag">Verify &#8599;</span>{% endif %}
+      <svg class="cert-thumb-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="22" y="12" width="56" height="76" rx="4" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="32" x2="68" y2="32" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="46" x2="68" y2="46" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="60" x2="54" y2="60" stroke="#008AFF" stroke-width="3"/></svg>
+      {% if is_image %}
+        <img class="cert-thumb-img" src="{{ c.file | relative_url }}" alt="{{ c.name }} certificate">
+      {% elsif thumb_src != "" %}
+        <img class="cert-thumb-img" src="{{ thumb_src | relative_url }}" alt="{{ c.name }} certificate preview" loading="lazy" onerror="this.style.display='none'">
+      {% endif %}
+    </div>
+    <div class="cert-info">
+      <p class="name">{{ c.name }}</p>
+      <p class="meta">{{ c.issuer }}{% if c.year and c.year != empty %} &middot; {{ c.year }}{% endif %}</p>
+    </div>
+  {% if has_file %}</div>{% else %}</a>{% endif %}
+{% endif %}

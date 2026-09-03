@@ -34,9 +34,6 @@
 }
 .cert-card:hover, .cert-card:focus-visible{ border-color:var(--link-col); box-shadow:0 6px 18px rgba(0,0,0,.08); outline:none; }
 
-/* icon sits as a base layer; the thumbnail image (when it loads) covers it entirely.
-   If the image 404s (thumbnail not generated yet), onerror hides it and the icon
-   underneath is revealed automatically - no broken-image icon ever shown. */
 .cert-thumb{
   aspect-ratio:1.4/1; background:linear-gradient(135deg,#F4F7FB,#EAF1FA);
   display:flex; align-items:center; justify-content:center; overflow:hidden;
@@ -57,15 +54,22 @@
 .cert-info .name{ font-family:var(--header-font); font-weight:700; font-size:.82rem; line-height:1.3; margin:0 0 .25rem; }
 .cert-info .meta{ font-size:.75rem; opacity:.65; margin:0; }
 
-/* in-page document viewer */
+/* in-page document viewer - a CONTAINED box, not full-screen, so the certs
+   page stays visibly present around the edges (dimmed backdrop, not covered) */
 .doc-viewer{
-  position:fixed; inset:0; background:rgba(20,24,28,.95); z-index:40;
-  display:none; flex-direction:column;
+  position:fixed; inset:0; background:rgba(20,24,28,.78); z-index:40;
+  display:none; align-items:center; justify-content:center;
+  padding:5vh 5vw;
 }
 .doc-viewer.open{ display:flex; }
+.doc-viewer-box{
+  background:#14181c; width:100%; max-width:960px; height:100%; max-height:760px;
+  border-radius:12px; overflow:hidden; display:flex; flex-direction:column;
+  box-shadow:0 30px 80px rgba(0,0,0,.55);
+}
 .doc-viewer-bar{
   display:flex; align-items:center; justify-content:space-between; gap:.75rem;
-  padding:.7rem .85rem; background:#14181c; color:#fff; flex-wrap:wrap;
+  padding:.7rem .85rem; background:#1c2126; color:#fff; flex-wrap:wrap;
   font-family:var(--header-font); font-size:.85rem; font-weight:600;
   flex-shrink:0;
 }
@@ -87,9 +91,17 @@
 #doc-viewer-close span{ font-size:1.15rem; line-height:1; }
 #doc-viewer-close:hover, #doc-viewer-close:focus-visible{ background:#e4e7eb; outline:2px solid var(--link-col); outline-offset:2px; }
 
-.doc-viewer-body{ flex:1; display:flex; align-items:center; justify-content:center; overflow:auto; padding:.75rem; min-height:0; }
+.doc-viewer-body{ flex:1; display:flex; align-items:center; justify-content:center; overflow:auto; padding:.75rem; min-height:0; background:#f2f2f2; }
 .doc-viewer-body iframe{ width:100%; height:100%; border:none; background:#fff; border-radius:4px; }
 .doc-viewer-body img{ max-width:100%; max-height:100%; object-fit:contain; border-radius:4px; }
+
+.doc-viewer-unsupported{ text-align:center; color:var(--text-col); font-family:var(--header-font); padding:2rem; }
+.doc-viewer-unsupported p{ margin:0 0 1rem; font-size:.9rem; }
+.doc-viewer-download-link{
+  display:inline-block; background:var(--link-col); color:#fff; text-decoration:none;
+  font-weight:700; font-size:.85rem; padding:.6rem 1.2rem; border-radius:6px;
+}
+.doc-viewer-download-link:hover{ background:var(--hover-col); }
 
 @media (max-width:640px){
   .certs-wrap{ padding:.75rem .75rem 2.5rem; }
@@ -99,6 +111,8 @@
   .cert-info .name{ font-size:.76rem; }
   .cert-info .meta{ font-size:.68rem; }
 
+  .doc-viewer{ padding:3vh 2.5vw; }
+  .doc-viewer-box{ max-height:none; border-radius:10px; }
   .doc-viewer-bar{ padding:.6rem .6rem; }
   #doc-viewer-title{ font-size:.78rem; flex-basis:100%; order:1; }
   .doc-viewer-actions{ order:2; width:100%; justify-content:space-between; }

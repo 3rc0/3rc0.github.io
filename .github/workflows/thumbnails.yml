@@ -4,7 +4,13 @@ on:
   push:
     branches: [main]
     paths:
-      - 'assets/data/certs/**.pdf'
+      - 'assets/data/certs/*.pdf'
+      - 'assets/data/certs/*.docx'
+      - 'assets/data/certs/*.doc'
+      - 'assets/data/certs/*.pptx'
+      - 'assets/data/certs/*.ppt'
+      - 'assets/data/certs/*.xlsx'
+      - 'assets/data/certs/*.xls'
   workflow_dispatch:
 
 jobs:
@@ -16,14 +22,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install poppler-utils
-        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+      - name: Install poppler-utils and LibreOffice
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils libreoffice
+
+      - name: Convert Office documents to PDF
+        run: |
+          mkdir -p assets/data/certs/converted
+          shopt -s nullglob
+          for doc in assets/data/certs/*.docx assets/data/certs/*.doc assets/data/certs/*.pptx assets/data/certs/*.ppt assets/data/certs/*.xlsx assets/data/certs/*.xls; do
+            base=$(basename "$doc")
+            base="${base%.*}"
+            out="assets/data/certs/converted/${base}.pdf"
+            if [ -f "$out" ]; then
+              echo "Already converted: $doc, skipping"
+              continue
+            fi
+            echo "Converting $doc"
+            if ! soffice --headless --convert-to pdf --outdir assets/data/certs/converted "$doc" 2>/dev/null; then
+              echo "::warning::LibreOffice conversion failed for $doc, leaving it unsupported"
+            fi
+          done
 
       - name: Generate missing thumbnails
         run: |
           mkdir -p assets/data/certs/thumbs
-          for pdf in assets/data/certs/*.pdf; do
-            [ -e "$pdf" ] || continue
+          shopt -s nullglob
+          for pdf in assets/data/certs/*.pdf assets/data/certs/converted/*.pdf; do
             base=$(basename "$pdf" .pdf)
             thumb="assets/data/certs/thumbs/${base}-thumb.jpg"
             if [ -f "$thumb" ]; then
@@ -42,10 +66,10 @@ jobs:
             fi
           done
 
-      - name: Commit generated thumbnails
+      - name: Commit generated files
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
-          commit_message: "Auto-generate certificate thumbnails"
-          file_pattern: 'assets/data/certs/thumbs/*.jpg'
+          commit_message: "Auto-generate certificate thumbnails and conversions"
+          file_pattern: 'assets/data/certs/thumbs/*.jpg assets/data/certs/converted/*.pdf'
           commit_user_name: github-actions[bot]
           commit_user_email: github-actions[bot]@users.noreply.github.com
