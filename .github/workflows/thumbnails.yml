@@ -1,0 +1,51 @@
+name: Generate certificate thumbnails
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/data/certs/**.pdf'
+  workflow_dispatch:
+
+jobs:
+  thumbnails:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install poppler-utils
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
+      - name: Generate missing thumbnails
+        run: |
+          mkdir -p assets/data/certs/thumbs
+          for pdf in assets/data/certs/*.pdf; do
+            [ -e "$pdf" ] || continue
+            base=$(basename "$pdf" .pdf)
+            thumb="assets/data/certs/thumbs/${base}-thumb.jpg"
+            if [ -f "$thumb" ]; then
+              echo "Already have a thumbnail for $pdf, skipping"
+              continue
+            fi
+            echo "Generating thumbnail for $pdf"
+            if pdftoppm -jpeg -r 80 -f 1 -l 1 -scale-to 600 "$pdf" "assets/data/certs/thumbs/${base}-thumb" 2>/dev/null; then
+              if [ -f "assets/data/certs/thumbs/${base}-thumb-1.jpg" ]; then
+                mv "assets/data/certs/thumbs/${base}-thumb-1.jpg" "$thumb"
+              else
+                echo "::warning::pdftoppm ran but no output found for $pdf"
+              fi
+            else
+              echo "::warning::pdftoppm failed for $pdf, leaving it on the icon fallback"
+            fi
+          done
+
+      - name: Commit generated thumbnails
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "Auto-generate certificate thumbnails"
+          file_pattern: 'assets/data/certs/thumbs/*.jpg'
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com

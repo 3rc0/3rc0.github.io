@@ -43,6 +43,14 @@ permalink: /certs/
               {% if c.file contains '.jpg' or c.file contains '.jpeg' or c.file contains '.png' %}{% assign is_image = true %}{% endif %}
               {% assign is_pdf = false %}
               {% if c.file contains '.pdf' %}{% assign is_pdf = true %}{% endif %}
+              {% assign thumb_src = "" %}
+              {% if c.thumb and c.thumb != empty %}
+                {% assign thumb_src = c.thumb %}
+              {% elsif is_pdf %}
+                {% assign fname = c.file | split: '/' | last %}
+                {% assign base = fname | remove: '.pdf' | remove: '.PDF' %}
+                {% assign thumb_src = 'assets/data/certs/thumbs/' | append: base | append: '-thumb.jpg' %}
+              {% endif %}
               {% if has_file %}
                 <div class="cert-card" tabindex="0" role="button"
                      data-file="{{ c.file | relative_url }}"
@@ -53,10 +61,11 @@ permalink: /certs/
               {% endif %}
                 <div class="cert-thumb">
                   {% if has_link %}<span class="verify-tag">Verify &#8599;</span>{% endif %}
+                  <svg class="cert-thumb-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="22" y="12" width="56" height="76" rx="4" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="32" x2="68" y2="32" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="46" x2="68" y2="46" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="60" x2="54" y2="60" stroke="#008AFF" stroke-width="3"/></svg>
                   {% if is_image %}
-                    <img src="{{ c.file | relative_url }}" alt="{{ c.name }} certificate">
-                  {% else %}
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="22" y="12" width="56" height="76" rx="4" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="32" x2="68" y2="32" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="46" x2="68" y2="46" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="60" x2="54" y2="60" stroke="#008AFF" stroke-width="3"/></svg>
+                    <img class="cert-thumb-img" src="{{ c.file | relative_url }}" alt="{{ c.name }} certificate">
+                  {% elsif thumb_src != "" %}
+                    <img class="cert-thumb-img" src="{{ thumb_src | relative_url }}" alt="{{ c.name }} certificate preview" loading="lazy" onerror="this.style.display='none'">
                   {% endif %}
                 </div>
                 <div class="cert-info">
@@ -87,6 +96,14 @@ permalink: /certs/
               {% if c.file contains '.jpg' or c.file contains '.jpeg' or c.file contains '.png' %}{% assign is_image = true %}{% endif %}
               {% assign is_pdf = false %}
               {% if c.file contains '.pdf' %}{% assign is_pdf = true %}{% endif %}
+              {% assign thumb_src = "" %}
+              {% if c.thumb and c.thumb != empty %}
+                {% assign thumb_src = c.thumb %}
+              {% elsif is_pdf %}
+                {% assign fname = c.file | split: '/' | last %}
+                {% assign base = fname | remove: '.pdf' | remove: '.PDF' %}
+                {% assign thumb_src = 'assets/data/certs/thumbs/' | append: base | append: '-thumb.jpg' %}
+              {% endif %}
               {% if has_file %}
                 <div class="cert-card" tabindex="0" role="button"
                      data-file="{{ c.file | relative_url }}"
@@ -97,10 +114,11 @@ permalink: /certs/
               {% endif %}
                 <div class="cert-thumb">
                   {% if has_link %}<span class="verify-tag">Verify &#8599;</span>{% endif %}
+                  <svg class="cert-thumb-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="22" y="12" width="56" height="76" rx="4" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="32" x2="68" y2="32" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="46" x2="68" y2="46" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="60" x2="54" y2="60" stroke="#008AFF" stroke-width="3"/></svg>
                   {% if is_image %}
-                    <img src="{{ c.file | relative_url }}" alt="{{ c.name }} certificate">
-                  {% else %}
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="22" y="12" width="56" height="76" rx="4" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="32" x2="68" y2="32" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="46" x2="68" y2="46" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="60" x2="54" y2="60" stroke="#008AFF" stroke-width="3"/></svg>
+                    <img class="cert-thumb-img" src="{{ c.file | relative_url }}" alt="{{ c.name }} certificate">
+                  {% elsif thumb_src != "" %}
+                    <img class="cert-thumb-img" src="{{ thumb_src | relative_url }}" alt="{{ c.name }} certificate preview" loading="lazy" onerror="this.style.display='none'">
                   {% endif %}
                 </div>
                 <div class="cert-info">
@@ -122,7 +140,7 @@ permalink: /certs/
     <span id="doc-viewer-title"></span>
     <span class="doc-viewer-actions">
       <a id="doc-viewer-open" href="#" target="_blank" rel="noopener">Open in new tab &#8599;</a>
-      <button id="doc-viewer-close" aria-label="Close">&times;</button>
+      <button id="doc-viewer-close"><span aria-hidden="true">&times;</span> Close</button>
     </span>
   </div>
   <div id="doc-viewer-body" class="doc-viewer-body"></div>

@@ -1,200 +1,129 @@
-
 - name: Azure Administrator Associate (AZ-104)
   issuer: Microsoft
   year: 2024
   category: Cloud
   file: assets/data/certs/AZ-104_Diyar_Hussein.pdf
-  verify_url: https://learn.microsoft.com/en-us/users/diyarhussein/credentials/7a60e3f32edc205d 
- 
+  verify_url: https://learn.microsoft.com/en-us/users/diyarhussein/credentials/7a60e3f32edc205d
 - name: Azure Fundamentals (AZ-900)
   issuer: Microsoft
   year: 
   category: Cloud
   file: assets/data/certs/AZ-900_Diyar_Hussein.pdf
-  verify_url: https://learn.microsoft.com/en-us/users/diyarhussein/credentials/9fa4c80fd727046b 
-
+  verify_url: https://learn.microsoft.com/en-us/users/diyarhussein/credentials/9fa4c80fd727046b
 - name: CompTIA Security+
   issuer: CompTIA
   year: 2024
   category: Cybersecurity
   file: assets/data/certs/CompTIA_Security+_Diyar_Hussein.pdf
-  verify_url: https://cp.certmetrics.com/comptia/en/public/verify/credential/Y3D3M356KNR1QT9J 
-
+  verify_url: https://cp.certmetrics.com/comptia/en/public/verify/credential/Y3D3M356KNR1QT9J
 - name: CompTIA PenTest+ (PT0-003) Course
   issuer: Udemy
   year: 2025
   category: Cybersecurity
   file: assets/data/certs/Udemy_CompTIA_PT0_003_Diyar_Hussein.jpg
   verify_url: https://ude.my/UC-0598a122-f1cf-4921-9351-91402e2bfe72
-
 - name: "Security Testing: Nmap Security Scanning"
   issuer: LinkedIn Learning
   year: 2020
   category: Cybersecurity
   file: assets/data/certs/Diyar_Hussein_Security_Testing_Nmap_Security_Scanning_Cert.pdf
   verify_url: 
- 
 - name: "Wireshark Essential Training"
   issuer: LinkedIn Learning
   year: 2020
   category: Cybersecurity
   file: assets/data/certs/Diyar_Hussein_Wireshark_Essential_Training_Cert.pdf
   verify_url: 
-
 - name: "Wireshark: Advanced Tools and Techniques"
   issuer: LinkedIn Learning
   year: 2020
   category: Cybersecurity
   file: assets/data/certs/Diyar_Hussein_Wireshark_Advanced_Tools_and_Techniques.pdf
   verify_url: 
-
 - name: "Wireshark: VoIP"
   issuer: LinkedIn Learning
   year: 2020
   category: Cybersecurity
   file: assets/data/certs/Diyar_Hussein_Wireshark_VoIP_Cert.pdf
   verify_url: 
-
 - name: Setting up a Forensic Workstation
   issuer: Pluralsight
   year: 2023
   category: Cybersecurity
   file: 
   verify_url: https://app.pluralsight.com/achievements/share/ffb143b8-2289-41e2-b7fe-9dd183f156eb
-
-- name: Cybersecurity Leadership and Management Specialization
-  issuer: Infosec
-  year: 2024
-  category: Cybersecurity
-  file: 
-  verify_url: 
-
-- name: Google Cybersecurity Specialization
-  issuer: Google
-  year: 2024
-  category: Cybersecurity
-  file: 
-  verify_url: 
-
 - name: CCNA — Introduction to Networks
   issuer: Cisco Networking Academy
   year: 
   category: Networking
   file: assets/data/certs/Diyar_Hussein-CCNARSIntr-certificate.pdf
   verify_url: 
-
 - name: CCNA — Routing & Switching Essentials
   issuer: Cisco Networking Academy
   year: 
   category: Networking
   file: assets/data/certs/Diyar_Hussein-CCNARSRout-certificate.pdf
   verify_url: 
-
 - name: CCNA — Connecting Networks
   issuer: Cisco Networking Academy
   year: 
   category: Networking
   file: assets/data/certs/Diyar_Hussein-CCNA3CNENG-certificate.pdf
   verify_url: 
-
 - name: IT Essentials
   issuer: Cisco Networking Academy
   year: 2017
   category: Networking
   file: assets/data/certs/Diyar_Hussein-ITE_1617en-certificate.pdf
   verify_url: 
-
 - name: Fiber Optic Cable Specialist
   issuer: K1 Academy
   year: 
   category: Networking
   file: assets/data/certs/Diyar_Hussein_Fiber_Optic_Specialist_Course.pdf
   verify_url: 
-
 - name: "Linux: System Maintenance"
   issuer: LinkedIn Learning
   year: 2020
   category: Linux & Systems
   file: assets/data/certs/Diyar_Hussein_Linux_System_Maintenance_cert.pdf
   verify_url: 
-
 - name: "RHEL 8: Operating Running Systems"
   issuer: Pluralsight
   year: 2023
   category: Linux & Systems
   file: 
   verify_url: https://app.pluralsight.com/achievements/share/39eceda7-a4b6-426b-b66f-a93123b1edd8
-
 - name: "RHEL 8: Configuring Local Storage"
   issuer: Pluralsight
   year: 2023
   category: Linux & Systems
   file: 
   verify_url: https://app.pluralsight.com/achievements/share/93dc2cd0-68d6-4dda-80c0-59ee7688e99d
-
 - name: "RHEL 8: Creating Shell Scripts"
   issuer: Pluralsight
   year: 2022
   category: Linux & Systems
   file: 
   verify_url: https://app.pluralsight.com/achievements/share/a0b3319a-89ab-4d74-8c5a-21df89dff9d7
-
 - name: "RHEL 8: Using Essential Tools"
   issuer: Pluralsight
   year: 2022
   category: Linux & Systems
   file: 
   verify_url: https://app.pluralsight.com/achievements/share/4ad29381-9408-43ef-bc6e-c88cd1609559
-
 - name: "Linux: Managing Web Services (LPIC-2)"
   issuer: Pluralsight
   year: 2023
   category: Linux & Systems
   file: 
   verify_url: https://app.pluralsight.com/achievements/share/4a25addf-8baa-4615-80d6-93919c6492cd
-
 - name: Learning Python
   issuer: LinkedIn Learning
   year: 2022
   category: Programming
   file: "assets/data/certs/CertificateOfCompletion_Learning Python.pdf"
   verify_url: 
-
-- name: Python (Advanced, Django, Flask, AI, ML, NLP, Computer Vision)
-  issuer: Programming Hub
-  year: 2023
-  category: Programming
-  file: 
-  verify_url: 
-
-- name: Project Management Foundations
-  issuer: LinkedIn Learning
-  year: 2023
-  category: Project Management
-  file: 
-  verify_url: 
-
-- name: Project Management Simplified
-  issuer: LinkedIn Learning
-  year: 2020
-  category: Project Management
-  file: 
-  verify_url: 
-
-- name: SEP Group 1 Electrical
-  issuer: Association of Polish Electrical Engineers
-  year: 2025
-  category: Electrical
-  file: 
-  verify_url: 
-
-- name: Understanding Basic Electricity
-  issuer: Alison
-  year: 2025
-  category: Electrical
-  file: 
-  verify_url: https://alison.com/certification/check/cf018ffba2
-
 - name: "ICTD COVID-19 Response: Emergency Preparedness & Humanitarian Response"
   issuer: UNICEF
   year: 2020
