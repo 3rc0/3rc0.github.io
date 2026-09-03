@@ -1,0 +1,86 @@
+---
+layout: page
+title: Certifications & Training
+permalink: /certs/
+---
+
+<link rel="stylesheet" href="{{ '/assets/css/certs.css' | relative_url }}">
+
+<div class="certs-wrap">
+
+  <div class="certs-head">
+    <p>Core certifications and coursework in cybersecurity, cloud, networking, and beyond. Click any certificate to view the original document.</p>
+  </div>
+
+  {% assign grouped = site.data.certs | group_by: "category" %}
+  {% assign categories = grouped | sort: "name" %}
+
+  <div class="certs-tabs" id="certsTabs">
+    <button class="certs-tab active" data-target="all">All<span class="count">{{ site.data.certs.size }}</span></button>
+    {% for group in categories %}
+    <button class="certs-tab" data-target="cat-{{ forloop.index }}">{{ group.name }}<span class="count">{{ group.items.size }}</span></button>
+    {% endfor %}
+  </div>
+
+  <div class="certs-section active" id="section-all">
+    {% for group in categories %}
+      <h2>{{ group.name }}</h2>
+      <div class="certs-grid">
+        {% for c in group.items %}
+          {% assign is_image = false %}
+          {% if c.file contains '.jpg' or c.file contains '.jpeg' or c.file contains '.png' %}{% assign is_image = true %}{% endif %}
+          {% if c.file and c.file != empty %}
+            <a class="cert-card" href="{{ c.file | relative_url }}" target="_blank" rel="noopener">
+          {% else %}
+            <a class="cert-card" href="{{ c.verify_url }}" target="_blank" rel="noopener">
+          {% endif %}
+            <div class="cert-thumb">
+              {% if c.verify_url and c.verify_url != empty %}<span class="verify-tag">Verify &#8599;</span>{% endif %}
+              {% if is_image %}
+                <img src="{{ c.file | relative_url }}" alt="{{ c.name }} certificate">
+              {% else %}
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="22" y="12" width="56" height="76" rx="4" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="32" x2="68" y2="32" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="46" x2="68" y2="46" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="60" x2="54" y2="60" stroke="#008AFF" stroke-width="3"/></svg>
+              {% endif %}
+            </div>
+            <div class="cert-info">
+              <p class="name">{{ c.name }}</p>
+              <p class="meta">{{ c.issuer }}{% if c.year and c.year != empty %} &middot; {{ c.year }}{% endif %}</p>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+
+  {% for group in categories %}
+    <div class="certs-section" id="section-cat-{{ forloop.index }}">
+      <div class="certs-grid">
+        {% for c in group.items %}
+          {% assign is_image = false %}
+          {% if c.file contains '.jpg' or c.file contains '.jpeg' or c.file contains '.png' %}{% assign is_image = true %}{% endif %}
+          {% if c.file and c.file != empty %}
+            <a class="cert-card" href="{{ c.file | relative_url }}" target="_blank" rel="noopener">
+          {% else %}
+            <a class="cert-card" href="{{ c.verify_url }}" target="_blank" rel="noopener">
+          {% endif %}
+            <div class="cert-thumb">
+              {% if c.verify_url and c.verify_url != empty %}<span class="verify-tag">Verify &#8599;</span>{% endif %}
+              {% if is_image %}
+                <img src="{{ c.file | relative_url }}" alt="{{ c.name }} certificate">
+              {% else %}
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="22" y="12" width="56" height="76" rx="4" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="32" x2="68" y2="32" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="46" x2="68" y2="46" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="60" x2="54" y2="60" stroke="#008AFF" stroke-width="3"/></svg>
+              {% endif %}
+            </div>
+            <div class="cert-info">
+              <p class="name">{{ c.name }}</p>
+              <p class="meta">{{ c.issuer }}{% if c.year and c.year != empty %} &middot; {{ c.year }}{% endif %}</p>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  {% endfor %}
+
+</div>
+
+<script src="{{ '/assets/js/certs.js' | relative_url }}"></script>
