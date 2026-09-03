@@ -18,7 +18,7 @@
   year: 2024
   category: Cybersecurity
   file: assets/data/certs/CompTIA_Security+_Diyar_Hussein.pdf
-  verify_url: 
+  verify_url: https://cp.certmetrics.com/comptia/en/public/verify/credential/Y3D3M356KNR1QT9J 
 
 - name: CompTIA PenTest+ (PT0-003) Course
   issuer: Udemy
