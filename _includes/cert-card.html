@@ -45,7 +45,13 @@
     <a class="cert-card" href="{{ c.verify_url }}" target="_blank" rel="noopener">
   {% endif %}
     <div class="cert-thumb">
-      {% if has_link %}<span class="verify-tag">Verify &#8599;</span>{% endif %}
+      {% if has_link %}
+        {% if has_file %}
+          <a class="verify-tag" href="{{ c.verify_url }}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Verify &#8599;</a>
+        {% else %}
+          <span class="verify-tag">Verify &#8599;</span>
+        {% endif %}
+      {% endif %}
       <svg class="cert-thumb-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="22" y="12" width="56" height="76" rx="4" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="32" x2="68" y2="32" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="46" x2="68" y2="46" stroke="#008AFF" stroke-width="3"/><line x1="32" y1="60" x2="54" y2="60" stroke="#008AFF" stroke-width="3"/></svg>
       {% if is_image %}
         <img class="cert-thumb-img" src="{{ c.file | relative_url }}" alt="{{ c.name }} certificate">
