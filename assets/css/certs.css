@@ -29,7 +29,7 @@
 .cert-card{
   border:1px solid var(--line); border-radius:8px; overflow:hidden;
   text-decoration:none; color:inherit; display:block; background:var(--page-col);
-  transition:border-color .15s ease, box-shadow .15s ease;
+  transition:border-color .15s ease, box-shadow .15s ease; cursor:pointer;
 }
 .cert-card:hover, .cert-card:focus-visible{ border-color:var(--link-col); box-shadow:0 6px 18px rgba(0,0,0,.08); outline:none; }
 
@@ -47,3 +47,34 @@
 .cert-info{ padding:.7rem .8rem .85rem; }
 .cert-info .name{ font-family:var(--header-font); font-weight:700; font-size:.85rem; line-height:1.3; margin:0 0 .25rem; }
 .cert-info .meta{ font-size:.78rem; opacity:.65; margin:0; }
+
+/* in-page document viewer */
+.doc-viewer{
+  position:fixed; inset:0; background:rgba(20,24,28,.92); z-index:40;
+  display:none; flex-direction:column;
+}
+.doc-viewer.open{ display:flex; }
+.doc-viewer-bar{
+  display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  padding:.9rem 1.2rem; background:#14181c; color:#fff;
+  font-family:var(--header-font); font-size:.9rem; font-weight:600;
+}
+.doc-viewer-bar span#doc-viewer-title{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.doc-viewer-actions{ display:flex; align-items:center; gap:1rem; flex-shrink:0; }
+#doc-viewer-open{
+  color:#fff; font-size:.82rem; font-weight:600; text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,.5); opacity:.85; white-space:nowrap;
+}
+#doc-viewer-open:hover, #doc-viewer-open:focus-visible{ opacity:1; border-color:#fff; }
+#doc-viewer-close{
+  background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer; opacity:.7; line-height:1;
+}
+#doc-viewer-close:hover, #doc-viewer-close:focus-visible{ opacity:1; }
+.doc-viewer-body{ flex:1; display:flex; align-items:center; justify-content:center; overflow:auto; padding:1rem; }
+.doc-viewer-body iframe{ width:100%; height:100%; border:none; background:#fff; border-radius:4px; }
+.doc-viewer-body img{ max-width:100%; max-height:100%; object-fit:contain; border-radius:4px; }
+
+@media (max-width:640px){
+  #doc-viewer-title{ max-width:38vw; }
+  #doc-viewer-open{ font-size:.75rem; }
+}
