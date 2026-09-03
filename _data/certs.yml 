@@ -33,7 +33,7 @@
   category: Cybersecurity
   file: assets/data/certs/Diyar_Hussein_Security_Testing_Nmap_Security_Scanning_Cert.pdf
   verify_url: 
-
+ 
 - name: "Wireshark Essential Training"
   issuer: LinkedIn Learning
   year: 2020
