@@ -5,7 +5,7 @@
   category: Cloud
   file: assets/data/certs/AZ-104_Diyar_Hussein.pdf
   verify_url: https://learn.microsoft.com/en-us/users/diyarhussein/credentials/7a60e3f32edc205d 
-
+ 
 - name: Azure Fundamentals (AZ-900)
   issuer: Microsoft
   year: 
