@@ -66,10 +66,23 @@ jobs:
             fi
           done
 
+      - name: Determine which patterns have files
+        id: patterns
+        run: |
+          patterns=""
+          if ls assets/data/certs/thumbs/*.jpg >/dev/null 2>&1; then
+            patterns="assets/data/certs/thumbs/*.jpg"
+          fi
+          if ls assets/data/certs/converted/*.pdf >/dev/null 2>&1; then
+            patterns="$patterns assets/data/certs/converted/*.pdf"
+          fi
+          echo "patterns=$patterns" >> "$GITHUB_OUTPUT"
+
       - name: Commit generated files
+        if: steps.patterns.outputs.patterns != ''
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "Auto-generate certificate thumbnails and conversions"
-          file_pattern: 'assets/data/certs/thumbs/*.jpg assets/data/certs/converted/*.pdf'
+          file_pattern: ${{ steps.patterns.outputs.patterns }}
           commit_user_name: github-actions[bot]
           commit_user_email: github-actions[bot]@users.noreply.github.com
