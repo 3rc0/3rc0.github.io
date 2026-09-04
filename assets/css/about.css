@@ -1,0 +1,12 @@
+.about-wrap{ max-width:620px; margin:0 auto; padding:1rem 1.5rem 3rem; font-family:'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif; color:#404040; }
+.about-label{ font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:#008AFF; margin:0 0 .6rem; }
+.about-wrap h1{ font-family:'Lora','Times New Roman',serif; font-weight:400; font-size:1.7rem; margin:0 0 1.1rem; }
+.about-wrap p{ font-family:'Lora','Times New Roman',serif; font-size:1.02rem; line-height:1.7; margin:0 0 1rem; }
+.about-contact{ display:flex; gap:10px; flex-wrap:wrap; margin-top:1rem; }
+.about-btn{
+  display:inline-flex; align-items:center; gap:8px; text-decoration:none;
+  font-weight:600; font-size:.9rem; padding:.7rem 1.3rem; border-radius:6px;
+}
+.about-btn svg{ width:18px; height:18px; }
+.about-btn.primary{ background:#008AFF; color:#fff; }
+.about-btn.primary:hover{ background:#0085A1; }
