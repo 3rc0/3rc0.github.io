@@ -86,7 +86,7 @@
   issuer: LinkedIn Learning
   year: 2020
   category: Linux & Systems
-  file: assets/data/certs/Diyar_Hussein_Linux_System_Maintenance_cert.pdf
+  file: assets/data/certs/CertificateOfCompletion_Linux_System_Maintenance.pdf
   verify_url: 
 - name: "RHEL 8: Operating Running Systems"
   issuer: Pluralsight
@@ -135,4 +135,28 @@
   year: 2025
   category: Electrical
   file: assets/data/certs/SEMP.pdf
+  verify_url: 
+- name: "Security Testing: Vulnerability Management with Nessus"
+  issuer: LinkedIn Learning
+  year: 2020
+  category: Cybersecurity
+  file: assets/data/certs/CertificateOfCompletion_Security_Testing_Vulnerability_Management_with_Nessus.pdf
+  verify_url: 
+- name: "Linux: Multitasking at the Command Line (2016)"
+  issuer: LinkedIn Learning
+  year: 2020
+  category: Linux & Systems
+  file: assets/data/certs/CertificateOfCompletion_Linux_Multitasking_at_the_Command_Line_2016.pdf
+  verify_url: 
+- name: Project Management Foundations
+  issuer: LinkedIn Learning
+  year: 2023
+  category: Project Management
+  file: assets/data/certs/CertificateOfCompletion_Project_Management_Foundations.pdf
+  verify_url: 
+- name: Project Management Simplified
+  issuer: LinkedIn Learning
+  year: 2020
+  category: Project Management
+  file: assets/data/certs/CertificateOfCompletion_Project_Management_Simplified.pdf
   verify_url:
