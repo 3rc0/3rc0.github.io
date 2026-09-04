@@ -8,10 +8,6 @@ permalink: /certs/
 
 <div class="certs-wrap">
 
-  <div class="certs-head">
-    <p>Core certifications and coursework in cybersecurity, cloud, networking, and beyond. Click any certificate to view it.</p>
-  </div>
-
   {% assign grouped = site.data.certs | group_by: "category" %}
   {% assign category_order = "Cybersecurity,Cloud,Networking,Linux & Systems,Programming,Emergency ICT,Project Management,Electrical" | split: "," %}
 
