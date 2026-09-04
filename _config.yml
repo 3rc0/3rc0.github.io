@@ -20,6 +20,7 @@ author: Diyar Hussein
 ###############################################
 
 navbar-links:
+  Home: "https://3rc0.github.io/"
   Projects: 
     - KIDAB - iBPMS Platform: "https://kidab.io"
     - EXFO Max Tester Simulation: "exfo"
@@ -31,6 +32,7 @@ navbar-links:
     - Voronezh Graffiti: "https://voronezhgraffiti.github.io/"
     - ICT Tutorials - YouTube: "https://youtube.com/DiyarHussein"
   Certifications: "certs"
+  Services: "https://www.linkedin.com/services/page/941215330466b937a3/admin/"
   About: "https://linkedin.com/in/diyar"
 
 ################
