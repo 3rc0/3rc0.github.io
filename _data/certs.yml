@@ -129,4 +129,10 @@
   year: 2020
   category: Emergency ICT
   file: assets/data/certs/Diyar_Hussein_ICTD_COVID-19_Response_Online_Training_Cert.pdf
+  verify_url: 
+- name: SEP Group 1 Electrical
+  issuer: Association of Polish Electrical Engineers
+  year: 2025
+  category: Electrical
+  file: assets/data/certs/SEMP.pdf
   verify_url:
