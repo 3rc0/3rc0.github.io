@@ -125,3 +125,9 @@ a.verify-tag:hover, a.verify-tag:focus-visible{ background:var(--hover-col); out
 @media (prefers-reduced-motion:reduce){
   .cert-card{ transition:none; }
 }
+
+.certs-thm-section{ margin-top:1.5rem; padding-top:1.2rem; border-top:1px solid #DDDDDD; }
+.thm-label{ font-size:.85rem; font-weight:700; margin:0 0 .6rem; }
+.thm-card{ display:block; max-width:400px; border:1px solid #DDDDDD; border-radius:8px; overflow:hidden; }
+.thm-card img{ width:100%; display:block; }
+.thm-stats{ font-size:.78rem; color:#404040; margin-top:.6rem; }

@@ -5,6 +5,8 @@ permalink: /certs/
 ---
 
 <link rel="stylesheet" href="{{ '/assets/css/certs.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/certs-viewer.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/certs-thm.css' | relative_url }}">
 
 <div class="certs-wrap">
 
@@ -31,6 +33,15 @@ permalink: /certs/
         <div class="certs-grid">
           {% for c in group.items %}{% include cert-card.html c=c %}{% endfor %}
         </div>
+        {% if cat_name == "Cybersecurity" %}
+          <div class="certs-thm-section">
+            <p class="thm-label">TryHackMe Profile</p>
+            <a class="thm-card" href="https://tryhackme.com/p/3rr0rC0nn3ct10n" target="_blank" rel="noopener">
+              <img src="https://tryhackme-badges.s3.amazonaws.com/3rr0rC0nn3ct10n.png" alt="TryHackMe profile badge">
+            </a>
+            <div class="thm-stats">14,560 pts &middot; 114 rooms &middot; Rank #63,065 &middot; Top 3%</div>
+          </div>
+        {% endif %}
       {% endif %}
     {% endfor %}
   </div>
@@ -43,6 +54,15 @@ permalink: /certs/
         <div class="certs-grid">
           {% for c in group.items %}{% include cert-card.html c=c %}{% endfor %}
         </div>
+        {% if cat_name == "Cybersecurity" %}
+          <div class="certs-thm-section">
+            <p class="thm-label">TryHackMe Profile</p>
+            <a class="thm-card" href="https://tryhackme.com/p/3rr0rC0nn3ct10n" target="_blank" rel="noopener">
+              <img src="https://tryhackme-badges.s3.amazonaws.com/3rr0rC0nn3ct10n.png" alt="TryHackMe profile badge">
+            </a>
+            <div class="thm-stats">14,560 pts &middot; 114 rooms &middot; Rank #63,065 &middot; Top 3%</div>
+          </div>
+        {% endif %}
       </div>
     {% endif %}
   {% endfor %}
