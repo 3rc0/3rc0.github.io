@@ -1,0 +1,88 @@
+- code: TRN-VIRT-01
+  title: Installing Windows 10 Pro N in VMware Workstation
+  category: System Virtualization & OS Installation
+  video_id: 0lUJ7PBRpII
+- code: TRN-VIRT-02
+  title: "Installing Windows 10 (Build 10.0.15063) in VMware Workstation"
+  category: System Virtualization & OS Installation
+  video_id: FKk4Y5f-NmE
+- code: TRN-VIRT-03
+  title: Installing Red Hat Enterprise Linux 8.5 in VMware Workstation
+  category: System Virtualization & OS Installation
+  video_id: YE2G1jPywU0
+- code: TRN-VIRT-04
+  title: Installing macOS in VMware Workstation
+  category: System Virtualization & OS Installation
+  video_id: xnhIdr6t1L0
+- code: TRN-VIRT-05
+  title: "Installing macOS in VMware Workstation — Complete Walkthrough"
+  category: System Virtualization & OS Installation
+  video_id: BsD22R79eKU
+- code: TRN-CLOUD-01
+  title: Applying for AWS Educate
+  category: Cloud Computing (AWS)
+  video_id: IeOI0BSW39w
+- code: TRN-CLOUD-02
+  title: Launching a Windows Virtual Machine in Amazon EC2
+  category: Cloud Computing (AWS)
+  video_id: 96yqbBa7nk4
+- code: TRN-CLOUD-03
+  title: Launching an Ubuntu Server in Amazon EC2 and Connecting via SSH
+  category: Cloud Computing (AWS)
+  video_id: LaX0q-sB7RE
+- code: TRN-LINUX-01
+  title: Creating a Bootable Ubuntu USB Installer
+  category: Linux Systems & Server Administration
+  video_id: fHXvijytyp4
+- code: TRN-LINUX-02
+  title: "Building a Web Server and Database Server from Scratch (Ubuntu Server 20.04 LTS)"
+  category: Linux Systems & Server Administration
+  video_id: 0frSSu1e8as
+- code: TRN-CAD-01
+  title: Sketching a Bushing
+  category: "Designcenter Solid Edge — Practical Training Course"
+  video_id: li29Yzy5_PQ
+- code: TRN-CAD-02
+  title: 3D Modeling a Bracket
+  category: "Designcenter Solid Edge — Practical Training Course"
+  video_id: qWpUtzdbmbA
+- code: TRN-CAD-03
+  title: 3D Modeling a Mechanical Bushing
+  category: "Designcenter Solid Edge — Practical Training Course"
+  video_id: 5DEHP-qWj7c
+- code: TRN-CAD-04
+  title: 3D Modeling a Corner Bracket
+  category: "Designcenter Solid Edge — Practical Training Course"
+  video_id: GafG3KlMJdU
+- code: TRN-CAD-05
+  title: 3D Modeling a Rotational Part
+  category: "Designcenter Solid Edge — Practical Training Course"
+  video_id: GGQzhjddCrs
+- code: TRN-CAD-06
+  title: 3D Modeling a Spring
+  category: "Designcenter Solid Edge — Practical Training Course"
+  video_id: mEd_wvwpWPo
+- code: TRN-CAD-07
+  title: 3D Modeling a Radiator Needle
+  category: "Designcenter Solid Edge — Practical Training Course"
+  video_id: kecIU7adP9A
+- code: TRN-CAD-08
+  title: 3D Modeling an Insulator
+  category: "Designcenter Solid Edge — Practical Training Course"
+  video_id: T_rdEupSejc
+- code: TRN-CAD-09
+  title: 3D Modeling a Housing
+  category: "Designcenter Solid Edge — Practical Training Course"
+  video_id: O9X_AZ_uO7Q
+- code: TRN-EMBED-01
+  title: Generating a Guaranteed Four-Digit Random Number (Arduino)
+  category: Embedded Systems (Arduino)
+  video_id: bwpZ0A1KKec
+- code: TRN-EMBED-02
+  title: "Wiring a Stepper Motor with the L293D Driver (Arduino, Tinkercad)"
+  category: Embedded Systems (Arduino)
+  video_id: O3L8eWt9GTo
+- code: TRN-EMBED-03
+  title: "Building a Traffic Light Circuit (Arduino, Tinkercad)"
+  category: Embedded Systems (Arduino)
+  video_id: lk3nuIlBBnU

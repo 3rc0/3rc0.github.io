@@ -1,0 +1,30 @@
+---
+layout: page
+title: Training & Tutorials
+permalink: /training/
+---
+
+<link rel="stylesheet" href="{{ '/assets/css/training.css' | relative_url }}">
+
+<a href="#training-player" class="skip-link">Skip to video player</a>
+
+<div class="training-wrap">
+  <div class="training-layout">
+    <nav class="training-sidebar" id="sidebar" aria-label="Course lessons"></nav>
+    <div class="training-main">
+      <div class="training-video-frame">
+        <iframe id="training-player" src="" allowfullscreen title="Select a lesson"></iframe>
+      </div>
+      <div class="training-nowplaying" aria-live="polite">
+        <span class="training-code" id="training-code"></span>
+        <p class="training-title" id="training-title"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% assign lessons = site.data.training %}
+<script>
+  window.TRAINING_DATA = {{ lessons | jsonify }};
+</script>
+<script src="{{ '/assets/js/training.js' | relative_url }}"></script>

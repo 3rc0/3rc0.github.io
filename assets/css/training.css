@@ -1,0 +1,38 @@
+.skip-link{
+  position:absolute; left:-9999px; top:0; z-index:50;
+  background:#008AFF; color:#fff; padding:.75rem 1.2rem; border-radius:0 0 6px 0;
+  font-family:'Open Sans',Arial,sans-serif; font-weight:600; font-size:.9rem; text-decoration:none;
+}
+.skip-link:focus{ left:0; }
+
+.training-wrap{ max-width:1080px; margin:0 auto; padding:1rem 1.5rem 3rem; font-family:'Open Sans',Arial,sans-serif; color:#404040; }
+.training-layout{ display:flex; gap:1.2rem; align-items:flex-start; }
+
+.training-sidebar{ width:280px; flex-shrink:0; border:1px solid #DDDDDD; border-radius:6px; overflow:hidden; }
+.cat-header, .lesson-row{
+  display:flex; align-items:center; width:100%; text-align:left; min-height:44px;
+  background:#fff; border:none; border-bottom:1px solid #DDDDDD; cursor:pointer;
+  font-family:'Open Sans',Arial,sans-serif; color:#404040;
+}
+.cat-header{ justify-content:space-between; padding:.7rem .85rem; font-size:.88rem; font-weight:600; }
+.cat-header i{ transition:transform .15s ease; }
+.cat-header[aria-expanded="true"] i{ transform:rotate(180deg); }
+.lesson-row{ padding:.6rem .85rem .6rem 1.4rem; font-size:.85rem; }
+.lesson-row:hover{ background:#F4F7FB; }
+.lesson-row.selected{ background:#E6F1FB; font-weight:600; }
+.lesson-row .fa-check{ font-size:14px; margin-right:6px; color:#008AFF; flex-shrink:0; }
+.cat-header:focus-visible, .lesson-row:focus-visible{ outline:2px solid #008AFF; outline-offset:-2px; }
+.lesson-group{ display:none; }
+.lesson-group.open{ display:block; }
+
+.training-main{ flex:1; min-width:0; }
+.training-video-frame{ position:relative; aspect-ratio:16/9; border-radius:6px; overflow:hidden; background:#F4F7FB; border:1px solid #DDDDDD; }
+.training-video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:none; }
+.training-nowplaying{ margin-top:.8rem; }
+.training-code{ font-size:.75rem; font-weight:700; color:#008AFF; letter-spacing:.03em; }
+.training-title{ font-size:1rem; font-weight:600; margin:.2rem 0 0; }
+
+@media (max-width:768px){
+  .training-layout{ flex-direction:column; }
+  .training-sidebar{ width:100%; }
+}
